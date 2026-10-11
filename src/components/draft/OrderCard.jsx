@@ -8,7 +8,8 @@ function OrderCard({
   onEditOrder, 
   onDeleteOrder, 
   onCopyPN,
-  onCopyFormatText
+  onCopyFormatText,
+  carryOverMonthText
 }) {
   const [copiedPn, setCopiedPn] = useState(null);
   const isCompleted = order.status === 'completed';
@@ -63,14 +64,19 @@ function OrderCard({
 
           {/* Info Toko */}
           <div className="flex-1 min-w-0">
-            {/* Badge Rute di baris terpisah agar tidak menabrak nama toko yang panjang */}
-            {order.routeCode && (
-              <div className="mb-1">
+            {/* Baris Badge: Rute & Lanjutan Bulan Lalu */}
+            <div className="flex items-center gap-1.5 flex-wrap mb-1">
+              {order.routeCode && (
                 <span className="inline-flex items-center px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-md text-[10.5px] font-bold tracking-wider">
                   {order.routeCode}
                 </span>
-              </div>
-            )}
+              )}
+              {carryOverMonthText && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/80 rounded-md text-[10.5px] font-semibold">
+                  <span>↳ Lanjutan {carryOverMonthText}</span>
+                </span>
+              )}
+            </div>
 
             {/* Nama Toko Full Width (tidak terpotong badge) */}
             <h3 className={`text-[17px] font-bold tracking-tight leading-snug break-words ${

@@ -22,10 +22,10 @@ function Header({
       <div className="max-w-md mx-auto px-5 py-3.5 flex justify-between items-center">
         <div>
           <h1 className="text-[20px] font-bold text-zinc-900 tracking-tight">
-            {activeTab === 'home' && "Dashboard"}
+            {activeTab === 'home' && "Home"}
+            {activeTab === 'draft' && "Catatan Order"}
             {activeTab === 'pricelist' && "Pricelist"}
             {activeTab === 'stores' && "Data Toko"}
-            {activeTab === 'draft' && "Draft Order"}
           </h1>
         </div>
         {showEditButton && (

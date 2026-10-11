@@ -23,7 +23,7 @@ import RouteSheet from './components/stores/RouteSheet';
 import OrderModal from './components/draft/OrderModal';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('pricelist'); 
+  const [activeTab, setActiveTab] = useState('home'); 
 
   // Storage for Pricelist
   const [items, setItems] = useState(() => {

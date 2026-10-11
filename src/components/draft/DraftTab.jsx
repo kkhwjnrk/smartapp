@@ -2,6 +2,13 @@ import React, { useState, useMemo, useRef } from 'react';
 import OrderCard from './OrderCard';
 import OrderDetailModal from './OrderDetailModal';
 import StatusConfirmModal from './StatusConfirmModal';
+import { 
+  getCurrentMonthKey, 
+  formatMonthKeyDisplay, 
+  getPreviousMonthKey, 
+  getNextMonthKey, 
+  getOrderMonthKey 
+} from '../../utils/date';
 
 function DraftTab({
   orders = [],
@@ -16,11 +23,32 @@ function DraftTab({
   const toastTimeoutRef = useRef(null);
   const searchInputRef = useRef(null);
 
+  // Periode Bulan Terpilih (Default: Bulan Ini secara otomatis)
+  const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
+  const [selectedMonthKey, setSelectedMonthKey] = useState(currentMonthKey);
+
   // State untuk Modal Halaman Penuh Rincian Order
   const [selectedDetailOrderId, setSelectedDetailOrderId] = useState(null);
 
   // State untuk Dialog Konfirmasi Ceklis / Status
   const [orderToConfirmStatus, setOrderToConfirmStatus] = useState(null);
+
+  // Kumpulan daftar bulan yang tersedia dari data order
+  const availableMonths = useMemo(() => {
+    const monthSet = new Set();
+    monthSet.add(currentMonthKey);
+    if (selectedMonthKey !== 'all') {
+      monthSet.add(selectedMonthKey);
+    }
+    orders.forEach(o => {
+      const m = getOrderMonthKey(o);
+      if (m) monthSet.add(m);
+    });
+    return Array.from(monthSet).sort().reverse();
+  }, [orders, currentMonthKey, selectedMonthKey]);
+
+  const isViewingCurrentMonth = selectedMonthKey === currentMonthKey;
+  const isViewingAllMonths = selectedMonthKey === 'all';
 
   // Dapatkan order yang sedang dibuka di modal detail secara reaktif dari list orders
   const selectedDetailOrder = useMemo(() => {
@@ -73,13 +101,37 @@ function DraftTab({
     }
   };
 
-  // Filter orders berdasarkan tab Aktif / Arsip dan search query
-  const { activeOrders, archivedOrders, currentDisplayedOrders } = useMemo(() => {
-    const active = orders.filter(o => o.status === 'pending');
-    const archive = orders.filter(o => o.status === 'completed');
+  // Filter orders berdasarkan periode bulan dan tab Aktif / Arsip
+  const { activeOrders, archivedOrders, currentDisplayedOrders, carryOverCount } = useMemo(() => {
+    // 1. Order Aktif
+    const active = orders.filter(order => {
+      if (order.status !== 'pending') return false;
+      if (isViewingAllMonths) return true;
+      const orderMonth = getOrderMonthKey(order);
+      if (isViewingCurrentMonth) {
+        // Tampilkan order bulan ini + order bulan lalu yang masih pending (carry-over otomatis)
+        return orderMonth <= currentMonthKey;
+      }
+      return orderMonth === selectedMonthKey;
+    });
+
+    // Hitung berapa order carry-over yang aktif di bulan ini
+    let carryCount = 0;
+    if (isViewingCurrentMonth) {
+      carryCount = active.filter(o => getOrderMonthKey(o) < currentMonthKey).length;
+    }
+
+    // 2. Order Arsip
+    const archive = orders.filter(order => {
+      if (order.status !== 'completed') return false;
+      if (isViewingAllMonths) return true;
+      const orderMonth = getOrderMonthKey(order);
+      return orderMonth === selectedMonthKey;
+    });
 
     const listToFilter = orderSubTab === 'active' ? active : archive;
 
+    // 3. Pencarian Teks
     const filtered = listToFilter.filter(order => {
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase().trim();
@@ -94,12 +146,93 @@ function DraftTab({
     return {
       activeOrders: active,
       archivedOrders: archive,
-      currentDisplayedOrders: filtered
+      currentDisplayedOrders: filtered,
+      carryOverCount: carryCount
     };
-  }, [orders, orderSubTab, searchQuery]);
+  }, [orders, orderSubTab, searchQuery, selectedMonthKey, isViewingCurrentMonth, isViewingAllMonths, currentMonthKey]);
 
   return (
     <div className="space-y-4 pb-12 animate-in fade-in duration-300">
+
+      {/* Month Navigator / Pemilih Periode Bulanan (Pendekatan 1) */}
+      <div className="bg-white rounded-2xl border border-zinc-200/90 p-2 shadow-xs">
+        <div className="flex items-center justify-between gap-1.5">
+          
+          {/* Tombol Bulan Sebelumnya */}
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedMonthKey === 'all') {
+                setSelectedMonthKey(currentMonthKey);
+              } else {
+                setSelectedMonthKey(getPreviousMonthKey(selectedMonthKey));
+              }
+            }}
+            className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-xl transition-colors active:scale-95"
+            title="Bulan sebelumnya"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Label Periode Bulan & Dropdown Cepat */}
+          <div className="flex-1 flex items-center justify-center gap-2 text-center min-w-0">
+            <div className="relative inline-flex items-center gap-1.5">
+              <span className="text-[14px]">📅</span>
+              
+              {/* Select Dropdown Cepat untuk Lompat ke Bulan Lain */}
+              <select
+                value={selectedMonthKey}
+                onChange={(e) => setSelectedMonthKey(e.target.value)}
+                className="font-bold text-zinc-900 text-[14.5px] bg-transparent focus:outline-none cursor-pointer py-1 pr-1 truncate"
+              >
+                {availableMonths.map(mKey => (
+                  <option key={mKey} value={mKey}>
+                    {formatMonthKeyDisplay(mKey)} {mKey === currentMonthKey ? '(Bulan Ini)' : ''}
+                  </option>
+                ))}
+                <option value="all">Semua Periode</option>
+              </select>
+
+              {isViewingCurrentMonth && (
+                <span className="px-1.5 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-md text-[10px] font-bold tracking-wider shrink-0">
+                  Bulan Ini
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Tombol Bulan Berikutnya */}
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedMonthKey === 'all') {
+                setSelectedMonthKey(currentMonthKey);
+              } else {
+                setSelectedMonthKey(getNextMonthKey(selectedMonthKey));
+              }
+            }}
+            className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-xl transition-colors active:scale-95"
+            title="Bulan berikutnya"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Informasi Bawaan / Carry-Over jika ada order dari bulan lalu yang masih pending */}
+        {isViewingCurrentMonth && carryOverCount > 0 && (
+          <div className="mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between text-[11.5px] px-2 text-amber-800 bg-amber-50/70 rounded-xl py-1.5">
+            <span className="flex items-center gap-1 font-medium">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              {carryOverCount} toko order bawaan dari bulan lalu
+            </span>
+            <span className="text-amber-700 font-semibold">Belum Selesai</span>
+          </div>
+        )}
+      </div>
 
       {/* Top Segmented Control: Aktif vs Arsip */}
       <div className="flex bg-zinc-100 p-1 rounded-2xl shadow-2xs">
@@ -150,7 +283,7 @@ function DraftTab({
           <input
             ref={searchInputRef}
             type="text"
-            placeholder={orderSubTab === 'active' ? "Cari toko, PN, atau tanggal..." : "Cari di arsip order..."}
+            placeholder={orderSubTab === 'active' ? "Cari toko, PN, atau tanggal..." : "Cari di arsip..."}
             className="w-full pl-10 pr-9 py-2.5 bg-white border border-zinc-200/80 rounded-2xl text-[14px] focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all shadow-2xs placeholder:text-zinc-400 font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -203,18 +336,25 @@ function DraftTab({
       {/* Daftar Order Cards */}
       {currentDisplayedOrders.length > 0 ? (
         <div className="space-y-3.5">
-          {currentDisplayedOrders.map(order => (
-            <OrderCard
-              key={order.id}
-              order={order}
-              onRequestToggleStatus={handleRequestToggleStatus}
-              onOpenDetail={(o) => setSelectedDetailOrderId(o.id)}
-              onEditOrder={onOpenEditOrder}
-              onDeleteOrder={onDeleteOrder}
-              onCopyPN={handleCopyPN}
-              onCopyFormatText={handleCopyFormatText}
-            />
-          ))}
+          {currentDisplayedOrders.map(order => {
+            const orderMonth = getOrderMonthKey(order);
+            const isCarryOver = isViewingCurrentMonth && order.status === 'pending' && orderMonth < currentMonthKey;
+            const carryOverMonthText = isCarryOver ? formatMonthKeyDisplay(orderMonth) : null;
+
+            return (
+              <OrderCard
+                key={order.id}
+                order={order}
+                carryOverMonthText={carryOverMonthText}
+                onRequestToggleStatus={handleRequestToggleStatus}
+                onOpenDetail={(o) => setSelectedDetailOrderId(o.id)}
+                onEditOrder={onOpenEditOrder}
+                onDeleteOrder={onDeleteOrder}
+                onCopyPN={handleCopyPN}
+                onCopyFormatText={handleCopyFormatText}
+              />
+            );
+          })}
         </div>
       ) : (
         /* Empty State */
@@ -233,18 +373,26 @@ function DraftTab({
 
           <h4 className="text-[16px] font-bold text-zinc-900">
             {orderSubTab === 'active'
-              ? (searchQuery ? 'Order tidak ditemukan' : 'Semua Order Sudah Selesai Diproses 🎉')
-              : (searchQuery ? 'Arsip tidak ditemukan' : 'Belum Ada Order di Arsip')}
+              ? (searchQuery 
+                  ? 'Order tidak ditemukan' 
+                  : (isViewingCurrentMonth 
+                      ? 'Semua Order Sudah Selesai Diproses 🎉' 
+                      : `Catatan Bersih - ${formatMonthKeyDisplay(selectedMonthKey)}`))
+              : (searchQuery 
+                  ? 'Arsip tidak ditemukan' 
+                  : `Belum Ada Riwayat di ${formatMonthKeyDisplay(selectedMonthKey)}`)}
           </h4>
 
           <p className="text-[13px] text-zinc-500 mt-1 max-w-xs mx-auto">
             {orderSubTab === 'active'
               ? (searchQuery
                 ? `Tidak ada toko atau PN yang cocok dengan "${searchQuery}"`
-                : 'Bagus! Semua pesanan toko saat ini sudah selesai dicentang.')
+                : (isViewingCurrentMonth
+                    ? 'Bagus! Semua pesanan toko saat ini sudah selesai dicentang.'
+                    : `Lembaran catatan untuk ${formatMonthKeyDisplay(selectedMonthKey)} masih kosong.`))
               : (searchQuery
                 ? `Tidak ada riwayat arsip dengan kata kunci "${searchQuery}"`
-                : 'Order toko yang sudah selesai akan otomatis tersimpan di sini.')}
+                : 'Pesanan toko yang telah selesai di bulan ini akan tersimpan di sini.')}
           </p>
 
           <div className="mt-5 flex justify-center gap-2">

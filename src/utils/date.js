@@ -68,3 +68,92 @@ export function getTodayIso() {
   const d = String(now.getDate()).padStart(2, '0');
   return `${y}-${m}-${d}`;
 }
+
+/**
+ * Format month key "YYYY-MM" (contoh: "2026-10")
+ */
+export function getCurrentMonthKey() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  return `${y}-${m}`;
+}
+
+/**
+ * Format monthKey "2026-10" ke tampilan "Oktober 2026"
+ */
+export function formatMonthKeyDisplay(monthKey) {
+  if (!monthKey) return '';
+  const parts = monthKey.split('-');
+  if (parts.length === 2) {
+    const y = parts[0];
+    const mIdx = parseInt(parts[1], 10) - 1;
+    if (mIdx >= 0 && mIdx < 12) {
+      return `${INDO_MONTHS[mIdx]} ${y}`;
+    }
+  }
+  return monthKey;
+}
+
+/**
+ * Mengambil bulan sebelumnya dari "YYYY-MM"
+ */
+export function getPreviousMonthKey(monthKey) {
+  const [yStr, mStr] = monthKey.split('-');
+  let y = parseInt(yStr, 10);
+  let m = parseInt(mStr, 10) - 1;
+  if (m < 1) {
+    m = 12;
+    y -= 1;
+  }
+  return `${y}-${String(m).padStart(2, '0')}`;
+}
+
+/**
+ * Mengambil bulan berikutnya dari "YYYY-MM"
+ */
+export function getNextMonthKey(monthKey) {
+  const [yStr, mStr] = monthKey.split('-');
+  let y = parseInt(yStr, 10);
+  let m = parseInt(mStr, 10) + 1;
+  if (m > 12) {
+    m = 1;
+    y += 1;
+  }
+  return `${y}-${String(m).padStart(2, '0')}`;
+}
+
+/**
+ * Mengambil monthKey ("YYYY-MM") dari sebuah objek order
+ */
+export function getOrderMonthKey(order) {
+  if (order.dateIso) {
+    return order.dateIso.slice(0, 7);
+  }
+  if (order.createdAt) {
+    const d = new Date(order.createdAt);
+    if (!isNaN(d.getTime())) {
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      return `${d.getFullYear()}-${m}`;
+    }
+  }
+  if (typeof order.date === 'string') {
+    // Cek nama bulan dalam teks "11 Oktober 2026"
+    const parts = order.date.trim().split(/\s+/);
+    if (parts.length >= 3) {
+      const mIdx = INDO_MONTHS.findIndex(m => m.toLowerCase() === parts[1].toLowerCase());
+      const y = parts[2];
+      if (mIdx >= 0 && y) {
+        return `${y}-${String(mIdx + 1).padStart(2, '0')}`;
+      }
+    }
+    // Cek format slash "11/10"
+    const slashMatch = order.date.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?/);
+    if (slashMatch) {
+      const monthStr = String(slashMatch[2]).padStart(2, '0');
+      const yearStr = slashMatch[3] || new Date().getFullYear();
+      return `${yearStr}-${monthStr}`;
+    }
+  }
+  return getCurrentMonthKey();
+}
