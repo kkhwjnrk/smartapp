@@ -262,89 +262,107 @@ function App() {
   const [modalItem, setModalItem] = useState(null); 
   const [discountItem, setDiscountItem] = useState(null);
 
-  // Drag-to-dismiss states for Discount Bottom Sheet
+  // Drag-to-Dismiss State untuk Modal Diskon
   const [discountDragY, setDiscountDragY] = useState(0);
   const [isDiscountDragging, setIsDiscountDragging] = useState(false);
   const discountDragStartY = useRef(0);
   const discountCurrentDragY = useRef(0);
 
-  // Drag-to-dismiss states for Category Bottom Sheet
+  // Drag-to-Dismiss State untuk Modal Kategori
   const [catDragY, setCatDragY] = useState(0);
   const [isCatDragging, setIsCatDragging] = useState(false);
   const catDragStartY = useRef(0);
   const catCurrentDragY = useRef(0);
 
-  // Lock background body scrolling while modal is open
+  // Kunci scroll halaman belakang saat modal terbuka
   useEffect(() => {
     if (discountItem || showCategorySheet || showItemModal) {
       const originalOverflow = document.body.style.overflow;
-      const originalTouchAction = document.body.style.touchAction;
       document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
       return () => {
         document.body.style.overflow = originalOverflow;
-        document.body.style.touchAction = originalTouchAction;
       };
     }
   }, [discountItem, showCategorySheet, showItemModal]);
 
-  // Drag handlers for Discount Sheet
-  const handleDiscountTouchStart = (e) => {
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    discountDragStartY.current = clientY;
+  // Pointer Handlers untuk Drag-to-Dismiss Modal Diskon
+  const handleDiscountPointerDown = (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    discountDragStartY.current = e.clientY;
     discountCurrentDragY.current = 0;
     setIsDiscountDragging(true);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (err) {}
   };
 
-  const handleDiscountTouchMove = (e) => {
+  const handleDiscountPointerMove = (e) => {
     if (!discountDragStartY.current) return;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const deltaY = clientY - discountDragStartY.current;
+    const deltaY = e.clientY - discountDragStartY.current;
     if (deltaY > 0) {
       discountCurrentDragY.current = deltaY;
       setDiscountDragY(deltaY);
     } else {
       discountCurrentDragY.current = 0;
-      setDiscountDragY(0);
+      setDiscountDragY(deltaY * 0.15); // Hambatan saat ditarik ke atas
     }
   };
 
-  const handleDiscountTouchEnd = () => {
+  const handleDiscountPointerUp = (e) => {
+    if (!discountDragStartY.current) return;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch (err) {}
+
     setIsDiscountDragging(false);
-    if (discountCurrentDragY.current > 70) {
+    const finalDelta = discountCurrentDragY.current;
+
+    // Jika di-drag ke bawah > 60px atau di-tap tanpa geser -> Tutup modal
+    if (finalDelta > 60 || finalDelta === 0) {
       setDiscountItem(null);
     }
+
     setDiscountDragY(0);
     discountDragStartY.current = 0;
     discountCurrentDragY.current = 0;
   };
 
-  // Drag handlers for Category Sheet
-  const handleCatTouchStart = (e) => {
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    catDragStartY.current = clientY;
+  // Pointer Handlers untuk Drag-to-Dismiss Modal Kategori
+  const handleCatPointerDown = (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    catDragStartY.current = e.clientY;
     catCurrentDragY.current = 0;
     setIsCatDragging(true);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (err) {}
   };
 
-  const handleCatTouchMove = (e) => {
+  const handleCatPointerMove = (e) => {
     if (!catDragStartY.current) return;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const deltaY = clientY - catDragStartY.current;
+    const deltaY = e.clientY - catDragStartY.current;
     if (deltaY > 0) {
       catCurrentDragY.current = deltaY;
       setCatDragY(deltaY);
     } else {
       catCurrentDragY.current = 0;
-      setCatDragY(0);
+      setCatDragY(deltaY * 0.15);
     }
   };
 
-  const handleCatTouchEnd = () => {
+  const handleCatPointerUp = (e) => {
+    if (!catDragStartY.current) return;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch (err) {}
+
     setIsCatDragging(false);
-    if (catCurrentDragY.current > 70) {
+    const finalDelta = catCurrentDragY.current;
+
+    if (finalDelta > 60 || finalDelta === 0) {
       setShowCategorySheet(false);
     }
+
     setCatDragY(0);
     catDragStartY.current = 0;
     catCurrentDragY.current = 0;
@@ -486,7 +504,7 @@ function App() {
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-28 font-sans text-zinc-900 selection:bg-zinc-200">
       
-      {/* Top Header - Apple Minimalist Aesthetic (Tanpa Daytona System) */}
+      {/* Top Header - Apple Minimalist Aesthetic */}
       <header className="bg-[#FDFDFD]/90 sticky top-0 z-30 backdrop-blur-xl border-b border-zinc-200/50">
         <div className="max-w-md mx-auto px-5 py-3.5 flex justify-between items-center">
           <div>
@@ -698,7 +716,7 @@ function App() {
               </div>
             )}
 
-            {/* List Container - Card dengan PN di atas oranye Daytona & Kategori di pojok kanan atas */}
+            {/* List Container */}
             <div className="space-y-3 pb-6">
               {filteredItems.map(item => (
                 <div 
@@ -871,13 +889,19 @@ function App() {
         )}
       </main>
 
-      {/* CATEGORY PICKER BOTTOM SHEET (Swipe/Drag Down to Dismiss) */}
+      {/* CATEGORY PICKER BOTTOM SHEET */}
       {showCategorySheet && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
-          <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" onClick={() => setShowCategorySheet(false)}></div>
+          <div 
+            className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" 
+            style={{
+              opacity: catDragY > 0 ? Math.max(0.1, 1 - catDragY / 250) : undefined
+            }}
+            onClick={() => setShowCategorySheet(false)}
+          ></div>
           <div 
             style={{
-              transform: catDragY > 0 ? `translateY(${catDragY}px)` : undefined,
+              transform: catDragY !== 0 ? `translateY(${catDragY}px)` : undefined,
               transition: isCatDragging ? 'none' : 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
             className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-6 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300 max-h-[82vh] flex flex-col"
@@ -885,19 +909,16 @@ function App() {
             
             {/* Garis Handle Interaktif Drag-down to Dismiss */}
             <div
-              className="touch-none select-none cursor-grab active:cursor-grabbing py-2 -mt-3 mb-2 flex justify-center items-center w-full"
-              onTouchStart={handleCatTouchStart}
-              onTouchMove={handleCatTouchMove}
-              onTouchEnd={handleCatTouchEnd}
-              onMouseDown={handleCatTouchStart}
-              onMouseMove={(e) => { if (isCatDragging) handleCatTouchMove(e); }}
-              onMouseUp={handleCatTouchEnd}
-              onClick={() => {
-                if (catCurrentDragY.current < 5) setShowCategorySheet(false);
-              }}
-              aria-label="Tutup kategori"
+              onPointerDown={handleCatPointerDown}
+              onPointerMove={handleCatPointerMove}
+              onPointerUp={handleCatPointerUp}
+              onPointerCancel={handleCatPointerUp}
+              className="w-full flex justify-center items-center pt-1 pb-3 -mt-4 mb-2 cursor-grab active:cursor-grabbing touch-none select-none group"
+              aria-label="Tarik ke bawah untuk menutup"
             >
-              <div className={`w-14 h-1.5 rounded-full transition-all ${isCatDragging ? 'bg-zinc-500 scale-105' : 'bg-zinc-300 hover:bg-zinc-400'}`}></div>
+              <div className={`w-14 h-1.5 rounded-full transition-all duration-150 ${
+                isCatDragging ? 'bg-zinc-600 w-16 scale-y-125' : 'bg-zinc-300 group-hover:bg-zinc-400'
+              }`}></div>
             </div>
 
             {/* Header */}
@@ -988,33 +1009,36 @@ function App() {
         </div>
       )}
 
-      {/* DISCOUNT BOTTOM SHEET MODAL (Interaktif Drag-down to Dismiss Seperti Native App) */}
+      {/* DISCOUNT BOTTOM SHEET MODAL (Interaktif Drag-to-Dismiss Seperti Native App, Tanpa Tombol X) */}
       {discountItem && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
-          <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" onClick={() => setDiscountItem(null)}></div>
+          <div 
+            className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" 
+            style={{
+              opacity: discountDragY > 0 ? Math.max(0.1, 1 - discountDragY / 250) : undefined
+            }}
+            onClick={() => setDiscountItem(null)}
+          ></div>
           <div 
             style={{
-              transform: discountDragY > 0 ? `translateY(${discountDragY}px)` : undefined,
+              transform: discountDragY !== 0 ? `translateY(${discountDragY}px)` : undefined,
               transition: isDiscountDragging ? 'none' : 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
-            className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-7 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300"
+            className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-7 pt-4 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300"
           >
             
             {/* Garis Handle Interaktif: Drag ke Bawah Menutup Modal, Touch-none Mencegah Background Scroll */}
             <div
-              className="touch-none select-none cursor-grab active:cursor-grabbing py-2.5 -mt-4 mb-3 flex justify-center items-center w-full"
-              onTouchStart={handleDiscountTouchStart}
-              onTouchMove={handleDiscountTouchMove}
-              onTouchEnd={handleDiscountTouchEnd}
-              onMouseDown={handleDiscountTouchStart}
-              onMouseMove={(e) => { if (isDiscountDragging) handleDiscountTouchMove(e); }}
-              onMouseUp={handleDiscountTouchEnd}
-              onClick={() => {
-                if (discountCurrentDragY.current < 5) setDiscountItem(null);
-              }}
-              aria-label="Tutup rincian dengan drag ke bawah atau ketuk"
+              onPointerDown={handleDiscountPointerDown}
+              onPointerMove={handleDiscountPointerMove}
+              onPointerUp={handleDiscountPointerUp}
+              onPointerCancel={handleDiscountPointerUp}
+              className="w-full flex justify-center items-center pt-1 pb-4 -mt-2 cursor-grab active:cursor-grabbing touch-none select-none group"
+              aria-label="Tarik ke bawah untuk menutup"
             >
-              <div className={`w-14 h-1.5 rounded-full transition-all ${isDiscountDragging ? 'bg-zinc-500 scale-105' : 'bg-zinc-300 hover:bg-zinc-400'}`}></div>
+              <div className={`w-14 h-1.5 rounded-full transition-all duration-150 ${
+                isDiscountDragging ? 'bg-zinc-600 w-16 scale-y-125' : 'bg-zinc-300 group-hover:bg-zinc-400'
+              }`}></div>
             </div>
             
             {/* Header Rincian Barang: PN di Kiri, Kategori di Pojok Kanan Atas (Tanpa Tombol X) */}
@@ -1028,7 +1052,7 @@ function App() {
                 <div className="text-[18px] font-bold text-zinc-900 leading-snug">{discountItem.description}</div>
               </div>
               <div className="shrink-0 pt-0.5">
-                <span className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200">
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200">
                   {discountItem.category || 'Lainnya'}
                 </span>
               </div>
