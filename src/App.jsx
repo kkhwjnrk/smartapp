@@ -1,65 +1,242 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import initialPricelist from './data/pricelist.json';
 
-// --- CATEGORY SYSTEM ---
-const CATEGORIES = [
-  { id: 'Semua', label: 'Semua' },
-  { id: 'Busi', label: 'Busi' },
-  { id: 'Kampas Rem', label: 'Kampas Rem' },
-  { id: 'Cakram & Kaliper', label: 'Cakram' },
-  { id: 'Roller & CVT', label: 'Roller & CVT' },
-  { id: 'Kopling', label: 'Kopling' },
-  { id: 'Filter', label: 'Filter' },
-  { id: 'Kelistrikan', label: 'Kelistrikan' },
-  { id: 'Mesin', label: 'Mesin' },
-  { id: 'Aksesoris', label: 'Aksesoris' },
-  { id: 'Lainnya', label: 'Lainnya' },
+// Daftar 29 Kategori Utama + Lainnya
+export const CATEGORIES = [
+  'Semua',
+  'Busi',
+  'Kampas Rem',
+  'Vanbelt',
+  'Roller',
+  'Kampas Ganda Matic',
+  'Kampas Ganda Bebek',
+  'Kampas Kopling',
+  'Per CVT',
+  'Per Sentrik',
+  'Filter Udara',
+  'Gas Spontan',
+  'Handgrip',
+  'Disc Rotor',
+  'Komstir',
+  'Mangkok Kampas Ganda',
+  'Bearing',
+  'Pulley',
+  'Per Kopling',
+  'Slider Pulley',
+  'Selang Rem',
+  'Velg',
+  'Rantai',
+  'Kaliper',
+  'Bracket Kaliper',
+  'Master Rem',
+  'Bushing Pulley',
+  'Injector',
+  'Klep',
+  'Mesin',
+  'Lainnya'
 ];
 
-const getCategory = (item) => {
-  if (item?.category) return item.category;
-  const d = (item?.description || '').toLowerCase();
-  if (d.includes('spark plug') || d.includes('busi') || d.includes('ignimax') || d.includes('iridium') || d.includes('splug')) return 'Busi';
-  if (d.includes('brake pad') || d.includes('brake shoe') || d.includes('kampas')) return 'Kampas Rem';
-  if (d.includes('disc') || d.includes('rotor') || d.includes('caliper') || d.includes('kaliper') || d.includes('master rem') || d.includes('brake hose')) return 'Cakram & Kaliper';
-  if (d.includes('roller') || d.includes('pulley') || d.includes('cvt') || d.includes('belt') || d.includes('bushing')) return 'Roller & CVT';
-  if (d.includes('clutch') || d.includes('kopling') || d.includes('friction disc') || d.includes('per sentrik')) return 'Kopling';
-  if (d.includes('filter')) return 'Filter';
-  if (d.includes('battery') || d.includes('aki') || d.includes('ignition') || d.includes('coil') || d.includes('cdi') || d.includes('rectifier')) return 'Kelistrikan';
-  if (d.includes('valve') || d.includes('piston') || d.includes('cylinder') || d.includes('injector') || d.includes('exhaust') || d.includes('camshaft') || d.includes('intake') || d.includes('knalpot') || d.includes('ecu')) return 'Mesin';
-  if (d.includes('wheel') || d.includes('velg') || d.includes('bearing') || d.includes('shock') || d.includes('grip') || d.includes('chain') || d.includes('gear') || d.includes('handle') || d.includes('cable') || d.includes('stang') || d.includes('radiator')) return 'Aksesoris';
+// Helper otomatisasi kategorisasi jika ada data lama/baru tanpa kategori
+export const categorizeItem = (item) => {
+  const d = ((item.description || '') + ' ' + (item.pn || '')).toLowerCase();
+
+  // 1. Busi
+  if (d.includes('spark plug') || d.includes('splug') || d.includes('busi')) {
+    return 'Busi';
+  }
+
+  // 2. Per Sentrik (Clutch shoe spring / per sentrik)
+  if (d.includes('per sentrik') || d.includes('clutch shoe spring') || d.includes('spring set(5pcs), clutch shoe') || d.includes('spring set (3pcs), clutch shoe') || d.includes('per ganda') || d.includes('centrifugal spring')) {
+    return 'Per Sentrik';
+  }
+
+  // 3. Per CVT
+  if (d.includes('cvt spring') || d.includes('spring cvt') || d.includes('per cvt') || d.includes('driven spring')) {
+    return 'Per CVT';
+  }
+
+  // 4. Per Kopling
+  if (d.includes('clutch spring') || d.includes('per kopling')) {
+    return 'Per Kopling';
+  }
+
+  // 5. Mangkok Kampas Ganda
+  if (d.includes('clutch housing') || d.includes('ctlutch housing') || d.includes('clutch bell') || d.includes('mangkok kampas ganda') || d.includes('mangkok ganda')) {
+    return 'Mangkok Kampas Ganda';
+  }
+
+  // 6. Kampas Ganda Bebek (Primary Clutch)
+  if (d.includes('primary clutch') || (d.includes('kampas ganda') && (d.includes('bebek') || d.includes('jupiter') || d.includes('vega') || d.includes('supra') || d.includes('grand') || d.includes('blade') || d.includes('revo')))) {
+    return 'Kampas Ganda Bebek';
+  }
+
+  // 7. Kampas Ganda Matic (Clutch Shoe matic)
+  if (d.includes('clutch shoe') || d.includes('kampas ganda') || d.includes('weight set clutch')) {
+    return 'Kampas Ganda Matic';
+  }
+
+  // 8. Kampas Kopling
+  if (d.includes('clutch disc') || d.includes('lining clutch') || d.includes('friction disc') || d.includes('plat kopling') || d.includes('kampas kopling')) {
+    return 'Kampas Kopling';
+  }
+
+  // 9. Slider Pulley
+  if (d.includes('slider pulley') || d.includes('piece slide') || d.includes('slider piece') || d.includes('slider plate') || d.includes('slide piece')) {
+    return 'Slider Pulley';
+  }
+
+  // 10. Bushing Pulley
+  if (d.includes('bushing pulley') || d.includes('collar') || (d.includes('bushing') && !d.includes('swing arm'))) {
+    return 'Bushing Pulley';
+  }
+
+  // 11. Pulley
+  if (d.includes('pulley') || d.includes('pully') || d.includes('face comp') || d.includes('drive face') || d.includes('sheave')) {
+    return 'Pulley';
+  }
+
+  // 12. Vanbelt
+  if (d.includes('drive belt') || d.includes('ultra drive belt') || d.includes('v-belt') || d.includes('vanbelt') || d.includes('belt')) {
+    return 'Vanbelt';
+  }
+
+  // 13. Roller
+  if (d.includes('weight roller') || d.includes('weightroller') || d.includes('roller')) {
+    return 'Roller';
+  }
+
+  // 14. Bracket Kaliper
+  if (d.includes('bracket kaliper') || d.includes('bracket caliper') || d.includes('breket kaliper') || d.includes('caliper bracket') || (d.includes('bracket') && d.includes('kaliper'))) {
+    return 'Bracket Kaliper';
+  }
+
+  // 15. Master Rem
+  if (d.includes('brake pump') || d.includes('master rem') || d.includes('master cylinder') || d.includes('brake master') || d.includes('clutch/brake lever')) {
+    return 'Master Rem';
+  }
+
+  // 16. Kaliper
+  if (d.includes('kaliper') || d.includes('caliper')) {
+    return 'Kaliper';
+  }
+
+  // 17. Selang Rem
+  if (d.includes('selang rem') || d.includes('brake hose')) {
+    return 'Selang Rem';
+  }
+
+  // 18. Disc Rotor
+  if (d.includes('disc rotor') || d.includes('brake disc') || d.includes('disc brake') || d.includes('piringan cakram') || d.includes('rotor disc') || d.includes('piringan') || d.includes('rotor') || (d.includes('disc') && !d.includes('clutch'))) {
+    return 'Disc Rotor';
+  }
+
+  // 19. Kampas Rem
+  if (d.includes('brake pad') || d.includes('brake shoe') || d.includes('pad set') || d.includes('shoe set') || d.includes('kampas rem') || d.includes('kampas tromol')) {
+    return 'Kampas Rem';
+  }
+
+  // 20. Filter Udara
+  if (d.includes('filter udara') || d.includes('air filter') || d.includes('hi-flow filter') || d.includes('element comp')) {
+    return 'Filter Udara';
+  }
+
+  // 21. Gas Spontan
+  if (d.includes('gas spontan') || d.includes('quick throttle') || d.includes('throttle kit')) {
+    return 'Gas Spontan';
+  }
+
+  // 22. Handgrip
+  if (d.includes('handgrip') || d.includes('handle grip') || d.includes('grip') || d.includes('bar end')) {
+    return 'Handgrip';
+  }
+
+  // 23. Komstir
+  if (d.includes('steering stem') || d.includes('komstir') || d.includes('cone race') || d.includes('steering cone')) {
+    return 'Komstir';
+  }
+
+  // 24. Bearing
+  if (d.includes('bearing') || d.includes('laher') || d.includes('ball bearing')) {
+    return 'Bearing';
+  }
+
+  // 25. Velg
+  if (d.includes('velg') || d.includes('wheel') || d.includes('rim') || d.includes('pelek')) {
+    return 'Velg';
+  }
+
+  // 26. Rantai
+  if (d.includes('rantai') || d.includes('chain')) {
+    return 'Rantai';
+  }
+
+  // 27. Injector
+  if (d.includes('injector') || d.includes('injektor')) {
+    return 'Injector';
+  }
+
+  // 28. Klep
+  if (d.includes('klep') || d.includes('valve')) {
+    return 'Klep';
+  }
+
+  // 29. Mesin
+  if (d.includes('oil filter') || d.includes('exhaust') || d.includes('knalpot') || d.includes('engine') || d.includes('piston') || d.includes('cylinder block') || d.includes('blok seher') || d.includes('noken as') || d.includes('camshaft') || d.includes('crankshaft') || d.includes('kruk as') || d.includes('mesin') || d.includes('muffler') || d.includes('gasket') || d.includes('packing') || d.includes('silinder') || d.includes('ignition coil') || d.includes('koil')) {
+    return 'Mesin';
+  }
+
   return 'Lainnya';
 };
 
-// Helper function to calculate and format discount
+const ensureValidCategory = (item) => {
+  if (item.category && CATEGORIES.includes(item.category) && item.category !== 'Semua') {
+    return item.category;
+  }
+  return categorizeItem(item);
+};
+
+// Helper kalkulasi diskon grosir
 const calculateDiscount = (priceStr, percentage) => {
   if (!priceStr || priceStr === "0") return "-";
-  // Parse Indonesian format (e.g. 18.204 -> 18204)
   const numericPrice = parseFloat(priceStr.replace(/\./g, '').replace(/,/g, ''));
   if (isNaN(numericPrice)) return "-";
   
   const discounted = numericPrice * (1 - (percentage / 100));
-  // Format back to Indonesian format (e.g. 13835 -> 13.835)
   return Math.round(discounted).toLocaleString('id-ID').replace(/,/g, '.');
 };
 
 function App() {
   const [activeTab, setActiveTab] = useState('pricelist'); 
-  
+  const searchInputRef = useRef(null);
+
   // Storage for Pricelist
   const [items, setItems] = useState(() => {
     const saved = localStorage.getItem('daytona_pricelist');
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) { return initialPricelist; }
+      try { 
+        const parsed = JSON.parse(saved);
+        return parsed.map(item => ({
+          ...item,
+          category: ensureValidCategory(item)
+        }));
+      } catch (e) { 
+        return initialPricelist.map(item => ({
+          ...item,
+          category: ensureValidCategory(item)
+        })); 
+      }
     }
-    return initialPricelist;
+    return initialPricelist.map(item => ({
+      ...item,
+      category: ensureValidCategory(item)
+    }));
   });
 
   useEffect(() => {
     localStorage.setItem('daytona_pricelist', JSON.stringify(items));
   }, [items]);
 
-  // Queries & Filters
+  // Queries & Categories
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Semua');
   const [draftQuery, setDraftQuery] = useState('');
@@ -77,42 +254,52 @@ function App() {
     localStorage.setItem('order_draft', JSON.stringify(cart));
   }, [cart]);
 
-  // Modals
+  // Modals & States
   const [isEditMode, setIsEditMode] = useState(false);
   const [showItemModal, setShowItemModal] = useState(false);
   const [modalItem, setModalItem] = useState(null); 
-  const [discountItem, setDiscountItem] = useState(null); // State for Bottom Sheet
+  const [discountItem, setDiscountItem] = useState(null);
 
   // Form State
-  const [formData, setFormData] = useState({ pn: '', description: '', price: '', qty: '1' });
+  const [formData, setFormData] = useState({ 
+    pn: '', 
+    description: '', 
+    price: '', 
+    qty: '1', 
+    category: 'Busi' 
+  });
 
-  // Category counts
+  // Hitung jumlah item per kategori
   const categoryCounts = useMemo(() => {
     const counts = { 'Semua': items.length };
     items.forEach(item => {
-      const cat = getCategory(item);
+      const cat = item.category || 'Lainnya';
       counts[cat] = (counts[cat] || 0) + 1;
     });
     return counts;
   }, [items]);
 
-  // Filter items by search + category
+  // Filter items berdasarkan Kategori dan Search Query
   const filteredItems = useMemo(() => {
     return items.filter(item => {
-      const matchCat = selectedCategory === 'Semua' || getCategory(item) === selectedCategory;
-      if (!matchCat) return false;
-      if (!query) return true;
-      const lowerQuery = query.toLowerCase();
-      return (
-        item.pn.toLowerCase().includes(lowerQuery) ||
-        item.description.toLowerCase().includes(lowerQuery)
-      );
+      // Filter Kategori
+      if (selectedCategory !== 'Semua' && item.category !== selectedCategory) {
+        return false;
+      }
+      // Filter Pencarian
+      if (query.trim()) {
+        const lower = query.toLowerCase().trim();
+        const matchPn = item.pn.toLowerCase().includes(lower);
+        const matchDesc = item.description.toLowerCase().includes(lower);
+        if (!matchPn && !matchDesc) return false;
+      }
+      return true;
     });
-  }, [query, selectedCategory, items]);
+  }, [items, selectedCategory, query]);
 
   const draftSearchItems = useMemo(() => {
     if (!draftQuery) return [];
-    const lowerQuery = draftQuery.toLowerCase();
+    const lowerQuery = draftQuery.toLowerCase().trim();
     return items.filter(item => 
       item.pn.toLowerCase().includes(lowerQuery) || 
       item.description.toLowerCase().includes(lowerQuery)
@@ -151,13 +338,22 @@ function App() {
 
   // CRUD Logic
   const openAddModal = () => {
-    setFormData({ pn: '', description: '', price: '', qty: '1' });
+    setFormData({ 
+      pn: '', 
+      description: '', 
+      price: '', 
+      qty: '1',
+      category: selectedCategory !== 'Semua' ? selectedCategory : 'Busi'
+    });
     setModalItem(null);
     setShowItemModal(true);
   };
 
   const openEditModal = (item) => {
-    setFormData({ ...item });
+    setFormData({ 
+      ...item,
+      category: item.category || 'Busi'
+    });
     setModalItem(item);
     setShowItemModal(true);
   };
@@ -166,14 +362,19 @@ function App() {
     e.preventDefault();
     if (!formData.pn.trim() || !formData.description.trim()) return;
 
+    const itemToSave = {
+      ...formData,
+      category: formData.category || 'Busi'
+    };
+
     if (modalItem) {
-      setItems(prev => prev.map(i => i.pn === modalItem.pn ? formData : i));
+      setItems(prev => prev.map(i => i.pn === modalItem.pn ? itemToSave : i));
     } else {
-      if (items.some(i => i.pn === formData.pn)) {
+      if (items.some(i => i.pn === formData.pn.trim())) {
         alert('Part Number sudah terdaftar!');
         return;
       }
-      setItems(prev => [formData, ...prev]);
+      setItems(prev => [itemToSave, ...prev]);
     }
     setShowItemModal(false);
   };
@@ -188,7 +389,7 @@ function App() {
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-28 font-sans text-zinc-900 selection:bg-zinc-200">
       
-      {/* Top Header - Clean Apple-like aesthetic */}
+      {/* Top Header - Apple Minimalist Aesthetic */}
       <header className="bg-[#FDFDFD]/90 sticky top-0 z-30 backdrop-blur-xl border-b border-zinc-200/50">
         <div className="max-w-md mx-auto px-5 py-4 flex justify-between items-end">
           <div>
@@ -210,7 +411,7 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-md mx-auto px-5 pt-5 relative">
+      <main className="max-w-md mx-auto px-5 pt-4 relative">
         
         {/* TAB: HOME */}
         {activeTab === 'home' && (
@@ -248,8 +449,8 @@ function App() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
                 <div>
-                  <span className="block font-semibold text-zinc-400 text-[15px]">Analitik</span>
-                  <span className="text-[13px] font-medium text-zinc-400 mt-0.5">Segera hadir</span>
+                  <span className="block font-semibold text-zinc-400 text-[15px]">Kategori</span>
+                  <span className="text-[13px] font-medium text-zinc-500 mt-0.5">{CATEGORIES.length - 1} Kategori</span>
                 </div>
               </div>
             </div>
@@ -258,92 +459,154 @@ function App() {
 
         {/* TAB: PRICELIST */}
         {activeTab === 'pricelist' && (
-          <div className="space-y-4 animate-in fade-in duration-500">
+          <div className="space-y-3.5 animate-in fade-in duration-500">
             
-            <div className="sticky top-[73px] z-20 bg-[#FDFDFD] pb-3 pt-1">
-              {/* Search Bar with X button */}
+            {/* Sticky Search & Filter Control Bar */}
+            <div className="sticky top-[69px] z-20 bg-[#FDFDFD] pb-2 pt-1">
+              
+              {/* Kolom Cari dengan Tombol X */}
               <div className="relative">
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                  <svg className="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                  <svg className="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
                 </div>
                 <input 
+                  ref={searchInputRef}
                   type="text" 
                   placeholder="Cari nama atau part number..."
-                  className="w-full pl-12 pr-10 py-3.5 bg-white border border-zinc-200 rounded-2xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 text-[15px] font-medium placeholder:font-normal placeholder:text-zinc-400 shadow-sm transition-all"
+                  className="w-full pl-12 pr-11 py-3.5 bg-white border border-zinc-200 rounded-2xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 text-[15px] font-medium placeholder:font-normal placeholder:text-zinc-400 shadow-sm transition-all"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
-                {query && (
+                
+                {/* Tombol X untuk reset pencarian */}
+                {query.length > 0 && (
                   <button
-                    onClick={() => setQuery('')}
-                    className="absolute inset-y-0 right-4 flex items-center text-zinc-400 hover:text-zinc-700 transition-colors"
+                    type="button"
+                    onClick={() => {
+                      setQuery('');
+                      searchInputRef.current?.focus();
+                    }}
+                    aria-label="Hapus pencarian"
+                    className="absolute inset-y-0 right-3.5 flex items-center justify-center my-auto w-6 h-6 rounded-full bg-zinc-200/90 hover:bg-zinc-300 text-zinc-600 transition-colors active:scale-95"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   </button>
                 )}
               </div>
 
-              {/* Category Pills - Horizontal Scroll */}
-              <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
-                {CATEGORIES.filter(cat => cat.id === 'Semua' || (categoryCounts[cat.id] || 0) > 0).map(cat => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.id)}
-                    className={`shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-medium transition-all ${
-                      selectedCategory === cat.id
-                        ? 'bg-zinc-900 text-white shadow-sm'
-                        : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-300'
-                    }`}
-                  >
-                    {cat.label}
-                    <span className={`text-[11px] font-semibold ${
-                      selectedCategory === cat.id ? 'text-zinc-300' : 'text-zinc-400'
-                    }`}>
-                      {categoryCounts[cat.id] || 0}
-                    </span>
-                  </button>
-                ))}
+              {/* Horizontal Scrollable Category Filter Pills */}
+              <div className="flex items-center gap-2 mt-3 overflow-x-auto no-scrollbar py-0.5 -mx-5 px-5">
+                {CATEGORIES.map(cat => {
+                  const count = categoryCounts[cat] || 0;
+                  if (count === 0 && cat !== 'Semua') return null;
+                  const isSelected = selectedCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`shrink-0 px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all flex items-center gap-1.5 active:scale-95 ${
+                        isSelected 
+                          ? 'bg-zinc-900 text-white shadow-sm' 
+                          : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:text-zinc-900'
+                      }`}
+                    >
+                      <span>{cat}</span>
+                      <span className={`text-[11px] px-1.5 py-0.2 rounded-full font-semibold ${
+                        isSelected ? 'bg-white/20 text-white' : 'bg-zinc-100 text-zinc-500'
+                      }`}>
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
 
+              {/* Filter Status & Reset */}
+              <div className="flex items-center justify-between text-[12px] text-zinc-500 font-medium px-1 mt-2">
+                <span>
+                  {selectedCategory !== 'Semua' ? (
+                    <>Kategori: <strong className="text-zinc-900 font-semibold">{selectedCategory}</strong></>
+                  ) : (
+                    'Semua Kategori'
+                  )}
+                  {' '}({filteredItems.length} item)
+                </span>
+                {(selectedCategory !== 'Semua' || query.trim().length > 0) && (
+                  <button 
+                    onClick={() => {
+                      setSelectedCategory('Semua');
+                      setQuery('');
+                    }}
+                    className="text-zinc-500 hover:text-zinc-900 font-medium underline transition-colors"
+                  >
+                    Reset Filter
+                  </button>
+                )}
+              </div>
+
+              {/* Mode Edit Banner */}
               {isEditMode && (
-                <div className="mt-3 bg-zinc-50 border border-zinc-200 p-3 rounded-2xl flex justify-between items-center">
-                  <span className="text-[13px] text-zinc-600 font-medium px-2">Mode pengelolaan aktif</span>
+                <div className="mt-2.5 bg-zinc-50 border border-zinc-200 p-3 rounded-2xl flex justify-between items-center animate-in fade-in">
+                  <span className="text-[13px] text-zinc-600 font-medium px-2">Mode kelola aktif</span>
                   <button onClick={openAddModal} className="px-4 py-2 bg-zinc-900 text-white font-medium text-[13px] rounded-xl hover:bg-zinc-800 transition-colors">
-                    Tambah Baru
+                    Tambah Barang
                   </button>
                 </div>
               )}
             </div>
 
+            {/* Empty State */}
             {filteredItems.length === 0 && (
-              <div className="text-center py-20">
-                <p className="text-zinc-500 text-[15px] font-medium">Data tidak ditemukan.</p>
+              <div className="text-center py-20 bg-white rounded-3xl border border-zinc-200 mt-2">
+                <div className="w-12 h-12 mx-auto bg-zinc-100 rounded-full flex items-center justify-center text-zinc-400 mb-3">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <p className="text-zinc-900 text-[15px] font-semibold">Data tidak ditemukan</p>
+                <p className="text-zinc-500 text-[13px] mt-1">Coba kata kunci lain atau reset filter kategori.</p>
+                <button 
+                  onClick={() => { setSelectedCategory('Semua'); setQuery(''); }}
+                  className="mt-4 px-4 py-2 bg-zinc-100 text-zinc-700 rounded-xl text-[13px] font-medium hover:bg-zinc-200 transition-colors"
+                >
+                  Tampilkan Semua Barang
+                </button>
               </div>
             )}
 
-            {/* List Container - Clean iOS-like cards */}
+            {/* List Container - Clean Minimalist Cards */}
             <div className="space-y-3 pb-6">
               {filteredItems.map(item => (
                 <div 
                   key={item.pn} 
                   onClick={() => !isEditMode && setDiscountItem(item)}
-                  className={`bg-white rounded-2xl p-4 border border-zinc-200 shadow-sm transition-all duration-200 flex flex-col gap-3 ${!isEditMode ? 'cursor-pointer hover:shadow-md hover:border-zinc-300 active:scale-[0.98]' : ''}`}
+                  className={`bg-white rounded-2xl p-4 border border-zinc-200 shadow-sm transition-all duration-200 flex flex-col gap-2.5 ${!isEditMode ? 'cursor-pointer hover:shadow-md hover:border-zinc-300 active:scale-[0.98]' : ''}`}
                 >
-                  <div className="flex justify-between items-start gap-4">
+                  <div className="flex justify-between items-start gap-3">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-[15px] text-zinc-900 leading-snug break-words pr-2">{item.description}</h3>
-                      <div className="text-[13px] font-medium text-zinc-500 mt-1">PN: {item.pn}</div>
+                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                        <span className="text-[12px] font-medium text-zinc-500 font-mono">PN: {item.pn}</span>
+                        <span className="w-1 h-1 rounded-full bg-zinc-300"></span>
+                        <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                          {item.category || 'Lainnya'}
+                        </span>
+                      </div>
                     </div>
                     {isEditMode && (
                       <button 
                         onClick={(e) => { e.stopPropagation(); openEditModal(item); }}
                         className="shrink-0 text-zinc-400 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 p-2 rounded-lg transition-colors"
+                        aria-label="Edit Barang"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                       </button>
                     )}
                   </div>
-                  <div className="pt-3 border-t border-zinc-100 flex justify-between items-center">
+                  <div className="pt-2.5 border-t border-zinc-100 flex justify-between items-center">
                     <div className="text-[13px] text-zinc-500 font-medium">Qty: {item.qty}</div>
                     <div className="text-[15px] font-semibold text-zinc-900">
                       {item.price === "0" || !item.price ? "-" : item.price}
@@ -355,7 +618,7 @@ function App() {
           </div>
         )}
 
-        {/* TAB: DRAFT */}
+        {/* TAB: DRAFT ORDER */}
         {activeTab === 'draft' && (
           <div className="space-y-6 pb-6 animate-in fade-in duration-500">
             <div className="relative z-30">
@@ -365,7 +628,7 @@ function App() {
               <input 
                 type="text" 
                 placeholder="Cari part untuk ditambahkan..."
-                className="w-full px-5 py-4 pl-12 bg-white border border-zinc-200 rounded-2xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[15px] font-medium placeholder:font-normal placeholder:text-zinc-400 shadow-sm"
+                className="w-full px-5 py-4 pl-12 pr-11 bg-white border border-zinc-200 rounded-2xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[15px] font-medium placeholder:font-normal placeholder:text-zinc-400 shadow-sm"
                 value={draftQuery}
                 onChange={(e) => {
                   setDraftQuery(e.target.value);
@@ -373,6 +636,18 @@ function App() {
                 }}
                 onFocus={() => setShowDraftDropdown(true)}
               />
+              {draftQuery.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setDraftQuery('')}
+                  aria-label="Hapus pencarian draft"
+                  className="absolute inset-y-0 right-3.5 flex items-center justify-center my-auto w-6 h-6 rounded-full bg-zinc-200/90 hover:bg-zinc-300 text-zinc-600 transition-colors"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
               
               {showDraftDropdown && draftQuery && draftSearchItems.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-zinc-200 z-50 max-h-[60vh] overflow-y-auto">
@@ -380,7 +655,7 @@ function App() {
                     <div key={item.pn} className="w-full text-left px-5 py-4 border-b border-zinc-100 last:border-0 flex flex-col gap-3">
                       <div>
                         <div className="text-[14px] font-semibold text-zinc-900 leading-snug">{item.description}</div>
-                        <div className="text-[12px] font-medium text-zinc-500 mt-0.5">PN: {item.pn}</div>
+                        <div className="text-[12px] font-medium text-zinc-500 mt-0.5">PN: {item.pn} · {item.category}</div>
                       </div>
                       {selectedDraftItem?.pn === item.pn ? (
                         <div className="flex gap-2 mt-1">
@@ -419,7 +694,7 @@ function App() {
             {cart.length === 0 ? (
               <div className="text-center py-20 bg-white rounded-3xl border border-zinc-200">
                 <p className="text-zinc-900 text-[15px] font-medium">Belum ada pesanan</p>
-                <p className="text-zinc-500 text-[13px] mt-1">Cari barang di atas untuk menambahkan.</p>
+                <p className="text-zinc-500 text-[13px] mt-1">Cari barang di atas untuk menambahkan ke order.</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -456,13 +731,18 @@ function App() {
             <div className="w-12 h-1.5 bg-zinc-200 rounded-full mx-auto mb-6"></div>
             
             <div className="mb-6">
-              <div className="text-[13px] font-medium text-zinc-500 mb-1">Part Number: <span className="font-semibold text-zinc-900 ml-1">{discountItem.pn}</span></div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-[13px] font-medium text-zinc-500">PN: <strong className="font-semibold text-zinc-900">{discountItem.pn}</strong></span>
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700 border border-zinc-200">
+                  {discountItem.category || 'Lainnya'}
+                </span>
+              </div>
               <div className="text-[18px] font-bold text-zinc-900 leading-snug">{discountItem.description}</div>
             </div>
             
             <div className="bg-zinc-50 rounded-2xl p-5 border border-zinc-200 mb-6 flex justify-between items-center">
               <span className="text-[14px] font-semibold text-zinc-600">Harga (HET)</span>
-              <span className="text-[20px] font-bold text-zinc-900">{discountItem.price === "0" ? "-" : `Rp ${discountItem.price}`}</span>
+              <span className="text-[20px] font-bold text-zinc-900">{discountItem.price === "0" || !discountItem.price ? "-" : `Rp ${discountItem.price}`}</span>
             </div>
 
             <div className="space-y-1 mb-8">
@@ -507,6 +787,18 @@ function App() {
                 />
               </div>
               <div>
+                <label className="block text-[13px] font-medium text-zinc-600 mb-1.5">Kategori</label>
+                <select
+                  className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px]"
+                  value={formData.category}
+                  onChange={e => setFormData({...formData, category: e.target.value})}
+                >
+                  {CATEGORIES.filter(c => c !== 'Semua').map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
                 <label className="block text-[13px] font-medium text-zinc-600 mb-1.5">Deskripsi Lengkap</label>
                 <textarea 
                   required rows="3"
@@ -516,7 +808,7 @@ function App() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[13px] font-medium text-zinc-600 mb-1.5">Harga</label>
+                  <label className="block text-[13px] font-medium text-zinc-600 mb-1.5">Harga (HET)</label>
                   <input 
                     type="text" 
                     className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px]"
