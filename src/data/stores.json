@@ -1,0 +1,62 @@
+[
+  {
+    "id": "store-1",
+    "name": "Sentosa Motor",
+    "routeCode": "R01 - BOGOR KOTA",
+    "owner": "Ko Hendra",
+    "address": "Jl. Pajajaran No. 45, Sukasari, Bogor Timur",
+    "lat": -6.608712,
+    "lng": 106.808129,
+    "notes": "Sebelah SPBU Pertamina Pajajaran, toko warna biru"
+  },
+  {
+    "id": "store-2",
+    "name": "Surya Abadi Motor",
+    "routeCode": "R01 - BOGOR KOTA",
+    "owner": "Pak Joko",
+    "address": "Jl. Suryakencana No. 112, Bogor Tengah",
+    "lat": -6.602534,
+    "lng": 106.799841,
+    "notes": "Dekat perempatan gang aut"
+  },
+  {
+    "id": "store-3",
+    "name": "Kurnia Jaya Motor",
+    "routeCode": "R02 - CIBINONG",
+    "owner": "Haji Wahyu",
+    "address": "Jl. Raya Jakarta-Bogor Km 42, Cibinong",
+    "lat": -6.481245,
+    "lng": 106.853218,
+    "notes": "Seberang Cibinong City Mall (CCM)"
+  },
+  {
+    "id": "store-4",
+    "name": "Mitra Mandiri Speed",
+    "routeCode": "R02 - CIBINONG",
+    "owner": "Mas Rian",
+    "address": "Jl. Mayor Oking Jaya Atmaja No. 28, Cibinong",
+    "lat": -6.474619,
+    "lng": 106.861942,
+    "notes": "Bengkel modifikasi dan matic tune up"
+  },
+  {
+    "id": "store-5",
+    "name": "Berkat Motor Depok",
+    "routeCode": "R03 - DEPOK",
+    "owner": "Ko Ahui",
+    "address": "Jl. Margonda Raya No. 230, Pondok Cina, Depok",
+    "lat": -6.372195,
+    "lng": 106.832415,
+    "notes": "Dekat stasiun UI, parkir luas"
+  },
+  {
+    "id": "store-6",
+    "name": "Champion Motor Racing",
+    "routeCode": "R03 - DEPOK",
+    "owner": "Pak Bambang",
+    "address": "Jl. Tole Iskandar No. 88, Sukmajaya, Depok",
+    "lat": -6.398412,
+    "lng": 106.842718,
+    "notes": "Samping bank BCA KCP Tole Iskandar"
+  }
+]

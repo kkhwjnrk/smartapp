@@ -8,6 +8,7 @@ function Header({ activeTab, isEditMode, setIsEditMode }) {
           <h1 className="text-[20px] font-bold text-zinc-900 tracking-tight">
             {activeTab === 'home' && "Dashboard"}
             {activeTab === 'pricelist' && "Pricelist"}
+            {activeTab === 'stores' && "Data Toko"}
             {activeTab === 'draft' && "Draft Order"}
           </h1>
         </div>

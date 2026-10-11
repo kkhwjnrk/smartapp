@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import initialPricelist from './data/pricelist.json';
+import initialStores from './data/stores.json';
 import { CATEGORIES, ensureValidCategory } from './constants/categories';
 
 // Layout Components
@@ -9,12 +10,14 @@ import BottomNav from './components/layout/BottomNav';
 // Tab Views
 import HomeTab from './components/home/HomeTab';
 import PricelistTab from './components/pricelist/PricelistTab';
+import StoresTab from './components/stores/StoresTab';
 import DraftTab from './components/draft/DraftTab';
 
 // Modals & Sheets
 import DiscountSheet from './components/pricelist/DiscountSheet';
 import CategorySheet from './components/pricelist/CategorySheet';
 import ItemModal from './components/pricelist/ItemModal';
+import StoreModal from './components/stores/StoreModal';
 
 function App() {
   const [activeTab, setActiveTab] = useState('pricelist'); 
@@ -46,6 +49,38 @@ function App() {
     localStorage.setItem('daytona_pricelist', JSON.stringify(items));
   }, [items]);
 
+  // Storage for Stores
+  const [stores, setStores] = useState(() => {
+    const saved = localStorage.getItem('daytona_stores');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return initialStores;
+      }
+    }
+    return initialStores;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('daytona_stores', JSON.stringify(stores));
+  }, [stores]);
+
+  // Stores State
+  const [storeSearchQuery, setStoreSearchQuery] = useState('');
+  const [selectedRoute, setSelectedRoute] = useState('Semua');
+  const [showStoreModal, setShowStoreModal] = useState(false);
+  const [modalStore, setModalStore] = useState(null);
+  const [storeFormData, setStoreFormData] = useState({
+    name: '',
+    routeCode: '',
+    owner: '',
+    address: '',
+    lat: '',
+    lng: '',
+    notes: ''
+  });
+
   // Queries & Categories State
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Semua');
@@ -71,7 +106,7 @@ function App() {
   const [modalItem, setModalItem] = useState(null); 
   const [discountItem, setDiscountItem] = useState(null);
 
-  // Form State untuk CRUD
+  // Form State untuk CRUD Item
   const [formData, setFormData] = useState({ 
     pn: '', 
     description: '', 
@@ -82,14 +117,14 @@ function App() {
 
   // Kunci scroll halaman belakang saat modal/sheet terbuka
   useEffect(() => {
-    if (discountItem || showCategorySheet || showItemModal) {
+    if (discountItem || showCategorySheet || showItemModal || showStoreModal) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       return () => {
         document.body.style.overflow = originalOverflow;
       };
     }
-  }, [discountItem, showCategorySheet, showItemModal]);
+  }, [discountItem, showCategorySheet, showItemModal, showStoreModal]);
 
   // Hitung jumlah item per kategori
   const categoryCounts = useMemo(() => {
@@ -207,6 +242,81 @@ function App() {
     }
   };
 
+  // Daftar Kode Rute yang ada untuk saran cepat
+  const existingRoutes = useMemo(() => {
+    const set = new Set();
+    stores.forEach(s => {
+      if (s.routeCode && s.routeCode.trim()) {
+        set.add(s.routeCode.trim());
+      }
+    });
+    return Array.from(set).sort();
+  }, [stores]);
+
+  // CRUD Toko Handlers
+  const openAddStore = () => {
+    setStoreFormData({
+      name: '',
+      routeCode: selectedRoute !== 'Semua' ? selectedRoute : (existingRoutes[0] || 'R01 - BOGOR KOTA'),
+      owner: '',
+      address: '',
+      lat: '',
+      lng: '',
+      notes: ''
+    });
+    setModalStore(null);
+    setShowStoreModal(true);
+  };
+
+  const openEditStore = (store) => {
+    setStoreFormData({
+      name: store.name || '',
+      routeCode: store.routeCode || '',
+      owner: store.owner || '',
+      address: store.address || '',
+      lat: store.lat !== undefined && store.lat !== null ? String(store.lat) : '',
+      lng: store.lng !== undefined && store.lng !== null ? String(store.lng) : '',
+      notes: store.notes || ''
+    });
+    setModalStore(store);
+    setShowStoreModal(true);
+  };
+
+  const saveStore = (e) => {
+    e.preventDefault();
+    if (!storeFormData.name.trim() || !storeFormData.routeCode.trim()) return;
+
+    const latVal = storeFormData.lat ? parseFloat(storeFormData.lat) : null;
+    const lngVal = storeFormData.lng ? parseFloat(storeFormData.lng) : null;
+
+    const storeToSave = {
+      id: modalStore ? modalStore.id : `store_${Date.now()}`,
+      name: storeFormData.name.trim(),
+      routeCode: storeFormData.routeCode.trim().toUpperCase(),
+      owner: storeFormData.owner.trim(),
+      address: storeFormData.address.trim(),
+      lat: isNaN(latVal) ? null : latVal,
+      lng: isNaN(lngVal) ? null : lngVal,
+      notes: storeFormData.notes.trim()
+    };
+
+    if (modalStore) {
+      setStores(prev => prev.map(s => s.id === modalStore.id ? storeToSave : s));
+    } else {
+      setStores(prev => [storeToSave, ...prev]);
+    }
+    setShowStoreModal(false);
+  };
+
+  const deleteStore = (storeToDelete) => {
+    const target = storeToDelete || modalStore;
+    if (!target) return;
+    if (window.confirm(`Hapus data toko ini secara permanen?\n\nNama: ${target.name}\nRute: ${target.routeCode}`)) {
+      setStores(prev => prev.filter(s => s.id !== target.id));
+      setShowStoreModal(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-28 font-sans text-zinc-900 selection:bg-zinc-200">
       
@@ -224,8 +334,11 @@ function App() {
             cartCount={cart.length}
             itemsCount={items.length}
             categoriesCount={CATEGORIES.length - 1}
+            storesCount={stores.length}
+            routesCount={existingRoutes.length}
             onOpenDraft={() => setActiveTab('draft')}
             onOpenPricelist={() => setActiveTab('pricelist')}
+            onOpenStores={() => setActiveTab('stores')}
             onOpenCategories={() => {
               setActiveTab('pricelist');
               setShowCategorySheet(true);
@@ -247,6 +360,19 @@ function App() {
             onOpenAddModal={openAddModal}
             onOpenEditModal={openEditModal}
             onOpenDiscountSheet={(item) => setDiscountItem(item)}
+          />
+        )}
+
+        {activeTab === 'stores' && (
+          <StoresTab 
+            stores={stores}
+            searchQuery={storeSearchQuery}
+            setSearchQuery={setStoreSearchQuery}
+            selectedRoute={selectedRoute}
+            setSelectedRoute={setSelectedRoute}
+            onOpenAddModal={openAddStore}
+            onOpenEditModal={openEditStore}
+            onDeleteStore={deleteStore}
           />
         )}
 
@@ -293,6 +419,18 @@ function App() {
         onSave={saveItem}
         onDelete={deleteItem}
         onClose={() => setShowItemModal(false)}
+      />
+
+      {/* CRUD Store Modal */}
+      <StoreModal 
+        isOpen={showStoreModal}
+        modalStore={modalStore}
+        formData={storeFormData}
+        setFormData={setStoreFormData}
+        existingRoutes={existingRoutes}
+        onSave={saveStore}
+        onDelete={deleteStore}
+        onClose={() => setShowStoreModal(false)}
       />
 
       {/* Bottom Navigation Bar */}
