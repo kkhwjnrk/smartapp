@@ -1,23 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-
-// Helper format ISO YYYY-MM-DD ke format tampilan ringkas DD/MM
-const formatDateDisplay = (isoStr) => {
-  if (!isoStr) return '';
-  const parts = isoStr.split('-');
-  if (parts.length === 3) {
-    return `${parts[2]}/${parts[1]}`;
-  }
-  return isoStr;
-};
-
-// Helper mendapatkan tanggal hari ini format YYYY-MM-DD secara real-time
-const getTodayIso = () => {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, '0');
-  const d = String(now.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-};
+import { formatFullIndonesianDate, getTodayIso } from '../../utils/date';
 
 function OrderModal({
   isOpen,
@@ -162,7 +144,7 @@ function OrderModal({
       id: modalOrder ? modalOrder.id : `order_${Date.now()}`,
       storeName: storeName.trim(),
       routeCode: routeCode.trim(),
-      date: formatDateDisplay(dateIso),
+      date: formatFullIndonesianDate(dateIso),
       dateIso: dateIso,
       status: modalOrder ? modalOrder.status : 'pending',
       createdAt: modalOrder ? modalOrder.createdAt : Date.now(),
@@ -326,7 +308,7 @@ function OrderModal({
             <div className="relative">
               <input 
                 type="text"
-                placeholder="Cari part: ketik 'beat', 'busi', 'roller', atau PN..."
+                placeholder="Cari item: ketik 'beat', 'busi', 'roller', atau PN..."
                 className="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-400 text-[13.5px] font-medium"
                 value={searchQuery}
                 onChange={e => {
@@ -400,16 +382,13 @@ function OrderModal({
           <div>
             <div className="flex items-center justify-between mb-2 px-1">
               <span className="text-[13px] font-bold text-zinc-800">
-                Daftar Barang ({orderItems.length} Part)
-              </span>
-              <span className="text-[12px] text-zinc-500 font-medium">
-                Total: <strong className="text-zinc-900">{totalQty}</strong> PCS
+                Daftar Item ({orderItems.length} item)
               </span>
             </div>
 
             {orderItems.length === 0 ? (
               <div className="p-6 text-center bg-zinc-50 rounded-2xl border border-dashed border-zinc-200 text-zinc-400 text-[13px]">
-                Belum ada part ditambahkan ke order ini.
+                Belum ada item ditambahkan ke order ini.
               </div>
             ) : (
               <div className="space-y-1.5 max-h-56 overflow-y-auto pr-0.5">

@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useRef } from 'react';
 import OrderCard from './OrderCard';
+import OrderDetailModal from './OrderDetailModal';
+import StatusConfirmModal from './StatusConfirmModal';
 
 function DraftTab({
   orders = [],
@@ -13,6 +15,18 @@ function DraftTab({
   const [toastMessage, setToastMessage] = useState('');
   const toastTimeoutRef = useRef(null);
   const searchInputRef = useRef(null);
+
+  // State untuk Modal Halaman Penuh Rincian Order
+  const [selectedDetailOrderId, setSelectedDetailOrderId] = useState(null);
+
+  // State untuk Dialog Konfirmasi Ceklis / Status
+  const [orderToConfirmStatus, setOrderToConfirmStatus] = useState(null);
+
+  // Dapatkan order yang sedang dibuka di modal detail secara reaktif dari list orders
+  const selectedDetailOrder = useMemo(() => {
+    if (!selectedDetailOrderId) return null;
+    return orders.find(o => o.id === selectedDetailOrderId) || null;
+  }, [selectedDetailOrderId, orders]);
 
   // Trigger floating toast
   const showToast = (msg) => {
@@ -39,12 +53,19 @@ function DraftTab({
     showToast(`Format catatan ${order.storeName} tersalin!`);
   };
 
-  // Toggle order status dengan feedback toast
-  const handleToggleStatusWithToast = (orderId) => {
+  // Buka konfirmasi sebelum mengubah status
+  const handleRequestToggleStatus = (order) => {
+    setOrderToConfirmStatus(order);
+  };
+
+  // Eksekusi perubahan status setelah dikonfirmasi pengguna
+  const handleConfirmToggleStatus = (orderId) => {
     const target = orders.find(o => o.id === orderId);
     if (!target) return;
     const willComplete = target.status === 'pending';
     onToggleOrderStatus(orderId);
+    setOrderToConfirmStatus(null);
+
     if (willComplete) {
       showToast(`✓ Order ${target.storeName} dipindahkan ke Arsip`);
     } else {
@@ -85,14 +106,16 @@ function DraftTab({
         <button
           type="button"
           onClick={() => setOrderSubTab('active')}
-          className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold transition-all flex items-center justify-center gap-1.5 ${orderSubTab === 'active'
+          className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold transition-all flex items-center justify-center gap-1.5 ${
+            orderSubTab === 'active'
               ? 'bg-white text-zinc-900 shadow-xs'
               : 'text-zinc-500 hover:text-zinc-800'
-            }`}
+          }`}
         >
           <span>Order Aktif</span>
-          <span className={`text-[11px] px-1.5 py-0.2 rounded-full font-bold ${orderSubTab === 'active' ? 'bg-orange-50 text-orange-700' : 'bg-zinc-200 text-zinc-600'
-            }`}>
+          <span className={`text-[11px] px-1.5 py-0.2 rounded-full font-bold ${
+            orderSubTab === 'active' ? 'bg-orange-50 text-orange-700' : 'bg-zinc-200 text-zinc-600'
+          }`}>
             {activeOrders.length}
           </span>
         </button>
@@ -100,14 +123,16 @@ function DraftTab({
         <button
           type="button"
           onClick={() => setOrderSubTab('archive')}
-          className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold transition-all flex items-center justify-center gap-1.5 ${orderSubTab === 'archive'
+          className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold transition-all flex items-center justify-center gap-1.5 ${
+            orderSubTab === 'archive'
               ? 'bg-white text-zinc-900 shadow-xs'
               : 'text-zinc-500 hover:text-zinc-800'
-            }`}
+          }`}
         >
           <span>Arsip</span>
-          <span className={`text-[11px] px-1.5 py-0.2 rounded-full font-bold ${orderSubTab === 'archive' ? 'bg-emerald-50 text-emerald-700' : 'bg-zinc-200 text-zinc-600'
-            }`}>
+          <span className={`text-[11px] px-1.5 py-0.2 rounded-full font-bold ${
+            orderSubTab === 'archive' ? 'bg-emerald-50 text-emerald-700' : 'bg-zinc-200 text-zinc-600'
+          }`}>
             {archivedOrders.length}
           </span>
         </button>
@@ -182,7 +207,8 @@ function DraftTab({
             <OrderCard
               key={order.id}
               order={order}
-              onToggleStatus={handleToggleStatusWithToast}
+              onRequestToggleStatus={handleRequestToggleStatus}
+              onOpenDetail={(o) => setSelectedDetailOrderId(o.id)}
               onEditOrder={onOpenEditOrder}
               onDeleteOrder={onDeleteOrder}
               onCopyPN={handleCopyPN}
@@ -240,6 +266,30 @@ function DraftTab({
           </div>
         </div>
       )}
+
+      {/* Modal Halaman Penuh Rincian Order */}
+      {selectedDetailOrder && (
+        <OrderDetailModal
+          isOpen={!!selectedDetailOrder}
+          order={selectedDetailOrder}
+          onClose={() => setSelectedDetailOrderId(null)}
+          onRequestToggleStatus={(order) => {
+            handleRequestToggleStatus(order);
+          }}
+          onEditOrder={onOpenEditOrder}
+          onDeleteOrder={onDeleteOrder}
+          onCopyPN={handleCopyPN}
+          onCopyFormatText={handleCopyFormatText}
+        />
+      )}
+
+      {/* Modal Dialog Konfirmasi Ceklis Status */}
+      <StatusConfirmModal
+        isOpen={!!orderToConfirmStatus}
+        order={orderToConfirmStatus}
+        onConfirm={handleConfirmToggleStatus}
+        onCancel={() => setOrderToConfirmStatus(null)}
+      />
 
       {/* Floating Toast Notification */}
       {toastMessage && (
