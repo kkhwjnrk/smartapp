@@ -3,6 +3,7 @@ import initialPricelist from './data/pricelist.json';
 import initialStores from './data/stores.json';
 import initialOrders from './data/orders.json';
 import { CATEGORIES, ensureValidCategory } from './constants/categories';
+import { getCurrentMonthKey, getOrderMonthKey } from './utils/date';
 
 // Layout Components
 import Header from './components/layout/Header';
@@ -110,6 +111,23 @@ function App() {
 
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [modalOrder, setModalOrder] = useState(null);
+
+  // Periode Bulan untuk Catatan Order (Pendekatan 1)
+  const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
+  const [selectedMonthKey, setSelectedMonthKey] = useState(currentMonthKey);
+
+  const availableMonths = useMemo(() => {
+    const monthSet = new Set();
+    monthSet.add(currentMonthKey);
+    if (selectedMonthKey !== 'all') {
+      monthSet.add(selectedMonthKey);
+    }
+    orders.forEach(o => {
+      const m = getOrderMonthKey(o);
+      if (m) monthSet.add(m);
+    });
+    return Array.from(monthSet).sort().reverse();
+  }, [orders, currentMonthKey, selectedMonthKey]);
 
   // Hitung jumlah order aktif / pending
   const pendingOrdersCount = useMemo(() => {
@@ -370,6 +388,10 @@ function App() {
         setIsEditMode={setIsEditMode} 
         isStoreEditMode={isStoreEditMode}
         setIsStoreEditMode={setIsStoreEditMode}
+        selectedMonthKey={selectedMonthKey}
+        setSelectedMonthKey={setSelectedMonthKey}
+        availableMonths={availableMonths}
+        currentMonthKey={currentMonthKey}
       />
 
       {/* Main Content Area */}
@@ -432,6 +454,9 @@ function App() {
             onOpenAddOrder={openAddOrder}
             onOpenEditOrder={openEditOrder}
             onDeleteOrder={deleteOrder}
+            selectedMonthKey={selectedMonthKey}
+            setSelectedMonthKey={setSelectedMonthKey}
+            currentMonthKey={currentMonthKey}
           />
         )}
       </main>

@@ -5,8 +5,6 @@ import StatusConfirmModal from './StatusConfirmModal';
 import { 
   getCurrentMonthKey, 
   formatMonthKeyDisplay, 
-  getPreviousMonthKey, 
-  getNextMonthKey, 
   getOrderMonthKey 
 } from '../../utils/date';
 
@@ -15,7 +13,10 @@ function DraftTab({
   onToggleOrderStatus,
   onOpenAddOrder,
   onOpenEditOrder,
-  onDeleteOrder
+  onDeleteOrder,
+  selectedMonthKey: propSelectedMonthKey,
+  setSelectedMonthKey: propSetSelectedMonthKey,
+  currentMonthKey: propCurrentMonthKey
 }) {
   const [orderSubTab, setOrderSubTab] = useState('active'); // 'active' | 'archive'
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,29 +24,15 @@ function DraftTab({
   const toastTimeoutRef = useRef(null);
   const searchInputRef = useRef(null);
 
-  // Periode Bulan Terpilih (Default: Bulan Ini secara otomatis)
-  const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
-  const [selectedMonthKey, setSelectedMonthKey] = useState(currentMonthKey);
+  // Gunakan bulan dari props (dikelola di Header) dengan fallback aman
+  const currentMonthKey = propCurrentMonthKey || getCurrentMonthKey();
+  const selectedMonthKey = propSelectedMonthKey || currentMonthKey;
 
   // State untuk Modal Halaman Penuh Rincian Order
   const [selectedDetailOrderId, setSelectedDetailOrderId] = useState(null);
 
   // State untuk Dialog Konfirmasi Ceklis / Status
   const [orderToConfirmStatus, setOrderToConfirmStatus] = useState(null);
-
-  // Kumpulan daftar bulan yang tersedia dari data order
-  const availableMonths = useMemo(() => {
-    const monthSet = new Set();
-    monthSet.add(currentMonthKey);
-    if (selectedMonthKey !== 'all') {
-      monthSet.add(selectedMonthKey);
-    }
-    orders.forEach(o => {
-      const m = getOrderMonthKey(o);
-      if (m) monthSet.add(m);
-    });
-    return Array.from(monthSet).sort().reverse();
-  }, [orders, currentMonthKey, selectedMonthKey]);
 
   const isViewingCurrentMonth = selectedMonthKey === currentMonthKey;
   const isViewingAllMonths = selectedMonthKey === 'all';
@@ -101,7 +88,7 @@ function DraftTab({
     }
   };
 
-  // Filter orders berdasarkan periode bulan dan tab Aktif / Arsip
+  // Filter orders berdasarkan periode bulan terpilih dan tab Aktif / Arsip
   const { activeOrders, archivedOrders, currentDisplayedOrders, carryOverCount } = useMemo(() => {
     // 1. Order Aktif
     const active = orders.filter(order => {
@@ -152,87 +139,20 @@ function DraftTab({
   }, [orders, orderSubTab, searchQuery, selectedMonthKey, isViewingCurrentMonth, isViewingAllMonths, currentMonthKey]);
 
   return (
-    <div className="space-y-4 pb-12 animate-in fade-in duration-300">
+    <div className="space-y-3.5 pb-12 animate-in fade-in duration-300">
 
-      {/* Month Navigator / Pemilih Periode Bulanan (Pendekatan 1) */}
-      <div className="bg-white rounded-2xl border border-zinc-200/90 p-2 shadow-xs">
-        <div className="flex items-center justify-between gap-1.5">
-          
-          {/* Tombol Bulan Sebelumnya */}
-          <button
-            type="button"
-            onClick={() => {
-              if (selectedMonthKey === 'all') {
-                setSelectedMonthKey(currentMonthKey);
-              } else {
-                setSelectedMonthKey(getPreviousMonthKey(selectedMonthKey));
-              }
-            }}
-            className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-xl transition-colors active:scale-95"
-            title="Bulan sebelumnya"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          {/* Label Periode Bulan & Dropdown Cepat */}
-          <div className="flex-1 flex items-center justify-center gap-2 text-center min-w-0">
-            <div className="relative inline-flex items-center gap-1.5">
-              <span className="text-[14px]">📅</span>
-              
-              {/* Select Dropdown Cepat untuk Lompat ke Bulan Lain */}
-              <select
-                value={selectedMonthKey}
-                onChange={(e) => setSelectedMonthKey(e.target.value)}
-                className="font-bold text-zinc-900 text-[14.5px] bg-transparent focus:outline-none cursor-pointer py-1 pr-1 truncate"
-              >
-                {availableMonths.map(mKey => (
-                  <option key={mKey} value={mKey}>
-                    {formatMonthKeyDisplay(mKey)} {mKey === currentMonthKey ? '(Bulan Ini)' : ''}
-                  </option>
-                ))}
-                <option value="all">Semua Periode</option>
-              </select>
-
-              {isViewingCurrentMonth && (
-                <span className="px-1.5 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-md text-[10px] font-bold tracking-wider shrink-0">
-                  Bulan Ini
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Tombol Bulan Berikutnya */}
-          <button
-            type="button"
-            onClick={() => {
-              if (selectedMonthKey === 'all') {
-                setSelectedMonthKey(currentMonthKey);
-              } else {
-                setSelectedMonthKey(getNextMonthKey(selectedMonthKey));
-              }
-            }}
-            className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-xl transition-colors active:scale-95"
-            title="Bulan berikutnya"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+      {/* Informasi Bawaan / Carry-Over jika ada order bulan lalu yang belum selesai (Slim & Rapi) */}
+      {isViewingCurrentMonth && carryOverCount > 0 && (
+        <div className="flex items-center justify-between text-[12px] px-3.5 py-2.5 text-amber-800 bg-amber-50/80 border border-amber-200/70 rounded-2xl shadow-2xs">
+          <span className="flex items-center gap-1.5 font-medium">
+            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+            <span><strong>{carryOverCount} toko</strong> memiliki order lanjutan dari bulan lalu</span>
+          </span>
+          <span className="text-[10.5px] font-bold bg-amber-200/60 text-amber-900 px-2 py-0.5 rounded-lg shrink-0">
+            Perlu Diproses
+          </span>
         </div>
-
-        {/* Informasi Bawaan / Carry-Over jika ada order dari bulan lalu yang masih pending */}
-        {isViewingCurrentMonth && carryOverCount > 0 && (
-          <div className="mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between text-[11.5px] px-2 text-amber-800 bg-amber-50/70 rounded-xl py-1.5">
-            <span className="flex items-center gap-1 font-medium">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-              {carryOverCount} toko order bawaan dari bulan lalu
-            </span>
-            <span className="text-amber-700 font-semibold">Belum Selesai</span>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Top Segmented Control: Aktif vs Arsip */}
       <div className="flex bg-zinc-100 p-1 rounded-2xl shadow-2xs">
@@ -316,12 +236,12 @@ function DraftTab({
         </button>
       </div>
 
-      {/* Info Bar */}
+      {/* Info Bar Jumlah Tampilan */}
       <div className="flex items-center justify-between text-[12px] text-zinc-500 px-1">
         <span>
           {orderSubTab === 'active'
-            ? `Menampilkan ${currentDisplayedOrders.length} toko menunggu diproses`
-            : `Menampilkan ${currentDisplayedOrders.length} riwayat toko di arsip`}
+            ? `Menampilkan ${currentDisplayedOrders.length} toko menunggu diproses (${formatMonthKeyDisplay(selectedMonthKey)})`
+            : `Menampilkan ${currentDisplayedOrders.length} riwayat toko di arsip (${formatMonthKeyDisplay(selectedMonthKey)})`}
         </span>
         {searchQuery && (
           <button
