@@ -1,0 +1,58 @@
+[
+  {
+    "id": "order-1",
+    "storeName": "Rici Motor Graha",
+    "routeCode": "R01 - BOGOR KOTA",
+    "date": "11/10",
+    "createdAt": 1728654000000,
+    "status": "pending",
+    "completedAt": null,
+    "items": [
+      { "pn": "5286", "description": "Busi Daytona Ignimax", "qty": 15 },
+      { "pn": "5558", "description": "Kampas Rem Depan", "qty": 15 },
+      { "pn": "5597", "description": "Roller Set Beat FI", "qty": 15 },
+      { "pn": "5601", "description": "Per CVT 1500 RPM", "qty": 15 },
+      { "pn": "4944", "description": "Vanbelt Super Kevlar", "qty": 10 },
+      { "pn": "6261", "description": "Filter Udara Racing", "qty": 10 },
+      { "pn": "6265", "description": "Handgrip Daytona", "qty": 10 },
+      { "pn": "6269", "description": "Bearing Kruk As", "qty": 10 },
+      { "pn": "4805", "description": "Kampas Ganda Matic", "qty": 10 },
+      { "pn": "4803", "description": "Mangkok Kampas Ganda", "qty": 10 }
+    ]
+  },
+  {
+    "id": "order-2",
+    "storeName": "Hobir",
+    "routeCode": "R02 - CIBINONG",
+    "date": "11/10",
+    "createdAt": 1728650000000,
+    "status": "pending",
+    "completedAt": null,
+    "items": [
+      { "pn": "4537", "description": "Disc Rotor Floating", "qty": 10 },
+      { "pn": "4810", "description": "Kampas Rem Belakang", "qty": 5 },
+      { "pn": "4553", "description": "Per Sentrik 1000 RPM", "qty": 10 },
+      { "pn": "4533", "description": "Busi Ultra Racing", "qty": 10 },
+      { "pn": "4534", "description": "Klep Set Racing", "qty": 10 },
+      { "pn": "5014", "description": "Slider Pulley Set", "qty": 5 },
+      { "pn": "5016", "description": "Bushing Pulley", "qty": 5 }
+    ]
+  },
+  {
+    "id": "order-3",
+    "storeName": "TSJM",
+    "routeCode": "R03 - DEPOK",
+    "date": "09/10",
+    "createdAt": 1728489600000,
+    "status": "completed",
+    "completedAt": 1728500000000,
+    "items": [
+      { "pn": "4299", "description": "Busi Tapered CPR6EA", "qty": 400 },
+      { "pn": "4300", "description": "Busi Tapered CPR7EA", "qty": 400 },
+      { "pn": "4302", "description": "Busi Tapered CPR9EA", "qty": 200 },
+      { "pn": "4303", "description": "Busi Tapered CR6HSA", "qty": 400 },
+      { "pn": "4304", "description": "Busi Tapered CR8E", "qty": 200 },
+      { "pn": "5185", "description": "Kampas Rem Pro Series", "qty": 200 }
+    ]
+  }
+]

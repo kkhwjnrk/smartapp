@@ -16,15 +16,17 @@ function HomeTab({
       {/* Draft Status Card */}
       <div className="bg-white rounded-3xl p-6 border border-zinc-200/80 shadow-sm flex flex-col justify-between h-48">
         <div>
-          <p className="text-[13px] font-medium text-zinc-500 mb-1">Status Draft Saat Ini</p>
+          <p className="text-[13px] font-medium text-zinc-500 mb-1">Order Menunggu Input SADIX</p>
           <div className="text-5xl font-semibold tracking-tight text-zinc-900">{cartCount}</div>
-          <p className="text-[13px] text-zinc-500 mt-1">Item siap diproses</p>
+          <p className="text-[13px] text-zinc-500 mt-1">
+            {cartCount > 0 ? "Toko menunggu diinput ke SADIX" : "Semua order sudah selesai diinput"}
+          </p>
         </div>
         <button 
           onClick={onOpenDraft}
           className="w-full py-3 bg-zinc-900 text-white rounded-xl text-[14px] font-medium hover:bg-zinc-800 transition-colors shadow-2xs"
         >
-          Buka Daftar Order
+          Buka Catatan Order
         </button>
       </div>
 

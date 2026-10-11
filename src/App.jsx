@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import initialPricelist from './data/pricelist.json';
 import initialStores from './data/stores.json';
+import initialOrders from './data/orders.json';
 import { CATEGORIES, ensureValidCategory } from './constants/categories';
 
 // Layout Components
@@ -19,6 +20,7 @@ import CategorySheet from './components/pricelist/CategorySheet';
 import ItemModal from './components/pricelist/ItemModal';
 import StoreModal from './components/stores/StoreModal';
 import RouteSheet from './components/stores/RouteSheet';
+import OrderModal from './components/draft/OrderModal';
 
 function App() {
   const [activeTab, setActiveTab] = useState('pricelist'); 
@@ -89,19 +91,72 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('Semua');
   const [showCategorySheet, setShowCategorySheet] = useState(false);
 
-  // Cart / Draft State
-  const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem('order_draft');
-    return saved ? JSON.parse(saved) : [];
+  // Orders State (Disimpan per toko, terpisah Aktif & Arsip)
+  const [orders, setOrders] = useState(() => {
+    const saved = localStorage.getItem('daytona_orders');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return initialOrders;
+      }
+    }
+    return initialOrders;
   });
-  const [draftQuery, setDraftQuery] = useState('');
-  const [showDraftDropdown, setShowDraftDropdown] = useState(false);
-  const [qtyInput, setQtyInput] = useState('1');
-  const [selectedDraftItem, setSelectedDraftItem] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem('order_draft', JSON.stringify(cart));
-  }, [cart]);
+    localStorage.setItem('daytona_orders', JSON.stringify(orders));
+  }, [orders]);
+
+  const [showOrderModal, setShowOrderModal] = useState(false);
+  const [modalOrder, setModalOrder] = useState(null);
+
+  // Hitung jumlah order aktif / pending
+  const pendingOrdersCount = useMemo(() => {
+    return orders.filter(o => o.status === 'pending').length;
+  }, [orders]);
+
+  // Order Handlers
+  const toggleOrderStatus = (orderId) => {
+    setOrders(prev => prev.map(o => {
+      if (o.id === orderId) {
+        const isCurrentlyPending = o.status === 'pending';
+        return {
+          ...o,
+          status: isCurrentlyPending ? 'completed' : 'pending',
+          completedAt: isCurrentlyPending ? Date.now() : null
+        };
+      }
+      return o;
+    }));
+  };
+
+  const openAddOrder = () => {
+    setModalOrder(null);
+    setShowOrderModal(true);
+  };
+
+  const openEditOrder = (order) => {
+    setModalOrder(order);
+    setShowOrderModal(true);
+  };
+
+  const saveOrder = (orderData) => {
+    if (modalOrder) {
+      setOrders(prev => prev.map(o => o.id === modalOrder.id ? orderData : o));
+    } else {
+      setOrders(prev => [orderData, ...prev]);
+    }
+    setShowOrderModal(false);
+  };
+
+  const deleteOrder = (orderId) => {
+    const target = orders.find(o => o.id === orderId);
+    if (target && window.confirm(`Hapus catatan order toko "${target.storeName}"?`)) {
+      setOrders(prev => prev.filter(o => o.id !== orderId));
+      setShowOrderModal(false);
+    }
+  };
 
   // Modals & States
   const [isEditMode, setIsEditMode] = useState(false);
@@ -120,14 +175,14 @@ function App() {
 
   // Kunci scroll halaman belakang saat modal/sheet terbuka
   useEffect(() => {
-    if (discountItem || showCategorySheet || showItemModal || showStoreModal || showRouteSheet) {
+    if (discountItem || showCategorySheet || showItemModal || showStoreModal || showRouteSheet || showOrderModal) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       return () => {
         document.body.style.overflow = originalOverflow;
       };
     }
-  }, [discountItem, showCategorySheet, showItemModal, showStoreModal, showRouteSheet]);
+  }, [discountItem, showCategorySheet, showItemModal, showStoreModal, showRouteSheet, showOrderModal]);
 
   // Hitung jumlah item per kategori
   const categoryCounts = useMemo(() => {
@@ -154,46 +209,6 @@ function App() {
       return true;
     });
   }, [items, selectedCategory, query]);
-
-  // Items untuk autocomplete pencarian Draft
-  const draftSearchItems = useMemo(() => {
-    if (!draftQuery) return [];
-    const lowerQuery = draftQuery.toLowerCase().trim();
-    return items.filter(item => 
-      item.pn.toLowerCase().includes(lowerQuery) || 
-      item.description.toLowerCase().includes(lowerQuery)
-    ).slice(0, 5);
-  }, [draftQuery, items]);
-
-  // Draft Logic
-  const handleAddToCart = (itemObj) => {
-    if (!itemObj) return;
-    const qty = parseInt(qtyInput, 10);
-    if (qty <= 0) return;
-
-    setCart(prev => {
-      const existing = prev.find(i => i.pn === itemObj.pn);
-      if (existing) {
-        return prev.map(i => i.pn === itemObj.pn ? { ...i, qty: i.qty + qty } : i);
-      }
-      return [...prev, { ...itemObj, qty }];
-    });
-
-    setDraftQuery('');
-    setQtyInput('1');
-    setShowDraftDropdown(false);
-    setSelectedDraftItem(null);
-  };
-
-  const removeFromCart = (pn) => {
-    setCart(prev => prev.filter(i => i.pn !== pn));
-  };
-
-  const clearDraft = () => {
-    if (window.confirm('Bersihkan semua daftar order saat ini?')) {
-      setCart([]);
-    }
-  };
 
   // CRUD Logic
   const openAddModal = () => {
@@ -361,7 +376,7 @@ function App() {
       <main className="max-w-md mx-auto px-5 pt-4 relative">
         {activeTab === 'home' && (
           <HomeTab 
-            cartCount={cart.length}
+            cartCount={pendingOrdersCount}
             itemsCount={items.length}
             categoriesCount={CATEGORIES.length - 1}
             storesCount={stores.length}
@@ -412,19 +427,11 @@ function App() {
 
         {activeTab === 'draft' && (
           <DraftTab 
-            cart={cart}
-            draftQuery={draftQuery}
-            setDraftQuery={setDraftQuery}
-            showDraftDropdown={showDraftDropdown}
-            setShowDraftDropdown={setShowDraftDropdown}
-            draftSearchItems={draftSearchItems}
-            selectedDraftItem={selectedDraftItem}
-            setSelectedDraftItem={setSelectedDraftItem}
-            qtyInput={qtyInput}
-            setQtyInput={setQtyInput}
-            onAddToCart={handleAddToCart}
-            onRemoveFromCart={removeFromCart}
-            onClearDraft={clearDraft}
+            orders={orders}
+            onToggleOrderStatus={toggleOrderStatus}
+            onOpenAddOrder={openAddOrder}
+            onOpenEditOrder={openEditOrder}
+            onDeleteOrder={deleteOrder}
           />
         )}
       </main>
@@ -467,6 +474,17 @@ function App() {
         onClose={() => setShowStoreModal(false)}
       />
 
+      {/* Catat Order Toko Modal */}
+      <OrderModal 
+        isOpen={showOrderModal}
+        modalOrder={modalOrder}
+        catalogItems={items}
+        stores={stores}
+        onSave={saveOrder}
+        onDelete={deleteOrder}
+        onClose={() => setShowOrderModal(false)}
+      />
+
       {/* Route Picker Bottom Sheet */}
       <RouteSheet 
         isOpen={showRouteSheet}
@@ -481,7 +499,7 @@ function App() {
       <BottomNav 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
-        cartCount={cart.length} 
+        cartCount={pendingOrdersCount} 
       />
 
     </div>
