@@ -1,5 +1,24 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 
+// Helper format ISO YYYY-MM-DD ke format tampilan ringkas DD/MM
+const formatDateDisplay = (isoStr) => {
+  if (!isoStr) return '';
+  const parts = isoStr.split('-');
+  if (parts.length === 3) {
+    return `${parts[2]}/${parts[1]}`;
+  }
+  return isoStr;
+};
+
+// Helper mendapatkan tanggal hari ini format YYYY-MM-DD secara real-time
+const getTodayIso = () => {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+
 function OrderModal({
   isOpen,
   modalOrder,
@@ -11,13 +30,13 @@ function OrderModal({
 }) {
   const [storeName, setStoreName] = useState('');
   const [routeCode, setRouteCode] = useState('');
-  const [dateStr, setDateStr] = useState('');
+  const [dateIso, setDateIso] = useState(getTodayIso());
   const [orderItems, setOrderItems] = useState([]);
 
   // Input tambah item
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCatalogItem, setSelectedCatalogItem] = useState(null);
-  const [itemQty, setItemQty] = useState('10');
+  const [itemQty, setItemQty] = useState(''); // Tidak default 10
   const [showItemSuggestions, setShowItemSuggestions] = useState(false);
 
   // Drag to dismiss
@@ -32,21 +51,18 @@ function OrderModal({
       if (modalOrder) {
         setStoreName(modalOrder.storeName || '');
         setRouteCode(modalOrder.routeCode || '');
-        setDateStr(modalOrder.date || '');
+        setDateIso(modalOrder.dateIso || getTodayIso());
         setOrderItems(modalOrder.items ? [...modalOrder.items] : []);
       } else {
-        // Format tanggal hari ini misal: 11/10
-        const now = new Date();
-        const d = String(now.getDate()).padStart(2, '0');
-        const m = String(now.getMonth() + 1).padStart(2, '0');
-        setDateStr(`${d}/${m}`);
+        // Tanggal real-time hari ini
+        setDateIso(getTodayIso());
         setStoreName('');
         setRouteCode('');
         setOrderItems([]);
       }
       setSearchQuery('');
       setSelectedCatalogItem(null);
-      setItemQty('10');
+      setItemQty('');
       setShowItemSuggestions(false);
       setDragY(0);
     }
@@ -64,17 +80,19 @@ function OrderModal({
 
   if (!isOpen) return null;
 
-  // Pilih toko dari daftar yang sudah ada
-  const handleSelectStoreSuggestion = (s) => {
-    setStoreName(s.name);
-    setRouteCode(s.routeCode || '');
+  // Handler ubah nama toko (jika cocok dengan toko terdaftar, auto-fill kode rute)
+  const handleStoreNameChange = (val) => {
+    setStoreName(val);
+    const matched = stores.find(s => s.name.toLowerCase() === val.trim().toLowerCase());
+    if (matched && matched.routeCode) {
+      setRouteCode(matched.routeCode);
+    }
   };
 
   // Tambah item ke daftar pesanan toko
   const handleAddItem = (e) => {
     e?.preventDefault();
-    const qty = parseInt(itemQty, 10);
-    if (!qty || qty <= 0) return;
+    const qty = parseInt(itemQty, 10) || 1;
 
     let newItem = null;
     if (selectedCatalogItem) {
@@ -108,7 +126,7 @@ function OrderModal({
     // Reset input
     setSearchQuery('');
     setSelectedCatalogItem(null);
-    setItemQty('10');
+    setItemQty('');
     setShowItemSuggestions(false);
   };
 
@@ -144,7 +162,8 @@ function OrderModal({
       id: modalOrder ? modalOrder.id : `order_${Date.now()}`,
       storeName: storeName.trim(),
       routeCode: routeCode.trim(),
-      date: dateStr.trim(),
+      date: formatDateDisplay(dateIso),
+      dateIso: dateIso,
       status: modalOrder ? modalOrder.status : 'pending',
       createdAt: modalOrder ? modalOrder.createdAt : Date.now(),
       completedAt: modalOrder ? modalOrder.completedAt : null,
@@ -235,7 +254,7 @@ function OrderModal({
               {modalOrder ? 'Edit Catatan Order' : 'Catat Order Toko Baru'}
             </h2>
             <p className="text-[12px] text-zinc-500">
-              Rangkum pesanan sebelum diinput ke aplikasi SADIX
+              Rangkum pesanan toko secara rapi
             </p>
           </div>
         </div>
@@ -249,42 +268,39 @@ function OrderModal({
               <label className="block text-[12px] font-semibold text-zinc-700 mb-1">
                 Nama Toko / Pemesan <span className="text-red-500">*</span>
               </label>
+              
+              {/* Input Nama Toko dengan Datalist Otomatis (Mendukung 160+ Toko tanpa makan tempat) */}
               <input 
                 type="text" 
                 required
-                placeholder="Contoh: Rici Motor Graha / Hobir / TSJM"
+                list="stores-datalist"
+                placeholder="Ketik atau pilih nama toko..."
                 className="w-full px-3.5 py-2.5 bg-white border border-zinc-200 rounded-xl focus:outline-none focus:border-zinc-400 font-bold text-zinc-900 text-[14.5px]"
                 value={storeName} 
-                onChange={e => setStoreName(e.target.value)}
+                onChange={e => handleStoreNameChange(e.target.value)}
               />
 
-              {/* Rekomendasi Toko Terdaftar */}
-              {stores.length > 0 && !modalOrder && (
-                <div className="flex items-center gap-1.5 flex-wrap mt-2">
-                  <span className="text-[11px] text-zinc-400">Pilih toko:</span>
-                  {stores.slice(0, 4).map(s => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={() => handleSelectStoreSuggestion(s)}
-                      className="px-2 py-0.5 bg-white hover:bg-orange-50 hover:text-orange-700 hover:border-orange-200 border border-zinc-200 rounded-md text-[11px] font-medium text-zinc-600 transition-colors"
-                    >
-                      {s.name}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <datalist id="stores-datalist">
+                {stores.map(s => (
+                  <option key={s.id} value={s.name}>
+                    {s.routeCode ? `[${s.routeCode}]` : ''} {s.owner ? `(${s.owner})` : ''}
+                  </option>
+                ))}
+              </datalist>
             </div>
 
             <div className="grid grid-cols-2 gap-2.5">
               <div>
-                <label className="block text-[11px] font-medium text-zinc-500 mb-1">Tanggal</label>
+                <label className="block text-[11px] font-medium text-zinc-500 mb-1">
+                  Tanggal Order
+                </label>
+                {/* Real-time HTML5 Date Picker */}
                 <input 
-                  type="text" 
-                  placeholder="11/10"
-                  className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-[13px] font-medium focus:outline-none focus:border-zinc-400"
-                  value={dateStr}
-                  onChange={e => setDateStr(e.target.value)}
+                  type="date" 
+                  required
+                  className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-[13px] font-medium text-zinc-800 focus:outline-none focus:border-zinc-400"
+                  value={dateIso}
+                  onChange={e => setDateIso(e.target.value)}
                 />
               </div>
               <div>
@@ -473,7 +489,7 @@ function OrderModal({
                 Batal
               </button>
               <button 
-                type="button"
+                type="button" 
                 onClick={handleFormSubmit}
                 className="flex-1 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl font-semibold text-[13.5px] transition-colors shadow-sm"
               >

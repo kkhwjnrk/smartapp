@@ -25,7 +25,7 @@ function DraftTab({
 
   // Salin Part Number tunggal
   const handleCopyPN = (pn) => {
-    showToast(`PN ${pn} tersalin! Siap paste di SADIX`);
+    showToast(`PN ${pn} tersalin!`);
   };
 
   // Salin seluruh format catatan toko (mirip Notes HP)
@@ -162,7 +162,7 @@ function DraftTab({
       <div className="flex items-center justify-between text-[12px] text-zinc-500 px-1">
         <span>
           {orderSubTab === 'active'
-            ? `Menampilkan ${currentDisplayedOrders.length} toko menunggu input SADIX`
+            ? `Menampilkan ${currentDisplayedOrders.length} toko menunggu diproses`
             : `Menampilkan ${currentDisplayedOrders.length} riwayat toko di arsip`}
         </span>
         {searchQuery && (
@@ -207,7 +207,7 @@ function DraftTab({
 
           <h4 className="text-[16px] font-bold text-zinc-900">
             {orderSubTab === 'active'
-              ? (searchQuery ? 'Order tidak ditemukan' : 'Semua Order Sudah Diinput ke SADIX 🎉')
+              ? (searchQuery ? 'Order tidak ditemukan' : 'Semua Order Sudah Selesai Diproses 🎉')
               : (searchQuery ? 'Arsip tidak ditemukan' : 'Belum Ada Order di Arsip')}
           </h4>
 
@@ -218,7 +218,7 @@ function DraftTab({
                 : 'Bagus! Semua pesanan toko saat ini sudah selesai dicentang.')
               : (searchQuery
                 ? `Tidak ada riwayat arsip dengan kata kunci "${searchQuery}"`
-                : 'Order toko yang selesai diinput ke SADIX akan otomatis tersimpan di sini.')}
+                : 'Order toko yang sudah selesai akan otomatis tersimpan di sini.')}
           </p>
 
           <div className="mt-5 flex justify-center gap-2">

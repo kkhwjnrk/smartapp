@@ -9,6 +9,7 @@ function OrderCard({
   onCopyFormatText
 }) {
   const [copiedPn, setCopiedPn] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const isCompleted = order.status === 'completed';
 
   const totalQty = order.items.reduce((sum, item) => sum + (Number(item.qty) || 0), 0);
@@ -20,6 +21,13 @@ function OrderCard({
     if (onCopyPN) onCopyPN(pn);
     setTimeout(() => setCopiedPn(null), 1500);
   };
+
+  // Batasi item yang tampil jika belum di-expand (maksimal 3 item)
+  const PREVIEW_LIMIT = 3;
+  const hasMoreItems = order.items.length > PREVIEW_LIMIT;
+  const displayedItems = (!isExpanded && hasMoreItems) 
+    ? order.items.slice(0, PREVIEW_LIMIT) 
+    : order.items;
 
   return (
     <div className={`bg-white rounded-3xl p-5 border transition-all duration-200 shadow-xs ${
@@ -41,7 +49,7 @@ function OrderCard({
                 ? 'bg-amber-500 text-white shadow-xs hover:bg-amber-600'
                 : 'border-2 border-zinc-400/80 hover:border-amber-500 hover:bg-amber-50/50 active:scale-95'
             }`}
-            title={isCompleted ? "Klik untuk mengembalikan ke Aktif" : "Klik untuk menandai Selesai diinput ke SADIX & Arsipkan"}
+            title={isCompleted ? "Klik untuk mengembalikan ke Aktif" : "Klik untuk menandai Selesai & Arsipkan"}
           >
             {isCompleted && (
               <svg className="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,7 +84,7 @@ function OrderCard({
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
                     </svg>
-                    Sudah di SADIX
+                    Sudah Selesai
                   </span>
                 </>
               )}
@@ -126,7 +134,7 @@ function OrderCard({
 
       {/* Body: Daftar Item Format Catatan (- PN : Qty) */}
       <div className="py-2.5 space-y-1">
-        {order.items.map((item, idx) => (
+        {displayedItems.map((item, idx) => (
           <div 
             key={idx}
             className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors group/item"
@@ -163,7 +171,7 @@ function OrderCard({
                   ? 'bg-emerald-100 text-emerald-800'
                   : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
               }`}
-              title="Salin PN ke clipboard untuk paste di SADIX"
+              title="Salin PN ke clipboard"
             >
               {copiedPn === item.pn ? (
                 <>
@@ -183,6 +191,31 @@ function OrderCard({
             </button>
           </div>
         ))}
+
+        {/* Tombol Buka / Ciutkan List jika part lebih dari 3 */}
+        {hasMoreItems && (
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="w-full py-1.5 mt-1.5 text-center text-[12px] font-semibold text-zinc-600 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 rounded-xl border border-zinc-200/60 transition-colors flex items-center justify-center gap-1.5 active:scale-[0.99]"
+          >
+            {isExpanded ? (
+              <>
+                <span>Ciutkan Daftar</span>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 15l7-7 7 7" />
+                </svg>
+              </>
+            ) : (
+              <>
+                <span>Lihat {order.items.length - PREVIEW_LIMIT} Part Lainnya (Total {order.items.length} Part)</span>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+              </>
+            )}
+          </button>
+        )}
       </div>
 
       {/* Footer Ringkasan Card */}
@@ -203,7 +236,7 @@ function OrderCard({
             onClick={() => onToggleStatus(order.id)}
             className="inline-flex items-center gap-1 text-amber-700 hover:text-amber-800 font-semibold text-[11.5px] bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-lg transition-colors"
           >
-            <span>Tandai Selesai SADIX</span>
+            <span>Tandai Selesai</span>
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
             </svg>
