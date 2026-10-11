@@ -1,6 +1,48 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import initialPricelist from './data/pricelist.json';
 
+// --- CATEGORY SYSTEM ---
+const CATEGORIES = [
+  { id: 'Semua', label: 'Semua' },
+  { id: 'Busi', label: 'Busi' },
+  { id: 'Kampas Rem', label: 'Kampas Rem' },
+  { id: 'Cakram & Kaliper', label: 'Cakram' },
+  { id: 'Roller & CVT', label: 'Roller & CVT' },
+  { id: 'Kopling', label: 'Kopling' },
+  { id: 'Filter', label: 'Filter' },
+  { id: 'Kelistrikan', label: 'Kelistrikan' },
+  { id: 'Mesin', label: 'Mesin' },
+  { id: 'Aksesoris', label: 'Aksesoris' },
+  { id: 'Lainnya', label: 'Lainnya' },
+];
+
+const getCategory = (item) => {
+  if (item?.category) return item.category;
+  const d = (item?.description || '').toLowerCase();
+  if (d.includes('spark plug') || d.includes('busi') || d.includes('ignimax') || d.includes('iridium') || d.includes('splug')) return 'Busi';
+  if (d.includes('brake pad') || d.includes('brake shoe') || d.includes('kampas')) return 'Kampas Rem';
+  if (d.includes('disc') || d.includes('rotor') || d.includes('caliper') || d.includes('kaliper') || d.includes('master rem') || d.includes('brake hose')) return 'Cakram & Kaliper';
+  if (d.includes('roller') || d.includes('pulley') || d.includes('cvt') || d.includes('belt') || d.includes('bushing')) return 'Roller & CVT';
+  if (d.includes('clutch') || d.includes('kopling') || d.includes('friction disc') || d.includes('per sentrik')) return 'Kopling';
+  if (d.includes('filter')) return 'Filter';
+  if (d.includes('battery') || d.includes('aki') || d.includes('ignition') || d.includes('coil') || d.includes('cdi') || d.includes('rectifier')) return 'Kelistrikan';
+  if (d.includes('valve') || d.includes('piston') || d.includes('cylinder') || d.includes('injector') || d.includes('exhaust') || d.includes('camshaft') || d.includes('intake') || d.includes('knalpot') || d.includes('ecu')) return 'Mesin';
+  if (d.includes('wheel') || d.includes('velg') || d.includes('bearing') || d.includes('shock') || d.includes('grip') || d.includes('chain') || d.includes('gear') || d.includes('handle') || d.includes('cable') || d.includes('stang') || d.includes('radiator')) return 'Aksesoris';
+  return 'Lainnya';
+};
+
+// Helper function to calculate and format discount
+const calculateDiscount = (priceStr, percentage) => {
+  if (!priceStr || priceStr === "0") return "-";
+  // Parse Indonesian format (e.g. 18.204 -> 18204)
+  const numericPrice = parseFloat(priceStr.replace(/\./g, '').replace(/,/g, ''));
+  if (isNaN(numericPrice)) return "-";
+  
+  const discounted = numericPrice * (1 - (percentage / 100));
+  // Format back to Indonesian format (e.g. 13835 -> 13.835)
+  return Math.round(discounted).toLocaleString('id-ID').replace(/,/g, '.');
+};
+
 function App() {
   const [activeTab, setActiveTab] = useState('pricelist'); 
   
@@ -17,8 +59,9 @@ function App() {
     localStorage.setItem('daytona_pricelist', JSON.stringify(items));
   }, [items]);
 
-  // Queries
+  // Queries & Filters
   const [query, setQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Semua');
   const [draftQuery, setDraftQuery] = useState('');
   const [showDraftDropdown, setShowDraftDropdown] = useState(false);
 
@@ -34,23 +77,38 @@ function App() {
     localStorage.setItem('order_draft', JSON.stringify(cart));
   }, [cart]);
 
-  // Modals for CRUD
+  // Modals
   const [isEditMode, setIsEditMode] = useState(false);
   const [showItemModal, setShowItemModal] = useState(false);
   const [modalItem, setModalItem] = useState(null); 
+  const [discountItem, setDiscountItem] = useState(null); // State for Bottom Sheet
 
   // Form State
   const [formData, setFormData] = useState({ pn: '', description: '', price: '', qty: '1' });
 
-  // Filter items
+  // Category counts
+  const categoryCounts = useMemo(() => {
+    const counts = { 'Semua': items.length };
+    items.forEach(item => {
+      const cat = getCategory(item);
+      counts[cat] = (counts[cat] || 0) + 1;
+    });
+    return counts;
+  }, [items]);
+
+  // Filter items by search + category
   const filteredItems = useMemo(() => {
-    if (!query) return items;
-    const lowerQuery = query.toLowerCase();
-    return items.filter(item => 
-      item.pn.toLowerCase().includes(lowerQuery) || 
-      item.description.toLowerCase().includes(lowerQuery)
-    );
-  }, [query, items]);
+    return items.filter(item => {
+      const matchCat = selectedCategory === 'Semua' || getCategory(item) === selectedCategory;
+      if (!matchCat) return false;
+      if (!query) return true;
+      const lowerQuery = query.toLowerCase();
+      return (
+        item.pn.toLowerCase().includes(lowerQuery) ||
+        item.description.toLowerCase().includes(lowerQuery)
+      );
+    });
+  }, [query, selectedCategory, items]);
 
   const draftSearchItems = useMemo(() => {
     if (!draftQuery) return [];
@@ -202,8 +260,8 @@ function App() {
         {activeTab === 'pricelist' && (
           <div className="space-y-4 animate-in fade-in duration-500">
             
-            {/* Minimalist Search Bar */}
             <div className="sticky top-[73px] z-20 bg-[#FDFDFD] pb-3 pt-1">
+              {/* Search Bar with X button */}
               <div className="relative">
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                   <svg className="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -211,10 +269,40 @@ function App() {
                 <input 
                   type="text" 
                   placeholder="Cari nama atau part number..."
-                  className="w-full pl-12 pr-4 py-3.5 bg-white border border-zinc-200 rounded-2xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 text-[15px] font-medium placeholder:font-normal placeholder:text-zinc-400 shadow-sm transition-all"
+                  className="w-full pl-12 pr-10 py-3.5 bg-white border border-zinc-200 rounded-2xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 text-[15px] font-medium placeholder:font-normal placeholder:text-zinc-400 shadow-sm transition-all"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
+                {query && (
+                  <button
+                    onClick={() => setQuery('')}
+                    className="absolute inset-y-0 right-4 flex items-center text-zinc-400 hover:text-zinc-700 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+                )}
+              </div>
+
+              {/* Category Pills - Horizontal Scroll */}
+              <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
+                {CATEGORIES.filter(cat => cat.id === 'Semua' || (categoryCounts[cat.id] || 0) > 0).map(cat => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className={`shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-medium transition-all ${
+                      selectedCategory === cat.id
+                        ? 'bg-zinc-900 text-white shadow-sm'
+                        : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                    }`}
+                  >
+                    {cat.label}
+                    <span className={`text-[11px] font-semibold ${
+                      selectedCategory === cat.id ? 'text-zinc-300' : 'text-zinc-400'
+                    }`}>
+                      {categoryCounts[cat.id] || 0}
+                    </span>
+                  </button>
+                ))}
               </div>
 
               {isEditMode && (
@@ -236,7 +324,11 @@ function App() {
             {/* List Container - Clean iOS-like cards */}
             <div className="space-y-3 pb-6">
               {filteredItems.map(item => (
-                <div key={item.pn} className="bg-white rounded-2xl p-4 border border-zinc-200 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col gap-3">
+                <div 
+                  key={item.pn} 
+                  onClick={() => !isEditMode && setDiscountItem(item)}
+                  className={`bg-white rounded-2xl p-4 border border-zinc-200 shadow-sm transition-all duration-200 flex flex-col gap-3 ${!isEditMode ? 'cursor-pointer hover:shadow-md hover:border-zinc-300 active:scale-[0.98]' : ''}`}
+                >
                   <div className="flex justify-between items-start gap-4">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-[15px] text-zinc-900 leading-snug break-words pr-2">{item.description}</h3>
@@ -244,7 +336,7 @@ function App() {
                     </div>
                     {isEditMode && (
                       <button 
-                        onClick={() => openEditModal(item)}
+                        onClick={(e) => { e.stopPropagation(); openEditModal(item); }}
                         className="shrink-0 text-zinc-400 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 p-2 rounded-lg transition-colors"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
@@ -266,8 +358,6 @@ function App() {
         {/* TAB: DRAFT */}
         {activeTab === 'draft' && (
           <div className="space-y-6 pb-6 animate-in fade-in duration-500">
-            
-            {/* Input Add Order */}
             <div className="relative z-30">
               <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                 <svg className="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
@@ -284,7 +374,6 @@ function App() {
                 onFocus={() => setShowDraftDropdown(true)}
               />
               
-              {/* Dropdown Search Results */}
               {showDraftDropdown && draftQuery && draftSearchItems.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-zinc-200 z-50 max-h-[60vh] overflow-y-auto">
                   {draftSearchItems.map(item => (
@@ -359,7 +448,48 @@ function App() {
         )}
       </main>
 
-      {/* CRUD MODAL - Clean, Native aesthetic */}
+      {/* DISCOUNT BOTTOM SHEET MODAL */}
+      {discountItem && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" onClick={() => setDiscountItem(null)}></div>
+          <div className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-7 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300">
+            <div className="w-12 h-1.5 bg-zinc-200 rounded-full mx-auto mb-6"></div>
+            
+            <div className="mb-6">
+              <div className="text-[13px] font-medium text-zinc-500 mb-1">Part Number: <span className="font-semibold text-zinc-900 ml-1">{discountItem.pn}</span></div>
+              <div className="text-[18px] font-bold text-zinc-900 leading-snug">{discountItem.description}</div>
+            </div>
+            
+            <div className="bg-zinc-50 rounded-2xl p-5 border border-zinc-200 mb-6 flex justify-between items-center">
+              <span className="text-[14px] font-semibold text-zinc-600">Harga (HET)</span>
+              <span className="text-[20px] font-bold text-zinc-900">{discountItem.price === "0" ? "-" : `Rp ${discountItem.price}`}</span>
+            </div>
+
+            <div className="space-y-1 mb-8">
+              <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-3 ml-1">Skema Diskon Grosir</h4>
+              
+              <div className="flex justify-between items-center py-3 px-1 border-b border-zinc-100">
+                <span className="text-[15px] font-medium text-zinc-700">Diskon 24%</span>
+                <span className="text-[16px] font-semibold text-zinc-900">Rp {calculateDiscount(discountItem.price, 24)}</span>
+              </div>
+              <div className="flex justify-between items-center py-3 px-1 border-b border-zinc-100">
+                <span className="text-[15px] font-medium text-zinc-700">Diskon 27%</span>
+                <span className="text-[16px] font-semibold text-zinc-900">Rp {calculateDiscount(discountItem.price, 27)}</span>
+              </div>
+              <div className="flex justify-between items-center py-3 px-1 border-b border-zinc-100">
+                <span className="text-[15px] font-medium text-zinc-700">Diskon 29%</span>
+                <span className="text-[16px] font-semibold text-zinc-900">Rp {calculateDiscount(discountItem.price, 29)}</span>
+              </div>
+            </div>
+
+            <button onClick={() => setDiscountItem(null)} className="w-full py-4 bg-zinc-900 text-white font-medium text-[15px] rounded-2xl hover:bg-zinc-800 transition-colors active:scale-[0.98]">
+              Tutup Rincian
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* CRUD MODAL */}
       {showItemModal && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
           <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm" onClick={() => setShowItemModal(false)}></div>
