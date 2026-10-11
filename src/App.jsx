@@ -18,6 +18,7 @@ import DiscountSheet from './components/pricelist/DiscountSheet';
 import CategorySheet from './components/pricelist/CategorySheet';
 import ItemModal from './components/pricelist/ItemModal';
 import StoreModal from './components/stores/StoreModal';
+import RouteSheet from './components/stores/RouteSheet';
 
 function App() {
   const [activeTab, setActiveTab] = useState('pricelist'); 
@@ -69,6 +70,8 @@ function App() {
   // Stores State
   const [storeSearchQuery, setStoreSearchQuery] = useState('');
   const [selectedRoute, setSelectedRoute] = useState('Semua');
+  const [isStoreEditMode, setIsStoreEditMode] = useState(false);
+  const [showRouteSheet, setShowRouteSheet] = useState(false);
   const [showStoreModal, setShowStoreModal] = useState(false);
   const [modalStore, setModalStore] = useState(null);
   const [storeFormData, setStoreFormData] = useState({
@@ -117,14 +120,14 @@ function App() {
 
   // Kunci scroll halaman belakang saat modal/sheet terbuka
   useEffect(() => {
-    if (discountItem || showCategorySheet || showItemModal || showStoreModal) {
+    if (discountItem || showCategorySheet || showItemModal || showStoreModal || showRouteSheet) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       return () => {
         document.body.style.overflow = originalOverflow;
       };
     }
-  }, [discountItem, showCategorySheet, showItemModal, showStoreModal]);
+  }, [discountItem, showCategorySheet, showItemModal, showStoreModal, showRouteSheet]);
 
   // Hitung jumlah item per kategori
   const categoryCounts = useMemo(() => {
@@ -242,22 +245,47 @@ function App() {
     }
   };
 
-  // Daftar Kode Rute yang ada untuk saran cepat
-  const existingRoutes = useMemo(() => {
-    const set = new Set();
+  // Daftar Kode Rute & Hitung jumlah toko per rute
+  const { routesList, routeCounts } = useMemo(() => {
+    const counts = { 'Semua': stores.length };
     stores.forEach(s => {
-      if (s.routeCode && s.routeCode.trim()) {
-        set.add(s.routeCode.trim());
-      }
+      const route = s.routeCode?.trim() || 'TANPA RUTE';
+      counts[route] = (counts[route] || 0) + 1;
     });
-    return Array.from(set).sort();
+    const unique = Object.keys(counts).filter(r => r !== 'Semua').sort();
+    return {
+      routesList: ['Semua', ...unique],
+      routeCounts: counts
+    };
   }, [stores]);
+
+  // Filter toko berdasarkan Kode Rute dan Search Query
+  const filteredStores = useMemo(() => {
+    return stores.filter(store => {
+      if (selectedRoute !== 'Semua') {
+        const storeRoute = store.routeCode?.trim() || 'TANPA RUTE';
+        if (storeRoute !== selectedRoute) return false;
+      }
+      if (storeSearchQuery.trim()) {
+        const q = storeSearchQuery.toLowerCase().trim();
+        const matchName = store.name?.toLowerCase().includes(q);
+        const matchRoute = store.routeCode?.toLowerCase().includes(q);
+        const matchOwner = store.owner?.toLowerCase().includes(q);
+        const matchAddress = store.address?.toLowerCase().includes(q);
+        if (!matchName && !matchRoute && !matchOwner && !matchAddress) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }, [stores, selectedRoute, storeSearchQuery]);
 
   // CRUD Toko Handlers
   const openAddStore = () => {
+    const firstRoute = routesList.find(r => r !== 'Semua') || 'R01 - BOGOR KOTA';
     setStoreFormData({
       name: '',
-      routeCode: selectedRoute !== 'Semua' ? selectedRoute : (existingRoutes[0] || 'R01 - BOGOR KOTA'),
+      routeCode: selectedRoute !== 'Semua' ? selectedRoute : firstRoute,
       owner: '',
       address: '',
       lat: '',
@@ -325,6 +353,8 @@ function App() {
         activeTab={activeTab} 
         isEditMode={isEditMode} 
         setIsEditMode={setIsEditMode} 
+        isStoreEditMode={isStoreEditMode}
+        setIsStoreEditMode={setIsStoreEditMode}
       />
 
       {/* Main Content Area */}
@@ -335,7 +365,7 @@ function App() {
             itemsCount={items.length}
             categoriesCount={CATEGORIES.length - 1}
             storesCount={stores.length}
-            routesCount={existingRoutes.length}
+            routesCount={routesList.length - 1}
             onOpenDraft={() => setActiveTab('draft')}
             onOpenPricelist={() => setActiveTab('pricelist')}
             onOpenStores={() => setActiveTab('stores')}
@@ -366,10 +396,14 @@ function App() {
         {activeTab === 'stores' && (
           <StoresTab 
             stores={stores}
+            filteredStores={filteredStores}
             searchQuery={storeSearchQuery}
             setSearchQuery={setStoreSearchQuery}
             selectedRoute={selectedRoute}
             setSelectedRoute={setSelectedRoute}
+            routeCounts={routeCounts}
+            onOpenRouteSheet={() => setShowRouteSheet(true)}
+            isEditMode={isStoreEditMode}
             onOpenAddModal={openAddStore}
             onOpenEditModal={openEditStore}
             onDeleteStore={deleteStore}
@@ -427,10 +461,20 @@ function App() {
         modalStore={modalStore}
         formData={storeFormData}
         setFormData={setStoreFormData}
-        existingRoutes={existingRoutes}
+        existingRoutes={routesList.filter(r => r !== 'Semua')}
         onSave={saveStore}
         onDelete={deleteStore}
         onClose={() => setShowStoreModal(false)}
+      />
+
+      {/* Route Picker Bottom Sheet */}
+      <RouteSheet 
+        isOpen={showRouteSheet}
+        selectedRoute={selectedRoute}
+        onSelectRoute={setSelectedRoute}
+        routesList={routesList}
+        routeCounts={routeCounts}
+        onClose={() => setShowRouteSheet(false)}
       />
 
       {/* Bottom Navigation Bar */}
