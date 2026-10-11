@@ -262,6 +262,94 @@ function App() {
   const [modalItem, setModalItem] = useState(null); 
   const [discountItem, setDiscountItem] = useState(null);
 
+  // Drag-to-dismiss states for Discount Bottom Sheet
+  const [discountDragY, setDiscountDragY] = useState(0);
+  const [isDiscountDragging, setIsDiscountDragging] = useState(false);
+  const discountDragStartY = useRef(0);
+  const discountCurrentDragY = useRef(0);
+
+  // Drag-to-dismiss states for Category Bottom Sheet
+  const [catDragY, setCatDragY] = useState(0);
+  const [isCatDragging, setIsCatDragging] = useState(false);
+  const catDragStartY = useRef(0);
+  const catCurrentDragY = useRef(0);
+
+  // Lock background body scrolling while modal is open
+  useEffect(() => {
+    if (discountItem || showCategorySheet || showItemModal) {
+      const originalOverflow = document.body.style.overflow;
+      const originalTouchAction = document.body.style.touchAction;
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.touchAction = originalTouchAction;
+      };
+    }
+  }, [discountItem, showCategorySheet, showItemModal]);
+
+  // Drag handlers for Discount Sheet
+  const handleDiscountTouchStart = (e) => {
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    discountDragStartY.current = clientY;
+    discountCurrentDragY.current = 0;
+    setIsDiscountDragging(true);
+  };
+
+  const handleDiscountTouchMove = (e) => {
+    if (!discountDragStartY.current) return;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const deltaY = clientY - discountDragStartY.current;
+    if (deltaY > 0) {
+      discountCurrentDragY.current = deltaY;
+      setDiscountDragY(deltaY);
+    } else {
+      discountCurrentDragY.current = 0;
+      setDiscountDragY(0);
+    }
+  };
+
+  const handleDiscountTouchEnd = () => {
+    setIsDiscountDragging(false);
+    if (discountCurrentDragY.current > 70) {
+      setDiscountItem(null);
+    }
+    setDiscountDragY(0);
+    discountDragStartY.current = 0;
+    discountCurrentDragY.current = 0;
+  };
+
+  // Drag handlers for Category Sheet
+  const handleCatTouchStart = (e) => {
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    catDragStartY.current = clientY;
+    catCurrentDragY.current = 0;
+    setIsCatDragging(true);
+  };
+
+  const handleCatTouchMove = (e) => {
+    if (!catDragStartY.current) return;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const deltaY = clientY - catDragStartY.current;
+    if (deltaY > 0) {
+      catCurrentDragY.current = deltaY;
+      setCatDragY(deltaY);
+    } else {
+      catCurrentDragY.current = 0;
+      setCatDragY(0);
+    }
+  };
+
+  const handleCatTouchEnd = () => {
+    setIsCatDragging(false);
+    if (catCurrentDragY.current > 70) {
+      setShowCategorySheet(false);
+    }
+    setCatDragY(0);
+    catDragStartY.current = 0;
+    catCurrentDragY.current = 0;
+  };
+
   // Form State
   const [formData, setFormData] = useState({ 
     pn: '', 
@@ -783,21 +871,34 @@ function App() {
         )}
       </main>
 
-      {/* CATEGORY PICKER BOTTOM SHEET */}
+      {/* CATEGORY PICKER BOTTOM SHEET (Swipe/Drag Down to Dismiss) */}
       {showCategorySheet && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" onClick={() => setShowCategorySheet(false)}></div>
-          <div className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-6 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300 max-h-[82vh] flex flex-col">
+          <div 
+            style={{
+              transform: catDragY > 0 ? `translateY(${catDragY}px)` : undefined,
+              transition: isCatDragging ? 'none' : 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+            className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-6 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300 max-h-[82vh] flex flex-col"
+          >
             
-            {/* Garis Handle Interaktif di Atas untuk Menutup Sheet */}
-            <button
-              type="button"
-              onClick={() => setShowCategorySheet(false)}
-              className="w-full flex justify-center items-center py-2 -mt-3 mb-3 group cursor-pointer focus:outline-none"
+            {/* Garis Handle Interaktif Drag-down to Dismiss */}
+            <div
+              className="touch-none select-none cursor-grab active:cursor-grabbing py-2 -mt-3 mb-2 flex justify-center items-center w-full"
+              onTouchStart={handleCatTouchStart}
+              onTouchMove={handleCatTouchMove}
+              onTouchEnd={handleCatTouchEnd}
+              onMouseDown={handleCatTouchStart}
+              onMouseMove={(e) => { if (isCatDragging) handleCatTouchMove(e); }}
+              onMouseUp={handleCatTouchEnd}
+              onClick={() => {
+                if (catCurrentDragY.current < 5) setShowCategorySheet(false);
+              }}
               aria-label="Tutup kategori"
             >
-              <div className="w-14 h-1.5 bg-zinc-300 group-hover:bg-zinc-400 rounded-full transition-colors"></div>
-            </button>
+              <div className={`w-14 h-1.5 rounded-full transition-all ${isCatDragging ? 'bg-zinc-500 scale-105' : 'bg-zinc-300 hover:bg-zinc-400'}`}></div>
+            </div>
 
             {/* Header */}
             <div className="flex justify-between items-center mb-3 shrink-0">
@@ -887,23 +988,36 @@ function App() {
         </div>
       )}
 
-      {/* DISCOUNT BOTTOM SHEET MODAL (Garis Atas Aktif Menggantikan Tombol Tutup) */}
+      {/* DISCOUNT BOTTOM SHEET MODAL (Interaktif Drag-down to Dismiss Seperti Native App) */}
       {discountItem && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" onClick={() => setDiscountItem(null)}></div>
-          <div className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-7 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300">
+          <div 
+            style={{
+              transform: discountDragY > 0 ? `translateY(${discountDragY}px)` : undefined,
+              transition: isDiscountDragging ? 'none' : 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+            className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-7 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300"
+          >
             
-            {/* Garis Handle Interaktif di Atas untuk Menutup Rincian */}
-            <button
-              type="button"
-              onClick={() => setDiscountItem(null)}
-              className="w-full flex justify-center items-center py-2.5 -mt-4 mb-3 group cursor-pointer focus:outline-none"
-              aria-label="Tutup rincian"
+            {/* Garis Handle Interaktif: Drag ke Bawah Menutup Modal, Touch-none Mencegah Background Scroll */}
+            <div
+              className="touch-none select-none cursor-grab active:cursor-grabbing py-2.5 -mt-4 mb-3 flex justify-center items-center w-full"
+              onTouchStart={handleDiscountTouchStart}
+              onTouchMove={handleDiscountTouchMove}
+              onTouchEnd={handleDiscountTouchEnd}
+              onMouseDown={handleDiscountTouchStart}
+              onMouseMove={(e) => { if (isDiscountDragging) handleDiscountTouchMove(e); }}
+              onMouseUp={handleDiscountTouchEnd}
+              onClick={() => {
+                if (discountCurrentDragY.current < 5) setDiscountItem(null);
+              }}
+              aria-label="Tutup rincian dengan drag ke bawah atau ketuk"
             >
-              <div className="w-14 h-1.5 bg-zinc-300 group-hover:bg-zinc-500 rounded-full transition-colors"></div>
-            </button>
+              <div className={`w-14 h-1.5 rounded-full transition-all ${isDiscountDragging ? 'bg-zinc-500 scale-105' : 'bg-zinc-300 hover:bg-zinc-400'}`}></div>
+            </div>
             
-            {/* Header Rincian Barang: PN di Kiri, Kategori & Tombol X di Pojok Kanan Atas */}
+            {/* Header Rincian Barang: PN di Kiri, Kategori di Pojok Kanan Atas (Tanpa Tombol X) */}
             <div className="flex justify-between items-start mb-5">
               <div className="flex-1 pr-3">
                 <div className="mb-1.5">
@@ -913,20 +1027,10 @@ function App() {
                 </div>
                 <div className="text-[18px] font-bold text-zinc-900 leading-snug">{discountItem.description}</div>
               </div>
-              <div className="flex flex-col items-end gap-2 shrink-0">
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200">
+              <div className="shrink-0 pt-0.5">
+                <span className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200">
                   {discountItem.category || 'Lainnya'}
                 </span>
-                <button
-                  type="button"
-                  onClick={() => setDiscountItem(null)}
-                  className="w-7 h-7 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-800 flex items-center justify-center transition-colors"
-                  aria-label="Tutup"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
               </div>
             </div>
             
@@ -943,7 +1047,7 @@ function App() {
             </div>
 
             {/* Skema Diskon Grosir */}
-            <div className="space-y-1 pb-4">
+            <div className="space-y-1 pb-2">
               <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2 ml-1">Skema Diskon Grosir</h4>
               
               <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
