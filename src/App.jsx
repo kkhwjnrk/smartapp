@@ -239,6 +239,8 @@ function App() {
   // Queries & Categories
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Semua');
+  const [showCategorySheet, setShowCategorySheet] = useState(false);
+  const [catSearchQuery, setCatSearchQuery] = useState('');
   const [draftQuery, setDraftQuery] = useState('');
   const [showDraftDropdown, setShowDraftDropdown] = useState(false);
 
@@ -278,6 +280,13 @@ function App() {
     });
     return counts;
   }, [items]);
+
+  // Kategori terfilter untuk modal pencarian kategori
+  const filteredCategories = useMemo(() => {
+    if (!catSearchQuery.trim()) return CATEGORIES;
+    const lower = catSearchQuery.toLowerCase().trim();
+    return CATEGORIES.filter(cat => cat.toLowerCase().includes(lower));
+  }, [catSearchQuery]);
 
   // Filter items berdasarkan Kategori dan Search Query
   const filteredItems = useMemo(() => {
@@ -444,15 +453,21 @@ function App() {
                 </div>
               </button>
 
-              <div className="bg-zinc-50/50 p-5 rounded-3xl border border-zinc-200/50 flex flex-col items-start gap-4">
-                <div className="w-10 h-10 bg-zinc-100/50 rounded-full flex items-center justify-center text-zinc-400">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <button 
+                onClick={() => {
+                  setActiveTab('pricelist');
+                  setShowCategorySheet(true);
+                }}
+                className="bg-white p-5 rounded-3xl border border-zinc-200 shadow-sm flex flex-col items-start gap-4 hover:border-zinc-300 transition-colors text-left"
+              >
+                <div className="w-10 h-10 bg-zinc-100 rounded-full flex items-center justify-center text-zinc-700">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 </div>
                 <div>
-                  <span className="block font-semibold text-zinc-400 text-[15px]">Kategori</span>
+                  <span className="block font-semibold text-zinc-900 text-[15px]">Kategori</span>
                   <span className="text-[13px] font-medium text-zinc-500 mt-0.5">{CATEGORIES.length - 1} Kategori</span>
                 </div>
-              </div>
+              </button>
             </div>
           </div>
         )}
@@ -461,7 +476,7 @@ function App() {
         {activeTab === 'pricelist' && (
           <div className="space-y-3.5 animate-in fade-in duration-500">
             
-            {/* Sticky Search & Filter Control Bar */}
+            {/* Sticky Search & Category Control Bar */}
             <div className="sticky top-[69px] z-20 bg-[#FDFDFD] pb-2 pt-1">
               
               {/* Kolom Cari dengan Tombol X */}
@@ -498,43 +513,62 @@ function App() {
                 )}
               </div>
 
-              {/* Horizontal Scrollable Category Filter Pills */}
-              <div className="flex items-center gap-2 mt-3 overflow-x-auto no-scrollbar py-0.5 -mx-5 px-5">
-                {CATEGORIES.map(cat => {
-                  const count = categoryCounts[cat] || 0;
-                  if (count === 0 && cat !== 'Semua') return null;
-                  const isSelected = selectedCategory === cat;
-                  return (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`shrink-0 px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all flex items-center gap-1.5 active:scale-95 ${
-                        isSelected 
-                          ? 'bg-zinc-900 text-white shadow-sm' 
-                          : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:text-zinc-900'
-                      }`}
-                    >
-                      <span>{cat}</span>
-                      <span className={`text-[11px] px-1.5 py-0.2 rounded-full font-semibold ${
-                        isSelected ? 'bg-white/20 text-white' : 'bg-zinc-100 text-zinc-500'
-                      }`}>
-                        {count}
-                      </span>
-                    </button>
-                  );
-                })}
+              {/* Category Selector Bar (Pengganti Pill Scroll yang melelahkan) */}
+              <div className="mt-2.5 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCatSearchQuery('');
+                    setShowCategorySheet(true);
+                  }}
+                  className={`flex-1 flex items-center justify-between px-4 py-2.5 rounded-2xl border text-[13px] font-medium transition-all active:scale-[0.99] ${
+                    selectedCategory !== 'Semua'
+                      ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
+                      : 'bg-white border-zinc-200 text-zinc-700 hover:border-zinc-300 shadow-sm'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    <svg className={`w-4 h-4 shrink-0 ${selectedCategory !== 'Semua' ? 'text-zinc-300' : 'text-zinc-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    <span className="truncate">
+                      {selectedCategory === 'Semua' ? 'Semua Kategori' : selectedCategory}
+                    </span>
+                    <span className={`text-[11px] px-1.5 py-0.2 rounded-full font-semibold ${
+                      selectedCategory !== 'Semua' ? 'bg-white/20 text-white' : 'bg-zinc-100 text-zinc-500'
+                    }`}>
+                      {categoryCounts[selectedCategory] || 0}
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-1 shrink-0 ml-2">
+                    <span className="text-[12px] opacity-75">Ganti</span>
+                    <svg className="w-4 h-4 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </button>
+
+                {selectedCategory !== 'Semua' && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory('Semua')}
+                    className="px-3.5 py-2.5 rounded-2xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-[13px] font-medium transition-colors shrink-0"
+                    title="Reset ke Semua Kategori"
+                  >
+                    Semua
+                  </button>
+                )}
               </div>
 
-              {/* Filter Status & Reset */}
+              {/* Status Hasil Pencarian */}
               <div className="flex items-center justify-between text-[12px] text-zinc-500 font-medium px-1 mt-2">
                 <span>
-                  {selectedCategory !== 'Semua' ? (
-                    <>Kategori: <strong className="text-zinc-900 font-semibold">{selectedCategory}</strong></>
+                  {query.trim() ? (
+                    <>Hasil cari "{query}" ({filteredItems.length} item)</>
                   ) : (
-                    'Semua Kategori'
+                    <>Menampilkan {filteredItems.length} item</>
                   )}
-                  {' '}({filteredItems.length} item)
                 </span>
                 {(selectedCategory !== 'Semua' || query.trim().length > 0) && (
                   <button 
@@ -544,7 +578,7 @@ function App() {
                     }}
                     className="text-zinc-500 hover:text-zinc-900 font-medium underline transition-colors"
                   >
-                    Reset Filter
+                    Reset Semua
                   </button>
                 )}
               </div>
@@ -567,7 +601,7 @@ function App() {
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
                 <p className="text-zinc-900 text-[15px] font-semibold">Data tidak ditemukan</p>
-                <p className="text-zinc-500 text-[13px] mt-1">Coba kata kunci lain atau reset filter kategori.</p>
+                <p className="text-zinc-500 text-[13px] mt-1">Coba kata kunci lain atau ubah pilihan kategori.</p>
                 <button 
                   onClick={() => { setSelectedCategory('Semua'); setQuery(''); }}
                   className="mt-4 px-4 py-2 bg-zinc-100 text-zinc-700 rounded-xl text-[13px] font-medium hover:bg-zinc-200 transition-colors"
@@ -587,15 +621,23 @@ function App() {
                 >
                   <div className="flex justify-between items-start gap-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-[15px] text-zinc-900 leading-snug break-words pr-2">{item.description}</h3>
-                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                        <span className="text-[12px] font-medium text-zinc-500 font-mono">PN: {item.pn}</span>
-                        <span className="w-1 h-1 rounded-full bg-zinc-300"></span>
-                        <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200/60">
+                      
+                      {/* PN di atas nama barang, jelas dan berukuran tegas */}
+                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                        <span className="text-[14px] font-bold text-zinc-900 font-mono tracking-tight bg-zinc-100 px-2.5 py-0.5 rounded-lg border border-zinc-200/80">
+                          PN: {item.pn}
+                        </span>
+                        <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-50 text-zinc-500 border border-zinc-200/60">
                           {item.category || 'Lainnya'}
                         </span>
                       </div>
+
+                      {/* Nama / Deskripsi Barang */}
+                      <h3 className="font-medium text-[15px] text-zinc-800 leading-snug break-words pr-1">
+                        {item.description}
+                      </h3>
                     </div>
+
                     {isEditMode && (
                       <button 
                         onClick={(e) => { e.stopPropagation(); openEditModal(item); }}
@@ -723,6 +765,113 @@ function App() {
         )}
       </main>
 
+      {/* CATEGORY PICKER BOTTOM SHEET */}
+      {showCategorySheet && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" onClick={() => setShowCategorySheet(false)}></div>
+          <div className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-6 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300 max-h-[82vh] flex flex-col">
+            {/* Handle bar */}
+            <div className="w-12 h-1.5 bg-zinc-200 rounded-full mx-auto mb-4 shrink-0"></div>
+
+            {/* Header */}
+            <div className="flex justify-between items-center mb-3 shrink-0">
+              <div>
+                <h3 className="text-[18px] font-bold text-zinc-900">Pilih Kategori</h3>
+                <p className="text-[13px] text-zinc-500">Pilih untuk menyaring barang secara instan</p>
+              </div>
+              {selectedCategory !== 'Semua' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory('Semua');
+                    setShowCategorySheet(false);
+                  }}
+                  className="text-[13px] font-semibold text-zinc-600 hover:text-zinc-900 underline"
+                >
+                  Tampilkan Semua
+                </button>
+              )}
+            </div>
+
+            {/* Mini Search Kategori */}
+            <div className="relative mb-3 shrink-0">
+              <div className="absolute inset-y-0 left-3.5 flex items-center pointer-events-none">
+                <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Cari nama kategori..."
+                className="w-full pl-10 pr-9 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-[14px] focus:outline-none focus:border-zinc-400 focus:bg-white transition-all font-medium placeholder:font-normal"
+                value={catSearchQuery}
+                onChange={e => setCatSearchQuery(e.target.value)}
+              />
+              {catSearchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setCatSearchQuery('')}
+                  className="absolute inset-y-0 right-3 flex items-center text-zinc-400 hover:text-zinc-600"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            {/* Category List */}
+            <div className="overflow-y-auto space-y-1.5 flex-1 pr-1 -mr-1">
+              {filteredCategories.map(cat => {
+                const count = categoryCounts[cat] || 0;
+                if (count === 0 && cat !== 'Semua') return null;
+                const isSelected = selectedCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategory(cat);
+                      setShowCategorySheet(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all ${
+                      isSelected
+                        ? 'bg-zinc-900 text-white font-semibold shadow-sm'
+                        : 'bg-zinc-50 hover:bg-zinc-100 text-zinc-800 font-medium'
+                    }`}
+                  >
+                    <span className="text-[14px]">{cat}</span>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[12px] px-2 py-0.5 rounded-full font-medium ${
+                        isSelected ? 'bg-white/20 text-white' : 'bg-white border border-zinc-200 text-zinc-600'
+                      }`}>
+                        {count} item
+                      </span>
+                      {isSelected && (
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Close Button */}
+            <div className="pt-3 mt-2 border-t border-zinc-100 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowCategorySheet(false)}
+                className="w-full py-3 bg-zinc-100 text-zinc-700 font-medium text-[14px] rounded-xl hover:bg-zinc-200 transition-colors"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* DISCOUNT BOTTOM SHEET MODAL */}
       {discountItem && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
@@ -732,8 +881,10 @@ function App() {
             
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-[13px] font-medium text-zinc-500">PN: <strong className="font-semibold text-zinc-900">{discountItem.pn}</strong></span>
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700 border border-zinc-200">
+                <span className="text-[14px] font-bold text-zinc-900 font-mono tracking-tight bg-zinc-100 px-2.5 py-0.5 rounded-lg border border-zinc-200">
+                  PN: {discountItem.pn}
+                </span>
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-50 text-zinc-600 border border-zinc-200">
                   {discountItem.category || 'Lainnya'}
                 </span>
               </div>
@@ -782,7 +933,7 @@ function App() {
                 <input 
                   type="text" required
                   disabled={!!modalItem}
-                  className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px] disabled:bg-zinc-50 disabled:text-zinc-500"
+                  className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px] disabled:bg-zinc-50 disabled:text-zinc-500 font-mono font-semibold"
                   value={formData.pn} onChange={e => setFormData({...formData, pn: e.target.value})}
                 />
               </div>
