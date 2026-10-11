@@ -398,16 +398,15 @@ function App() {
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-28 font-sans text-zinc-900 selection:bg-zinc-200">
       
-      {/* Top Header - Apple Minimalist Aesthetic */}
+      {/* Top Header - Apple Minimalist Aesthetic (Tanpa Daytona System) */}
       <header className="bg-[#FDFDFD]/90 sticky top-0 z-30 backdrop-blur-xl border-b border-zinc-200/50">
-        <div className="max-w-md mx-auto px-5 py-4 flex justify-between items-end">
+        <div className="max-w-md mx-auto px-5 py-3.5 flex justify-between items-center">
           <div>
-            <h1 className="text-[22px] font-bold text-zinc-900 tracking-tight">
+            <h1 className="text-[20px] font-bold text-zinc-900 tracking-tight">
               {activeTab === 'home' && "Dashboard"}
               {activeTab === 'pricelist' && "Pricelist"}
               {activeTab === 'draft' && "Draft Order"}
             </h1>
-            <p className="text-[13px] font-medium text-zinc-500 mt-0.5">Daytona System</p>
           </div>
           {activeTab === 'pricelist' && (
             <button 
@@ -477,7 +476,7 @@ function App() {
           <div className="space-y-3.5 animate-in fade-in duration-500">
             
             {/* Sticky Search & Category Control Bar */}
-            <div className="sticky top-[69px] z-20 bg-[#FDFDFD] pb-2 pt-1">
+            <div className="sticky top-[58px] z-20 bg-[#FDFDFD] pb-2 pt-1">
               
               {/* Kolom Cari dengan Tombol X */}
               <div className="relative">
@@ -513,7 +512,7 @@ function App() {
                 )}
               </div>
 
-              {/* Category Selector Bar (Pengganti Pill Scroll yang melelahkan) */}
+              {/* Category Selector Bar */}
               <div className="mt-2.5 flex items-center gap-2">
                 <button
                   type="button"
@@ -611,7 +610,7 @@ function App() {
               </div>
             )}
 
-            {/* List Container - Clean Minimalist Cards */}
+            {/* List Container - Card dengan PN di atas oranye Daytona & Kategori di pojok kanan atas */}
             <div className="space-y-3 pb-6">
               {filteredItems.map(item => (
                 <div 
@@ -619,37 +618,46 @@ function App() {
                   onClick={() => !isEditMode && setDiscountItem(item)}
                   className={`bg-white rounded-2xl p-4 border border-zinc-200 shadow-sm transition-all duration-200 flex flex-col gap-2.5 ${!isEditMode ? 'cursor-pointer hover:shadow-md hover:border-zinc-300 active:scale-[0.98]' : ''}`}
                 >
+                  {/* Bagian Atas Card: PN di Kiri, Kategori di Pojok Kanan Atas */}
                   <div className="flex justify-between items-start gap-3">
                     <div className="flex-1 min-w-0">
                       
-                      {/* PN di atas nama barang, jelas dan berukuran tegas */}
-                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                        <span className="text-[14px] font-bold text-zinc-900 font-mono tracking-tight bg-zinc-100 px-2.5 py-0.5 rounded-lg border border-zinc-200/80">
+                      {/* PN Berwarna Oranye Daytona khas racing, tegas & jelas */}
+                      <div className="mb-1.5">
+                        <span className="inline-block text-[14px] font-bold text-[#EA580C] font-mono tracking-tight bg-orange-50/90 px-2.5 py-0.5 rounded-lg border border-orange-200/70 shadow-[0_1px_2px_rgba(234,88,12,0.06)]">
                           PN: {item.pn}
-                        </span>
-                        <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-50 text-zinc-500 border border-zinc-200/60">
-                          {item.category || 'Lainnya'}
                         </span>
                       </div>
 
                       {/* Nama / Deskripsi Barang */}
-                      <h3 className="font-medium text-[15px] text-zinc-800 leading-snug break-words pr-1">
+                      <h3 className="font-medium text-[15px] text-zinc-900 leading-snug break-words pr-1">
                         {item.description}
                       </h3>
                     </div>
 
-                    {isEditMode && (
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); openEditModal(item); }}
-                        className="shrink-0 text-zinc-400 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 p-2 rounded-lg transition-colors"
-                        aria-label="Edit Barang"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                      </button>
-                    )}
+                    {/* Pojok Kanan Atas: Kategori Badge & Tombol Edit */}
+                    <div className="flex flex-col items-end gap-2 shrink-0 pt-0.5">
+                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200/60 max-w-[140px] truncate text-right">
+                        {item.category || 'Lainnya'}
+                      </span>
+                      {isEditMode && (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); openEditModal(item); }}
+                          className="text-zinc-400 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 p-1.5 rounded-lg transition-colors"
+                          aria-label="Edit Barang"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        </button>
+                      )}
+                    </div>
                   </div>
+
+                  {/* Bagian Bawah Card: Isi per Dus/Karton & Harga HET */}
                   <div className="pt-2.5 border-t border-zinc-100 flex justify-between items-center">
-                    <div className="text-[13px] text-zinc-500 font-medium">Qty: {item.qty}</div>
+                    <div className="text-[13px] text-zinc-500 font-medium flex items-center gap-1.5">
+                      <span className="text-zinc-400">Isi/Dus:</span>
+                      <span className="font-semibold text-zinc-700">{item.qty} PCS</span>
+                    </div>
                     <div className="text-[15px] font-semibold text-zinc-900">
                       {item.price === "0" || !item.price ? "-" : item.price}
                     </div>
@@ -697,7 +705,13 @@ function App() {
                     <div key={item.pn} className="w-full text-left px-5 py-4 border-b border-zinc-100 last:border-0 flex flex-col gap-3">
                       <div>
                         <div className="text-[14px] font-semibold text-zinc-900 leading-snug">{item.description}</div>
-                        <div className="text-[12px] font-medium text-zinc-500 mt-0.5">PN: {item.pn} · {item.category}</div>
+                        <div className="text-[12px] font-medium text-zinc-500 mt-0.5 flex items-center gap-1.5">
+                          <span className="text-[#EA580C] font-semibold font-mono">PN: {item.pn}</span>
+                          <span>·</span>
+                          <span>{item.category}</span>
+                          <span>·</span>
+                          <span className="text-zinc-400">{item.qty} pcs/dus</span>
+                        </div>
                       </div>
                       {selectedDraftItem?.pn === item.pn ? (
                         <div className="flex gap-2 mt-1">
@@ -747,7 +761,11 @@ function App() {
                     </div>
                     <div className="flex-1 min-w-0 pr-2">
                       <div className="font-semibold text-zinc-900 text-[14px] leading-snug break-words line-clamp-2 mb-0.5">{item.description}</div>
-                      <div className="text-[12px] font-medium text-zinc-500">PN: {item.pn}</div>
+                      <div className="text-[12px] font-medium text-zinc-500 flex items-center gap-1.5">
+                        <span className="text-[#EA580C] font-semibold font-mono">PN: {item.pn}</span>
+                        <span>·</span>
+                        <span className="text-zinc-400">{item.qty} pcs/dus</span>
+                      </div>
                     </div>
                     <div className="flex flex-col items-end gap-3 shrink-0">
                       <div className="text-[15px] font-semibold text-zinc-900 bg-zinc-50 px-3 py-1 rounded-lg border border-zinc-100">
@@ -770,8 +788,16 @@ function App() {
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" onClick={() => setShowCategorySheet(false)}></div>
           <div className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-6 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300 max-h-[82vh] flex flex-col">
-            {/* Handle bar */}
-            <div className="w-12 h-1.5 bg-zinc-200 rounded-full mx-auto mb-4 shrink-0"></div>
+            
+            {/* Garis Handle Interaktif di Atas untuk Menutup Sheet */}
+            <button
+              type="button"
+              onClick={() => setShowCategorySheet(false)}
+              className="w-full flex justify-center items-center py-2 -mt-3 mb-3 group cursor-pointer focus:outline-none"
+              aria-label="Tutup kategori"
+            >
+              <div className="w-14 h-1.5 bg-zinc-300 group-hover:bg-zinc-400 rounded-full transition-colors"></div>
+            </button>
 
             {/* Header */}
             <div className="flex justify-between items-center mb-3 shrink-0">
@@ -857,65 +883,83 @@ function App() {
                 );
               })}
             </div>
-
-            {/* Close Button */}
-            <div className="pt-3 mt-2 border-t border-zinc-100 shrink-0">
-              <button
-                type="button"
-                onClick={() => setShowCategorySheet(false)}
-                className="w-full py-3 bg-zinc-100 text-zinc-700 font-medium text-[14px] rounded-xl hover:bg-zinc-200 transition-colors"
-              >
-                Tutup
-              </button>
-            </div>
           </div>
         </div>
       )}
 
-      {/* DISCOUNT BOTTOM SHEET MODAL */}
+      {/* DISCOUNT BOTTOM SHEET MODAL (Garis Atas Aktif Menggantikan Tombol Tutup) */}
       {discountItem && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" onClick={() => setDiscountItem(null)}></div>
           <div className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-7 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300">
-            <div className="w-12 h-1.5 bg-zinc-200 rounded-full mx-auto mb-6"></div>
             
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-[14px] font-bold text-zinc-900 font-mono tracking-tight bg-zinc-100 px-2.5 py-0.5 rounded-lg border border-zinc-200">
-                  PN: {discountItem.pn}
-                </span>
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-50 text-zinc-600 border border-zinc-200">
+            {/* Garis Handle Interaktif di Atas untuk Menutup Rincian */}
+            <button
+              type="button"
+              onClick={() => setDiscountItem(null)}
+              className="w-full flex justify-center items-center py-2.5 -mt-4 mb-3 group cursor-pointer focus:outline-none"
+              aria-label="Tutup rincian"
+            >
+              <div className="w-14 h-1.5 bg-zinc-300 group-hover:bg-zinc-500 rounded-full transition-colors"></div>
+            </button>
+            
+            {/* Header Rincian Barang: PN di Kiri, Kategori & Tombol X di Pojok Kanan Atas */}
+            <div className="flex justify-between items-start mb-5">
+              <div className="flex-1 pr-3">
+                <div className="mb-1.5">
+                  <span className="inline-block text-[14px] font-bold text-[#EA580C] font-mono tracking-tight bg-orange-50/90 px-2.5 py-0.5 rounded-lg border border-orange-200/70">
+                    PN: {discountItem.pn}
+                  </span>
+                </div>
+                <div className="text-[18px] font-bold text-zinc-900 leading-snug">{discountItem.description}</div>
+              </div>
+              <div className="flex flex-col items-end gap-2 shrink-0">
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200">
                   {discountItem.category || 'Lainnya'}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => setDiscountItem(null)}
+                  className="w-7 h-7 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-800 flex items-center justify-center transition-colors"
+                  aria-label="Tutup"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-              <div className="text-[18px] font-bold text-zinc-900 leading-snug">{discountItem.description}</div>
             </div>
             
-            <div className="bg-zinc-50 rounded-2xl p-5 border border-zinc-200 mb-6 flex justify-between items-center">
-              <span className="text-[14px] font-semibold text-zinc-600">Harga (HET)</span>
-              <span className="text-[20px] font-bold text-zinc-900">{discountItem.price === "0" || !discountItem.price ? "-" : `Rp ${discountItem.price}`}</span>
+            {/* Harga HET & Qty per Dus */}
+            <div className="bg-zinc-50 rounded-2xl p-4 border border-zinc-200 mb-5 flex justify-between items-center">
+              <div>
+                <span className="block text-[12px] font-medium text-zinc-500">Harga (HET)</span>
+                <span className="text-[20px] font-bold text-zinc-900">{discountItem.price === "0" || !discountItem.price ? "-" : `Rp ${discountItem.price}`}</span>
+              </div>
+              <div className="text-right">
+                <span className="block text-[12px] font-medium text-zinc-500">Isi per Dus</span>
+                <span className="text-[15px] font-semibold text-zinc-800">{discountItem.qty} PCS</span>
+              </div>
             </div>
 
-            <div className="space-y-1 mb-8">
-              <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-3 ml-1">Skema Diskon Grosir</h4>
+            {/* Skema Diskon Grosir */}
+            <div className="space-y-1 pb-4">
+              <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2 ml-1">Skema Diskon Grosir</h4>
               
-              <div className="flex justify-between items-center py-3 px-1 border-b border-zinc-100">
+              <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
                 <span className="text-[15px] font-medium text-zinc-700">Diskon 24%</span>
                 <span className="text-[16px] font-semibold text-zinc-900">Rp {calculateDiscount(discountItem.price, 24)}</span>
               </div>
-              <div className="flex justify-between items-center py-3 px-1 border-b border-zinc-100">
+              <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
                 <span className="text-[15px] font-medium text-zinc-700">Diskon 27%</span>
                 <span className="text-[16px] font-semibold text-zinc-900">Rp {calculateDiscount(discountItem.price, 27)}</span>
               </div>
-              <div className="flex justify-between items-center py-3 px-1 border-b border-zinc-100">
+              <div className="flex justify-between items-center py-2.5 px-1">
                 <span className="text-[15px] font-medium text-zinc-700">Diskon 29%</span>
                 <span className="text-[16px] font-semibold text-zinc-900">Rp {calculateDiscount(discountItem.price, 29)}</span>
               </div>
             </div>
 
-            <button onClick={() => setDiscountItem(null)} className="w-full py-4 bg-zinc-900 text-white font-medium text-[15px] rounded-2xl hover:bg-zinc-800 transition-colors active:scale-[0.98]">
-              Tutup Rincian
-            </button>
           </div>
         </div>
       )}
@@ -933,7 +977,7 @@ function App() {
                 <input 
                   type="text" required
                   disabled={!!modalItem}
-                  className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px] disabled:bg-zinc-50 disabled:text-zinc-500 font-mono font-semibold"
+                  className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px] disabled:bg-zinc-50 disabled:text-zinc-500 font-mono font-bold text-[#EA580C]"
                   value={formData.pn} onChange={e => setFormData({...formData, pn: e.target.value})}
                 />
               </div>
@@ -967,7 +1011,7 @@ function App() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[13px] font-medium text-zinc-600 mb-1.5">Isi per Dus</label>
+                  <label className="block text-[13px] font-medium text-zinc-600 mb-1.5">Isi per Dus/Karton</label>
                   <input 
                     type="number" 
                     className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px]"
