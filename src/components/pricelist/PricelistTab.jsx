@@ -8,6 +8,11 @@ function PricelistTab({
   setQuery,
   selectedCategory,
   setSelectedCategory,
+  selectedSubCategory = 'Semua',
+  setSelectedSubCategory = () => {},
+  availableSubCategories = [],
+  selectedDiscountTier = 'het',
+  setSelectedDiscountTier = () => {},
   categoryCounts,
   onOpenCategorySheet,
   isEditMode,
@@ -19,10 +24,10 @@ function PricelistTab({
 
   return (
     <div className="space-y-3.5 animate-in fade-in duration-500">
-      
+
       {/* Sticky Search & Category Control Bar */}
-      <div className="sticky top-[58px] z-20 bg-[#FDFDFD] pb-2 pt-1">
-        
+      <div className="sticky top-[58px] z-20 bg-[#FDFDFD] pb-2.5 pt-1 space-y-2.5">
+
         {/* Kolom Cari dengan Tombol X */}
         <div className="relative">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
@@ -30,15 +35,15 @@ function PricelistTab({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <input 
+          <input
             ref={searchInputRef}
-            type="text" 
-            placeholder="Cari nama atau part number..."
-            className="w-full pl-12 pr-11 py-3.5 bg-white border border-zinc-200 rounded-2xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 text-[15px] font-medium placeholder:font-normal placeholder:text-zinc-400 shadow-sm transition-all"
+            type="text"
+            placeholder="Cari part number, nama, motor (beat, vario, nmax)..."
+            className="w-full pl-12 pr-11 py-3 bg-white border border-zinc-200 rounded-2xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 text-[14.5px] font-medium placeholder:font-normal placeholder:text-zinc-400 shadow-sm transition-all"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          
+
           {/* Tombol X untuk reset pencarian */}
           {query.length > 0 && (
             <button
@@ -57,12 +62,12 @@ function PricelistTab({
           )}
         </div>
 
-        {/* Category Selector Bar */}
-        <div className="mt-2.5 flex items-center gap-2">
+        {/* Row 2: Category Selector Bar */}
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onOpenCategorySheet}
-            className={`flex-1 flex items-center justify-between px-4 py-2.5 rounded-2xl border text-[13px] font-medium transition-all active:scale-[0.99] ${
+            className={`flex-1 flex items-center justify-between px-3.5 py-2.5 rounded-2xl border text-[13px] font-medium transition-all active:scale-[0.99] ${
               selectedCategory !== 'Semua'
                 ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
                 : 'bg-white border-zinc-200 text-zinc-700 hover:border-zinc-300 shadow-sm'
@@ -81,8 +86,8 @@ function PricelistTab({
                 {categoryCounts[selectedCategory] || 0}
               </span>
             </div>
-            
-            <div className="flex items-center gap-1 shrink-0 ml-2">
+
+            <div className="flex items-center gap-1 shrink-0 ml-1.5">
               <span className="text-[12px] opacity-75">Ganti</span>
               <svg className="w-4 h-4 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -93,7 +98,10 @@ function PricelistTab({
           {selectedCategory !== 'Semua' && (
             <button
               type="button"
-              onClick={() => setSelectedCategory('Semua')}
+              onClick={() => {
+                setSelectedCategory('Semua');
+                setSelectedSubCategory('Semua');
+              }}
               className="px-3.5 py-2.5 rounded-2xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-[13px] font-medium transition-colors shrink-0"
               title="Reset ke Semua Kategori"
             >
@@ -102,34 +110,115 @@ function PricelistTab({
           )}
         </div>
 
-        {/* Status Hasil Pencarian */}
-        <div className="flex items-center justify-between text-[12px] text-zinc-500 font-medium px-1 mt-2">
+        {/* Row 3: Quick Discount Tier Toggle Buttons */}
+        <div className="bg-zinc-100 p-1 rounded-2xl flex items-center gap-1 border border-zinc-200/70 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]">
+          <button
+            type="button"
+            onClick={() => setSelectedDiscountTier('het')}
+            className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
+              selectedDiscountTier === 'het'
+                ? 'bg-white text-zinc-900 shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-800'
+            }`}
+          >
+            HET
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedDiscountTier('24')}
+            className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
+              selectedDiscountTier === '24'
+                ? 'bg-[#EA580C] text-white shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-800'
+            }`}
+          >
+            Disc 24%
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedDiscountTier('27')}
+            className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
+              selectedDiscountTier === '27'
+                ? 'bg-[#EA580C] text-white shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-800'
+            }`}
+          >
+            Disc 27%
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedDiscountTier('29')}
+            className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
+              selectedDiscountTier === '29'
+                ? 'bg-[#EA580C] text-white shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-800'
+            }`}
+          >
+            Disc 29%
+          </button>
+        </div>
+
+        {/* Row 4: Sub-Category Horizontal Scrollable Pills (muncul saat pilih kategori spesifik) */}
+        {selectedCategory !== 'Semua' && availableSubCategories.length > 1 && (
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5 scrollbar-none no-scrollbar -mx-1 px-1">
+            <button
+              type="button"
+              onClick={() => setSelectedSubCategory('Semua')}
+              className={`shrink-0 px-3 py-1.5 rounded-xl text-[12px] font-medium transition-all active:scale-95 ${
+                selectedSubCategory === 'Semua'
+                  ? 'bg-zinc-900 text-white shadow-xs'
+                  : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-600 border border-zinc-200/60'
+              }`}
+            >
+              Semua Tipe
+            </button>
+            {availableSubCategories.map(sub => (
+              <button
+                key={sub}
+                type="button"
+                onClick={() => setSelectedSubCategory(sub)}
+                className={`shrink-0 px-3 py-1.5 rounded-xl text-[12px] font-medium transition-all active:scale-95 ${
+                  selectedSubCategory === sub
+                    ? 'bg-zinc-900 text-white shadow-xs'
+                    : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-600 border border-zinc-200/60'
+                }`}
+              >
+                {sub}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Status Hasil Pencarian & Tombol Reset Filter */}
+        <div className="flex items-center justify-between text-[12px] text-zinc-500 font-medium px-1 pt-0.5">
           <span>
             {query.trim() ? (
               <>Hasil cari "{query}" ({filteredItems.length} item)</>
             ) : (
-              <>Menampilkan {filteredItems.length} item</>
+              <>Menampilkan {filteredItems.length} item {selectedDiscountTier !== 'het' ? `(Netto ${selectedDiscountTier}%)` : ''}</>
             )}
           </span>
-          {(selectedCategory !== 'Semua' || query.trim().length > 0) && (
-            <button 
+          {(selectedCategory !== 'Semua' || selectedSubCategory !== 'Semua' || query.trim().length > 0 || selectedDiscountTier !== 'het') && (
+            <button
               onClick={() => {
                 setSelectedCategory('Semua');
+                setSelectedSubCategory('Semua');
                 setQuery('');
+                setSelectedDiscountTier('het');
               }}
               className="text-zinc-500 hover:text-zinc-900 font-medium underline transition-colors"
             >
-              Reset Semua
+              Reset Filter
             </button>
           )}
         </div>
 
         {/* Mode Edit Banner */}
         {isEditMode && (
-          <div className="mt-2.5 bg-zinc-50 border border-zinc-200 p-3 rounded-2xl flex justify-between items-center animate-in fade-in">
+          <div className="mt-2 bg-zinc-50 border border-zinc-200 p-3 rounded-2xl flex justify-between items-center animate-in fade-in">
             <span className="text-[13px] text-zinc-600 font-medium px-2">Mode kelola aktif</span>
-            <button 
-              onClick={onOpenAddModal} 
+            <button
+              onClick={onOpenAddModal}
               className="px-4 py-2 bg-zinc-900 text-white font-medium text-[13px] rounded-xl hover:bg-zinc-800 transition-colors"
             >
               Tambah Barang
@@ -148,10 +237,12 @@ function PricelistTab({
           </div>
           <p className="text-zinc-900 text-[15px] font-semibold">Data tidak ditemukan</p>
           <p className="text-zinc-500 text-[13px] mt-1">Coba kata kunci lain atau ubah pilihan kategori.</p>
-          <button 
-            onClick={() => { 
-              setSelectedCategory('Semua'); 
-              setQuery(''); 
+          <button
+            onClick={() => {
+              setSelectedCategory('Semua');
+              setSelectedSubCategory('Semua');
+              setQuery('');
+              setSelectedDiscountTier('het');
             }}
             className="mt-4 px-4 py-2 bg-zinc-100 text-zinc-700 rounded-xl text-[13px] font-medium hover:bg-zinc-200 transition-colors"
           >
@@ -163,9 +254,10 @@ function PricelistTab({
       {/* List Container */}
       <div className="space-y-3 pb-6">
         {filteredItems.map(item => (
-          <ItemCard 
+          <ItemCard
             key={item.pn}
             item={item}
+            selectedDiscountTier={selectedDiscountTier}
             isEditMode={isEditMode}
             onOpenDiscount={onOpenDiscountSheet}
             onOpenEdit={onOpenEditModal}

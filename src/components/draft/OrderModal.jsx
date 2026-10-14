@@ -50,14 +50,14 @@ function OrderModal({
     }
   }, [isOpen, modalOrder]);
 
-  // Autocomplete pencarian barang dari katalog
+  // Autocomplete pencarian barang dari katalog dengan smart multi-token search
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
-    const lower = searchQuery.toLowerCase().trim();
-    return catalogItems.filter(item => 
-      item.pn.toLowerCase().includes(lower) || 
-      item.description.toLowerCase().includes(lower)
-    ).slice(0, 6);
+    const tokens = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    return catalogItems.filter(item => {
+      const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
+      return tokens.every(t => combined.includes(t));
+    }).slice(0, 8);
   }, [searchQuery, catalogItems]);
 
   if (!isOpen) return null;
@@ -163,7 +163,7 @@ function OrderModal({
     setIsDragging(true);
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const handlePointerMove = (e) => {
@@ -182,7 +182,7 @@ function OrderModal({
     if (!dragStartY.current) return;
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch (err) {}
+    } catch (err) { }
 
     setIsDragging(false);
     const finalDelta = currentDragY.current;
@@ -199,8 +199,8 @@ function OrderModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" 
+      <div
+        className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity"
         style={{
           opacity: dragY > 0 ? Math.max(0.1, 1 - dragY / 250) : undefined
         }}
@@ -208,7 +208,7 @@ function OrderModal({
       ></div>
 
       {/* Sheet Content Container */}
-      <div 
+      <div
         style={{
           transform: dragY !== 0 ? `translateY(${dragY}px)` : undefined,
           transition: isDragging ? 'none' : 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
@@ -224,9 +224,8 @@ function OrderModal({
           className="w-full flex justify-center items-center pt-1 pb-3 cursor-grab active:cursor-grabbing touch-none select-none group shrink-0"
           aria-label="Tarik ke bawah untuk menutup"
         >
-          <div className={`w-14 h-1.5 rounded-full transition-all duration-150 ${
-            isDragging ? 'bg-zinc-600 w-16 scale-y-125' : 'bg-zinc-300 group-hover:bg-zinc-400'
-          }`}></div>
+          <div className={`w-14 h-1.5 rounded-full transition-all duration-150 ${isDragging ? 'bg-zinc-600 w-16 scale-y-125' : 'bg-zinc-300 group-hover:bg-zinc-400'
+            }`}></div>
         </div>
 
         {/* Modal Title */}
@@ -243,22 +242,22 @@ function OrderModal({
 
         {/* Scrollable Form Body */}
         <div className="overflow-y-auto pr-1 pb-4 flex-1 space-y-4">
-          
+
           {/* Toko & Tanggal */}
           <div className="space-y-3 bg-zinc-50/80 p-3.5 rounded-2xl border border-zinc-200/80">
             <div>
               <label className="block text-[12px] font-semibold text-zinc-700 mb-1">
                 Nama Toko / Pemesan <span className="text-red-500">*</span>
               </label>
-              
+
               {/* Input Nama Toko dengan Datalist Otomatis (Mendukung 160+ Toko tanpa makan tempat) */}
-              <input 
-                type="text" 
+              <input
+                type="text"
                 required
                 list="stores-datalist"
                 placeholder="Ketik atau pilih nama toko..."
                 className="w-full px-3.5 py-2.5 bg-white border border-zinc-200 rounded-xl focus:outline-none focus:border-zinc-400 font-bold text-zinc-900 text-[14.5px]"
-                value={storeName} 
+                value={storeName}
                 onChange={e => handleStoreNameChange(e.target.value)}
               />
 
@@ -277,8 +276,8 @@ function OrderModal({
                   Tanggal Order
                 </label>
                 {/* Real-time HTML5 Date Picker */}
-                <input 
-                  type="date" 
+                <input
+                  type="date"
                   required
                   className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-[13px] font-medium text-zinc-800 focus:outline-none focus:border-zinc-400"
                   value={dateIso}
@@ -287,8 +286,8 @@ function OrderModal({
               </div>
               <div>
                 <label className="block text-[11px] font-medium text-zinc-500 mb-1">Kode Rute (Opsional)</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="R01 - BOGOR"
                   className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-[13px] font-medium uppercase text-orange-600 focus:outline-none focus:border-zinc-400"
                   value={routeCode}
@@ -306,7 +305,7 @@ function OrderModal({
 
             {/* Input Pencarian Part / Bahasa Motor */}
             <div className="relative">
-              <input 
+              <input
                 type="text"
                 placeholder="Cari item: ketik 'beat', 'busi', 'roller', atau PN..."
                 className="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-400 text-[13.5px] font-medium"
@@ -359,8 +358,8 @@ function OrderModal({
             {/* Baris Qty & Tombol Tambah */}
             <div className="flex gap-2">
               <div className="w-28">
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   min="1"
                   placeholder="Qty"
                   className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-center font-bold text-[14px] focus:outline-none focus:border-zinc-400"
@@ -393,7 +392,7 @@ function OrderModal({
             ) : (
               <div className="space-y-1.5 max-h-56 overflow-y-auto pr-0.5">
                 {orderItems.map((item, idx) => (
-                  <div 
+                  <div
                     key={idx}
                     className="flex items-center justify-between p-2.5 bg-zinc-50/70 border border-zinc-200/80 rounded-xl gap-2"
                   >
@@ -451,24 +450,24 @@ function OrderModal({
           {/* Action Buttons */}
           <div className="pt-3 flex gap-2.5 border-t border-zinc-100">
             {modalOrder && (
-              <button 
-                type="button" 
-                onClick={() => onDelete(modalOrder.id)} 
+              <button
+                type="button"
+                onClick={() => onDelete(modalOrder.id)}
                 className="px-4 py-3 text-red-600 bg-red-50 hover:bg-red-100 rounded-xl font-semibold text-[13.5px] transition-colors"
               >
                 Hapus
               </button>
             )}
             <div className="flex-1 flex gap-2">
-              <button 
-                type="button" 
-                onClick={onClose} 
+              <button
+                type="button"
+                onClick={onClose}
                 className="flex-1 py-3 text-zinc-600 bg-zinc-100 hover:bg-zinc-200 rounded-xl font-semibold text-[13.5px] transition-colors"
               >
                 Batal
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={handleFormSubmit}
                 className="flex-1 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl font-semibold text-[13.5px] transition-colors shadow-sm"
               >

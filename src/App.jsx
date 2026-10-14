@@ -23,26 +23,29 @@ import StoreModal from './components/stores/StoreModal';
 import RouteSheet from './components/stores/RouteSheet';
 import OrderModal from './components/draft/OrderModal';
 
-function App() {
-  const [activeTab, setActiveTab] = useState('home'); 
+const PRICELIST_DATA_VERSION = 'v2_568_official_pdf';
 
-  // Storage for Pricelist
+function App() {
+  const [activeTab, setActiveTab] = useState('home');
+
+  // Storage for Pricelist dengan migrasi versi otomatis ke dataset PDF baru
   const [items, setItems] = useState(() => {
+    const savedVersion = localStorage.getItem('daytona_pricelist_version');
     const saved = localStorage.getItem('daytona_pricelist');
-    if (saved) {
-      try { 
+    if (saved && savedVersion === PRICELIST_DATA_VERSION) {
+      try {
         const parsed = JSON.parse(saved);
-        return parsed.map(item => ({
-          ...item,
-          category: ensureValidCategory(item)
-        }));
-      } catch (e) { 
-        return initialPricelist.map(item => ({
-          ...item,
-          category: ensureValidCategory(item)
-        })); 
-      }
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.het !== undefined) {
+          return parsed.map(item => ({
+            ...item,
+            category: ensureValidCategory(item)
+          }));
+        }
+      } catch (e) {}
     }
+
+    // Auto-update ke data 568 item baru dengan harga net dan subkategori lengkap
+    localStorage.setItem('daytona_pricelist_version', PRICELIST_DATA_VERSION);
     return initialPricelist.map(item => ({
       ...item,
       category: ensureValidCategory(item)
@@ -51,6 +54,7 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('daytona_pricelist', JSON.stringify(items));
+    localStorage.setItem('daytona_pricelist_version', PRICELIST_DATA_VERSION);
   }, [items]);
 
   // Storage for Stores
@@ -87,10 +91,18 @@ function App() {
     notes: ''
   });
 
-  // Queries & Categories State
+  // Queries, SubCategories & Discount Tiers State
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Semua');
+  const [selectedSubCategory, setSelectedSubCategory] = useState('Semua');
+  const [selectedDiscountTier, setSelectedDiscountTier] = useState('het'); // 'het' | '24' | '27' | '29'
   const [showCategorySheet, setShowCategorySheet] = useState(false);
+
+  // Ganti kategori dengan auto-reset subkategori
+  const handleSelectCategory = (cat) => {
+    setSelectedCategory(cat);
+    setSelectedSubCategory('Semua');
+  };
 
   // Orders State (Disimpan per toko, terpisah Aktif & Arsip)
   const [orders, setOrders] = useState(() => {
@@ -179,16 +191,16 @@ function App() {
   // Modals & States
   const [isEditMode, setIsEditMode] = useState(false);
   const [showItemModal, setShowItemModal] = useState(false);
-  const [modalItem, setModalItem] = useState(null); 
+  const [modalItem, setModalItem] = useState(null);
   const [discountItem, setDiscountItem] = useState(null);
 
   // Form State untuk CRUD Item
-  const [formData, setFormData] = useState({ 
-    pn: '', 
-    description: '', 
-    price: '', 
-    qty: '1', 
-    category: 'Busi' 
+  const [formData, setFormData] = useState({
+    pn: '',
+    description: '',
+    price: '',
+    qty: '1',
+    category: 'Busi'
   });
 
   // Kunci scroll halaman belakang saat modal/sheet terbuka
@@ -212,28 +224,44 @@ function App() {
     return counts;
   }, [items]);
 
-  // Filter items berdasarkan Kategori dan Search Query
+  // Subkategori yang tersedia untuk kategori yang dipilih
+  const availableSubCategories = useMemo(() => {
+    if (selectedCategory === 'Semua') return [];
+    const subs = new Set();
+    items.forEach(item => {
+      if (item.category === selectedCategory && item.subCategory) {
+        subs.add(item.subCategory);
+      }
+    });
+    return Array.from(subs);
+  }, [items, selectedCategory]);
+
+  // Filter items berdasarkan Kategori, Subkategori, dan Smart Multi-token Search
   const filteredItems = useMemo(() => {
+    const queryTokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+
     return items.filter(item => {
       if (selectedCategory !== 'Semua' && item.category !== selectedCategory) {
         return false;
       }
-      if (query.trim()) {
-        const lower = query.toLowerCase().trim();
-        const matchPn = item.pn.toLowerCase().includes(lower);
-        const matchDesc = item.description.toLowerCase().includes(lower);
-        if (!matchPn && !matchDesc) return false;
+      if (selectedSubCategory !== 'Semua' && item.subCategory !== selectedSubCategory) {
+        return false;
+      }
+      if (queryTokens.length > 0) {
+        const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
+        const allMatch = queryTokens.every(token => combined.includes(token));
+        if (!allMatch) return false;
       }
       return true;
     });
-  }, [items, selectedCategory, query]);
+  }, [items, selectedCategory, selectedSubCategory, query]);
 
   // CRUD Logic
   const openAddModal = () => {
-    setFormData({ 
-      pn: '', 
-      description: '', 
-      price: '', 
+    setFormData({
+      pn: '',
+      description: '',
+      price: '',
       qty: '1',
       category: selectedCategory !== 'Semua' ? selectedCategory : 'Busi'
     });
@@ -242,7 +270,7 @@ function App() {
   };
 
   const openEditModal = (item) => {
-    setFormData({ 
+    setFormData({
       ...item,
       category: item.category || 'Busi'
     });
@@ -380,12 +408,12 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-28 font-sans text-zinc-900 selection:bg-zinc-200">
-      
+
       {/* Top Header */}
-      <Header 
-        activeTab={activeTab} 
-        isEditMode={isEditMode} 
-        setIsEditMode={setIsEditMode} 
+      <Header
+        activeTab={activeTab}
+        isEditMode={isEditMode}
+        setIsEditMode={setIsEditMode}
         isStoreEditMode={isStoreEditMode}
         setIsStoreEditMode={setIsStoreEditMode}
         selectedMonthKey={selectedMonthKey}
@@ -397,7 +425,7 @@ function App() {
       {/* Main Content Area */}
       <main className="max-w-md mx-auto px-5 pt-4 relative">
         {activeTab === 'home' && (
-          <HomeTab 
+          <HomeTab
             cartCount={pendingOrdersCount}
             itemsCount={items.length}
             categoriesCount={CATEGORIES.length - 1}
@@ -414,13 +442,18 @@ function App() {
         )}
 
         {activeTab === 'pricelist' && (
-          <PricelistTab 
+          <PricelistTab
             items={items}
             filteredItems={filteredItems}
             query={query}
             setQuery={setQuery}
             selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
+            setSelectedCategory={handleSelectCategory}
+            selectedSubCategory={selectedSubCategory}
+            setSelectedSubCategory={setSelectedSubCategory}
+            availableSubCategories={availableSubCategories}
+            selectedDiscountTier={selectedDiscountTier}
+            setSelectedDiscountTier={setSelectedDiscountTier}
             categoryCounts={categoryCounts}
             onOpenCategorySheet={() => setShowCategorySheet(true)}
             isEditMode={isEditMode}
@@ -431,7 +464,7 @@ function App() {
         )}
 
         {activeTab === 'stores' && (
-          <StoresTab 
+          <StoresTab
             stores={stores}
             filteredStores={filteredStores}
             searchQuery={storeSearchQuery}
@@ -448,7 +481,7 @@ function App() {
         )}
 
         {activeTab === 'draft' && (
-          <DraftTab 
+          <DraftTab
             orders={orders}
             onToggleOrderStatus={toggleOrderStatus}
             onOpenAddOrder={openAddOrder}
@@ -462,7 +495,7 @@ function App() {
       </main>
 
       {/* Category Picker Bottom Sheet */}
-      <CategorySheet 
+      <CategorySheet
         isOpen={showCategorySheet}
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
@@ -471,13 +504,13 @@ function App() {
       />
 
       {/* Discount Bottom Sheet */}
-      <DiscountSheet 
+      <DiscountSheet
         item={discountItem}
         onClose={() => setDiscountItem(null)}
       />
 
       {/* CRUD Item Modal */}
-      <ItemModal 
+      <ItemModal
         isOpen={showItemModal}
         modalItem={modalItem}
         formData={formData}
@@ -488,7 +521,7 @@ function App() {
       />
 
       {/* CRUD Store Modal */}
-      <StoreModal 
+      <StoreModal
         isOpen={showStoreModal}
         modalStore={modalStore}
         formData={storeFormData}
@@ -500,7 +533,7 @@ function App() {
       />
 
       {/* Catat Order Toko Modal */}
-      <OrderModal 
+      <OrderModal
         isOpen={showOrderModal}
         modalOrder={modalOrder}
         catalogItems={items}
@@ -511,7 +544,7 @@ function App() {
       />
 
       {/* Route Picker Bottom Sheet */}
-      <RouteSheet 
+      <RouteSheet
         isOpen={showRouteSheet}
         selectedRoute={selectedRoute}
         onSelectRoute={setSelectedRoute}
@@ -521,10 +554,10 @@ function App() {
       />
 
       {/* Bottom Navigation Bar */}
-      <BottomNav 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        cartCount={pendingOrdersCount} 
+      <BottomNav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        cartCount={pendingOrdersCount}
       />
 
     </div>
