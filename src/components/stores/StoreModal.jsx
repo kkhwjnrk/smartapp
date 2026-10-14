@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { parseGoogleMapsInput, isShortGoogleMapsUrl } from '../../utils/geoUtils';
 
 function StoreModal({ 
   isOpen, 
@@ -12,10 +13,9 @@ function StoreModal({
 }) {
   const [gpsLoading, setGpsLoading] = useState(false);
   const [gpsStatus, setGpsStatus] = useState('');
-  const [gpsStatusType, setGpsStatusType] = useState('info'); // 'info' | 'success' | 'warning'
-  const [mapInputText, setMapInputText] = useState('');
-  const [showManualCoords, setShowManualCoords] = useState(false);
-  const [showGuide, setShowGuide] = useState(false);
+  const [mapsInput, setMapsInput] = useState('');
+  const [resolvingLink, setResolvingLink] = useState(false);
+  const [showGpsHelp, setShowGpsHelp] = useState(false);
   const [dragY, setDragY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartY = useRef(0);
@@ -25,191 +25,151 @@ function StoreModal({
   useEffect(() => {
     if (isOpen) {
       setGpsStatus('');
-      setGpsStatusType('info');
       setGpsLoading(false);
-      setMapInputText('');
-      setShowManualCoords(false);
-      setShowGuide(false);
+      setMapsInput('');
+      setResolvingLink(false);
+      setShowGpsHelp(false);
       setDragY(0);
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-  // Parser serbaguna untuk link Maps atau koordinat
-  const parseCoordinates = (val) => {
-    if (!val) return null;
-    const clean = val.trim();
+  // Fitur Ambil Titik GPS Saat Ini via Geolocation Browser dengan 2-Stage Fallback
+  const handleGetCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setGpsStatus('Browser Anda tidak mendukung pendeteksian GPS.');
+      return;
+    }
 
-    // 1. Koordinat Desimal e.g. "-6.595038, 106.816635" atau "-6.595038 106.816635"
-    const decMatch = clean.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
-    if (decMatch) {
-      const lat = parseFloat(decMatch[1]);
-      const lng = parseFloat(decMatch[2]);
-      if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-        return { lat: lat.toFixed(6), lng: lng.toFixed(6), source: 'koordinat' };
+    setGpsLoading(true);
+    setGpsStatus('Mencari sinyal GPS satelit...');
+
+    const handleSuccess = (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const accuracy = Math.round(position.coords.accuracy);
+
+      setFormData(prev => ({
+        ...prev,
+        lat: latitude.toFixed(6),
+        lng: longitude.toFixed(6)
+      }));
+
+      setGpsLoading(false);
+      setGpsStatus(`✓ GPS berhasil didapat! (Akurasi: ±${accuracy}m)`);
+    };
+
+    // Percobaan 1: High Accuracy (Satelit HP)
+    navigator.geolocation.getCurrentPosition(
+      handleSuccess,
+      (error) => {
+        // Jika izin ditolak atau master GPS HP mati
+        if (error.code === error.PERMISSION_DENIED) {
+          setGpsLoading(false);
+          setGpsStatus('⚠️ Izin lokasi belum aktif atau tombol "Lokasi" di bar notifikasi HP sedang mati. Mohon nyalakan toggle Lokasi di HP Anda.');
+          return;
+        }
+
+        // Percobaan 2: Fallback ke jaringan seluler/Wi-Fi (Bisa di dalam ruangan)
+        setGpsStatus('Mengalihkan ke sinyal WiFi/Jaringan (Indoor mode)...');
+        navigator.geolocation.getCurrentPosition(
+          handleSuccess,
+          (fallbackError) => {
+            setGpsLoading(false);
+            if (fallbackError.code === fallbackError.PERMISSION_DENIED) {
+              setGpsStatus('⚠️ Izin lokasi ditolak. Silakan izinkan akses lokasi di setelan browser HP Anda.');
+            } else if (fallbackError.code === fallbackError.POSITION_UNAVAILABLE) {
+              setGpsStatus('⚠️ Lokasi tidak tersedia. Pastikan ikon "Lokasi" di menu atas HP sudah MENYALA.');
+            } else {
+              setGpsStatus('⚠️ Waktu pencarian GPS habis. Anda bisa mengisi titik dengan menempelkan link Google Maps di bawah.');
+            }
+          },
+          {
+            enableHighAccuracy: false,
+            timeout: 10000,
+            maximumAge: 30000
+          }
+        );
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 6000,
+        maximumAge: 0
       }
-    }
-
-    // 2. Link Google Maps e.g. @lat,lng atau ?q=lat,lng atau ll=lat,lng atau query=lat,lng
-    const urlMatch = clean.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) || 
-                     clean.match(/[?&](?:q|query|ll)=(-?\d+\.\d+),(-?\d+\.\d+)/);
-    if (urlMatch) {
-      const lat = parseFloat(urlMatch[1]);
-      const lng = parseFloat(urlMatch[2]);
-      if (!isNaN(lat) && !isNaN(lng)) {
-        return { lat: lat.toFixed(6), lng: lng.toFixed(6), source: 'link Maps' };
-      }
-    }
-
-    // 3. Format Derajat Menit Detik (DMS) e.g. 6°35'42.1"S 106°49'00.0"E
-    const dmsMatch = clean.match(/(\d+)[°\s]+(\d+)['\s]+([\d.]+)"?\s*([NSns])[,\s]+(\d+)[°\s]+(\d+)['\s]+([\d.]+)"?\s*([EWew])/);
-    if (dmsMatch) {
-      let lat = parseInt(dmsMatch[1], 10) + parseInt(dmsMatch[2], 10)/60 + parseFloat(dmsMatch[3])/3600;
-      if (dmsMatch[4].toUpperCase() === 'S') lat = -lat;
-      let lng = parseInt(dmsMatch[5], 10) + parseInt(dmsMatch[6], 10)/60 + parseFloat(dmsMatch[7])/3600;
-      if (dmsMatch[8].toUpperCase() === 'W') lng = -lng;
-      return { lat: lat.toFixed(6), lng: lng.toFixed(6), source: 'derajat DMS' };
-    }
-
-    return null;
+    );
   };
 
-  // Proses input teks / tempelan link Maps
-  const handleProcessMapInput = (value) => {
-    setMapInputText(value);
-    if (!value || !value.trim()) return;
+  // Helper untuk memproses input link Google Maps atau format koordinat
+  const handleProcessMapsInput = async (rawValue) => {
+    const val = (rawValue || '').trim();
+    if (!val) return;
 
-    const parsed = parseCoordinates(value);
+    // 1. Coba parse langsung (koordinat langsung, URL lengkap @lat,lng, ?q=lat,lng, !3dlat!4dlng, DMS)
+    const parsed = parseGoogleMapsInput(val);
     if (parsed) {
       setFormData(prev => ({
         ...prev,
         lat: parsed.lat,
         lng: parsed.lng
       }));
-      setGpsStatusType('success');
-      setGpsStatus(`✓ Titik koordinat berhasil terpasang dari ${parsed.source}!`);
+      setGpsStatus(`✓ Titik lokasi terpasang dari ${parsed.source}! (${parsed.lat}, ${parsed.lng})`);
+      setMapsInput('');
       return;
     }
 
-    // Deteksi jika user paste link pendek seperti maps.app.goo.gl atau goo.gl/maps
-    if (value.includes('goo.gl') || value.includes('maps.app')) {
-      setGpsStatusType('warning');
-      setGpsStatus('Link pendek terdeteksi. Buka link tersebut di Google Maps, tahan pin lokasi toko sampai muncul angka koordinat (-6.xxx, 106.xxx), lalu salin angkanya.');
+    // 2. Jika link pendek (maps.app.goo.gl atau goo.gl/maps)
+    if (isShortGoogleMapsUrl(val)) {
+      setResolvingLink(true);
+      setGpsStatus('Membaca link Google Maps...');
+      try {
+        const res = await fetch(`/api/resolve-maps?url=${encodeURIComponent(val)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.finalUrl) {
+            const resolvedParsed = parseGoogleMapsInput(data.finalUrl);
+            if (resolvedParsed) {
+              setFormData(prev => ({
+                ...prev,
+                lat: resolvedParsed.lat,
+                lng: resolvedParsed.lng
+              }));
+              setGpsStatus(`✓ Berhasil! Koordinat terpasang: ${resolvedParsed.lat}, ${resolvedParsed.lng}`);
+              setResolvingLink(false);
+              setMapsInput('');
+              return;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Gagal resolve link maps:', err);
+      }
+      setResolvingLink(false);
+
+      setGpsStatus('ℹ️ Link Google Maps terbaca. Buka link tersebut di Google Maps, lalu tahan titik toko di peta untuk salin angka koordinatnya (-6.xxx, 106.xxx).');
       return;
     }
 
-    setGpsStatusType('warning');
-    setGpsStatus('Format belum sesuai. Contoh format yang didukung: -6.595038, 106.816635');
+    setGpsStatus('⚠️ Format tidak dikenali. Masukkan contoh: -6.595038, 106.816635 atau link Google Maps.');
   };
 
-  // Tempel langsung dari Clipboard
+  // Helper tombol Tempel dari Clipboard
   const handlePasteClipboard = async () => {
     try {
       if (navigator.clipboard && navigator.clipboard.readText) {
         const text = await navigator.clipboard.readText();
         if (text) {
-          handleProcessMapInput(text);
-          return;
-        }
-      }
-    } catch (err) {
-      // Browser mungkin memblokir auto clipboard read
-    }
-    setGpsStatusType('info');
-    setGpsStatus('Silakan tahan jari di kotak input di atas lalu pilih "Tempel / Paste".');
-  };
-
-  // Buka Google Maps langsung untuk mencari toko ini
-  const handleOpenGoogleMapsSearch = () => {
-    const query = [formData.name, formData.address].filter(Boolean).join(' ');
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query || 'bengkel motor')}`;
-    window.open(url, '_blank');
-  };
-
-  // Fitur Ambil Titik GPS Saat Ini via Geolocation Browser (Dual-Stage Fallback)
-  const handleGetCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      setGpsStatusType('warning');
-      setGpsStatus('Browser Anda tidak mendukung pendeteksian lokasi GPS.');
-      return;
-    }
-
-    setGpsLoading(true);
-    setGpsStatusType('info');
-    setGpsStatus('Mencari sinyal GPS satelit...');
-
-    // Fallback kedua: sinyal jaringan / Wi-Fi (indoor friendly)
-    const runNetworkFallback = (alasan) => {
-      setGpsStatus(`${alasan} Mencoba via sinyal jaringan/Wi-Fi...`);
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const latitude = pos.coords.latitude.toFixed(6);
-          const longitude = pos.coords.longitude.toFixed(6);
-          const accuracy = Math.round(pos.coords.accuracy);
-
-          setFormData(prev => ({
-            ...prev,
-            lat: latitude,
-            lng: longitude
-          }));
-
-          setGpsLoading(false);
-          setGpsStatusType('success');
-          setGpsStatus(`✓ Lokasi didapat via jaringan (Akurasi: ±${accuracy}m).`);
-        },
-        (err) => {
-          setGpsLoading(false);
-          setGpsStatusType('warning');
-          if (err.code === err.PERMISSION_DENIED) {
-            setGpsStatus('Izin lokasi ditolak. Buka Setelan HP > Aplikasi > Daytona/Chrome > Izin > Lokasi.');
-          } else if (err.code === err.POSITION_UNAVAILABLE) {
-            setGpsStatus('GPS HP sedang nonaktif. Tarik layar atas HP Anda, lalu nyalakan ikon "Lokasi/GPS".');
-          } else {
-            setGpsStatus('Gagal membaca GPS. Pastikan toggle Lokasi di HP aktif atau gunakan metode tempel titik di atas.');
-          }
-        },
-        { enableHighAccuracy: false, timeout: 12000, maximumAge: 30000 }
-      );
-    };
-
-    // Percobaan pertama: GPS Satelit Akurasi Tinggi
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const latitude = position.coords.latitude.toFixed(6);
-        const longitude = position.coords.longitude.toFixed(6);
-        const accuracy = Math.round(position.coords.accuracy);
-
-        setFormData(prev => ({
-          ...prev,
-          lat: latitude,
-          lng: longitude
-        }));
-
-        setGpsLoading(false);
-        setGpsStatusType('success');
-        setGpsStatus(`✓ GPS akurat berhasil didapat! (Akurasi: ±${accuracy}m)`);
-      },
-      (error) => {
-        if (error.code === error.PERMISSION_DENIED) {
-          setGpsLoading(false);
-          setGpsStatusType('warning');
-          setGpsStatus('Izin lokasi ditolak. Silakan aktifkan izin lokasi di Setelan Aplikasi HP Anda.');
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          setGpsLoading(false);
-          setGpsStatusType('warning');
-          setGpsStatus('GPS HP sedang mati. Tarik bilah atas HP Anda lalu aktifkan ikon "Lokasi/GPS".');
+          setMapsInput(text);
+          handleProcessMapsInput(text);
         } else {
-          // Timeout pada satelit indoor -> fallback ke jaringan
-          runNetworkFallback('Sinyal satelit lemah.');
+          setGpsStatus('Papan klip (clipboard) kosong.');
         }
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 7000,
-        maximumAge: 0
+      } else {
+        setGpsStatus('Browser membatasi akses clipboard otomatis. Silakan tekan & tahan kolom input lalu pilih Tempel.');
       }
-    );
+    } catch (e) {
+      setGpsStatus('Izin clipboard ditolak. Silakan tekan & tahan kolom input lalu pilih Tempel.');
+    }
   };
 
   // Drag down to dismiss handle logic
@@ -391,86 +351,85 @@ function StoreModal({
           </div>
 
           {/* Titik Lokasi Google Maps / GPS */}
-          <div className="bg-zinc-50/90 rounded-2xl p-4 border border-zinc-200 space-y-3">
-            {/* Header Box */}
+          <div className="bg-zinc-50/80 rounded-2xl p-4 border border-zinc-200/90 space-y-3">
+            {/* Header Bagian Lokasi */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <svg className="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span className="text-[13px] font-bold text-zinc-900">Titik Lokasi Google Maps</span>
+                <span className="text-[13px] font-bold text-zinc-900">Titik Google Maps / GPS</span>
               </div>
 
-              {/* Status Badge atau Reset Titik */}
-              {hasCoordinates ? (
-                <div className="flex items-center gap-1.5">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-[10.5px] font-semibold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Terpasang
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFormData(prev => ({ ...prev, lat: '', lng: '' }));
-                      setMapInputText('');
-                      setGpsStatusType('info');
-                      setGpsStatus('Titik koordinat berhasil dihapus.');
-                    }}
-                    className="text-[11px] text-red-500 hover:text-red-700 underline font-medium"
-                  >
-                    Hapus
-                  </button>
-                </div>
-              ) : (
-                <span className="text-[11px] text-zinc-400 font-medium">Opsional</span>
-              )}
+              {/* Toggle Bantuan / Petunjuk */}
+              <button
+                type="button"
+                onClick={() => setShowGpsHelp(!showGpsHelp)}
+                className="text-[11px] font-medium text-orange-600 hover:text-orange-700 flex items-center gap-0.5"
+              >
+                <span>{showGpsHelp ? 'Tutup Panduan' : '💡 Panduan Tanpa ke Lokasi'}</span>
+              </button>
             </div>
 
-            {/* Pilihan 1: Input Cerdas (Tempel Link atau Koordinat) */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label className="text-[11.5px] font-semibold text-zinc-700">
-                  Cara 1: Tempel Link / Koordinat Maps <span className="text-zinc-400 font-normal">(Dari Jarak Jauh)</span>
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setShowGuide(!showGuide)}
-                  className="text-[11px] text-orange-600 hover:text-orange-700 font-medium inline-flex items-center gap-0.5"
-                >
-                  <span>{showGuide ? 'Tutup Panduan' : '💡 Cara Ambil Titik'}</span>
-                </button>
+            {/* Petunjuk Cara Isi Tanpa ke Lokasi Toko */}
+            {showGpsHelp && (
+              <div className="bg-orange-50/70 border border-orange-200/80 rounded-xl p-3 text-[11.5px] text-zinc-700 space-y-1.5 animate-in fade-in duration-200">
+                <p className="font-bold text-orange-900 flex items-center gap-1">
+                  <span>📍 Cara Mengisi Titik Tanpa Berada di Toko:</span>
+                </p>
+                <ol className="list-decimal list-inside space-y-1 text-zinc-600">
+                  <li>Buka aplikasi <strong>Google Maps</strong> di HP atau komputer Anda.</li>
+                  <li>Cari nama toko / bengkel atau ketik alamatnya di peta.</li>
+                  <li><strong>Tekan dan tahan</strong> jari Anda di atas bangunan toko sampai muncul <strong>pin merah (📌)</strong>.</li>
+                  <li>Di kotak pencarian atas akan muncul angka koordinat (contoh: <code className="bg-white px-1 py-0.5 rounded text-orange-800 font-mono font-bold">-6.595038, 106.816635</code>). Ketuk untuk <strong>Salin</strong>.</li>
+                  <li>Atau ketuk tombol <strong>Bagikan (Share)</strong> &gt; <strong>Salin Link</strong>.</li>
+                  <li>Kembali ke sini lalu tekan tombol <strong>Tempel</strong> di bawah. Titik akan otomatis terpasang!</li>
+                </ol>
               </div>
+            )}
 
-              {/* Panduan Mini jika diklik */}
-              {showGuide && (
-                <div className="p-3 bg-orange-50/70 border border-orange-200/60 rounded-xl text-[11.5px] text-orange-950 space-y-1.5 animate-in fade-in duration-200">
-                  <p className="font-bold text-orange-900 flex items-center gap-1">
-                    <span>📌 Cara mengisi titik tanpa harus ke toko:</span>
-                  </p>
-                  <ol className="list-decimal list-inside space-y-1 text-[11px] text-zinc-700">
-                    <li>Klik tombol <b className="text-zinc-900">"🔍 Cari di Google Maps"</b> di bawah.</li>
-                    <li>Pada aplikasi Google Maps, cari nama/daerah toko tersebut.</li>
-                    <li><b className="text-zinc-900">Tekan & tahan</b> jari Anda pada titik toko sampai muncul pin merah.</li>
-                    <li>Google Maps akan menampilkan angka koordinat (contoh: <code className="bg-white px-1 py-0.5 rounded border border-zinc-200 font-mono text-[10.5px]">-6.595038, 106.816635</code>). Ketuk untuk menyalinnya.</li>
-                    <li>Kembali ke aplikasi ini dan klik tombol <b className="text-zinc-900">"📋 Tempel"</b>.</li>
-                  </ol>
+            {/* Input Utama: Tempel Link Google Maps atau Koordinat */}
+            <div className="space-y-1.5">
+              <label className="block text-[11.5px] font-semibold text-zinc-700">
+                Tempel Link Google Maps / Koordinat Toko:
+              </label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <input 
+                    type="text" 
+                    placeholder="Contoh: https://maps.app.goo.gl/... atau -6.595038, 106.816635"
+                    value={mapsInput}
+                    onChange={(e) => {
+                      setMapsInput(e.target.value);
+                      handleProcessMapsInput(e.target.value);
+                    }}
+                    onPaste={(e) => {
+                      const pasteText = e.clipboardData.getData('text');
+                      if (pasteText) {
+                        setTimeout(() => handleProcessMapsInput(pasteText), 50);
+                      }
+                    }}
+                    className="w-full pl-3 pr-8 py-2 bg-white border border-zinc-200 rounded-xl text-[12.5px] font-mono focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 placeholder:text-zinc-400 placeholder:font-sans"
+                  />
+                  {mapsInput && (
+                    <button
+                      type="button"
+                      onClick={() => setMapsInput('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 text-[13px]"
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
-              )}
 
-              {/* Kotak Input dan Tombol Paste */}
-              <div className="relative flex items-center">
-                <input 
-                  type="text"
-                  placeholder="Tempel link Google Maps atau angka: -6.595038, 106.816635"
-                  className="w-full pl-3.5 pr-20 py-2.5 bg-white border border-zinc-200 rounded-xl text-[12.5px] font-medium text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-400 shadow-2xs"
-                  value={mapInputText}
-                  onChange={e => handleProcessMapInput(e.target.value)}
-                />
+                {/* Tombol Tempel dari Clipboard */}
                 <button
                   type="button"
                   onClick={handlePasteClipboard}
-                  className="absolute right-1.5 px-2.5 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-[11px] font-bold rounded-lg transition-colors inline-flex items-center gap-1"
+                  disabled={resolvingLink}
+                  className="px-3 py-2 bg-white border border-zinc-300 hover:border-zinc-400 text-zinc-700 text-[12px] font-semibold rounded-xl shadow-2xs hover:bg-zinc-50 transition-colors flex items-center gap-1 shrink-0"
+                  title="Tempel teks yang sudah disalin"
                 >
                   <svg className="w-3.5 h-3.5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -478,132 +437,107 @@ function StoreModal({
                   <span>Tempel</span>
                 </button>
               </div>
-
-              {/* Tombol Pintasan Buka Maps */}
-              <div className="pt-0.5">
-                <button
-                  type="button"
-                  onClick={handleOpenGoogleMapsSearch}
-                  className="w-full py-2 px-3 bg-white hover:bg-zinc-50 border border-zinc-300 text-zinc-700 rounded-xl text-[11.5px] font-semibold transition-all inline-flex items-center justify-center gap-1.5 shadow-2xs"
-                >
-                  <svg className="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  <span>🔍 Buka Google Maps untuk Cari Lokasi Toko Ini</span>
-                </button>
-              </div>
             </div>
 
-            {/* Pemisah visual Atau */}
-            <div className="relative flex items-center justify-center py-0.5">
-              <div className="border-t border-zinc-200 w-full"></div>
-              <span className="bg-zinc-50 px-2 text-[10.5px] font-semibold text-zinc-400 uppercase tracking-wider absolute">
-                atau jika di toko
-              </span>
-            </div>
-
-            {/* Pilihan 2: Ambil Lokasi GPS Saat Ini */}
-            <div>
+            {/* Tombol Ambil GPS Saat Ini (Jika Berada di Lokasi Toko) */}
+            <div className="pt-0.5">
               <button
                 type="button"
                 onClick={handleGetCurrentLocation}
-                disabled={gpsLoading}
-                className="w-full py-2.5 px-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-[12px] font-semibold transition-all inline-flex items-center justify-center gap-1.5 shadow-xs disabled:opacity-50"
+                disabled={gpsLoading || resolvingLink}
+                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-white border border-dashed border-zinc-300 hover:border-orange-400 text-zinc-700 hover:text-orange-600 text-[12px] font-semibold rounded-xl transition-colors disabled:opacity-50"
               >
                 {gpsLoading ? (
                   <>
-                    <svg className="animate-spin w-3.5 h-3.5 text-zinc-300" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin w-3.5 h-3.5 text-orange-600" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                     </svg>
-                    <span>Mendeteksi Lokasi HP...</span>
+                    <span>Mencari Sinyal GPS Ponsel...</span>
                   </>
                 ) : (
                   <>
-                    <span>📍 Ambil Titik GPS Saat Ini (Sedang di Toko)</span>
+                    <span>📍</span>
+                    <span>Ambil Lokasi Ponsel Sekarang (Bila Sedang di Toko)</span>
                   </>
                 )}
               </button>
             </div>
 
-            {/* Status Pesan GPS / Input */}
+            {/* Status Pesan GPS / Link */}
             {gpsStatus && (
-              <div className={`text-[11.5px] font-medium p-2.5 rounded-xl flex items-start gap-2 ${
-                gpsStatusType === 'success'
+              <div className={`text-[11.5px] font-medium px-3 py-2 rounded-xl flex items-start gap-1.5 ${
+                gpsStatus.includes('✓') || gpsStatus.includes('berhasil') || gpsStatus.includes('terpasang')
                   ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
-                  : gpsStatusType === 'warning'
-                  ? 'bg-amber-50 text-amber-800 border border-amber-200'
-                  : 'bg-blue-50 text-blue-800 border border-blue-200'
+                  : gpsStatus.includes('⚠️')
+                    ? 'bg-amber-50 text-amber-900 border border-amber-200'
+                    : 'bg-blue-50 text-blue-800 border border-blue-200'
               }`}>
-                <span className="text-[13px] shrink-0 mt-0.5">
-                  {gpsStatusType === 'success' ? '✅' : gpsStatusType === 'warning' ? '⚠️' : 'ℹ️'}
-                </span>
-                <div className="flex-1 leading-snug">
-                  {gpsStatus}
-                </div>
+                <span className="shrink-0">{gpsStatus.includes('✓') ? '✅' : gpsStatus.includes('⚠️') ? '⚠️' : 'ℹ️'}</span>
+                <span className="flex-1 leading-snug">{gpsStatus}</span>
               </div>
             )}
 
-            {/* Ringkasan Koordinat Terpasang & Preview Maps */}
-            {hasCoordinates ? (
-              <div className="bg-white p-3 rounded-xl border border-zinc-200/80 space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">Koordinat:</span>
-                    <span className="text-[12px] font-mono font-bold text-zinc-900">
-                      {formData.lat}, {formData.lng}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowManualCoords(!showManualCoords)}
-                    className="text-[11px] text-zinc-500 hover:text-zinc-800 underline"
-                  >
-                    {showManualCoords ? 'Tutup Detail' : 'Koreksi Angka'}
-                  </button>
-                </div>
+            {/* Input Manual Latitude & Longitude */}
+            <div className="grid grid-cols-2 gap-2.5 pt-1">
+              <div>
+                <label className="block text-[11px] font-medium text-zinc-500 mb-0.5">Latitude</label>
+                <input 
+                  type="text"
+                  placeholder="-6.595038"
+                  className="w-full px-3 py-1.5 bg-white border border-zinc-200 rounded-lg text-[13px] font-mono focus:outline-none focus:border-zinc-400"
+                  value={formData.lat || ''}
+                  onChange={e => {
+                    handleProcessMapsInput(e.target.value);
+                    if (!e.target.value.includes(',')) {
+                      setFormData(prev => ({ ...prev, lat: e.target.value }));
+                    }
+                  }}
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-medium text-zinc-500 mb-0.5">Longitude</label>
+                <input 
+                  type="text"
+                  placeholder="106.816635"
+                  className="w-full px-3 py-1.5 bg-white border border-zinc-200 rounded-lg text-[13px] font-mono focus:outline-none focus:border-zinc-400"
+                  value={formData.lng || ''}
+                  onChange={e => setFormData({ ...formData, lng: e.target.value })}
+                />
+              </div>
+            </div>
 
-                {/* Input Manual Lat/Lng (hanya jika ingin koreksi) */}
-                {showManualCoords && (
-                  <div className="grid grid-cols-2 gap-2 pt-1 border-t border-zinc-100">
-                    <div>
-                      <label className="block text-[10.5px] font-medium text-zinc-500 mb-0.5">Latitude</label>
-                      <input 
-                        type="text"
-                        className="w-full px-2.5 py-1.5 bg-zinc-50 border border-zinc-200 rounded-lg text-[12px] font-mono focus:outline-none focus:border-zinc-400"
-                        value={formData.lat || ''}
-                        onChange={e => setFormData(prev => ({ ...prev, lat: e.target.value }))}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10.5px] font-medium text-zinc-500 mb-0.5">Longitude</label>
-                      <input 
-                        type="text"
-                        className="w-full px-2.5 py-1.5 bg-zinc-50 border border-zinc-200 rounded-lg text-[12px] font-mono focus:outline-none focus:border-zinc-400"
-                        value={formData.lng || ''}
-                        onChange={e => setFormData(prev => ({ ...prev, lng: e.target.value }))}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Tombol Preview Google Maps */}
-                <div className="pt-1 flex items-center justify-between">
-                  <span className="text-[11px] text-emerald-600 font-medium">✓ Siap digunakan navigasi rute</span>
+            {/* Preview & Verifikasi di Google Maps jika koordinat sudah ada */}
+            {hasCoordinates && (
+              <div className="pt-1 flex items-center justify-between border-t border-zinc-200/60 mt-1">
+                <span className="text-[11.5px] text-emerald-700 font-semibold flex items-center gap-1">
+                  <span>✓ Titik koordinat terpasang</span>
+                </span>
+                <div className="flex items-center gap-2">
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${formData.lat},${formData.lng}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[11.5px] font-bold text-blue-600 hover:text-blue-700 inline-flex items-center gap-1"
+                    className="text-[11.5px] font-bold text-blue-600 hover:text-blue-700 inline-flex items-center gap-1 px-2 py-0.5 rounded-md hover:bg-blue-50 transition-colors"
                   >
-                    <span>Buka Preview Maps</span>
+                    <span>🗺️ Cek di Google Maps</span>
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                   </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData(prev => ({ ...prev, lat: '', lng: '' }));
+                      setGpsStatus('Titik koordinat dihapus.');
+                    }}
+                    className="text-[11px] font-medium text-red-500 hover:text-red-700 hover:underline"
+                  >
+                    Hapus Titik
+                  </button>
                 </div>
               </div>
-            ) : null}
+            )}
           </div>
 
           {/* Patokan / Catatan Rute */}
