@@ -192,32 +192,45 @@ function StoreModal({
 
         {/* Scrollable Form Body */}
         <form onSubmit={onSave} className="space-y-4 overflow-y-auto pr-1 pb-4 flex-1">
-          {/* Nama Toko */}
-          <div>
-            <label className="block text-[12.5px] font-semibold text-zinc-700 mb-1">
-              Nama Toko / Bengkel <span className="text-red-500">*</span>
-            </label>
-            <input 
-              type="text" 
-              required
-              placeholder="Contoh: Sentosa Motor"
-              className="w-full px-4 py-2.5 bg-zinc-50/70 border border-zinc-200 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px] font-medium"
-              value={formData.name} 
-              onChange={e => setFormData({ ...formData, name: e.target.value })}
-            />
+          {/* Customer ID & Nama Toko */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="sm:col-span-1">
+              <label className="block text-[12.5px] font-semibold text-zinc-700 mb-1">
+                ID Customer
+              </label>
+              <input 
+                type="text" 
+                placeholder="C 3780"
+                className="w-full px-3.5 py-2.5 bg-zinc-50/70 border border-zinc-200 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px] font-mono font-bold uppercase text-zinc-900"
+                value={formData.customerId || ''} 
+                onChange={e => setFormData({ ...formData, customerId: e.target.value.toUpperCase() })}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="block text-[12.5px] font-semibold text-zinc-700 mb-1">
+                Nama Toko / Bengkel <span className="text-red-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                required
+                placeholder="Contoh: Sentosa Motor"
+                className="w-full px-4 py-2.5 bg-zinc-50/70 border border-zinc-200 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px] font-medium"
+                value={formData.name} 
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
+              />
+            </div>
           </div>
 
           {/* Kode Rute */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="text-[12.5px] font-semibold text-zinc-700">
-                Kode Rute <span className="text-red-500">*</span>
+                Kode Rute <span className="text-zinc-400 font-normal">(Opsional)</span>
               </label>
               <span className="text-[11px] text-zinc-400">Untuk pengelompokan rute</span>
             </div>
             <input 
               type="text" 
-              required
               placeholder="Contoh: R01 - BOGOR KOTA atau R01"
               className="w-full px-4 py-2.5 bg-zinc-50/70 border border-zinc-200 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all text-[14px] font-semibold text-orange-600 uppercase"
               value={formData.routeCode} 

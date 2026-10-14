@@ -65,9 +65,20 @@ function OrderModal({
   // Handler ubah nama toko (jika cocok dengan toko terdaftar, auto-fill kode rute)
   const handleStoreNameChange = (val) => {
     setStoreName(val);
-    const matched = stores.find(s => s.name.toLowerCase() === val.trim().toLowerCase());
-    if (matched && matched.routeCode) {
-      setRouteCode(matched.routeCode);
+    const cleanVal = val.trim().toLowerCase();
+    const matched = stores.find(s => 
+      s.name.toLowerCase() === cleanVal || 
+      (s.customerId && s.customerId.toLowerCase() === cleanVal) ||
+      (s.customerId && s.customerId.replace(/\s+/g, '').toLowerCase() === cleanVal.replace(/\s+/g, ''))
+    );
+    if (matched) {
+      if (matched.routeCode) {
+        setRouteCode(matched.routeCode);
+      }
+      // Jika user mengetik nomor customerId saja, otomatis ganti dengan nama toko
+      if (matched.customerId && (cleanVal === matched.customerId.toLowerCase() || cleanVal.replace(/\s+/g, '') === matched.customerId.replace(/\s+/g, '').toLowerCase())) {
+        setStoreName(matched.name);
+      }
     }
   };
 
@@ -264,7 +275,7 @@ function OrderModal({
               <datalist id="stores-datalist">
                 {stores.map(s => (
                   <option key={s.id} value={s.name}>
-                    {s.routeCode ? `[${s.routeCode}]` : ''} {s.owner ? `(${s.owner})` : ''}
+                    {s.customerId ? `[ID: ${s.customerId}] ` : ''}{s.routeCode ? `[${s.routeCode}] ` : ''}{s.owner ? `(${s.owner})` : ''}
                   </option>
                 ))}
               </datalist>

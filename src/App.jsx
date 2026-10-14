@@ -25,6 +25,8 @@ import OrderModal from './components/draft/OrderModal';
 
 const PRICELIST_DATA_VERSION = 'v2_568_official_pdf';
 
+const STORES_DATA_VERSION = 'v2_168_stores';
+
 function App() {
   const [activeTab, setActiveTab] = useState('home');
 
@@ -57,21 +59,25 @@ function App() {
     localStorage.setItem('daytona_pricelist_version', PRICELIST_DATA_VERSION);
   }, [items]);
 
-  // Storage for Stores
+  // Storage for Stores dengan migrasi otomatis ke 168 toko resmi
   const [stores, setStores] = useState(() => {
+    const savedVersion = localStorage.getItem('daytona_stores_version');
     const saved = localStorage.getItem('daytona_stores');
-    if (saved) {
+    if (saved && savedVersion === STORES_DATA_VERSION) {
       try {
-        return JSON.parse(saved);
-      } catch (e) {
-        return initialStores;
-      }
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length >= 100 && parsed[0]?.customerId) {
+          return parsed;
+        }
+      } catch (e) {}
     }
+    localStorage.setItem('daytona_stores_version', STORES_DATA_VERSION);
     return initialStores;
   });
 
   useEffect(() => {
     localStorage.setItem('daytona_stores', JSON.stringify(stores));
+    localStorage.setItem('daytona_stores_version', STORES_DATA_VERSION);
   }, [stores]);
 
   // Stores State
@@ -82,6 +88,7 @@ function App() {
   const [showStoreModal, setShowStoreModal] = useState(false);
   const [modalStore, setModalStore] = useState(null);
   const [storeFormData, setStoreFormData] = useState({
+    customerId: '',
     name: '',
     routeCode: '',
     owner: '',
@@ -320,22 +327,19 @@ function App() {
     };
   }, [stores]);
 
-  // Filter toko berdasarkan Kode Rute dan Search Query
+  // Filter toko berdasarkan Kode Rute dan Smart Multi-token Search (Customer ID, Nama, Rute, Alamat, PIC)
   const filteredStores = useMemo(() => {
+    const queryTokens = storeSearchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
+
     return stores.filter(store => {
       if (selectedRoute !== 'Semua') {
         const storeRoute = store.routeCode?.trim() || 'TANPA RUTE';
         if (storeRoute !== selectedRoute) return false;
       }
-      if (storeSearchQuery.trim()) {
-        const q = storeSearchQuery.toLowerCase().trim();
-        const matchName = store.name?.toLowerCase().includes(q);
-        const matchRoute = store.routeCode?.toLowerCase().includes(q);
-        const matchOwner = store.owner?.toLowerCase().includes(q);
-        const matchAddress = store.address?.toLowerCase().includes(q);
-        if (!matchName && !matchRoute && !matchOwner && !matchAddress) {
-          return false;
-        }
+      if (queryTokens.length > 0) {
+        const combined = `${store.customerId || ''} ${store.name || ''} ${store.routeCode || ''} ${store.owner || ''} ${store.address || ''} ${store.notes || ''}`.toLowerCase();
+        const allMatch = queryTokens.every(token => combined.includes(token));
+        if (!allMatch) return false;
       }
       return true;
     });
@@ -343,10 +347,10 @@ function App() {
 
   // CRUD Toko Handlers
   const openAddStore = () => {
-    const firstRoute = routesList.find(r => r !== 'Semua') || 'R01 - BOGOR KOTA';
     setStoreFormData({
+      customerId: '',
       name: '',
-      routeCode: selectedRoute !== 'Semua' ? selectedRoute : firstRoute,
+      routeCode: selectedRoute !== 'Semua' && selectedRoute !== 'TANPA RUTE' ? selectedRoute : '',
       owner: '',
       address: '',
       lat: '',
@@ -359,6 +363,7 @@ function App() {
 
   const openEditStore = (store) => {
     setStoreFormData({
+      customerId: store.customerId || '',
       name: store.name || '',
       routeCode: store.routeCode || '',
       owner: store.owner || '',
@@ -373,13 +378,14 @@ function App() {
 
   const saveStore = (e) => {
     e.preventDefault();
-    if (!storeFormData.name.trim() || !storeFormData.routeCode.trim()) return;
+    if (!storeFormData.name.trim()) return;
 
     const latVal = storeFormData.lat ? parseFloat(storeFormData.lat) : null;
     const lngVal = storeFormData.lng ? parseFloat(storeFormData.lng) : null;
 
     const storeToSave = {
       id: modalStore ? modalStore.id : `store_${Date.now()}`,
+      customerId: storeFormData.customerId.trim().toUpperCase(),
       name: storeFormData.name.trim(),
       routeCode: storeFormData.routeCode.trim().toUpperCase(),
       owner: storeFormData.owner.trim(),

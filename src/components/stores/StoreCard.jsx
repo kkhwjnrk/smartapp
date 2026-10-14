@@ -15,10 +15,19 @@ function StoreCard({ store, isEditMode, onEdit, onDelete }) {
         isEditMode ? 'cursor-pointer hover:border-zinc-400 hover:shadow-md' : 'hover:shadow-md'
       }`}
     >
-      {/* Header Card: Route Code & Actions */}
+      {/* Header Card: Customer ID, Route Code & Actions */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="px-2.5 py-1 bg-orange-50 text-orange-700 border border-orange-200/70 rounded-lg text-[11px] font-bold tracking-wider">
+          {store.customerId && (
+            <span className="px-2.5 py-0.5 bg-zinc-900 text-white rounded-lg text-[11px] font-bold font-mono tracking-tight shadow-xs">
+              {store.customerId}
+            </span>
+          )}
+          <span className={`px-2.5 py-0.5 rounded-lg text-[11px] font-bold tracking-wider ${
+            store.routeCode 
+              ? 'bg-orange-50 text-orange-700 border border-orange-200/70' 
+              : 'bg-zinc-100 text-zinc-500 border border-zinc-200/60'
+          }`}>
             {store.routeCode || 'TANPA RUTE'}
           </span>
           {hasCoordinates && (

@@ -37,7 +37,7 @@ function StoresTab({
           <input 
             ref={searchInputRef}
             type="text" 
-            placeholder="Cari nama toko, PIC, alamat, atau rute..."
+            placeholder="Cari ID customer (C 3780), nama toko, atau rute..."
             className="w-full pl-12 pr-11 py-3.5 bg-white border border-zinc-200 rounded-2xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 text-[15px] font-medium placeholder:font-normal placeholder:text-zinc-400 shadow-sm transition-all"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
