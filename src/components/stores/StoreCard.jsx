@@ -121,17 +121,19 @@ function StoreCard({ store, isEditMode, onEdit, onDelete }) {
             <span className="text-[11.5px] text-zinc-400 italic">
               Belum ada koordinat Maps
             </span>
-            {isEditMode && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit(store);
-                }}
-                className="text-[11.5px] font-semibold text-orange-600 hover:text-orange-700 transition-colors"
-              >
-                + Pasang Titik
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(store);
+              }}
+              className="inline-flex items-center gap-1 text-[11.5px] font-bold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 px-2.5 py-1 rounded-lg border border-orange-200/80 transition-colors active:scale-95"
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>Pasang Titik</span>
+            </button>
           </div>
         )}
       </div>
