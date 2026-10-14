@@ -14,7 +14,8 @@ function Header({
   selectedMonthKey,
   setSelectedMonthKey,
   availableMonths = [],
-  currentMonthKey
+  currentMonthKey,
+  onOpenAddOrder
 }) {
   const showEditButton = activeTab === 'pricelist' || activeTab === 'stores';
   const currentIsEdit = activeTab === 'stores' ? isStoreEditMode : isEditMode;
@@ -34,7 +35,14 @@ function Header({
         {/* Sisi Kiri: Heading Halaman */}
         <div className="min-w-0 shrink-0">
           <h1 className="text-[20px] font-bold text-zinc-900 tracking-tight truncate">
-            {activeTab === 'home' && "Home"}
+            {activeTab === 'home' && (
+              <span className="flex items-center gap-2">
+                <span>SmartApp</span>
+                <span className="px-1.5 py-0.5 bg-orange-600 text-white rounded-md text-[10px] font-black font-mono tracking-wider uppercase shadow-2xs">
+                  Daytona
+                </span>
+              </span>
+            )}
             {activeTab === 'draft' && "Catatan Order"}
             {activeTab === 'pricelist' && "Pricelist"}
             {activeTab === 'stores' && "Data Toko"}
@@ -99,6 +107,18 @@ function Header({
               </svg>
             </button>
           </div>
+        )}
+
+        {/* Sisi Kanan Khusus Home: Quick Action + Order */}
+        {activeTab === 'home' && onOpenAddOrder && (
+          <button 
+            type="button"
+            onClick={onOpenAddOrder}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white rounded-full text-[12px] font-bold transition-all shadow-2xs"
+          >
+            <span className="text-white text-[13px] leading-none">+</span>
+            <span>Order</span>
+          </button>
         )}
 
         {/* Sisi Kanan Khusus Pricelist / Data Toko: Tombol Mode Edit */}

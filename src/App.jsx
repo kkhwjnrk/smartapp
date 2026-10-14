@@ -426,48 +426,34 @@ function App() {
         setSelectedMonthKey={setSelectedMonthKey}
         availableMonths={availableMonths}
         currentMonthKey={currentMonthKey}
+        onOpenAddOrder={openAddOrder}
       />
 
       {/* Main Content Area */}
       <main className="max-w-md mx-auto px-5 pt-4 relative">
         {activeTab === 'home' && (
           <HomeTab
-            cartCount={pendingOrdersCount}
-            itemsCount={items.length}
-            categoriesCount={CATEGORIES.length - 1}
-            storesCount={stores.length}
-            routesCount={routesList.length - 1}
             orders={orders}
             stores={stores}
             items={items}
             routesList={routesList}
             routeCounts={routeCounts}
             onOpenDraft={() => setActiveTab('draft')}
-            onOpenPricelist={() => setActiveTab('pricelist')}
-            onOpenStores={() => setActiveTab('stores')}
+            onOpenPricelist={(category, queryText) => {
+              if (category) setSelectedCategory(category);
+              if (queryText !== undefined) setQuery(queryText);
+              setActiveTab('pricelist');
+            }}
+            onOpenStores={(routeFilter, searchFilter) => {
+              if (routeFilter) setSelectedRoute(routeFilter);
+              if (searchFilter !== undefined) setStoreSearchQuery(searchFilter);
+              setActiveTab('stores');
+            }}
+            onOpenAddOrder={openAddOrder}
+            onOpenEditOrder={openEditOrder}
             onOpenCategories={() => {
               setActiveTab('pricelist');
               setShowCategorySheet(true);
-            }}
-            onOpenAddOrder={openAddOrder}
-            onOpenAddStore={openAddStore}
-            onOpenEditOrder={openEditOrder}
-            onToggleOrderStatus={toggleOrderStatus}
-            onSelectRoute={(route) => {
-              setSelectedRoute(route);
-              setActiveTab('stores');
-            }}
-            onSelectCategory={(category) => {
-              handleSelectCategory(category);
-              setActiveTab('pricelist');
-            }}
-            onSelectStore={(store) => {
-              setStoreSearchQuery(store.name);
-              setActiveTab('stores');
-            }}
-            onSelectItem={(item) => {
-              setQuery(item.pn);
-              setActiveTab('pricelist');
             }}
           />
         )}
