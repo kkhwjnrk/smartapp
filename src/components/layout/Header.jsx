@@ -1,15 +1,15 @@
 import React from 'react';
-import { 
-  formatMonthKeyDisplay, 
-  getPreviousMonthKey, 
-  getNextMonthKey 
+import {
+  formatMonthKeyDisplay,
+  getPreviousMonthKey,
+  getNextMonthKey
 } from '../../utils/date';
 
-function Header({ 
-  activeTab, 
-  isEditMode, 
-  setIsEditMode, 
-  isStoreEditMode, 
+function Header({
+  activeTab,
+  isEditMode,
+  setIsEditMode,
+  isStoreEditMode,
   setIsStoreEditMode,
   selectedMonthKey,
   setSelectedMonthKey,
@@ -19,7 +19,7 @@ function Header({
 }) {
   const showEditButton = activeTab === 'pricelist' || activeTab === 'stores';
   const currentIsEdit = activeTab === 'stores' ? isStoreEditMode : isEditMode;
-  
+
   const toggleEdit = () => {
     if (activeTab === 'stores') {
       setIsStoreEditMode(!isStoreEditMode);
@@ -31,15 +31,13 @@ function Header({
   return (
     <header className="bg-[#FDFDFD]/90 sticky top-0 z-30 backdrop-blur-xl border-b border-zinc-200/50">
       <div className="max-w-md mx-auto px-5 py-3.5 flex justify-between items-center gap-2">
-        
+
         {/* Sisi Kiri: Heading Halaman */}
         <div className="min-w-0 shrink-0">
           <h1 className="text-[20px] font-bold text-zinc-900 tracking-tight truncate">
             {activeTab === 'home' && (
               <span className="flex items-center gap-2">
-                <span>SmartApp</span>
-                <span className="px-1.5 py-0.5 bg-orange-600 text-white rounded-md text-[10px] font-black font-mono tracking-wider uppercase shadow-2xs">
-                  Daytona
+                <span>SmartApp
                 </span>
               </span>
             )}
@@ -111,7 +109,7 @@ function Header({
 
         {/* Sisi Kanan Khusus Home: Quick Action + Order */}
         {activeTab === 'home' && onOpenAddOrder && (
-          <button 
+          <button
             type="button"
             onClick={onOpenAddOrder}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-600 hover:bg-orange-700 active:scale-95 text-white rounded-full text-[12px] font-bold transition-all shadow-2xs"
@@ -123,13 +121,12 @@ function Header({
 
         {/* Sisi Kanan Khusus Pricelist / Data Toko: Tombol Mode Edit */}
         {showEditButton && (
-          <button 
+          <button
             onClick={toggleEdit}
-            className={`px-3 py-1.5 rounded-full text-[13px] font-medium transition-all ${
-              currentIsEdit 
-                ? 'bg-zinc-900 text-white' 
-                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
-            }`}
+            className={`px-3 py-1.5 rounded-full text-[13px] font-medium transition-all ${currentIsEdit
+              ? 'bg-zinc-900 text-white'
+              : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+              }`}
           >
             {currentIsEdit ? 'Selesai' : 'Edit'}
           </button>
