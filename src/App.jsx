@@ -432,17 +432,36 @@ function App() {
       <main className="max-w-md mx-auto px-5 pt-4 relative">
         {activeTab === 'home' && (
           <HomeTab
+            orders={orders}
+            stores={stores}
+            items={items}
             cartCount={pendingOrdersCount}
             itemsCount={items.length}
             categoriesCount={CATEGORIES.length - 1}
             storesCount={stores.length}
             routesCount={routesList.length - 1}
+            routesList={routesList}
             onOpenDraft={() => setActiveTab('draft')}
             onOpenPricelist={() => setActiveTab('pricelist')}
             onOpenStores={() => setActiveTab('stores')}
             onOpenCategories={() => {
               setActiveTab('pricelist');
               setShowCategorySheet(true);
+            }}
+            onAddOrder={openAddOrder}
+            onEditOrder={openEditOrder}
+            onToggleOrderStatus={toggleOrderStatus}
+            onSelectCategory={(cat) => {
+              handleSelectCategory(cat);
+              setActiveTab('pricelist');
+            }}
+            onSelectRoute={(route) => {
+              setSelectedRoute(route);
+              setActiveTab('stores');
+            }}
+            onSelectDiscountTier={(tier) => {
+              setSelectedDiscountTier(tier);
+              setActiveTab('pricelist');
             }}
           />
         )}
