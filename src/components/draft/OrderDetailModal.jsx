@@ -16,6 +16,7 @@ function OrderDetailModal({
 }) {
   const [copiedPn, setCopiedPn] = useState(null);
   const [copiedAll, setCopiedAll] = useState(false);
+  const [copiedStoreHeader, setCopiedStoreHeader] = useState(false);
 
   if (!isOpen || !order) return null;
 
@@ -120,28 +121,39 @@ function OrderDetailModal({
             </div>
           )}
 
-          {/* Nama Toko Full Width */}
-          <h1 className="text-[22px] font-bold text-zinc-900 tracking-tight leading-snug break-words">
-            {order.storeName}
-          </h1>
+          {/* Nama Toko & Tombol Ikon Salin Rapi */}
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <h1 className="text-[22px] font-bold text-zinc-900 tracking-tight leading-snug break-words">
+              {order.storeName}
+            </h1>
 
-          {/* Tombol Salin [ID Customer] [Nama Toko] */}
-          <div className="mt-2.5 flex items-center gap-2 flex-wrap">
             <button
               type="button"
               onClick={() => {
                 if (onCopyStoreHeader) onCopyStoreHeader(formattedStoreText);
                 else navigator.clipboard.writeText(formattedStoreText);
+                setCopiedStoreHeader(true);
+                setTimeout(() => setCopiedStoreHeader(false), 1500);
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-900 border border-orange-200/90 rounded-xl text-[12px] font-semibold transition-all active:scale-95 shadow-2xs group/btn"
-              title={`Salin "${formattedStoreText}" ke clipboard`}
+              className={`p-1.5 rounded-xl border transition-all active:scale-95 shrink-0 ${
+                copiedStoreHeader
+                  ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
+                  : 'bg-white hover:bg-orange-50 text-zinc-400 hover:text-orange-600 border-zinc-200 shadow-2xs'
+              }`}
+              title={`Salin ID & Nama Toko: "${formattedStoreText}"`}
             >
-              <svg className="w-3.5 h-3.5 text-orange-600 group-hover/btn:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-              </svg>
-              <span>Salin: <strong className="font-mono font-bold text-zinc-900">{formattedStoreText}</strong></span>
+              {copiedStoreHeader ? (
+                <svg className="w-4 h-4 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                </svg>
+              )}
             </button>
           </div>
+
 
           {/* Meta Bar: Tanggal Lengkap & Total Item */}
           <div className="flex items-center gap-2 mt-2 text-[13px] text-zinc-500 font-medium flex-wrap">

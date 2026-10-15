@@ -15,6 +15,7 @@ function OrderCard({
   carryOverMonthText
 }) {
   const [copiedPn, setCopiedPn] = useState(null);
+  const [copiedStoreHeader, setCopiedStoreHeader] = useState(false);
   const isCompleted = order.status === 'completed';
   const formattedDate = formatFullIndonesianDate(order.date || order.createdAt);
   const formattedStoreText = formatStoreCustomerHeader(order, stores);
@@ -82,15 +83,15 @@ function OrderCard({
               )}
             </div>
 
-            {/* Nama Toko Full Width */}
-            <h3 className={`text-[17px] font-bold tracking-tight leading-snug break-words ${
-              isCompleted ? 'text-zinc-500 line-through decoration-zinc-300' : 'text-zinc-900'
-            }`}>
-              {order.storeName}
-            </h3>
+            {/* Nama Toko & Ikon Copy Rapi */}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <h3 className={`text-[17px] font-bold tracking-tight leading-snug break-words ${
+                isCompleted ? 'text-zinc-500 line-through decoration-zinc-300' : 'text-zinc-900'
+              }`}>
+                {order.storeName}
+              </h3>
 
-            {/* Tombol Aksi 1-Tap Salin "[ID Customer] [Nama Toko]" */}
-            <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+              {/* Tombol Ikon Copy Rapi (Tanpa teks panjang agar tidak sempit) */}
               <button
                 type="button"
                 onClick={(e) => {
@@ -100,19 +101,30 @@ function OrderCard({
                   } else {
                     navigator.clipboard.writeText(formattedStoreText);
                   }
+                  setCopiedStoreHeader(true);
+                  setTimeout(() => setCopiedStoreHeader(false), 1500);
                 }}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-orange-50/90 hover:bg-orange-100 text-orange-900 text-[11.5px] font-semibold border border-orange-200/90 transition-all active:scale-95 group/btn shadow-2xs"
-                title={`Salin "${formattedStoreText}" ke clipboard`}
+                className={`p-1 rounded-lg transition-all active:scale-90 shrink-0 ${
+                  copiedStoreHeader
+                    ? 'text-emerald-600 bg-emerald-50'
+                    : 'text-zinc-400 hover:text-orange-600 hover:bg-orange-50'
+                }`}
+                title={`Salin ID & Nama Toko: "${formattedStoreText}"`}
               >
-                <svg className="w-3.5 h-3.5 text-orange-600 group-hover/btn:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                </svg>
-                <span className="truncate">Salin: <strong className="font-mono font-bold text-zinc-900">{formattedStoreText}</strong></span>
+                {copiedStoreHeader ? (
+                  <svg className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                  </svg>
+                )}
               </button>
             </div>
             
             {/* Meta: Tanggal Lengkap & Jumlah Item (tanpa total pcs) */}
-            <div className="flex items-center gap-2 mt-2 text-[12px] text-zinc-400 font-medium flex-wrap">
+            <div className="flex items-center gap-2 mt-1.5 text-[12px] text-zinc-400 font-medium flex-wrap">
               <span className="text-zinc-600">{formattedDate}</span>
               <span>·</span>
               <span className="font-semibold text-zinc-700">{order.items.length} item</span>
@@ -130,6 +142,7 @@ function OrderCard({
             </div>
           </div>
         </div>
+
 
         {/* Action Buttons Top-Right */}
         <div className="flex items-center gap-1 shrink-0">

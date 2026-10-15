@@ -385,7 +385,6 @@ function HomeTab({
                       {orderItemsCount} Jenis Part · {orderQty} Pcs Barang
                     </p>
                   </div>
-
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       type="button"
@@ -393,16 +392,24 @@ function HomeTab({
                         e.stopPropagation();
                         navigator.clipboard.writeText(formattedStore);
                         setCopiedStore(formattedStore);
-                        setTimeout(() => setCopiedStore(''), 1800);
+                        setTimeout(() => setCopiedStore(''), 1500);
                       }}
-                      className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all shadow-2xs border ${
+                      className={`p-1.5 rounded-xl border transition-all active:scale-90 shrink-0 ${
                         isCopied 
-                          ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
-                          : 'bg-orange-50 hover:bg-orange-100 text-orange-800 border-orange-200'
+                          ? 'bg-emerald-50 text-emerald-600 border-emerald-200' 
+                          : 'bg-orange-50 hover:bg-orange-100 text-orange-600 border-orange-200/80'
                       }`}
-                      title={`Salin "${formattedStore}"`}
+                      title={`Salin ID & Toko: "${formattedStore}"`}
                     >
-                      {isCopied ? '✓ Tersalin' : 'Salin Toko'}
+                      {isCopied ? (
+                        <svg className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                        </svg>
+                      )}
                     </button>
 
                     <button
