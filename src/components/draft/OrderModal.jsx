@@ -27,6 +27,9 @@ function OrderModal({
   const [itemQty, setItemQty] = useState('');
   const [showItemSuggestions, setShowItemSuggestions] = useState(false);
 
+  // Dialog Konfirmasi Simpan Order
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+
   // Inisialisasi form saat modal terbuka
   useEffect(() => {
     if (isOpen) {
@@ -58,6 +61,7 @@ function OrderModal({
       setShowItemSuggestions(false);
       setIsStorePickerOpen(false);
       setStoreSearchQuery('');
+      setShowSaveConfirm(false);
     }
   }, [isOpen, modalOrder, stores]);
 
@@ -101,10 +105,28 @@ function OrderModal({
     setStoreSearchQuery('');
   };
 
-  // Tambah item ke daftar pesanan toko
+  // Helper keyboard hanya angka: blokir minus, plus, huruf e/E, koma, titik
+  const handleNumericKeyDown = (e) => {
+    if (['-', '+', 'e', 'E', '.', ',', '/', '*'].includes(e.key)) {
+      e.preventDefault();
+    }
+  };
+
+  // Handler sanitasi input Qty tambah item baru (hanya digit > 0)
+  const handleQtyInputChange = (e) => {
+    const raw = e.target.value.replace(/[^0-9]/g, '');
+    setItemQty(raw);
+  };
+
+  // Tambah item ke daftar pesanan toko (Urutan: PN pertama diinput tetap di atas / FIFO)
   const handleAddItem = (e) => {
     e?.preventDefault();
-    const qty = parseInt(itemQty, 10) || 1;
+    if (!storeName.trim()) {
+      alert('Silakan pilih toko terlebih dahulu di atas sebelum menambahkan item.');
+      return;
+    }
+
+    const qty = Math.max(1, parseInt(itemQty, 10) || 1);
 
     let newItem = null;
     if (selectedCatalogItem) {
@@ -123,7 +145,7 @@ function OrderModal({
 
     if (!newItem) return;
 
-    // Cek jika PN sudah ada di list, update qty
+    // Cek jika PN sudah ada di list, update qty di posisinya (tidak memindahkan urutan)
     setOrderItems(prev => {
       const idx = prev.findIndex(i => i.pn.toLowerCase() === newItem.pn.toLowerCase());
       if (idx >= 0) {
@@ -136,7 +158,8 @@ function OrderModal({
         };
         return updated;
       }
-      return [newItem, ...prev];
+      // Tambahkan ke paling akhir daftar agar PN pertama yang diinput tetap berada di atas
+      return [...prev, newItem];
     });
 
     // Reset input
@@ -151,22 +174,23 @@ function OrderModal({
     setOrderItems(prev => prev.filter((_, idx) => idx !== index));
   };
 
-  // Ubah qty item secara langsung melalui input angka
-  const handleDirectQtyChange = (index, value) => {
+  // Ubah qty item secara langsung melalui input angka (hanya digit positif)
+  const handleDirectQtyChange = (index, rawValue) => {
+    const sanitized = String(rawValue).replace(/[^0-9]/g, '');
     setOrderItems(prev => prev.map((item, idx) => {
       if (idx === index) {
         return { 
           ...item, 
-          qty: value === '' ? '' : Math.max(1, parseInt(value, 10) || 1) 
+          qty: sanitized === '' ? '' : Math.max(1, parseInt(sanitized, 10) || 1) 
         };
       }
       return item;
     }));
   };
 
-  // Simpan seluruh order
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
+  // Validasi sebelum membuka modal konfirmasi simpan
+  const handleRequestSubmit = (e) => {
+    e?.preventDefault();
     if (!storeName.trim()) {
       alert('Mohon pilih toko yang terdaftar pada data.');
       return;
@@ -176,6 +200,12 @@ function OrderModal({
       return;
     }
 
+    // Buka konfirmasi dialog
+    setShowSaveConfirm(true);
+  };
+
+  // Eksekusi penyimpanan setelah dikonfirmasi pengguna
+  const handleConfirmSave = () => {
     const orderToSave = {
       id: modalOrder ? modalOrder.id : `order_${Date.now()}`,
       customerId: customerId.trim(),
@@ -192,10 +222,12 @@ function OrderModal({
       }))
     };
 
+    setShowSaveConfirm(false);
     onSave(orderToSave);
   };
 
   const totalQty = orderItems.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
+  const isStoreSelected = Boolean(storeName.trim());
 
   return (
     <div className="fixed inset-0 z-50 bg-zinc-50 flex flex-col animate-in slide-in-from-right duration-250">
@@ -407,35 +439,61 @@ function OrderModal({
             </div>
           </div>
 
-          {/* SECTION TAMBAH ITEM (Tanpa Menampilkan HET) */}
-          <div className="bg-white p-4 rounded-3xl border border-zinc-200/90 shadow-xs space-y-3">
+          {/* SECTION TAMBAH ITEM (Terkunci jika belum memilih toko) */}
+          <div className={`bg-white p-4 rounded-3xl border transition-all ${
+            isStoreSelected 
+              ? 'border-zinc-200/90 shadow-xs' 
+              : 'border-dashed border-zinc-300 bg-zinc-50/60'
+          } space-y-3`}>
+            
             <div className="flex items-center justify-between">
               <label className="block text-[13px] font-bold text-zinc-900">
                 Tambah Item Pesanan
               </label>
-              <span className="text-[11px] text-zinc-400">
-                {catalogItems.length} part katalog
-              </span>
+              {isStoreSelected && (
+                <span className="text-[11px] text-zinc-400">
+                  {catalogItems.length} part katalog
+                </span>
+              )}
             </div>
+
+            {/* Warning banner jika toko belum dipilih */}
+            {!isStoreSelected && (
+              <div className="p-3 bg-amber-50 border border-amber-200/90 rounded-2xl flex items-center gap-2.5 text-[12px] text-amber-900 font-medium animate-in fade-in duration-200">
+                <svg className="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Mohon pilih toko terlebih dahulu di atas sebelum menambahkan item pesanan.</span>
+              </div>
+            )}
 
             {/* Input Pencarian Part */}
             <div className="relative">
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Cari part: ketik 'beat', 'busi', 'roller', atau PN..."
-                  className="w-full pl-9 pr-8 py-2.5 bg-zinc-50 border border-zinc-300 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-500 text-[13.5px] font-medium text-zinc-900"
+                  disabled={!isStoreSelected}
+                  placeholder={isStoreSelected 
+                    ? "Cari part: ketik 'beat', 'busi', 'roller', atau PN..." 
+                    : "Pilih toko terlebih dahulu di atas untuk mencari part..."}
+                  className={`w-full pl-9 pr-8 py-2.5 border rounded-xl text-[13.5px] font-medium transition-all ${
+                    isStoreSelected 
+                      ? 'bg-zinc-50 border-zinc-300 focus:bg-white focus:outline-none focus:border-zinc-500 text-zinc-900' 
+                      : 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed'
+                  }`}
                   value={searchQuery}
                   onChange={e => {
                     setSearchQuery(e.target.value);
                     setShowItemSuggestions(true);
                   }}
-                  onFocus={() => setShowItemSuggestions(true)}
+                  onFocus={() => {
+                    if (isStoreSelected) setShowItemSuggestions(true);
+                  }}
                 />
                 <svg className="w-4 h-4 text-zinc-400 absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                {searchQuery && (
+                {searchQuery && isStoreSelected && (
                   <button
                     type="button"
                     onClick={() => {
@@ -452,7 +510,7 @@ function OrderModal({
               </div>
 
               {/* Dropdown Rekomendasi Part (Tanpa HET) */}
-              {showItemSuggestions && searchQuery.trim() && (
+              {isStoreSelected && showItemSuggestions && searchQuery.trim() && (
                 <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-zinc-200 rounded-2xl shadow-xl z-30 max-h-64 overflow-y-auto divide-y divide-zinc-100">
                   {searchResults.length > 0 ? (
                     searchResults.map(item => (
@@ -505,7 +563,7 @@ function OrderModal({
             </div>
 
             {/* Kotak Konfirmasi Item Terpilih (Tanpa HET) */}
-            {selectedCatalogItem && (
+            {isStoreSelected && selectedCatalogItem && (
               <div className="p-3 bg-orange-50/90 border border-orange-200/90 rounded-2xl flex items-start justify-between gap-3 animate-in fade-in duration-150">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap mb-1">
@@ -541,29 +599,41 @@ function OrderModal({
               </div>
             )}
 
-            {/* Input Qty & Tombol Tambah */}
+            {/* Input Qty (Numeric Keyboard Saja) & Tombol Tambah */}
             <div className="flex gap-2.5">
               <div className="w-32">
                 <input
-                  type="number"
-                  min="1"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  disabled={!isStoreSelected}
                   placeholder="Qty (PCS)"
-                  className="w-full px-3 py-2.5 bg-zinc-50 border border-zinc-300 rounded-xl text-center font-bold text-[14px] text-zinc-900 focus:bg-white focus:outline-none focus:border-zinc-500"
+                  onKeyDown={handleNumericKeyDown}
+                  className={`w-full px-3 py-2.5 border rounded-xl text-center font-bold text-[14px] transition-all ${
+                    isStoreSelected
+                      ? 'bg-zinc-50 border-zinc-300 text-zinc-900 focus:bg-white focus:outline-none focus:border-zinc-500'
+                      : 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed'
+                  }`}
                   value={itemQty}
-                  onChange={e => setItemQty(e.target.value)}
+                  onChange={handleQtyInputChange}
                 />
               </div>
               <button
                 type="button"
+                disabled={!isStoreSelected || (!selectedCatalogItem && !searchQuery.trim())}
                 onClick={handleAddItem}
-                className="flex-1 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-[13px] rounded-xl transition-all shadow-xs active:scale-98 flex items-center justify-center gap-1.5"
+                className={`flex-1 py-2.5 text-white font-semibold text-[13px] rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 ${
+                  isStoreSelected && (selectedCatalogItem || searchQuery.trim())
+                    ? 'bg-zinc-900 hover:bg-zinc-800 active:scale-98 cursor-pointer'
+                    : 'bg-zinc-400/80 cursor-not-allowed opacity-60'
+                }`}
               >
                 <span>+ Tambah ke Daftar</span>
               </button>
             </div>
           </div>
 
-          {/* SECTION DAFTAR ITEM PESANAN (Qty Bisa Diinput Langsung, Tanpa Tombol - dan +) */}
+          {/* SECTION DAFTAR ITEM PESANAN (Urut dari Pertama Diinput, Qty Numeric Langsung) */}
           <div className="bg-white p-4 rounded-3xl border border-zinc-200/90 shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[13px] font-bold text-zinc-900">
@@ -602,13 +672,15 @@ function OrderModal({
                       )}
                     </div>
 
-                    {/* Input Qty Langsung (Tanpa tombol - dan +) & Tombol Hapus */}
+                    {/* Input Qty Langsung (Numeric Keyboard Saja, Tanpa tombol - dan +) & Tombol Hapus */}
                     <div className="flex items-center gap-1.5 shrink-0">
                       <div className="flex items-center bg-white border border-zinc-300 rounded-xl px-2 py-1 shadow-2xs focus-within:border-zinc-500 focus-within:ring-1 focus-within:ring-zinc-500">
                         <input
-                          type="number"
-                          min="1"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           value={item.qty}
+                          onKeyDown={handleNumericKeyDown}
                           onChange={(e) => handleDirectQtyChange(idx, e.target.value)}
                           onBlur={(e) => {
                             const val = parseInt(e.target.value, 10);
@@ -659,7 +731,7 @@ function OrderModal({
             </button>
             <button
               type="button"
-              onClick={handleFormSubmit}
+              onClick={handleRequestSubmit}
               className="px-5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-[13px] rounded-xl transition-all shadow-sm active:scale-95 flex items-center gap-1.5"
             >
               <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -670,6 +742,83 @@ function OrderModal({
           </div>
         </div>
       </div>
+
+      {/* 4. MODAL DIALOG KONFIRMASI SIMPAN ORDER */}
+      {showSaveConfirm && (
+        <div className="fixed inset-0 z-60 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-200 animate-in zoom-in-95 duration-150 space-y-4">
+            
+            {/* Header Dialog */}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
+                <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-[16px] font-bold text-zinc-900 leading-tight">
+                  Simpan Catatan Order?
+                </h3>
+                <p className="text-[12px] text-zinc-500 mt-0.5">
+                  Pastikan data pesanan sudah sesuai
+                </p>
+              </div>
+            </div>
+
+            {/* Kotak Rangkuman Ringkas */}
+            <div className="bg-zinc-50 border border-zinc-200/90 rounded-2xl p-3.5 space-y-2 text-[12.5px]">
+              <div>
+                <span className="text-zinc-500 block text-[11px] font-medium">Toko / Pemesan</span>
+                <span className="font-bold text-zinc-900 text-[13.5px] leading-tight block">
+                  {storeName}
+                </span>
+                {customerId && (
+                  <span className="inline-block mt-0.5 font-mono font-bold text-[10.5px] text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.2 rounded">
+                    ID: {customerId}
+                  </span>
+                )}
+              </div>
+
+              <div className="border-t border-zinc-200/60 pt-2 flex items-center justify-between">
+                <div>
+                  <span className="text-zinc-500 block text-[11px] font-medium">Tanggal</span>
+                  <span className="font-semibold text-zinc-800">
+                    {formatFullIndonesianDate(dateIso)}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-zinc-500 block text-[11px] font-medium">Jumlah Pesanan</span>
+                  <span className="font-bold text-[#EA580C]">
+                    {orderItems.length} Part ({totalQty} PCS)
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Tombol Aksi Konfirmasi */}
+            <div className="flex gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setShowSaveConfirm(false)}
+                className="flex-1 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold text-[13px] rounded-xl transition-colors"
+              >
+                Periksa Kembali
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmSave}
+                className="flex-1 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-[13px] rounded-xl transition-all shadow-xs active:scale-95 flex items-center justify-center gap-1.5"
+              >
+                <svg className="w-4 h-4 text-emerald-400 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Ya, Simpan</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );
