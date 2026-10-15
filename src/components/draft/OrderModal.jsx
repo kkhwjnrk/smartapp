@@ -16,7 +16,7 @@ function OrderModal({
   const [dateIso, setDateIso] = useState(getTodayIso());
   const [orderItems, setOrderItems] = useState([]);
 
-  // Searchable Select Toko
+  // Searchable Select Toko (Popup Picker)
   const [isStorePickerOpen, setIsStorePickerOpen] = useState(false);
   const [storeSearchQuery, setStoreSearchQuery] = useState('');
   const storeSearchInputRef = useRef(null);
@@ -68,18 +68,18 @@ function OrderModal({
   // Fokuskan input pencarian toko saat picker dibuka
   useEffect(() => {
     if (isStorePickerOpen && storeSearchInputRef.current) {
-      setTimeout(() => storeSearchInputRef.current?.focus(), 50);
+      setTimeout(() => storeSearchInputRef.current?.focus(), 80);
     }
   }, [isStorePickerOpen]);
 
   // Filter daftar toko terdaftar berdasarkan pencarian nama toko atau customer ID
   const filteredStores = useMemo(() => {
-    if (!storeSearchQuery.trim()) return stores.slice(0, 60);
+    if (!storeSearchQuery.trim()) return stores.slice(0, 80);
     const tokens = storeSearchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
     return stores.filter(s => {
       const combined = `${s.customerId || ''} ${s.name || ''} ${s.routeCode || ''} ${s.owner || ''}`.toLowerCase();
       return tokens.every(t => combined.includes(t));
-    }).slice(0, 60);
+    }).slice(0, 80);
   }, [storeSearchQuery, stores]);
 
   // Autocomplete pencarian barang katalog (multi-token search)
@@ -98,11 +98,28 @@ function OrderModal({
   const handleSelectStore = (store) => {
     setStoreName(store.name);
     setCustomerId(store.customerId || '');
-    if (store.routeCode) {
-      setRouteCode(store.routeCode);
-    }
+    // Reset/isi rute sesuai toko yang dipilih (tidak meninggalkan rute sebelumnya)
+    setRouteCode(store.routeCode || '');
     setIsStorePickerOpen(false);
     setStoreSearchQuery('');
+  };
+
+  // Batalkan / reset toko yang telah dipilih (kolom rute & ID customer otomatis ikut bersih)
+  const handleClearStore = () => {
+    setStoreName('');
+    setCustomerId('');
+    setRouteCode('');
+    setStoreSearchQuery('');
+    setIsStorePickerOpen(false);
+  };
+
+  // Mulai proses ganti toko
+  const handleStartChangeStore = () => {
+    setStoreName('');
+    setCustomerId('');
+    setRouteCode('');
+    setStoreSearchQuery('');
+    setIsStorePickerOpen(true);
   };
 
   // Helper keyboard hanya angka: blokir minus, plus, huruf e/E, koma, titik
@@ -274,7 +291,7 @@ function OrderModal({
       <div className="flex-1 overflow-y-auto px-4 py-4">
         <div className="max-w-2xl mx-auto space-y-4 pb-28">
 
-          {/* SECTION TOKO: Searchable Select Toko (Hanya Toko yang Ada Pada Data) */}
+          {/* SECTION TOKO: Select Rapi Tanpa Menampilkan List Memanjang di Awal */}
           <div className="bg-white p-4 rounded-3xl border border-zinc-200/90 shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <label className="block text-[13px] font-bold text-zinc-900">
@@ -285,99 +302,42 @@ function OrderModal({
               </span>
             </div>
 
-            {/* Jika Toko Belum Dipilih / Sedang Mengganti */}
-            {!storeName || isStorePickerOpen ? (
-              <div className="space-y-2">
-                {/* Search Input Toko */}
-                <div className="relative">
-                  <input
-                    ref={storeSearchInputRef}
-                    type="text"
-                    placeholder="Ketik nama atau ID toko (misal C 3780)..."
-                    className="w-full pl-9 pr-8 py-2.5 bg-zinc-50 border border-zinc-300 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-500 text-[13.5px] font-medium text-zinc-900"
-                    value={storeSearchQuery}
-                    onChange={e => {
-                      setStoreSearchQuery(e.target.value);
-                      setIsStorePickerOpen(true);
-                    }}
-                    onFocus={() => setIsStorePickerOpen(true)}
-                  />
-                  <svg className="w-4 h-4 text-zinc-400 absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            {/* Tampilan Kondisional: Tombol Pilih Rapi vs Kartu Toko Terpilih */}
+            {!isStoreSelected ? (
+              /* Tombol Pilih Toko Rapi (Kompak, tidak langsung menampilkan list toko memanjang) */
+              <button
+                type="button"
+                onClick={() => {
+                  setStoreSearchQuery('');
+                  setIsStorePickerOpen(true);
+                }}
+                className="w-full p-3.5 bg-zinc-50 hover:bg-orange-50/50 border border-zinc-300 hover:border-orange-400 rounded-2xl flex items-center justify-between text-left transition-all group active:scale-99 shadow-2xs"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-9 h-9 rounded-xl bg-orange-100 text-[#EA580C] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <div className="min-w-0">
+                    <span className="block text-[14px] font-bold text-zinc-700 group-hover:text-zinc-950 truncate">
+                      Pilih Toko Pemesan...
+                    </span>
+                    <span className="block text-[11.5px] text-zinc-400 mt-0.5">
+                      Klik untuk mencari dari {stores.length} toko
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1 text-zinc-400 group-hover:text-orange-600 shrink-0">
+                  <span className="text-[12px] font-semibold hidden sm:inline">Pilih Toko</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
                   </svg>
-                  {storeSearchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setStoreSearchQuery('')}
-                      className="absolute right-2.5 top-2.5 text-zinc-400 hover:text-zinc-600 p-0.5"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  )}
                 </div>
-
-                {/* Dropdown Hasil Pencarian Toko */}
-                <div className="border border-zinc-200 rounded-2xl max-h-56 overflow-y-auto divide-y divide-zinc-100 bg-white shadow-xs">
-                  {filteredStores.length > 0 ? (
-                    filteredStores.map(store => (
-                      <button
-                        key={store.id}
-                        type="button"
-                        onClick={() => handleSelectStore(store)}
-                        className="w-full text-left p-3 hover:bg-orange-50/70 active:bg-orange-100 transition-colors flex items-center justify-between gap-3 group"
-                      >
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            {store.customerId && (
-                              <span className="font-mono font-bold text-blue-700 bg-blue-50 border border-blue-200/70 px-1.5 py-0.5 rounded text-[11px]">
-                                {store.customerId}
-                              </span>
-                            )}
-                            {store.routeCode && (
-                              <span className="font-bold text-orange-700 bg-orange-50 border border-orange-200/70 px-1.5 py-0.5 rounded text-[10.5px]">
-                                {store.routeCode}
-                              </span>
-                            )}
-                            <h4 className="font-bold text-[13.5px] text-zinc-900 group-hover:text-orange-950">
-                              {store.name}
-                            </h4>
-                          </div>
-                          {store.owner && (
-                            <p className="text-[11.5px] text-zinc-400 mt-0.5">
-                              Pemilik: {store.owner}
-                            </p>
-                          )}
-                        </div>
-                        <span className="text-[11px] font-semibold text-orange-600 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                          Pilih →
-                        </span>
-                      </button>
-                    ))
-                  ) : (
-                    <div className="p-4 text-center text-zinc-400 text-[12.5px]">
-                      Tidak ada toko yang cocok dengan "{storeSearchQuery}".<br />
-                      <span className="text-[11px] text-zinc-400">Pilih dari data 160+ toko yang tersedia.</span>
-                    </div>
-                  )}
-                </div>
-
-                {storeName && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsStorePickerOpen(false);
-                      setStoreSearchQuery('');
-                    }}
-                    className="w-full py-1.5 text-center text-[12px] font-semibold text-zinc-500 hover:text-zinc-800"
-                  >
-                    Batal ganti toko
-                  </button>
-                )}
-              </div>
+              </button>
             ) : (
-              /* Kartu Toko Terpilih */
+              /* Kartu Toko Terpilih: Lengkap dengan tombol Ganti & Tombol Batal/Reset */
               <div className="p-3.5 bg-orange-50/70 border border-orange-200/90 rounded-2xl flex items-center justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap mb-1">
@@ -397,20 +357,29 @@ function OrderModal({
                   </h3>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsStorePickerOpen(true);
-                    setStoreSearchQuery('');
-                  }}
-                  className="px-3 py-1.5 bg-white hover:bg-orange-100 text-orange-800 border border-orange-300 rounded-xl text-[12px] font-bold transition-all shrink-0 active:scale-95 shadow-2xs"
-                >
-                  Ganti Toko
-                </button>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={handleStartChangeStore}
+                    className="px-3 py-1.5 bg-white hover:bg-orange-100 text-orange-800 border border-orange-300 rounded-xl text-[12px] font-bold transition-all active:scale-95 shadow-2xs"
+                  >
+                    Ganti Toko
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleClearStore}
+                    className="p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                    title="Batal pilih toko & bersihkan rute"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             )}
 
-            {/* Grid Tanggal & Kode Rute (Tanpa Input ID Customer) */}
+            {/* Grid Tanggal & Kode Rute */}
             <div className="grid grid-cols-2 gap-3 pt-1">
               <div>
                 <label className="block text-[11.5px] font-semibold text-zinc-600 mb-1">
@@ -426,11 +395,11 @@ function OrderModal({
               </div>
               <div>
                 <label className="block text-[11.5px] font-semibold text-zinc-600 mb-1">
-                  Kode Rute (Otomatis)
+                  Kode Rute {isStoreSelected ? '(Otomatis)' : ''}
                 </label>
                 <input
                   type="text"
-                  placeholder="R01 - BOGOR"
+                  placeholder={isStoreSelected ? "Rute toko..." : "Otomatis dari toko..."}
                   className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-[13px] font-medium uppercase text-orange-600 focus:bg-white focus:outline-none focus:border-zinc-400"
                   value={routeCode}
                   onChange={e => setRouteCode(e.target.value.toUpperCase())}
@@ -743,7 +712,137 @@ function OrderModal({
         </div>
       </div>
 
-      {/* 4. MODAL DIALOG KONFIRMASI SIMPAN ORDER */}
+      {/* 4. MODAL DIALOG POPUP PILIH TOKO TERDAFTAR (Hanya muncul saat tombol Pilih/Ganti Toko ditekan) */}
+      {isStorePickerOpen && (
+        <div className="fixed inset-0 z-60 bg-black/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
+          <div className="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl border border-zinc-200 animate-in slide-in-from-bottom duration-200">
+            
+            {/* Header Modal Picker */}
+            <div className="p-4 border-b border-zinc-100 flex items-center justify-between gap-3 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-orange-100 text-[#EA580C] flex items-center justify-center shrink-0">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-[16px] font-bold text-zinc-900 leading-tight">
+                    Pilih Toko Terdaftar
+                  </h3>
+                  <p className="text-[12px] text-zinc-400">
+                    Pilih dari {stores.length} toko dalam database
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsStorePickerOpen(false);
+                  setStoreSearchQuery('');
+                }}
+                className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded-xl transition-colors"
+                title="Tutup pencarian"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Kotak Pencarian Toko */}
+            <div className="p-4 pb-2 shrink-0">
+              <div className="relative">
+                <input
+                  ref={storeSearchInputRef}
+                  type="text"
+                  autoFocus
+                  placeholder="Ketik nama atau ID toko (misal C 3780)..."
+                  className="w-full pl-9 pr-8 py-2.5 bg-zinc-50 border border-zinc-300 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-500 text-[14px] font-medium text-zinc-900"
+                  value={storeSearchQuery}
+                  onChange={e => setStoreSearchQuery(e.target.value)}
+                />
+                <svg className="w-4 h-4 text-zinc-400 absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                {storeSearchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setStoreSearchQuery('')}
+                    className="absolute right-2.5 top-2.5 text-zinc-400 hover:text-zinc-600 p-0.5"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* List Toko (Scrollable) */}
+            <div className="flex-1 overflow-y-auto px-4 py-2 divide-y divide-zinc-100">
+              {filteredStores.length > 0 ? (
+                filteredStores.map(store => (
+                  <button
+                    key={store.id}
+                    type="button"
+                    onClick={() => handleSelectStore(store)}
+                    className="w-full text-left py-3 px-2 hover:bg-orange-50/70 active:bg-orange-100 rounded-xl transition-colors flex items-center justify-between gap-3 group"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {store.customerId && (
+                          <span className="font-mono font-bold text-blue-700 bg-blue-50 border border-blue-200/70 px-1.5 py-0.5 rounded text-[11px]">
+                            {store.customerId}
+                          </span>
+                        )}
+                        {store.routeCode && (
+                          <span className="font-bold text-orange-700 bg-orange-50 border border-orange-200/70 px-1.5 py-0.5 rounded text-[10.5px]">
+                            {store.routeCode}
+                          </span>
+                        )}
+                        <h4 className="font-bold text-[14px] text-zinc-900 group-hover:text-orange-950">
+                          {store.name}
+                        </h4>
+                      </div>
+                      {store.owner && (
+                        <p className="text-[12px] text-zinc-400 mt-0.5">
+                          Pemilik: {store.owner}
+                        </p>
+                      )}
+                    </div>
+                    <span className="text-[12px] font-semibold text-orange-600 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                      Pilih →
+                    </span>
+                  </button>
+                ))
+              ) : (
+                <div className="py-10 text-center text-zinc-400 text-[13px]">
+                  Tidak ada toko yang cocok dengan "{storeSearchQuery}".<br />
+                  <span className="text-[11.5px] text-zinc-400">Pilih dari data 160+ toko yang tersedia.</span>
+                </div>
+              )}
+            </div>
+
+            {/* Footer Modal Picker */}
+            <div className="p-3 border-t border-zinc-100 bg-zinc-50 rounded-b-3xl shrink-0 flex justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsStorePickerOpen(false);
+                  setStoreSearchQuery('');
+                }}
+                className="px-4 py-2 bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-semibold text-[13px] rounded-xl transition-colors"
+              >
+                Tutup
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* 5. MODAL DIALOG KONFIRMASI SIMPAN ORDER */}
       {showSaveConfirm && (
         <div className="fixed inset-0 z-60 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150">
           <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-200 animate-in zoom-in-95 duration-150 space-y-4">
