@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { formatFullIndonesianDate } from '../../utils/date';
+import { formatStoreCustomerHeader } from '../../utils/formatters';
 
 function OrderDetailModal({
   isOpen,
   order,
+  stores = [],
   onClose,
   onRequestToggleStatus,
   onEditOrder,
   onDeleteOrder,
   onCopyPN,
-  onCopyFormatText
+  onCopyFormatText,
+  onCopyStoreHeader
 }) {
   const [copiedPn, setCopiedPn] = useState(null);
   const [copiedAll, setCopiedAll] = useState(false);
@@ -18,6 +21,8 @@ function OrderDetailModal({
 
   const isCompleted = order.status === 'completed';
   const formattedDate = formatFullIndonesianDate(order.date || order.createdAt);
+  const formattedStoreText = formatStoreCustomerHeader(order, stores);
+
 
   const handleCopySinglePn = (pn) => {
     navigator.clipboard.writeText(pn);
@@ -120,6 +125,24 @@ function OrderDetailModal({
             {order.storeName}
           </h1>
 
+          {/* Tombol Salin [ID Customer] [Nama Toko] */}
+          <div className="mt-2.5 flex items-center gap-2 flex-wrap">
+            <button
+              type="button"
+              onClick={() => {
+                if (onCopyStoreHeader) onCopyStoreHeader(formattedStoreText);
+                else navigator.clipboard.writeText(formattedStoreText);
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-900 border border-orange-200/90 rounded-xl text-[12px] font-semibold transition-all active:scale-95 shadow-2xs group/btn"
+              title={`Salin "${formattedStoreText}" ke clipboard`}
+            >
+              <svg className="w-3.5 h-3.5 text-orange-600 group-hover/btn:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+              </svg>
+              <span>Salin: <strong className="font-mono font-bold text-zinc-900">{formattedStoreText}</strong></span>
+            </button>
+          </div>
+
           {/* Meta Bar: Tanggal Lengkap & Total Item */}
           <div className="flex items-center gap-2 mt-2 text-[13px] text-zinc-500 font-medium flex-wrap">
             <span className="text-zinc-700 font-semibold">{formattedDate}</span>
@@ -188,9 +211,9 @@ function OrderDetailModal({
                       </span>
                     </div>
 
-                    {/* Deskripsi Barang */}
+                    {/* Deskripsi Barang Lengkap (Tanpa Terpotong) */}
                     {item.description && (
-                      <p className="text-[13px] text-zinc-500 font-medium mt-0.5 truncate">
+                      <p className="text-[13px] text-zinc-600 font-medium mt-1 leading-snug break-words whitespace-normal">
                         {item.description}
                       </p>
                     )}

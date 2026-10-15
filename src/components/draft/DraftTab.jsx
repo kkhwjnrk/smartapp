@@ -10,6 +10,7 @@ import {
 
 function DraftTab({
   orders = [],
+  stores = [],
   onToggleOrderStatus,
   onOpenAddOrder,
   onOpenEditOrder,
@@ -68,6 +69,12 @@ function DraftTab({
     showToast(`Format catatan ${order.storeName} tersalin!`);
   };
 
+  // Salin "[ID Customer] [Nama Toko]"
+  const handleCopyStoreHeader = (formattedText) => {
+    navigator.clipboard.writeText(formattedText);
+    showToast(`✓ "${formattedText}" tersalin!`);
+  };
+
   // Buka konfirmasi sebelum mengubah status
   const handleRequestToggleStatus = (order) => {
     setOrderToConfirmStatus(order);
@@ -102,18 +109,31 @@ function DraftTab({
       return orderMonth === selectedMonthKey;
     });
 
+    // Urutkan order aktif dari TERLAMA dulu mulai dari atas (FIFO agar orderan lama bisa terinput duluan)
+    active.sort((a, b) => {
+      const timeA = a.createdAt || (a.dateIso ? new Date(a.dateIso).getTime() : 0);
+      const timeB = b.createdAt || (b.dateIso ? new Date(b.dateIso).getTime() : 0);
+      return timeA - timeB;
+    });
+
     // Hitung berapa order carry-over yang aktif di bulan ini
     let carryCount = 0;
     if (isViewingCurrentMonth) {
       carryCount = active.filter(o => getOrderMonthKey(o) < currentMonthKey).length;
     }
 
-    // 2. Order Arsip
+    // 2. Order Arsip (Terbaru selesai di atas)
     const archive = orders.filter(order => {
       if (order.status !== 'completed') return false;
       if (isViewingAllMonths) return true;
       const orderMonth = getOrderMonthKey(order);
       return orderMonth === selectedMonthKey;
+    });
+
+    archive.sort((a, b) => {
+      const timeA = b.completedAt || b.createdAt || 0;
+      const timeB = a.completedAt || a.createdAt || 0;
+      return timeA - timeB;
     });
 
     const listToFilter = orderSubTab === 'active' ? active : archive;
@@ -265,6 +285,7 @@ function DraftTab({
               <OrderCard
                 key={order.id}
                 order={order}
+                stores={stores}
                 carryOverMonthText={carryOverMonthText}
                 onRequestToggleStatus={handleRequestToggleStatus}
                 onOpenDetail={(o) => setSelectedDetailOrderId(o.id)}
@@ -272,6 +293,7 @@ function DraftTab({
                 onDeleteOrder={onDeleteOrder}
                 onCopyPN={handleCopyPN}
                 onCopyFormatText={handleCopyFormatText}
+                onCopyStoreHeader={handleCopyStoreHeader}
               />
             );
           })}
@@ -348,6 +370,8 @@ function DraftTab({
           onDeleteOrder={onDeleteOrder}
           onCopyPN={handleCopyPN}
           onCopyFormatText={handleCopyFormatText}
+          onCopyStoreHeader={handleCopyStoreHeader}
+          stores={stores}
         />
       )}
 

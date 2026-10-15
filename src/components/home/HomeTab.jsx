@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { formatStoreCustomerHeader } from '../../utils/formatters';
 
 function HomeTab({ 
   orders = [], 
@@ -14,6 +15,8 @@ function HomeTab({
   onOpenCategories 
 }) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [copiedStore, setCopiedStore] = useState('');
+
 
   // Sapaan Waktu Otomatis
   const greeting = useMemo(() => {
@@ -32,9 +35,13 @@ function HomeTab({
     return `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
   }, []);
 
-  // Order Aktif / Pending
+  // Order Aktif / Pending (Urut dari terlama dulu di atas)
   const pendingOrders = useMemo(() => {
-    return orders.filter(o => o.status === 'pending');
+    return [...orders.filter(o => o.status === 'pending')].sort((a, b) => {
+      const timeA = a.createdAt || (a.dateIso ? new Date(a.dateIso).getTime() : 0);
+      const timeB = b.createdAt || (b.dateIso ? new Date(b.dateIso).getTime() : 0);
+      return timeA - timeB;
+    });
   }, [orders]);
 
   const pendingOrdersCount = pendingOrders.length;
@@ -354,6 +361,9 @@ function HomeTab({
               const orderItemsCount = order.items ? order.items.length : 0;
               const orderQty = order.items ? order.items.reduce((s, it) => s + (Number(it.qty) || 0), 0) : 0;
 
+              const formattedStore = formatStoreCustomerHeader(order, stores);
+              const isCopied = copiedStore === formattedStore;
+
               return (
                 <div 
                   key={order.id}
@@ -376,17 +386,37 @@ function HomeTab({
                     </p>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (onOpenEditOrder) onOpenEditOrder(order);
-                      else onOpenDraft();
-                    }}
-                    className="px-2.5 py-1 bg-white border border-zinc-300 hover:border-zinc-400 group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900 text-zinc-700 rounded-xl text-[11px] font-bold transition-all shrink-0 shadow-2xs"
-                  >
-                    Buka
-                  </button>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigator.clipboard.writeText(formattedStore);
+                        setCopiedStore(formattedStore);
+                        setTimeout(() => setCopiedStore(''), 1800);
+                      }}
+                      className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all shadow-2xs border ${
+                        isCopied 
+                          ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
+                          : 'bg-orange-50 hover:bg-orange-100 text-orange-800 border-orange-200'
+                      }`}
+                      title={`Salin "${formattedStore}"`}
+                    >
+                      {isCopied ? '✓ Tersalin' : 'Salin Toko'}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onOpenEditOrder) onOpenEditOrder(order);
+                        else onOpenDraft();
+                      }}
+                      className="px-2.5 py-1 bg-white border border-zinc-300 hover:border-zinc-400 group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900 text-zinc-700 rounded-xl text-[11px] font-bold transition-all shadow-2xs"
+                    >
+                      Buka
+                    </button>
+                  </div>
                 </div>
               );
             })}

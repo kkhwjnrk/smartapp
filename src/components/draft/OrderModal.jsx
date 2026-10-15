@@ -11,6 +11,7 @@ function OrderModal({
   onClose
 }) {
   const [storeName, setStoreName] = useState('');
+  const [customerId, setCustomerId] = useState('');
   const [routeCode, setRouteCode] = useState('');
   const [dateIso, setDateIso] = useState(getTodayIso());
   const [orderItems, setOrderItems] = useState([]);
@@ -32,6 +33,7 @@ function OrderModal({
     if (isOpen) {
       if (modalOrder) {
         setStoreName(modalOrder.storeName || '');
+        setCustomerId(modalOrder.customerId || '');
         setRouteCode(modalOrder.routeCode || '');
         setDateIso(modalOrder.dateIso || getTodayIso());
         setOrderItems(modalOrder.items ? [...modalOrder.items] : []);
@@ -39,6 +41,7 @@ function OrderModal({
         // Tanggal real-time hari ini
         setDateIso(getTodayIso());
         setStoreName('');
+        setCustomerId('');
         setRouteCode('');
         setOrderItems([]);
       }
@@ -50,24 +53,24 @@ function OrderModal({
     }
   }, [isOpen, modalOrder]);
 
-  // Autocomplete pencarian barang dari katalog dengan smart multi-token search
+  // Autocomplete pencarian barang dari katalog dengan smart multi-token search (hingga 30 item)
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const tokens = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
     return catalogItems.filter(item => {
       const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
       return tokens.every(t => combined.includes(t));
-    }).slice(0, 8);
+    }).slice(0, 30);
   }, [searchQuery, catalogItems]);
 
   if (!isOpen) return null;
 
-  // Handler ubah nama toko (jika cocok dengan toko terdaftar, auto-fill kode rute)
+  // Handler ubah nama toko (jika cocok dengan toko terdaftar, auto-fill kode rute & ID customer)
   const handleStoreNameChange = (val) => {
     setStoreName(val);
     const cleanVal = val.trim().toLowerCase();
     const matched = stores.find(s => 
-      s.name.toLowerCase() === cleanVal || 
+      s.name?.toLowerCase() === cleanVal || 
       (s.customerId && s.customerId.toLowerCase() === cleanVal) ||
       (s.customerId && s.customerId.replace(/\s+/g, '').toLowerCase() === cleanVal.replace(/\s+/g, ''))
     );
@@ -75,12 +78,16 @@ function OrderModal({
       if (matched.routeCode) {
         setRouteCode(matched.routeCode);
       }
+      if (matched.customerId) {
+        setCustomerId(matched.customerId);
+      }
       // Jika user mengetik nomor customerId saja, otomatis ganti dengan nama toko
       if (matched.customerId && (cleanVal === matched.customerId.toLowerCase() || cleanVal.replace(/\s+/g, '') === matched.customerId.replace(/\s+/g, '').toLowerCase())) {
         setStoreName(matched.name);
       }
     }
   };
+
 
   // Tambah item ke daftar pesanan toko
   const handleAddItem = (e) => {
@@ -153,6 +160,7 @@ function OrderModal({
 
     const orderToSave = {
       id: modalOrder ? modalOrder.id : `order_${Date.now()}`,
+      customerId: customerId.trim(),
       storeName: storeName.trim(),
       routeCode: routeCode.trim(),
       date: formatFullIndonesianDate(dateIso),
@@ -261,7 +269,7 @@ function OrderModal({
                 Nama Toko / Pemesan <span className="text-red-500">*</span>
               </label>
 
-              {/* Input Nama Toko dengan Datalist Otomatis (Mendukung 160+ Toko tanpa makan tempat) */}
+              {/* Input Nama Toko dengan Datalist Otomatis */}
               <input
                 type="text"
                 required
@@ -281,26 +289,39 @@ function OrderModal({
               </datalist>
             </div>
 
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label className="block text-[11px] font-medium text-zinc-500 mb-1">
+                  ID Customer
+                </label>
+                <input
+                  type="text"
+                  placeholder="C 3780"
+                  className="w-full px-2.5 py-2 bg-white border border-zinc-200 rounded-lg text-[12.5px] font-mono font-bold text-blue-700 focus:outline-none focus:border-zinc-400 uppercase"
+                  value={customerId}
+                  onChange={e => setCustomerId(e.target.value.toUpperCase())}
+                />
+              </div>
               <div>
                 <label className="block text-[11px] font-medium text-zinc-500 mb-1">
                   Tanggal Order
                 </label>
-                {/* Real-time HTML5 Date Picker */}
                 <input
                   type="date"
                   required
-                  className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-[13px] font-medium text-zinc-800 focus:outline-none focus:border-zinc-400"
+                  className="w-full px-2 py-2 bg-white border border-zinc-200 rounded-lg text-[12px] font-medium text-zinc-800 focus:outline-none focus:border-zinc-400"
                   value={dateIso}
                   onChange={e => setDateIso(e.target.value)}
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-medium text-zinc-500 mb-1">Kode Rute (Opsional)</label>
+                <label className="block text-[11px] font-medium text-zinc-500 mb-1">
+                  Kode Rute
+                </label>
                 <input
                   type="text"
-                  placeholder="R01 - BOGOR"
-                  className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg text-[13px] font-medium uppercase text-orange-600 focus:outline-none focus:border-zinc-400"
+                  placeholder="R01"
+                  className="w-full px-2 py-2 bg-white border border-zinc-200 rounded-lg text-[12px] font-medium uppercase text-orange-600 focus:outline-none focus:border-zinc-400"
                   value={routeCode}
                   onChange={e => setRouteCode(e.target.value.toUpperCase())}
                 />
@@ -310,46 +331,91 @@ function OrderModal({
 
           {/* Bagian Tambah Item Barang */}
           <div className="border border-zinc-200 rounded-2xl p-3.5 space-y-3 bg-white">
-            <label className="block text-[12.5px] font-bold text-zinc-800">
-              Tambah Item Pesanan Toko
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="block text-[12.5px] font-bold text-zinc-800">
+                Tambah Item Pesanan Toko
+              </label>
+              <span className="text-[11px] text-zinc-400">
+                {catalogItems.length} item katalog
+              </span>
+            </div>
 
             {/* Input Pencarian Part / Bahasa Motor */}
             <div className="relative">
-              <input
-                type="text"
-                placeholder="Cari item: ketik 'beat', 'busi', 'roller', atau PN..."
-                className="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-400 text-[13.5px] font-medium"
-                value={searchQuery}
-                onChange={e => {
-                  setSearchQuery(e.target.value);
-                  setSelectedCatalogItem(null);
-                  setShowItemSuggestions(true);
-                }}
-                onFocus={() => setShowItemSuggestions(true)}
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Cari item: ketik 'beat', 'busi', 'roller', atau PN..."
+                  className="w-full pl-9 pr-8 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl focus:bg-white focus:outline-none focus:border-zinc-400 text-[13.5px] font-medium text-zinc-900"
+                  value={searchQuery}
+                  onChange={e => {
+                    setSearchQuery(e.target.value);
+                    setShowItemSuggestions(true);
+                  }}
+                  onFocus={() => setShowItemSuggestions(true)}
+                />
+                <svg className="w-4 h-4 text-zinc-400 absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setShowItemSuggestions(false);
+                    }}
+                    className="absolute right-2.5 top-2.5 text-zinc-400 hover:text-zinc-600 p-0.5"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
 
-              {/* Dropdown Hasil Pencarian */}
+              {/* Dropdown Hasil Pencarian: Multi-line Tanpa Truncate */}
               {showItemSuggestions && searchQuery.trim() && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-zinc-200 rounded-xl shadow-lg z-30 max-h-48 overflow-y-auto">
-                  {searchResults.map(item => (
-                    <button
-                      key={item.pn}
-                      type="button"
-                      onClick={() => {
-                        setSelectedCatalogItem(item);
-                        setSearchQuery(`PN: ${item.pn} - ${item.description.slice(0, 32)}...`);
-                        setShowItemSuggestions(false);
-                      }}
-                      className="w-full text-left px-3 py-2 hover:bg-zinc-50 border-b border-zinc-100 last:border-0 flex items-center justify-between text-[12.5px]"
-                    >
-                      <div className="truncate pr-2">
-                        <span className="font-mono font-bold text-[#EA580C] mr-1.5">{item.pn}</span>
-                        <span className="text-zinc-700">{item.description}</span>
-                      </div>
-                      <span className="text-zinc-400 text-[11px] shrink-0">{item.category}</span>
-                    </button>
-                  ))}
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-zinc-200 rounded-2xl shadow-xl z-30 max-h-64 overflow-y-auto divide-y divide-zinc-100">
+                  {searchResults.length > 0 ? (
+                    searchResults.map(item => (
+                      <button
+                        key={item.pn}
+                        type="button"
+                        onClick={() => {
+                          setSelectedCatalogItem(item);
+                          setSearchQuery('');
+                          setShowItemSuggestions(false);
+                        }}
+                        className="w-full text-left p-3 hover:bg-orange-50/70 active:bg-orange-100 transition-colors flex flex-col gap-1 group"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-mono font-bold text-[#EA580C] text-[13.5px]">
+                            PN: {item.pn}
+                          </span>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {item.category && (
+                              <span className="px-1.5 py-0.5 bg-zinc-100 text-zinc-600 rounded text-[10px] font-medium">
+                                {item.category}
+                              </span>
+                            )}
+                            {item.price && (
+                              <span className="text-emerald-700 font-bold text-[10.5px] bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60">
+                                HET Rp {item.price}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {/* Deskripsi Barang Lengkap (Wrap bebas & jelas) */}
+                        <p className="text-[13px] font-semibold text-zinc-900 group-hover:text-orange-950 leading-snug break-words whitespace-normal">
+                          {item.description}
+                        </p>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="p-3 text-center text-zinc-400 text-[12px]">
+                      Tidak ada part yang cocok dengan "{searchQuery}"
+                    </div>
+                  )}
 
                   {/* Opsi Gunakan PN Manual Langsung */}
                   <button
@@ -358,13 +424,57 @@ function OrderModal({
                       setSelectedCatalogItem(null);
                       setShowItemSuggestions(false);
                     }}
-                    className="w-full text-left px-3 py-2 bg-orange-50/50 hover:bg-orange-50 text-orange-700 font-semibold text-[12px]"
+                    className="w-full text-left p-3 bg-orange-50/60 hover:bg-orange-100 text-orange-800 font-semibold text-[12px] border-t border-orange-100 flex items-center justify-between"
                   >
-                    + Gunakan PN "{searchQuery.trim()}" langsung
+                    <span>+ Gunakan nomor PN "{searchQuery.trim()}" langsung</span>
+                    <span className="text-[10.5px] text-orange-600 font-normal">Tekan untuk pakai</span>
                   </button>
                 </div>
               )}
             </div>
+
+            {/* Kotak Konfirmasi Item Terpilih (Mencegah salah pilih barang) */}
+            {selectedCatalogItem && (
+              <div className="p-3 bg-orange-50/80 border border-orange-200 rounded-2xl flex items-start justify-between gap-3 animate-in fade-in duration-150">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 flex-wrap mb-1">
+                    <span className="px-2 py-0.5 bg-[#EA580C] text-white rounded-md font-mono font-bold text-[12px]">
+                      PN {selectedCatalogItem.pn}
+                    </span>
+                    {selectedCatalogItem.category && (
+                      <span className="px-2 py-0.5 bg-white text-zinc-700 border border-zinc-200/80 rounded-md text-[10.5px] font-medium">
+                        {selectedCatalogItem.category}
+                      </span>
+                    )}
+                    {selectedCatalogItem.price && (
+                      <span className="text-emerald-700 font-bold text-[10.5px] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/70">
+                        HET: Rp {selectedCatalogItem.price}
+                      </span>
+                    )}
+                  </div>
+                  {/* Deskripsi Lengkap Item Terpilih */}
+                  <p className="text-[13.5px] font-bold text-zinc-900 leading-snug break-words whitespace-normal">
+                    {selectedCatalogItem.description}
+                  </p>
+                  <p className="text-[11px] text-zinc-500 mt-0.5 font-medium">
+                    ✓ Item sudah benar, masukkan jumlah PCS di bawah
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCatalogItem(null);
+                    setSearchQuery('');
+                  }}
+                  className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-orange-100/80 rounded-lg transition-colors shrink-0"
+                  title="Ganti Item"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            )}
 
             {/* Baris Qty & Tombol Tambah */}
             <div className="flex gap-2">
@@ -407,8 +517,9 @@ function OrderModal({
                     key={idx}
                     className="flex items-center justify-between p-2.5 bg-zinc-50/70 border border-zinc-200/80 rounded-xl gap-2"
                   >
-                    <div className="min-w-0 flex-1 truncate">
-                      <div className="flex items-center gap-1.5">
+                    {/* Item Info Lengkap Tanpa Truncate */}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="font-mono font-bold text-[#EA580C] text-[14px]">
                           {item.pn}
                         </span>
@@ -418,7 +529,7 @@ function OrderModal({
                         </span>
                       </div>
                       {item.description && (
-                        <p className="text-[11.5px] text-zinc-500 truncate mt-0.5">
+                        <p className="text-[12px] text-zinc-600 font-medium mt-0.5 leading-snug break-words whitespace-normal">
                           {item.description}
                         </p>
                       )}

@@ -500,6 +500,7 @@ function App() {
         {activeTab === 'draft' && (
           <DraftTab
             orders={orders}
+            stores={stores}
             onToggleOrderStatus={toggleOrderStatus}
             onOpenAddOrder={openAddOrder}
             onOpenEditOrder={openEditOrder}
