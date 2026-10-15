@@ -69,29 +69,15 @@ function OrderCard({
 
           {/* Info Toko */}
           <div className="flex-1 min-w-0">
-            {/* Baris Badge: Rute & Lanjutan Bulan Lalu */}
+            {/* Baris Badge: Rute, Tombol Salin ID & Toko, serta Lanjutan Bulan Lalu */}
             <div className="flex items-center gap-1.5 flex-wrap mb-1">
               {order.routeCode && (
                 <span className="inline-flex items-center px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-md text-[10.5px] font-bold tracking-wider">
                   {order.routeCode}
                 </span>
               )}
-              {carryOverMonthText && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/80 rounded-md text-[10.5px] font-semibold">
-                  <span>↳ Lanjutan {carryOverMonthText}</span>
-                </span>
-              )}
-            </div>
 
-            {/* Nama Toko & Ikon Copy Rapi */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <h3 className={`text-[17px] font-bold tracking-tight leading-snug break-words ${
-                isCompleted ? 'text-zinc-500 line-through decoration-zinc-300' : 'text-zinc-900'
-              }`}>
-                {order.storeName}
-              </h3>
-
-              {/* Tombol Ikon Copy Rapi (Tanpa teks panjang agar tidak sempit) */}
+              {/* Tombol Ikon Copy Rapi di sebelah badge rute */}
               <button
                 type="button"
                 onClick={(e) => {
@@ -104,10 +90,10 @@ function OrderCard({
                   setCopiedStoreHeader(true);
                   setTimeout(() => setCopiedStoreHeader(false), 1500);
                 }}
-                className={`p-1 rounded-lg transition-all active:scale-90 shrink-0 ${
+                className={`p-1 rounded-md transition-all active:scale-90 shrink-0 border ${
                   copiedStoreHeader
-                    ? 'text-emerald-600 bg-emerald-50'
-                    : 'text-zinc-400 hover:text-orange-600 hover:bg-orange-50'
+                    ? 'text-emerald-600 bg-emerald-50 border-emerald-200'
+                    : 'text-zinc-400 hover:text-orange-600 hover:bg-orange-50 border-zinc-200/80 bg-white'
                 }`}
                 title={`Salin ID & Nama Toko: "${formattedStoreText}"`}
               >
@@ -121,7 +107,20 @@ function OrderCard({
                   </svg>
                 )}
               </button>
+
+              {carryOverMonthText && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/80 rounded-md text-[10.5px] font-semibold">
+                  <span>↳ Lanjutan {carryOverMonthText}</span>
+                </span>
+              )}
             </div>
+
+            {/* Nama Toko Full Width */}
+            <h3 className={`text-[17px] font-bold tracking-tight leading-snug break-words ${
+              isCompleted ? 'text-zinc-500 line-through decoration-zinc-300' : 'text-zinc-900'
+            }`}>
+              {order.storeName}
+            </h3>
             
             {/* Meta: Tanggal Lengkap & Jumlah Item (tanpa total pcs) */}
             <div className="flex items-center gap-2 mt-1.5 text-[12px] text-zinc-400 font-medium flex-wrap">

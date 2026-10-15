@@ -112,20 +112,13 @@ function OrderDetailModal({
       {/* Hero Header Order Toko */}
       <div className="bg-zinc-50 border-b border-zinc-200/80 px-5 py-4 shrink-0">
         <div className="max-w-2xl mx-auto">
-          {/* Badge Rute ditaruh rapi di atas tanpa memotong nama toko */}
-          {order.routeCode && (
-            <div className="mb-1.5">
+          {/* Baris Badge Rute & Tombol Salin */}
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            {order.routeCode && (
               <span className="inline-flex items-center px-2.5 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-md text-[11px] font-bold tracking-wide">
                 {order.routeCode}
               </span>
-            </div>
-          )}
-
-          {/* Nama Toko & Tombol Ikon Salin Rapi */}
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <h1 className="text-[22px] font-bold text-zinc-900 tracking-tight leading-snug break-words">
-              {order.storeName}
-            </h1>
+            )}
 
             <button
               type="button"
@@ -143,16 +136,21 @@ function OrderDetailModal({
               title={`Salin ID & Nama Toko: "${formattedStoreText}"`}
             >
               {copiedStoreHeader ? (
-                <svg className="w-4 h-4 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                 </svg>
               )}
             </button>
           </div>
+
+          {/* Nama Toko Full Width */}
+          <h1 className="text-[22px] font-bold text-zinc-900 tracking-tight leading-snug break-words">
+            {order.storeName}
+          </h1>
 
 
           {/* Meta Bar: Tanggal Lengkap & Total Item */}
