@@ -93,8 +93,6 @@ function OrderModal({
     }).slice(0, 30);
   }, [searchQuery, catalogItems]);
 
-  if (!isOpen) return null;
-
   // Pilih toko dari searchable select
   const handleSelectStore = (store) => {
     setStoreName(store.name);
@@ -247,6 +245,8 @@ function OrderModal({
   const totalQty = orderItems.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
   const orderSummary = useMemo(() => calculateOrderSummary(orderItems, catalogItems), [orderItems, catalogItems]);
   const isStoreSelected = Boolean(storeName.trim());
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-zinc-50 flex flex-col animate-in slide-in-from-right duration-250">

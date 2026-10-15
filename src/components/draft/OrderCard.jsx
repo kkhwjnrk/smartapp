@@ -32,7 +32,6 @@ function OrderCard({
 
   // Preview maksimal 2 item ringkas agar kartu tetap rapi
   const previewItems = order.items.slice(0, 2);
-  const remainingCount = order.items.length - previewItems.length;
 
   return (
     <div 
