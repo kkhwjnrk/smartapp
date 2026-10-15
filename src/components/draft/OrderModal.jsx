@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { formatFullIndonesianDate, getTodayIso } from '../../utils/date';
 import { calculateOrderSummary } from '../../utils/formatters';
+import useSwipeBack from '../../hooks/useSwipeBack';
 
 function OrderModal({
   isOpen,
@@ -246,10 +247,62 @@ function OrderModal({
   const orderSummary = useMemo(() => calculateOrderSummary(orderItems, catalogItems), [orderItems, catalogItems]);
   const isStoreSelected = Boolean(storeName.trim());
 
+  const {
+    isSwiping,
+    dragX,
+    dragProgress,
+    isExiting,
+    containerStyle,
+    backdropOpacity,
+    handlers: swipeHandlers
+  } = useSwipeBack({
+    onBack: onClose,
+    edgeWidth: 60,
+    threshold: 85,
+    enabled: isOpen && !isStorePickerOpen && !showSaveConfirm
+  });
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-zinc-50 flex flex-col animate-in slide-in-from-right duration-250">
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Dimmed Backdrop Scrim */}
+      <div 
+        className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity pointer-events-none"
+        style={{
+          opacity: backdropOpacity,
+          transition: isSwiping ? 'none' : 'opacity 0.25s ease'
+        }}
+      />
+
+      {/* Main Sliding Order Form Screen */}
+      <div 
+        {...swipeHandlers}
+        style={containerStyle}
+        className={`relative w-full h-full bg-zinc-50 flex flex-col shadow-2xl ${
+          dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
+        }`}
+      >
+        {/* iOS-Style Left-Edge Swipe Hint / Indicator */}
+        {dragX > 10 && (
+          <div 
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-50 pointer-events-none flex items-center justify-center transition-all duration-100"
+            style={{
+              opacity: Math.min(1, dragX / 30),
+              transform: `translateY(-50%) scale(${0.8 + dragProgress * 0.3})`
+            }}
+          >
+            <div className={`p-2.5 rounded-full shadow-lg border backdrop-blur-md transition-colors ${
+              dragProgress >= 1 
+                ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-500/30' 
+                : 'bg-white/95 text-zinc-700 border-zinc-200 shadow-zinc-900/10'
+            }`}>
+              <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </div>
+          </div>
+        )}
       
       {/* 1. TOP HEADER BAR (Halaman Penuh) */}
       <div className="bg-white border-b border-zinc-200 px-4 py-3 shrink-0 flex items-center justify-between gap-3 shadow-2xs">
@@ -923,6 +976,7 @@ function OrderModal({
         </div>
       )}
 
+      </div>
     </div>
   );
 }
