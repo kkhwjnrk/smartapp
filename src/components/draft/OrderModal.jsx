@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { formatFullIndonesianDate, getTodayIso } from '../../utils/date';
+import { calculateOrderSummary } from '../../utils/formatters';
 
 function OrderModal({
   isOpen,
@@ -244,6 +245,7 @@ function OrderModal({
   };
 
   const totalQty = orderItems.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
+  const orderSummary = useMemo(() => calculateOrderSummary(orderItems, catalogItems), [orderItems, catalogItems]);
   const isStoreSelected = Boolean(storeName.trim());
 
   return (
@@ -687,8 +689,10 @@ function OrderModal({
       {/* 3. FIXED BOTTOM ACTION BAR */}
       <div className="bg-white border-t border-zinc-200 px-4 py-3 shrink-0 shadow-lg">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
-          <div className="text-[12px] text-zinc-500">
-            Total: <strong className="text-zinc-900 text-[13px]">{orderItems.length} Part</strong> ({totalQty} PCS)
+          <div className="min-w-0 pr-2">
+            <span className="font-bold text-zinc-900 text-[15px] tracking-tight block">
+              {orderSummary.formattedText}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -706,7 +710,7 @@ function OrderModal({
               <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
               </svg>
-              <span>Simpan Order</span>
+              <span>Simpan</span>
             </button>
           </div>
         </div>
@@ -886,9 +890,9 @@ function OrderModal({
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-zinc-500 block text-[11px] font-medium">Jumlah Pesanan</span>
+                  <span className="text-zinc-500 block text-[11px] font-medium">Total Pesanan</span>
                   <span className="font-bold text-[#EA580C]">
-                    {orderItems.length} Part ({totalQty} PCS)
+                    {orderSummary.formattedText}
                   </span>
                 </div>
               </div>
