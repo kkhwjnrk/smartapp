@@ -11,6 +11,7 @@ import {
 function DraftTab({
   orders = [],
   stores = [],
+  catalogItems = [],
   onToggleOrderStatus,
   onOpenAddOrder,
   onOpenEditOrder,
@@ -286,6 +287,7 @@ function DraftTab({
                 key={order.id}
                 order={order}
                 stores={stores}
+                catalogItems={catalogItems}
                 carryOverMonthText={carryOverMonthText}
                 onRequestToggleStatus={handleRequestToggleStatus}
                 onOpenDetail={(o) => setSelectedDetailOrderId(o.id)}
@@ -372,6 +374,7 @@ function DraftTab({
           onCopyFormatText={handleCopyFormatText}
           onCopyStoreHeader={handleCopyStoreHeader}
           stores={stores}
+          catalogItems={catalogItems}
         />
       )}
 

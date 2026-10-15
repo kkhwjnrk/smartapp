@@ -501,6 +501,7 @@ function App() {
           <DraftTab
             orders={orders}
             stores={stores}
+            catalogItems={items}
             onToggleOrderStatus={toggleOrderStatus}
             onOpenAddOrder={openAddOrder}
             onOpenEditOrder={openEditOrder}

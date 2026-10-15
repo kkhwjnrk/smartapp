@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { formatFullIndonesianDate } from '../../utils/date';
-import { formatStoreCustomerHeader } from '../../utils/formatters';
+import { formatStoreCustomerHeader, calculateOrderSummary } from '../../utils/formatters';
 
 function OrderDetailModal({
   isOpen,
   order,
   stores = [],
+  catalogItems = [],
   onClose,
   onRequestToggleStatus,
   onEditOrder,
@@ -23,6 +24,7 @@ function OrderDetailModal({
   const isCompleted = order.status === 'completed';
   const formattedDate = formatFullIndonesianDate(order.date || order.createdAt);
   const formattedStoreText = formatStoreCustomerHeader(order, stores);
+  const orderSummary = calculateOrderSummary(order.items, catalogItems);
 
 
   const handleCopySinglePn = (pn) => {
@@ -112,8 +114,8 @@ function OrderDetailModal({
       {/* Hero Header Order Toko */}
       <div className="bg-zinc-50 border-b border-zinc-200/80 px-5 py-4 shrink-0">
         <div className="max-w-2xl mx-auto">
-          {/* Baris Badge Rute & Tombol Salin */}
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
+          {/* Baris Badge Rute & Tombol Salin ID & Nama Toko */}
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             {order.routeCode && (
               <span className="inline-flex items-center px-2.5 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-md text-[11px] font-bold tracking-wide">
                 {order.routeCode}
@@ -136,28 +138,32 @@ function OrderDetailModal({
               title={`Salin ID & Nama Toko: "${formattedStoreText}"`}
             >
               {copiedStoreHeader ? (
-                <svg className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               ) : (
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                 </svg>
               )}
             </button>
           </div>
 
-          {/* Nama Toko Full Width */}
+          {/* Nama Toko */}
           <h1 className="text-[22px] font-bold text-zinc-900 tracking-tight leading-snug break-words">
             {order.storeName}
           </h1>
 
 
-          {/* Meta Bar: Tanggal Lengkap & Total Item */}
+          {/* Meta Bar: Tanggal Lengkap, Total Item & Total Nominal Diskon */}
           <div className="flex items-center gap-2 mt-2 text-[13px] text-zinc-500 font-medium flex-wrap">
             <span className="text-zinc-700 font-semibold">{formattedDate}</span>
             <span>·</span>
             <span className="font-semibold text-zinc-800">{order.items.length} item</span>
+            <span>·</span>
+            <span className="font-bold text-zinc-900 bg-zinc-200/70 px-2 py-0.5 rounded-lg text-[12px]">
+              {orderSummary.formattedText}
+            </span>
             <span>·</span>
             {isCompleted ? (
               <span className="text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full text-[11px] font-bold inline-flex items-center gap-1">

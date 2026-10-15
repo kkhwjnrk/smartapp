@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { formatFullIndonesianDate } from '../../utils/date';
-import { formatStoreCustomerHeader } from '../../utils/formatters';
+import { formatStoreCustomerHeader, calculateOrderSummary } from '../../utils/formatters';
 
 function OrderCard({ 
   order, 
   stores = [],
+  catalogItems = [],
   onRequestToggleStatus, 
   onOpenDetail,
   onEditOrder, 
@@ -19,6 +20,7 @@ function OrderCard({
   const isCompleted = order.status === 'completed';
   const formattedDate = formatFullIndonesianDate(order.date || order.createdAt);
   const formattedStoreText = formatStoreCustomerHeader(order, stores);
+  const orderSummary = calculateOrderSummary(order.items, catalogItems);
 
   const handleCopySinglePn = (pn, e) => {
     e.stopPropagation();
@@ -69,7 +71,7 @@ function OrderCard({
 
           {/* Info Toko */}
           <div className="flex-1 min-w-0">
-            {/* Baris Badge: Rute, Tombol Salin ID & Toko, serta Lanjutan Bulan Lalu */}
+            {/* Baris Badge: Rute, Tombol Salin [ID Customer] [Nama Toko], & Lanjutan Bulan Lalu */}
             <div className="flex items-center gap-1.5 flex-wrap mb-1">
               {order.routeCode && (
                 <span className="inline-flex items-center px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-md text-[10.5px] font-bold tracking-wider">
@@ -90,10 +92,10 @@ function OrderCard({
                   setCopiedStoreHeader(true);
                   setTimeout(() => setCopiedStoreHeader(false), 1500);
                 }}
-                className={`p-1 rounded-md transition-all active:scale-90 shrink-0 border ${
+                className={`p-1 rounded-md transition-all active:scale-90 shrink-0 ${
                   copiedStoreHeader
-                    ? 'text-emerald-600 bg-emerald-50 border-emerald-200'
-                    : 'text-zinc-400 hover:text-orange-600 hover:bg-orange-50 border-zinc-200/80 bg-white'
+                    ? 'text-emerald-600 bg-emerald-50'
+                    : 'text-zinc-400 hover:text-orange-600 hover:bg-orange-50'
                 }`}
                 title={`Salin ID & Nama Toko: "${formattedStoreText}"`}
               >
@@ -115,7 +117,7 @@ function OrderCard({
               )}
             </div>
 
-            {/* Nama Toko Full Width */}
+            {/* Nama Toko */}
             <h3 className={`text-[17px] font-bold tracking-tight leading-snug break-words ${
               isCompleted ? 'text-zinc-500 line-through decoration-zinc-300' : 'text-zinc-900'
             }`}>
@@ -253,7 +255,7 @@ function OrderCard({
         ))}
       </div>
 
-      {/* Footer Kartu: Tombol Buka Rincian Halaman Penuh */}
+      {/* Footer Kartu: Tombol Total Nominal dengan Diskon Pintar & Aksi Buka Rincian */}
       <div className="pt-2.5 border-t border-zinc-100 flex items-center justify-between gap-2">
         <button
           type="button"
@@ -261,14 +263,13 @@ function OrderCard({
             e.stopPropagation();
             onOpenDetail(order);
           }}
-          className="flex-1 py-2 px-3 text-left text-[12.5px] font-semibold text-zinc-700 hover:text-zinc-950 bg-zinc-50 hover:bg-zinc-100 rounded-xl border border-zinc-200/70 transition-colors flex items-center justify-between"
+          className="flex-1 py-2 px-3.5 text-left bg-zinc-50 hover:bg-zinc-100 rounded-xl border border-zinc-200/80 hover:border-zinc-300 transition-all flex items-center justify-between group active:scale-[0.99]"
+          title={`Buka rincian pesanan (${order.items.length} item)`}
         >
-          <span>
-            {remainingCount > 0 
-              ? `Buka Rincian (${order.items.length} item · +${remainingCount} lainnya)` 
-              : `Buka Rincian (${order.items.length} item)`}
+          <span className="font-bold text-zinc-900 text-[13.5px] tracking-tight">
+            {orderSummary.formattedText}
           </span>
-          <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 group-hover:translate-x-0.5 transition-all shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
