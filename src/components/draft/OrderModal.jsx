@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { formatFullIndonesianDate, getTodayIso } from '../../utils/date';
 import { calculateOrderSummary } from '../../utils/formatters';
 import useSwipeBack from '../../hooks/useSwipeBack';
@@ -264,7 +265,7 @@ function OrderModal({
 
   if (!isOpen) return null;
 
-  return (
+  const modalContent = (
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Dimmed Backdrop Scrim */}
       <div 
@@ -979,6 +980,8 @@ function OrderModal({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }
 
 export default OrderModal;
