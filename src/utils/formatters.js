@@ -1,3 +1,5 @@
+import initialPricelist from '../data/pricelist.json';
+
 // Helper kalkulasi diskon grosir dari string harga Indonesia (e.g. "18.204")
 export const calculateDiscount = (priceStr, percentage) => {
   if (!priceStr || priceStr === "0") return "-";
@@ -84,14 +86,16 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
     };
   }
 
+  const activeCatalog = (Array.isArray(catalogItems) && catalogItems.length > 0)
+    ? catalogItems
+    : initialPricelist;
+
   const catalogMap = new Map();
-  if (Array.isArray(catalogItems)) {
-    catalogItems.forEach(item => {
-      if (item && item.pn) {
-        catalogMap.set(String(item.pn).trim().toLowerCase(), item);
-      }
-    });
-  }
+  activeCatalog.forEach(item => {
+    if (item && item.pn) {
+      catalogMap.set(String(item.pn).trim().toLowerCase(), item);
+    }
+  });
 
   let totalHet = 0;
   let totalQty = 0;
