@@ -67,10 +67,11 @@ export const formatStoreCustomerHeader = (order, stores = []) => {
 
 /**
  * Kalkulasi pintar total nominal order dengan penentuan skema diskon otomatis:
- * Kriteria diskon dari total HET:
- * - <= Rp 3.000.000  => 24%
- * - 3 juta s/d 10 juta ( > 3.000.000 dan < 10.000.000 ) => 27%
- * - >= Rp 10.000.000 => 29%
+ * Kriteria diskon dihitung dari nominal setelah diskon (bukan dari HET):
+ * - Setiap 1 pcs item dihitung dengan diskon 24% terlebih dahulu dikali jumlah pcs
+ * - Jika total nominal <= Rp 3.000.000 => Diskon tetap 24%
+ * - Jika total nominal tembus > Rp 3.000.000 s/d < Rp 10.000.000 => Naik diskon 27%
+ * - Jika total nominal tembus >= Rp 10.000.000 => Naik diskon 29%
  */
 export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
   if (!orderItems || !Array.isArray(orderItems) || orderItems.length === 0) {
@@ -92,7 +93,6 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
     });
   }
 
-  // 1. Hitung total HET kotor
   let totalHet = 0;
   let totalQty = 0;
 
@@ -120,38 +120,52 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
     return { catalogItem, qty, het };
   });
 
-  // 2. Tentukan Persentase Diskon Pintar
+  // 1. Hitung total dasar dengan diskon awal 24% (harga diskon per pcs dikali qty)
+  let totalNet24 = 0;
+  resolvedItems.forEach(({ catalogItem, qty, het }) => {
+    let price24 = 0;
+    if (catalogItem && catalogItem.d24) {
+      price24 = catalogItem.d24;
+    } else {
+      price24 = Math.round(het * (1 - 0.24));
+    }
+    totalNet24 += price24 * qty;
+  });
+
+  // 2. Tentukan persentase diskon pintar berdasarkan total nominal setelah diskon:
   // <= 3 juta diskon 24%
-  // 3 juta s/d 10 juta diskon 27%
-  // >= 10 juta diskon 29%
+  // 3 juta s/d 10 juta diskon 27% (naik saat nominal tembus > 3 juta)
+  // >= 10 juta diskon 29% (naik saat nominal tembus >= 10 juta)
   let discountPercentage = 24;
-  if (totalHet >= 10000000) {
+  if (totalNet24 >= 10000000) {
     discountPercentage = 29;
-  } else if (totalHet > 3000000) {
+  } else if (totalNet24 > 3000000) {
     discountPercentage = 27;
   } else {
     discountPercentage = 24;
   }
 
-  // 3. Hitung Total Net Bersih
+  // 3. Hitung Total Net Bersih sesuai tier diskon yang berlaku
   let totalNet = 0;
-  resolvedItems.forEach(({ catalogItem, qty, het }) => {
-    let itemNetPrice = 0;
-    if (catalogItem) {
-      if (discountPercentage === 24 && catalogItem.d24) {
-        itemNetPrice = catalogItem.d24;
-      } else if (discountPercentage === 27 && catalogItem.d27) {
-        itemNetPrice = catalogItem.d27;
-      } else if (discountPercentage === 29 && catalogItem.d29) {
-        itemNetPrice = catalogItem.d29;
+  if (discountPercentage === 24) {
+    totalNet = totalNet24;
+  } else {
+    resolvedItems.forEach(({ catalogItem, qty, het }) => {
+      let itemNetPrice = 0;
+      if (catalogItem) {
+        if (discountPercentage === 27 && catalogItem.d27) {
+          itemNetPrice = catalogItem.d27;
+        } else if (discountPercentage === 29 && catalogItem.d29) {
+          itemNetPrice = catalogItem.d29;
+        } else {
+          itemNetPrice = Math.round(het * (1 - discountPercentage / 100));
+        }
       } else {
         itemNetPrice = Math.round(het * (1 - discountPercentage / 100));
       }
-    } else {
-      itemNetPrice = Math.round(het * (1 - discountPercentage / 100));
-    }
-    totalNet += itemNetPrice * qty;
-  });
+      totalNet += itemNetPrice * qty;
+    });
+  }
 
   return {
     totalHet,
