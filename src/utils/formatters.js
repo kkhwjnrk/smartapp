@@ -68,9 +68,9 @@ export const formatStoreCustomerHeader = (order, stores = []) => {
 /**
  * Kalkulasi pintar total nominal order dengan penentuan skema diskon otomatis:
  * Kriteria diskon dari total HET:
- * - < Rp 3.000.000  => 24%
- * - Rp 3.000.000 s/d Rp 10.000.000 => 27%
- * - > Rp 10.000.000 => 29%
+ * - <= Rp 3.000.000  => 24%
+ * - 3 juta s/d 10 juta ( > 3.000.000 dan < 10.000.000 ) => 27%
+ * - >= Rp 10.000.000 => 29%
  */
 export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
   if (!orderItems || !Array.isArray(orderItems) || orderItems.length === 0) {
@@ -121,10 +121,13 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
   });
 
   // 2. Tentukan Persentase Diskon Pintar
+  // <= 3 juta diskon 24%
+  // 3 juta s/d 10 juta diskon 27%
+  // >= 10 juta diskon 29%
   let discountPercentage = 24;
-  if (totalHet > 10000000) {
+  if (totalHet >= 10000000) {
     discountPercentage = 29;
-  } else if (totalHet >= 3000000) {
+  } else if (totalHet > 3000000) {
     discountPercentage = 27;
   } else {
     discountPercentage = 24;
