@@ -8,11 +8,11 @@ function MoreTab({
   items = []
 }) {
   const [importStatus, setImportStatus] = useState(null);
+  const [pendingExportType, setPendingExportType] = useState(null); // 'all' | 'orders' | 'stores' | null
   const [pendingRestoreData, setPendingRestoreData] = useState(null);
   const [restoreOrdersChecked, setRestoreOrdersChecked] = useState(true);
   const [restoreStoresChecked, setRestoreStoresChecked] = useState(true);
   const [copyStatus, setCopyStatus] = useState(null);
-  const [showExportMenu, setShowExportMenu] = useState(false);
   const fileInputRef = useRef(null);
 
   // Hitung statistik toko dengan koordinat GPS
@@ -325,7 +325,7 @@ function MoreTab({
           {/* Tombol Utama: Cadangkan Semua Data (Rekomendasi) */}
           <button
             type="button"
-            onClick={() => handleExportBackup('all')}
+            onClick={() => setPendingExportType('all')}
             className="w-full p-3.5 bg-gradient-to-r from-orange-600 to-[#EA580C] hover:from-orange-700 hover:to-orange-600 active:scale-98 text-white rounded-2xl transition-all shadow-sm flex items-center justify-between text-left group"
           >
             <div className="flex items-center gap-3">
@@ -357,7 +357,7 @@ function MoreTab({
             {/* Hanya Order */}
             <button
               type="button"
-              onClick={() => handleExportBackup('orders')}
+              onClick={() => setPendingExportType('orders')}
               className="p-3 bg-zinc-50 hover:bg-zinc-100 active:scale-98 border border-zinc-200/80 rounded-2xl transition-all text-left flex flex-col justify-between"
             >
               <div className="flex items-center gap-2 text-zinc-800 font-bold text-[12.5px]">
@@ -374,7 +374,7 @@ function MoreTab({
             {/* Hanya Toko & GPS */}
             <button
               type="button"
-              onClick={() => handleExportBackup('stores')}
+              onClick={() => setPendingExportType('stores')}
               className="p-3 bg-zinc-50 hover:bg-zinc-100 active:scale-98 border border-zinc-200/80 rounded-2xl transition-all text-left flex flex-col justify-between"
             >
               <div className="flex items-center gap-2 text-zinc-800 font-bold text-[12.5px]">
@@ -631,6 +631,95 @@ function MoreTab({
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Pulihkan Terpilih</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DIALOG KONFIRMASI UNDUH CADANGAN */}
+      {pendingExportType && (
+        <div 
+          onClick={(e) => { if (e.target === e.currentTarget) setPendingExportType(null); }}
+          className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+        >
+          <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-100 animate-in zoom-in-95 duration-200 space-y-4">
+            
+            {/* Header Modal */}
+            <div className="text-center">
+              <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-100 text-[#EA580C] flex items-center justify-center mx-auto mb-2">
+                <svg className="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </div>
+              <h3 className="text-[17px] font-bold text-zinc-900">
+                Konfirmasi Unduh Cadangan
+              </h3>
+              <p className="text-[12px] text-zinc-500 mt-1 leading-snug">
+                File cadangan akan diunduh ke memori perangkat ini:
+              </p>
+            </div>
+
+            {/* Rincian Data yang Akan Diunduh */}
+            <div className="p-3.5 bg-zinc-50/90 rounded-2xl border border-zinc-200/80 space-y-2 text-[12.5px]">
+              <div className="flex justify-between items-center pb-2 border-b border-zinc-200/60">
+                <span className="text-zinc-500">Tipe Cadangan:</span>
+                <span className="font-bold text-zinc-900">
+                  {pendingExportType === 'orders' 
+                    ? 'Hanya Data Order' 
+                    : pendingExportType === 'stores' 
+                      ? 'Hanya Toko & GPS' 
+                      : 'Semua Data (Lengkap)'}
+                </span>
+              </div>
+
+              {(pendingExportType === 'all' || pendingExportType === 'orders') && (
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-500">Catatan Order:</span>
+                  <span className="font-semibold text-zinc-800">
+                    {orders.length} order ({pendingOrdersCount} aktif, {completedOrdersCount} arsip)
+                  </span>
+                </div>
+              )}
+
+              {(pendingExportType === 'all' || pendingExportType === 'stores') && (
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-500">Data Toko & GPS:</span>
+                  <span className="font-semibold text-zinc-800">
+                    {stores.length} toko ({storesWithGpsCount} ada GPS)
+                  </span>
+                </div>
+              )}
+
+              <div className="flex justify-between items-center pt-2 border-t border-zinc-200/60 text-[11px] text-zinc-400">
+                <span>Format File:</span>
+                <span className="font-mono text-zinc-600 font-medium">.json</span>
+              </div>
+            </div>
+
+            {/* Tombol Aksi */}
+            <div className="flex gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setPendingExportType(null)}
+                className="flex-1 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold text-[13px] rounded-2xl transition-colors"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const type = pendingExportType;
+                  setPendingExportType(null);
+                  handleExportBackup(type);
+                }}
+                className="flex-1 py-3 bg-[#EA580C] hover:bg-orange-700 active:scale-95 text-white font-bold text-[13px] rounded-2xl transition-all shadow-sm flex items-center justify-center gap-1.5"
+              >
+                <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>Ya, Unduh File</span>
               </button>
             </div>
 
