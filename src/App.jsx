@@ -170,8 +170,16 @@ function App() {
     }));
   };
 
-  const openAddOrder = () => {
-    setModalOrder(null);
+  const openAddOrder = (initialStore = null) => {
+    if (initialStore && initialStore.name) {
+      setModalOrder({
+        storeName: initialStore.name,
+        customerId: initialStore.customerId || '',
+        routeCode: initialStore.routeCode || ''
+      });
+    } else {
+      setModalOrder(null);
+    }
     setShowOrderModal(true);
   };
 
@@ -181,7 +189,7 @@ function App() {
   };
 
   const saveOrder = (orderData) => {
-    if (modalOrder) {
+    if (modalOrder && modalOrder.id) {
       setOrders(prev => prev.map(o => o.id === modalOrder.id ? orderData : o));
     } else {
       setOrders(prev => [orderData, ...prev]);
@@ -497,6 +505,7 @@ function App() {
             onOpenAddModal={openAddStore}
             onOpenEditModal={openEditStore}
             onDeleteStore={deleteStore}
+            onOpenAddOrder={openAddOrder}
           />
         )}
 
