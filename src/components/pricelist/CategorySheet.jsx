@@ -23,7 +23,7 @@ function CategorySheet({ isOpen, selectedCategory, onSelectCategory, categoryCou
     setIsDragging(true);
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch (err) {}
+    } catch {}
   };
 
   const handlePointerMove = (e) => {
@@ -42,7 +42,7 @@ function CategorySheet({ isOpen, selectedCategory, onSelectCategory, categoryCou
     if (!dragStartY.current) return;
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch (err) {}
+    } catch {}
 
     setIsDragging(false);
     const finalDelta = currentDragY.current;

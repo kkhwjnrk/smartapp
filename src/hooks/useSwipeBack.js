@@ -94,7 +94,7 @@ export function useSwipeBack({
     }
   }, [isExiting]);
 
-  const handleEnd = useCallback((clientX) => {
+  const handleEnd = useCallback(() => {
     if (!isTrackingRef.current && !isSwipingRef.current) return;
 
     const wasSwiping = isSwipingRef.current;

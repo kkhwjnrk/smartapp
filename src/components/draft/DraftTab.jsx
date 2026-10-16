@@ -17,7 +17,6 @@ function DraftTab({
   onOpenEditOrder,
   onDeleteOrder,
   selectedMonthKey: propSelectedMonthKey,
-  setSelectedMonthKey: propSetSelectedMonthKey,
   currentMonthKey: propCurrentMonthKey
 }) {
   const [orderSubTab, setOrderSubTab] = useState('active'); // 'active' | 'archive'

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import initialPricelist from './data/pricelist.json';
 import initialStores from './data/stores.json';
 import initialOrders from './data/orders.json';
-import { CATEGORIES, ensureValidCategory } from './constants/categories';
+import { ensureValidCategory } from './constants/categories';
 import { getCurrentMonthKey, getOrderMonthKey } from './utils/date';
 
 // Layout Components
@@ -15,6 +15,7 @@ import HomeTab from './components/home/HomeTab';
 import PricelistTab from './components/pricelist/PricelistTab';
 import StoresTab from './components/stores/StoresTab';
 import DraftTab from './components/draft/DraftTab';
+import MoreTab from './components/more/MoreTab';
 
 // Modals & Sheets
 import DiscountSheet from './components/pricelist/DiscountSheet';
@@ -23,7 +24,6 @@ import ItemModal from './components/pricelist/ItemModal';
 import StoreModal from './components/stores/StoreModal';
 import RouteSheet from './components/stores/RouteSheet';
 import OrderModal from './components/draft/OrderModal';
-import MoreTab from './components/more/MoreTab';
 
 const PRICELIST_DATA_VERSION = 'v2_568_official_pdf';
 
@@ -45,7 +45,7 @@ function App() {
             category: ensureValidCategory(item)
           }));
         }
-      } catch (e) {}
+      } catch {}
     }
 
     // Auto-update ke data 568 item baru dengan harga net dan subkategori lengkap
@@ -71,7 +71,7 @@ function App() {
         if (Array.isArray(parsed) && parsed.length >= 100 && parsed[0]?.customerId) {
           return parsed;
         }
-      } catch (e) {}
+      } catch {}
     }
     localStorage.setItem('daytona_stores_version', STORES_DATA_VERSION);
     return initialStores;
@@ -119,7 +119,7 @@ function App() {
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch (e) {
+      } catch {
         return initialOrders;
       }
     }
@@ -510,7 +510,6 @@ function App() {
             onOpenEditOrder={openEditOrder}
             onDeleteOrder={deleteOrder}
             selectedMonthKey={selectedMonthKey}
-            setSelectedMonthKey={setSelectedMonthKey}
             currentMonthKey={currentMonthKey}
           />
         )}

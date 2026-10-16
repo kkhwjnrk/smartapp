@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import ItemCard from './ItemCard';
 
 function PricelistTab({
-  items,
   filteredItems,
   query,
   setQuery,

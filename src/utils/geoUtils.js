@@ -65,7 +65,7 @@ export function parseGoogleMapsInput(input) {
   }
 
   // 6. Navigation dir or daddr or saddr: /dir//-6.595038,106.816635 or ?daddr=-6.595038,106.816635
-  const dirMatch = str.match(/(?:dir\/[^\/]*\/|[?&][ds]addr=)(-?\d+\.\d+),(-?\d+\.\d+)/);
+  const dirMatch = str.match(/(?:dir\/[^/]*\/|[?&][ds]addr=)(-?\d+\.\d+),(-?\d+\.\d+)/);
   if (dirMatch) {
     return {
       lat: Number(dirMatch[1]).toFixed(6),
@@ -75,7 +75,7 @@ export function parseGoogleMapsInput(input) {
   }
 
   // 7. Clean coordinates: -6.595038, 106.816635 (with or without brackets, space, etc.)
-  const cleanStr = str.replace(/^[\[\({\s]+|[\]\)}\s]+$/g, '');
+  const cleanStr = str.replace(/^[[({\s]+|[\])}\s]+$/g, '');
   const coordMatch = cleanStr.match(/^(-?\d{1,2}(?:\.\d+)?)\s*[,|\s]\s*(-?\d{1,3}(?:\.\d+)?)$/);
   if (coordMatch) {
     const lat = Number(coordMatch[1]);

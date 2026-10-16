@@ -167,7 +167,7 @@ function StoreModal({
       } else {
         setGpsStatus('Browser membatasi akses clipboard otomatis. Silakan tekan & tahan kolom input lalu pilih Tempel.');
       }
-    } catch (e) {
+    } catch {
       setGpsStatus('Izin clipboard ditolak. Silakan tekan & tahan kolom input lalu pilih Tempel.');
     }
   };
@@ -180,7 +180,7 @@ function StoreModal({
     setIsDragging(true);
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch (err) {}
+    } catch {}
   };
 
   const handlePointerMove = (e) => {
@@ -199,7 +199,7 @@ function StoreModal({
     if (!dragStartY.current) return;
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch (err) {}
+    } catch {}
 
     setIsDragging(false);
     const finalDelta = currentDragY.current;

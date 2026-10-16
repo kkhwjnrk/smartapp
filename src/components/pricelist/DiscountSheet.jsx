@@ -16,7 +16,7 @@ function DiscountSheet({ item, onClose }) {
     setIsDragging(true);
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch (err) { }
+    } catch {}
   };
 
   const handlePointerMove = (e) => {
@@ -35,7 +35,7 @@ function DiscountSheet({ item, onClose }) {
     if (!dragStartY.current) return;
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch (err) { }
+    } catch {}
 
     setIsDragging(false);
     const finalDelta = currentDragY.current;

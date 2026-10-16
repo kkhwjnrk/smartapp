@@ -29,7 +29,7 @@ function RouteSheet({
     setIsDragging(true);
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch (err) {}
+    } catch {}
   };
 
   const handlePointerMove = (e) => {
@@ -48,7 +48,7 @@ function RouteSheet({
     if (!dragStartY.current) return;
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch (err) {}
+    } catch {}
 
     setIsDragging(false);
     const finalDelta = currentDragY.current;
