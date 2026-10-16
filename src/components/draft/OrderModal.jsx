@@ -306,7 +306,7 @@ function OrderModal({
         )}
       
       {/* 1. TOP HEADER BAR (Halaman Penuh) */}
-      <div className="bg-white border-b border-zinc-200 px-4 py-3 shrink-0 flex items-center justify-between gap-3 shadow-2xs">
+      <div className="bg-white border-b border-zinc-200 px-4 py-3 shrink-0 flex items-center justify-between gap-3 shadow-2xs pt-safe">
         <button
           type="button"
           onClick={onClose}
@@ -741,7 +741,7 @@ function OrderModal({
       </div>
 
       {/* 3. FIXED BOTTOM ACTION BAR */}
-      <div className="bg-white border-t border-zinc-200 px-4 py-3 shrink-0 shadow-lg">
+      <div className="bg-white border-t border-zinc-200 px-4 py-3 shrink-0 shadow-lg pb-safe">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
           <div className="min-w-0 pr-2">
             <span className="font-bold text-zinc-900 text-[15px] tracking-tight block">
@@ -773,7 +773,7 @@ function OrderModal({
       {/* 4. MODAL DIALOG POPUP PILIH TOKO TERDAFTAR (Hanya muncul saat tombol Pilih/Ganti Toko ditekan) */}
       {isStorePickerOpen && (
         <div className="fixed inset-0 z-60 bg-black/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
-          <div className="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl border border-zinc-200 animate-in slide-in-from-bottom duration-200">
+          <div className="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl border border-zinc-200 animate-in slide-in-from-bottom duration-200 pb-safe">
             
             {/* Header Modal Picker */}
             <div className="p-4 border-b border-zinc-100 flex items-center justify-between gap-3 shrink-0">

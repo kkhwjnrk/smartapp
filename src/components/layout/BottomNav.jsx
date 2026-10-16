@@ -2,8 +2,8 @@ import React from 'react';
 
 function BottomNav({ activeTab, setActiveTab, cartCount }) {
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-[#FDFDFD]/90 border-t border-zinc-200/60 pb-safe pt-2 backdrop-blur-xl z-40">
-      <div className="max-w-md mx-auto flex justify-around items-center px-2 pb-5 pt-1">
+    <nav className="fixed bottom-0 left-0 w-full bg-[#FDFDFD]/90 border-t border-zinc-200/60 pb-safe pt-1.5 backdrop-blur-xl z-40 shadow-xs">
+      <div className="max-w-md mx-auto flex justify-around items-center px-2 pb-1.5 pt-0.5">
         
         {/* 1. Home */}
         <button 

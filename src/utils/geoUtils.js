@@ -110,3 +110,45 @@ export function isShortGoogleMapsUrl(input) {
   if (!input || typeof input !== 'string') return false;
   return /maps\.app\.goo\.gl|goo\.gl\/maps/i.test(input);
 }
+
+/**
+ * Menghitung jarak garis lurus (haversine) antara dua koordinat GPS dalam satuan kilometer (km).
+ */
+export function calculateDistanceKm(lat1, lon1, lat2, lon2) {
+  const nLat1 = Number(lat1);
+  const nLon1 = Number(lon1);
+  const nLat2 = Number(lat2);
+  const nLon2 = Number(lon2);
+
+  if (isNaN(nLat1) || isNaN(nLon1) || isNaN(nLat2) || isNaN(nLon2)) {
+    return null;
+  }
+
+  const R = 6371; // Radius bumi dalam km
+  const dLat = (nLat2 - nLat1) * (Math.PI / 180);
+  const dLon = (nLon2 - nLon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(nLat1 * (Math.PI / 180)) * Math.cos(nLat2 * (Math.PI / 180)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+/**
+ * Format jarak ke teks rapi (contoh: '450 m' atau '2.3 km').
+ */
+export function formatDistance(km) {
+  if (km === null || km === undefined || isNaN(km)) return '';
+  if (km < 1) {
+    return `${Math.round(km * 1000)} m`;
+  }
+  return `${km.toFixed(1)} km`;
+}
+
+/**
+ * URL Google Maps untuk langsung membuka navigasi / rute perjalanan.
+ */
+export function getNavigationUrl(lat, lng) {
+  return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+}

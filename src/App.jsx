@@ -8,6 +8,7 @@ import { getCurrentMonthKey, getOrderMonthKey } from './utils/date';
 // Layout Components
 import Header from './components/layout/Header';
 import BottomNav from './components/layout/BottomNav';
+import IosInstallPrompt from './components/layout/IosInstallPrompt';
 
 // Tab Views
 import HomeTab from './components/home/HomeTab';
@@ -22,6 +23,7 @@ import ItemModal from './components/pricelist/ItemModal';
 import StoreModal from './components/stores/StoreModal';
 import RouteSheet from './components/stores/RouteSheet';
 import OrderModal from './components/draft/OrderModal';
+import BackupRestoreModal from './components/layout/BackupRestoreModal';
 
 const PRICELIST_DATA_VERSION = 'v2_568_official_pdf';
 
@@ -29,6 +31,7 @@ const STORES_DATA_VERSION = 'v2_168_stores';
 
 function App() {
   const [activeTab, setActiveTab] = useState('home');
+  const [showBackupModal, setShowBackupModal] = useState(false);
 
   // Storage for Pricelist dengan migrasi versi otomatis ke dataset PDF baru
   const [items, setItems] = useState(() => {
@@ -427,6 +430,7 @@ function App() {
         availableMonths={availableMonths}
         currentMonthKey={currentMonthKey}
         onOpenAddOrder={openAddOrder}
+        onOpenBackup={() => setShowBackupModal(true)}
       />
 
       {/* Main Content Area */}
@@ -455,6 +459,7 @@ function App() {
               setActiveTab('pricelist');
               setShowCategorySheet(true);
             }}
+            onOpenBackup={() => setShowBackupModal(true)}
           />
         )}
 
@@ -572,12 +577,26 @@ function App() {
         onClose={() => setShowRouteSheet(false)}
       />
 
+      {/* Backup & Restore Data Modal */}
+      <BackupRestoreModal
+        isOpen={showBackupModal}
+        onClose={() => setShowBackupModal(false)}
+        orders={orders}
+        setOrders={setOrders}
+        stores={stores}
+        setStores={setStores}
+        items={items}
+      />
+
       {/* Bottom Navigation Bar */}
       <BottomNav
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         cartCount={pendingOrdersCount}
       />
+
+      {/* iOS Home Screen Install Helper Banner */}
+      <IosInstallPrompt />
 
     </div>
   );

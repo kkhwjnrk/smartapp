@@ -12,7 +12,8 @@ function HomeTab({
   onOpenStores, 
   onOpenAddOrder, 
   onOpenEditOrder,
-  onOpenCategories 
+  onOpenCategories,
+  onOpenBackup 
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedStore, setCopiedStore] = useState('');
@@ -465,6 +466,33 @@ function HomeTab({
               );
             })}
           </div>
+        </div>
+      )}
+
+      {/* CARD CADANGAN & KEAMANAN DATA */}
+      {onOpenBackup && (
+        <div 
+          onClick={onOpenBackup}
+          className="bg-white rounded-3xl p-4.5 border border-zinc-200/80 shadow-xs flex items-center justify-between cursor-pointer hover:border-zinc-300 hover:shadow-sm transition-all group active:scale-[0.99]"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-orange-50 text-[#EA580C] border border-orange-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="font-bold text-[14px] text-zinc-900 group-hover:text-orange-950 transition-colors">
+                Cadangan & Pemulihan Data
+              </h4>
+              <p className="text-[12px] text-zinc-500">
+                Unduh file cadangan JSON atau pulihkan data order Anda
+              </p>
+            </div>
+          </div>
+          <svg className="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 group-hover:translate-x-0.5 transition-all shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+          </svg>
         </div>
       )}
 

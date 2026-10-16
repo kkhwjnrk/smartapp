@@ -1,5 +1,6 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import StoreCard from './StoreCard';
+import { calculateDistanceKm } from '../../utils/geoUtils';
 
 function StoresTab({
   stores,
@@ -16,10 +17,77 @@ function StoresTab({
   onDeleteStore
 }) {
   const searchInputRef = useRef(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [locating, setLocating] = useState(false);
+  const [locError, setLocError] = useState('');
+  const [sortByDistance, setSortByDistance] = useState(false);
 
   const gpsCount = useMemo(() => {
     return stores.filter(s => s.lat && s.lng).length;
   }, [stores]);
+
+  // Handler toggle urutkan toko terdekat berdasarkan lokasi GPS saat ini
+  const handleToggleNearby = () => {
+    if (sortByDistance) {
+      setSortByDistance(false);
+      return;
+    }
+
+    if (userLocation) {
+      setSortByDistance(true);
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      alert('Browser HP Anda tidak mendukung deteksi GPS.');
+      return;
+    }
+
+    setLocating(true);
+    setLocError('');
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const coords = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        };
+        setUserLocation(coords);
+        setSortByDistance(true);
+        setLocating(false);
+      },
+      (err) => {
+        setLocating(false);
+        if (err.code === err.PERMISSION_DENIED) {
+          setLocError('Izin akses lokasi ditolak. Buka izin lokasi di browser Anda.');
+        } else {
+          setLocError('Gagal mendeteksi sinyal GPS. Pastikan GPS HP Anda aktif.');
+        }
+        setTimeout(() => setLocError(''), 4000);
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+    );
+  };
+
+  // Urutkan toko berdasarkan jarak terdekat dari lokasi pengguna saat tombol aktif
+  const sortedDisplayedStores = useMemo(() => {
+    if (!sortByDistance || !userLocation) {
+      return filteredStores;
+    }
+
+    return [...filteredStores].sort((a, b) => {
+      const hasA = a.lat && a.lng;
+      const hasB = b.lat && b.lng;
+
+      if (!hasA && !hasB) return 0;
+      if (!hasA) return 1; // Taruh toko tanpa GPS di bagian bawah
+      if (!hasB) return -1;
+
+      const distA = calculateDistanceKm(userLocation.lat, userLocation.lng, a.lat, a.lng) ?? 999999;
+      const distB = calculateDistanceKm(userLocation.lat, userLocation.lng, b.lat, b.lng) ?? 999999;
+      return distA - distB;
+    });
+  }, [filteredStores, sortByDistance, userLocation]);
 
   return (
     <div className="space-y-3.5 animate-in fade-in duration-500">
@@ -104,7 +172,62 @@ function StoresTab({
               Semua
             </button>
           )}
+
+          {/* Tombol Urutkan Toko Terdekat */}
+          <button
+            type="button"
+            onClick={handleToggleNearby}
+            disabled={locating}
+            className={`px-3.5 py-2.5 rounded-2xl border text-[12.5px] font-bold transition-all flex items-center gap-1.5 shrink-0 active:scale-95 ${
+              sortByDistance
+                ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
+                : 'bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50 shadow-sm'
+            }`}
+            title="Urutkan toko terdekat dari lokasi GPS Anda"
+          >
+            {locating ? (
+              <>
+                <svg className="w-3.5 h-3.5 animate-spin text-[#EA580C]" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span className="text-[12px]">GPS...</span>
+              </>
+            ) : (
+              <>
+                <svg className={`w-4 h-4 ${sortByDistance ? 'text-white' : 'text-emerald-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>{sortByDistance ? 'Terdekat ✓' : 'Terdekat'}</span>
+              </>
+            )}
+          </button>
         </div>
+
+        {/* Notifikasi GPS / Error */}
+        {locError && (
+          <div className="mt-2 p-2.5 rounded-xl bg-red-50 border border-red-200 text-[12px] text-red-700 font-medium">
+            ⚠️ {locError}
+          </div>
+        )}
+
+        {/* Banner Aktif Mode Terdekat */}
+        {sortByDistance && (
+          <div className="mt-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200/80 text-[12px] text-emerald-800 flex items-center justify-between">
+            <span className="flex items-center gap-1.5 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Diurutkan dari posisi terdekat Anda</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => setSortByDistance(false)}
+              className="text-emerald-700 font-bold hover:underline text-[11px]"
+            >
+              Matikan
+            </button>
+          </div>
+        )}
 
         {/* Status Hasil Pencarian & GPS info */}
         <div className="flex items-center justify-between text-[12px] text-zinc-500 font-medium px-1 mt-2">
@@ -171,13 +294,14 @@ function StoresTab({
 
       {/* List Container */}
       <div className="space-y-3 pb-6">
-        {filteredStores.map(store => (
+        {sortedDisplayedStores.map(store => (
           <StoreCard 
             key={store.id}
             store={store}
             isEditMode={isEditMode}
             onEdit={onOpenEditModal}
             onDelete={onDeleteStore}
+            userLocation={sortByDistance ? userLocation : null}
           />
         ))}
       </div>

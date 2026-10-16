@@ -98,7 +98,7 @@ function OrderDetailModal({
         )}
       
       {/* Top Header Bar */}
-      <div className="bg-white border-b border-zinc-200 px-4 py-3 shrink-0 flex items-center justify-between gap-3 shadow-2xs">
+      <div className="bg-white border-b border-zinc-200 px-4 py-3 shrink-0 flex items-center justify-between gap-3 shadow-2xs pt-safe">
         <button
           type="button"
           onClick={onClose}
@@ -325,7 +325,7 @@ function OrderDetailModal({
       </div>
 
       {/* Sticky Bottom Action Bar */}
-      <div className="bg-white border-t border-zinc-200 px-4 py-3 shrink-0 shadow-lg">
+      <div className="bg-white border-t border-zinc-200 px-4 py-3 shrink-0 shadow-lg pb-safe">
         <div className="max-w-2xl mx-auto flex items-center gap-3">
           
           <button
