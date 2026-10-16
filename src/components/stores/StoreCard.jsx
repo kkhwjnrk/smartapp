@@ -1,18 +1,11 @@
 import React from 'react';
-import { calculateDistanceKm, formatDistance, getNavigationUrl } from '../../utils/geoUtils';
 
-function StoreCard({ store, isEditMode, onEdit, onDelete, userLocation }) {
+function StoreCard({ store, isEditMode, onEdit, onDelete }) {
   const hasCoordinates = store.lat !== undefined && store.lat !== null && store.lat !== '' &&
                          store.lng !== undefined && store.lng !== null && store.lng !== '';
 
-  const distanceKm = (hasCoordinates && userLocation)
-    ? calculateDistanceKm(userLocation.lat, userLocation.lng, store.lat, store.lng)
-    : null;
-
-  const distanceText = formatDistance(distanceKm);
-
   const mapsUrl = hasCoordinates 
-    ? (userLocation ? getNavigationUrl(store.lat, store.lng) : `https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lng}`)
+    ? `https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lng}`
     : null;
 
   return (
@@ -40,7 +33,7 @@ function StoreCard({ store, isEditMode, onEdit, onDelete, userLocation }) {
           {hasCoordinates && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-[10px] font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              {distanceText ? `📍 ${distanceText}` : 'GPS Aktif'}
+              GPS Aktif
             </span>
           )}
         </div>
@@ -120,7 +113,7 @@ function StoreCard({ store, isEditMode, onEdit, onDelete, userLocation }) {
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
-              <span>{userLocation ? 'Rute ke Toko' : 'Buka Maps'}</span>
+              <span>Buka Maps</span>
             </a>
           </div>
         ) : (

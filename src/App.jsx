@@ -23,7 +23,7 @@ import ItemModal from './components/pricelist/ItemModal';
 import StoreModal from './components/stores/StoreModal';
 import RouteSheet from './components/stores/RouteSheet';
 import OrderModal from './components/draft/OrderModal';
-import BackupRestoreModal from './components/layout/BackupRestoreModal';
+import MoreTab from './components/more/MoreTab';
 
 const PRICELIST_DATA_VERSION = 'v2_568_official_pdf';
 
@@ -31,7 +31,6 @@ const STORES_DATA_VERSION = 'v2_168_stores';
 
 function App() {
   const [activeTab, setActiveTab] = useState('home');
-  const [showBackupModal, setShowBackupModal] = useState(false);
 
   // Storage for Pricelist dengan migrasi versi otomatis ke dataset PDF baru
   const [items, setItems] = useState(() => {
@@ -430,7 +429,6 @@ function App() {
         availableMonths={availableMonths}
         currentMonthKey={currentMonthKey}
         onOpenAddOrder={openAddOrder}
-        onOpenBackup={() => setShowBackupModal(true)}
       />
 
       {/* Main Content Area */}
@@ -459,7 +457,7 @@ function App() {
               setActiveTab('pricelist');
               setShowCategorySheet(true);
             }}
-            onOpenBackup={() => setShowBackupModal(true)}
+            onOpenMore={() => setActiveTab('more')}
           />
         )}
 
@@ -514,6 +512,16 @@ function App() {
             selectedMonthKey={selectedMonthKey}
             setSelectedMonthKey={setSelectedMonthKey}
             currentMonthKey={currentMonthKey}
+          />
+        )}
+
+        {activeTab === 'more' && (
+          <MoreTab
+            orders={orders}
+            setOrders={setOrders}
+            stores={stores}
+            setStores={setStores}
+            items={items}
           />
         )}
       </main>
@@ -575,17 +583,6 @@ function App() {
         routesList={routesList}
         routeCounts={routeCounts}
         onClose={() => setShowRouteSheet(false)}
-      />
-
-      {/* Backup & Restore Data Modal */}
-      <BackupRestoreModal
-        isOpen={showBackupModal}
-        onClose={() => setShowBackupModal(false)}
-        orders={orders}
-        setOrders={setOrders}
-        stores={stores}
-        setStores={setStores}
-        items={items}
       />
 
       {/* Bottom Navigation Bar */}

@@ -13,7 +13,7 @@ function HomeTab({
   onOpenAddOrder, 
   onOpenEditOrder,
   onOpenCategories,
-  onOpenBackup 
+  onOpenMore 
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedStore, setCopiedStore] = useState('');
@@ -470,9 +470,9 @@ function HomeTab({
       )}
 
       {/* CARD CADANGAN & KEAMANAN DATA */}
-      {onOpenBackup && (
+      {onOpenMore && (
         <div 
-          onClick={onOpenBackup}
+          onClick={onOpenMore}
           className="bg-white rounded-3xl p-4.5 border border-zinc-200/80 shadow-xs flex items-center justify-between cursor-pointer hover:border-zinc-300 hover:shadow-sm transition-all group active:scale-[0.99]"
         >
           <div className="flex items-center gap-3">

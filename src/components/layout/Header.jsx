@@ -15,8 +15,7 @@ function Header({
   setSelectedMonthKey,
   availableMonths = [],
   currentMonthKey,
-  onOpenAddOrder,
-  onOpenBackup
+  onOpenAddOrder
 }) {
   const showEditButton = activeTab === 'pricelist' || activeTab === 'stores';
   const currentIsEdit = activeTab === 'stores' ? isStoreEditMode : isEditMode;
@@ -47,6 +46,7 @@ function Header({
             {activeTab === 'draft' && "Catatan Order"}
             {activeTab === 'pricelist' && "Pricelist"}
             {activeTab === 'stores' && "Data Toko"}
+            {activeTab === 'more' && "Fitur & Pengaturan"}
           </h1>
         </div>
 
@@ -134,21 +134,6 @@ function Header({
                 }`}
             >
               {currentIsEdit ? 'Selesai' : 'Edit'}
-            </button>
-          )}
-
-          {/* Tombol Cadangan & Pemulihan Data */}
-          {onOpenBackup && (
-            <button
-              type="button"
-              onClick={onOpenBackup}
-              className="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-600 hover:text-zinc-950 transition-colors active:scale-90 shrink-0"
-              title="Cadangan & Pemulihan Data (Backup/Restore)"
-              aria-label="Cadangan Data"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
             </button>
           )}
         </div>
