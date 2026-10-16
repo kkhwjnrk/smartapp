@@ -238,20 +238,20 @@ function MoreTab({
       <div className="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-xs flex items-center gap-4">
         {/* Logo Resmi Sistem Daytona */}
         <div className="w-14 h-14 shrink-0 rounded-2xl overflow-hidden shadow-xs flex items-center justify-center">
-          <svg 
-            className="w-full h-full" 
-            viewBox="0 0 512 512" 
-            fill="none" 
+          <svg
+            className="w-full h-full"
+            viewBox="0 0 512 512"
+            fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <rect width="512" height="512" rx="115" fill="#EA580C"/>
+            <rect width="512" height="512" rx="115" fill="#EA580C" />
             <g transform="translate(18, 0)">
-              <polygon points="108,384 142,128 172,128 138,384" fill="#FFFFFF" opacity="0.35"/>
-              <path 
-                fillRule="evenodd" 
+              <polygon points="108,384 142,128 172,128 138,384" fill="#FFFFFF" opacity="0.35" />
+              <path
+                fillRule="evenodd"
                 clipRule="evenodd"
-                d="M 160 384 L 210 128 L 305 128 C 375 128 420 168 405 240 C 390 316 335 384 255 384 Z M 225 328 L 260 184 L 295 184 C 335 184 355 204 345 244 C 335 284 305 328 265 328 Z" 
-                fill="#FFFFFF" 
+                d="M 160 384 L 210 128 L 305 128 C 375 128 420 168 405 240 C 390 316 335 384 255 384 Z M 225 328 L 260 184 L 295 184 C 335 184 355 204 345 244 C 335 284 305 328 265 328 Z"
+                fill="#FFFFFF"
               />
             </g>
           </svg>
@@ -259,25 +259,21 @@ function MoreTab({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
             <h2 className="text-[17px] font-bold text-zinc-900 leading-tight">
-              SmartApp Daytona
+              SmartApp
             </h2>
-            <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10.5px] font-bold rounded-full">
-              PWA V2.0
-            </span>
           </div>
           <p className="text-[12px] text-zinc-500 mt-1 leading-snug">
-            Aplikasi pencatatan pesanan & pricelist resmi Daytona
+            Aplikasi produktifitas kerja
           </p>
         </div>
       </div>
 
       {/* Notifikasi Status Pesan */}
       {importStatus && (
-        <div className={`p-4 rounded-2xl text-[13px] font-medium border flex items-start justify-between gap-3 animate-in fade-in duration-200 ${
-          importStatus.type === 'success' 
-            ? 'bg-emerald-50 text-emerald-800 border-emerald-200' 
-            : 'bg-red-50 text-red-800 border-red-200'
-        }`}>
+        <div className={`p-4 rounded-2xl text-[13px] font-medium border flex items-start justify-between gap-3 animate-in fade-in duration-200 ${importStatus.type === 'success'
+          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+          : 'bg-red-50 text-red-800 border-red-200'
+          }`}>
           <span>{importStatus.message}</span>
           <button
             type="button"
@@ -291,7 +287,7 @@ function MoreTab({
 
       {/* SECTION 1: CADANGAN & KEAMANAN DATA MODULAR */}
       <div className="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-xs space-y-4">
-        
+
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-orange-50 text-[#EA580C] border border-orange-100 flex items-center justify-center shrink-0">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -370,7 +366,7 @@ function MoreTab({
 
           {/* Opsi Cadangkan Parsial (2 Kolom) */}
           <div className="grid grid-cols-2 gap-2">
-            
+
             {/* Hanya Order */}
             <button
               type="button"
@@ -449,7 +445,7 @@ function MoreTab({
             </svg>
             <span>Pilih File Cadangan (.json)</span>
           </button>
-          
+
           <p className="text-[11.5px] text-zinc-400 text-center">
             Anda dapat memilih bagian data mana yang ingin dipulihkan setelah file dipilih.
           </p>
@@ -459,13 +455,13 @@ function MoreTab({
 
       {/* SECTION 2: INFORMASI SISTEM & KATALOG */}
       <div className="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-xs space-y-4">
-        
+
         <h3 className="text-[15px] font-bold text-zinc-900 leading-tight">
           Informasi & Spesifikasi Sistem
         </h3>
 
         <div className="divide-y divide-zinc-100 text-[13px]">
-          
+
           <div className="py-3 flex items-center justify-between">
             <div>
               <span className="font-semibold text-zinc-800 block">Katalog Resmi Daytona</span>
@@ -514,7 +510,7 @@ function MoreTab({
       {pendingRestoreData && (
         <div className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-100 animate-in zoom-in-95 duration-200 space-y-4 max-h-[90vh] overflow-y-auto">
-            
+
             {/* Header Modal */}
             <div className="text-center">
               <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-100 text-[#EA580C] flex items-center justify-center mx-auto mb-2">
@@ -540,13 +536,12 @@ function MoreTab({
               </span>
 
               {/* Opsi 1: Data Order */}
-              <label className={`p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${
-                !pendingRestoreData.hasOrders 
-                  ? 'bg-zinc-50 border-zinc-200 opacity-60 cursor-not-allowed'
-                  : restoreOrdersChecked 
-                    ? 'bg-orange-50/70 border-orange-300 ring-1 ring-orange-200' 
-                    : 'bg-white border-zinc-200 hover:bg-zinc-50'
-              }`}>
+              <label className={`p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${!pendingRestoreData.hasOrders
+                ? 'bg-zinc-50 border-zinc-200 opacity-60 cursor-not-allowed'
+                : restoreOrdersChecked
+                  ? 'bg-orange-50/70 border-orange-300 ring-1 ring-orange-200'
+                  : 'bg-white border-zinc-200 hover:bg-zinc-50'
+                }`}>
                 <input
                   type="checkbox"
                   disabled={!pendingRestoreData.hasOrders}
@@ -581,13 +576,12 @@ function MoreTab({
               </label>
 
               {/* Opsi 2: Data Toko & GPS */}
-              <label className={`p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${
-                !pendingRestoreData.hasStores 
-                  ? 'bg-zinc-50 border-zinc-200 opacity-60 cursor-not-allowed'
-                  : restoreStoresChecked 
-                    ? 'bg-orange-50/70 border-orange-300 ring-1 ring-orange-200' 
-                    : 'bg-white border-zinc-200 hover:bg-zinc-50'
-              }`}>
+              <label className={`p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${!pendingRestoreData.hasStores
+                ? 'bg-zinc-50 border-zinc-200 opacity-60 cursor-not-allowed'
+                : restoreStoresChecked
+                  ? 'bg-orange-50/70 border-orange-300 ring-1 ring-orange-200'
+                  : 'bg-white border-zinc-200 hover:bg-zinc-50'
+                }`}>
                 <input
                   type="checkbox"
                   disabled={!pendingRestoreData.hasStores}
@@ -657,12 +651,12 @@ function MoreTab({
 
       {/* MODAL DIALOG KONFIRMASI UNDUH CADANGAN */}
       {pendingExportType && (
-        <div 
+        <div
           onClick={(e) => { if (e.target === e.currentTarget) setPendingExportType(null); }}
           className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
         >
           <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-100 animate-in zoom-in-95 duration-200 space-y-4">
-            
+
             {/* Header Modal */}
             <div className="text-center">
               <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-100 text-[#EA580C] flex items-center justify-center mx-auto mb-2">
@@ -683,10 +677,10 @@ function MoreTab({
               <div className="flex justify-between items-center pb-2 border-b border-zinc-200/60">
                 <span className="text-zinc-500">Tipe Cadangan:</span>
                 <span className="font-bold text-zinc-900">
-                  {pendingExportType === 'orders' 
-                    ? 'Hanya Data Order' 
-                    : pendingExportType === 'stores' 
-                      ? 'Hanya Toko & GPS' 
+                  {pendingExportType === 'orders'
+                    ? 'Hanya Data Order'
+                    : pendingExportType === 'stores'
+                      ? 'Hanya Toko & GPS'
                       : 'Semua Data (Lengkap)'}
                 </span>
               </div>
