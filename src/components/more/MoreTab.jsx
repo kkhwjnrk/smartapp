@@ -236,8 +236,25 @@ function MoreTab({
 
       {/* Header Info Aplikasi */}
       <div className="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-xs flex items-center gap-4">
-        <div className="w-13 h-13 rounded-2xl bg-[#EA580C] text-white flex items-center justify-center font-black italic text-[22px] shrink-0 shadow-md">
-          D
+        {/* Logo Resmi Sistem Daytona */}
+        <div className="w-14 h-14 shrink-0 rounded-2xl overflow-hidden shadow-xs flex items-center justify-center">
+          <svg 
+            className="w-full h-full" 
+            viewBox="0 0 512 512" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect width="512" height="512" rx="115" fill="#EA580C"/>
+            <g transform="translate(18, 0)">
+              <polygon points="108,384 142,128 172,128 138,384" fill="#FFFFFF" opacity="0.35"/>
+              <path 
+                fillRule="evenodd" 
+                clipRule="evenodd"
+                d="M 160 384 L 210 128 L 305 128 C 375 128 420 168 405 240 C 390 316 335 384 255 384 Z M 225 328 L 260 184 L 295 184 C 335 184 355 204 345 244 C 335 284 305 328 265 328 Z" 
+                fill="#FFFFFF" 
+              />
+            </g>
+          </svg>
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
