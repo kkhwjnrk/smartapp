@@ -7,13 +7,13 @@ function MoreTab({
   setStores,
   items = []
 }) {
+  const [exportCategory, setExportCategory] = useState('all'); // 'all' | 'orders' | 'stores'
   const [importStatus, setImportStatus] = useState(null);
   const [pendingRestoreData, setPendingRestoreData] = useState(null);
   const [copyStatus, setCopyStatus] = useState(false);
-  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const fileInputRef = useRef(null);
 
-  // 1. Ekspor Data Cadangan ke File JSON
+  // 1. Ekspor Data Cadangan ke File JSON sesuai kategori yang dipilih
   const handleExportBackup = () => {
     try {
       const now = new Date();
@@ -23,20 +23,54 @@ function MoreTab({
       const backupPayload = {
         appName: 'SmartApp Daytona',
         version: '2.0',
+        category: exportCategory,
         exportedAt: now.toISOString(),
         exportedDateFormatted: now.toLocaleString('id-ID'),
-        summary: {
+        summary: {},
+        data: {}
+      };
+
+      let filename = '';
+      let successMsg = '';
+
+      if (exportCategory === 'all') {
+        backupPayload.summary = {
+          categoryName: 'Semua Data (Order + Toko)',
           totalOrders: orders.length,
           pendingOrders: orders.filter(o => o.status === 'pending').length,
           completedOrders: orders.filter(o => o.status === 'completed').length,
           totalStores: stores.length,
           totalItems: items.length
-        },
-        data: {
+        };
+        backupPayload.data = {
           orders: orders,
           stores: stores
-        }
-      };
+        };
+        filename = `daytona_backup_semua_${dateStr}_${timeStr}.json`;
+        successMsg = `✓ Berhasil mengunduh semua data (${orders.length} order & ${stores.length} toko)`;
+      } else if (exportCategory === 'orders') {
+        backupPayload.summary = {
+          categoryName: 'Catatan Order Saja',
+          totalOrders: orders.length,
+          pendingOrders: orders.filter(o => o.status === 'pending').length,
+          completedOrders: orders.filter(o => o.status === 'completed').length
+        };
+        backupPayload.data = {
+          orders: orders
+        };
+        filename = `daytona_backup_order_${dateStr}_${timeStr}.json`;
+        successMsg = `✓ Berhasil mengunduh cadangan order (${orders.length} pesanan)`;
+      } else if (exportCategory === 'stores') {
+        backupPayload.summary = {
+          categoryName: 'Data Toko & Titik GPS Saja',
+          totalStores: stores.length
+        };
+        backupPayload.data = {
+          stores: stores
+        };
+        filename = `daytona_backup_toko_${dateStr}_${timeStr}.json`;
+        successMsg = `✓ Berhasil mengunduh master toko & titik GPS (${stores.length} toko)`;
+      }
 
       const jsonString = JSON.stringify(backupPayload, null, 2);
       const blob = new Blob([jsonString], { type: 'application/json' });
@@ -44,7 +78,7 @@ function MoreTab({
 
       const downloadLink = document.createElement('a');
       downloadLink.href = url;
-      downloadLink.download = `daytona_backup_${dateStr}_${timeStr}.json`;
+      downloadLink.download = filename;
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
@@ -52,7 +86,7 @@ function MoreTab({
 
       setImportStatus({
         type: 'success',
-        message: `✓ File cadangan berhasil diunduh (${orders.length} order, ${stores.length} toko)`
+        message: successMsg
       });
     } catch (err) {
       setImportStatus({
@@ -62,14 +96,26 @@ function MoreTab({
     }
   };
 
-  // 2. Salin Data Cadangan ke Clipboard
+  // 2. Salin Data Cadangan ke Clipboard sesuai Kategori
   const handleCopyBackupText = () => {
     try {
+      const now = new Date();
       const backupPayload = {
         appName: 'SmartApp Daytona',
-        exportedAt: new Date().toISOString(),
-        data: { orders, stores }
+        version: '2.0',
+        category: exportCategory,
+        exportedAt: now.toISOString(),
+        data: {}
       };
+
+      if (exportCategory === 'all') {
+        backupPayload.data = { orders, stores };
+      } else if (exportCategory === 'orders') {
+        backupPayload.data = { orders };
+      } else if (exportCategory === 'stores') {
+        backupPayload.data = { stores };
+      }
+
       navigator.clipboard.writeText(JSON.stringify(backupPayload));
       setCopyStatus(true);
       setTimeout(() => setCopyStatus(false), 2000);
@@ -88,18 +134,26 @@ function MoreTab({
       try {
         const parsed = JSON.parse(event.target.result);
 
-        const restoredOrders = parsed.data?.orders || parsed.orders;
-        const restoredStores = parsed.data?.stores || parsed.stores;
+        const restoredOrders = parsed.data?.orders ?? (Array.isArray(parsed.orders) ? parsed.orders : null);
+        const restoredStores = parsed.data?.stores ?? (Array.isArray(parsed.stores) ? parsed.stores : null);
 
-        if (!Array.isArray(restoredOrders)) {
-          throw new Error('Format file tidak valid: data order tidak ditemukan.');
+        const hasOrders = Array.isArray(restoredOrders) && restoredOrders.length >= 0;
+        const hasStores = Array.isArray(restoredStores) && restoredStores.length >= 0;
+
+        if (!hasOrders && !hasStores) {
+          throw new Error('Format file tidak valid: tidak ditemukan data pesanan (order) maupun data toko.');
         }
 
         setPendingRestoreData({
-          orders: restoredOrders,
-          stores: Array.isArray(restoredStores) ? restoredStores : null,
+          orders: hasOrders ? restoredOrders : null,
+          stores: hasStores ? restoredStores : null,
+          selectedTypes: {
+            orders: hasOrders,
+            stores: hasStores
+          },
           exportedAt: parsed.exportedDateFormatted || parsed.exportedAt || 'Tidak diketahui',
-          appName: parsed.appName || 'Cadangan Daytona'
+          appName: parsed.appName || 'Cadangan Daytona',
+          fileCategory: parsed.category || (hasOrders && hasStores ? 'all' : hasOrders ? 'orders' : 'stores')
         });
         setImportStatus(null);
       } catch (err) {
@@ -113,26 +167,47 @@ function MoreTab({
     e.target.value = '';
   };
 
-  // 4. Eksekusi Pemulihan Data
+  // Toggle pilihan jenis data yang akan dipulihkan
+  const toggleRestoreType = (type) => {
+    setPendingRestoreData(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        selectedTypes: {
+          ...prev.selectedTypes,
+          [type]: !prev.selectedTypes[type]
+        }
+      };
+    });
+  };
+
+  // 4. Eksekusi Pemulihan Data Selektif
   const handleConfirmRestore = () => {
     if (!pendingRestoreData) return;
 
+    const { orders: fileOrders, stores: fileStores, selectedTypes } = pendingRestoreData;
+
     try {
-      if (pendingRestoreData.orders) {
-        localStorage.setItem('daytona_orders', JSON.stringify(pendingRestoreData.orders));
-        setOrders(pendingRestoreData.orders);
+      const restoredItems = [];
+
+      // Pulihkan Catatan Order jika dipilih
+      if (selectedTypes.orders && fileOrders) {
+        localStorage.setItem('daytona_orders', JSON.stringify(fileOrders));
+        setOrders(fileOrders);
+        restoredItems.push(`${fileOrders.length} order`);
       }
 
-      if (pendingRestoreData.stores && setStores) {
-        localStorage.setItem('daytona_stores_custom', JSON.stringify(pendingRestoreData.stores));
-        setStores(pendingRestoreData.stores);
+      // Pulihkan Data Toko jika dipilih
+      if (selectedTypes.stores && fileStores && setStores) {
+        localStorage.setItem('daytona_stores', JSON.stringify(fileStores));
+        setStores(fileStores);
+        restoredItems.push(`${fileStores.length} toko`);
       }
 
-      const totalRestored = pendingRestoreData.orders.length;
       setPendingRestoreData(null);
       setImportStatus({
         type: 'success',
-        message: `✓ Berhasil memulihkan ${totalRestored} catatan order!`
+        message: `✓ Berhasil memulihkan: ${restoredItems.join(' & ')}!`
       });
     } catch (err) {
       setImportStatus({
@@ -141,6 +216,8 @@ function MoreTab({
       });
     }
   };
+
+  const isRestoreButtonDisabled = !pendingRestoreData?.selectedTypes?.orders && !pendingRestoreData?.selectedTypes?.stores;
 
   return (
     <div className="space-y-4 animate-in fade-in duration-300 pb-10">
@@ -188,12 +265,12 @@ function MoreTab({
               Cadangan & Pemulihan Data
             </h3>
             <p className="text-[12px] text-zinc-500 mt-0.5">
-              Kelola arsip pesanan agar data tidak hilang saat berganti HP
+              Simpan & pulihkan data secara fleksibel per kategori
             </p>
           </div>
         </div>
 
-        {/* Ringkasan Status Data */}
+        {/* Ringkasan Status Data Terkini */}
         <div className="grid grid-cols-2 gap-2.5 pt-1">
           <div className="p-3.5 bg-zinc-50 rounded-2xl border border-zinc-100">
             <span className="text-[11.5px] text-zinc-500 font-medium block">Total Catatan Order</span>
@@ -206,13 +283,80 @@ function MoreTab({
             <span className="text-[11.5px] text-zinc-500 font-medium block">Total Toko Terdaftar</span>
             <span className="text-[20px] font-black text-zinc-900">{stores.length}</span>
             <span className="text-[11px] text-zinc-400 block mt-0.5">
-              Data Pelanggan
+              Data Master Toko & GPS
             </span>
           </div>
         </div>
 
+        {/* Pemilih Kategori Ekspor Cadangan */}
+        <div className="space-y-2.5 pt-2">
+          <label className="text-[12px] font-bold text-zinc-700 block">
+            Pilih Jenis Data yang Ingin Dicadangkan:
+          </label>
+          
+          <div className="grid grid-cols-3 gap-1.5 p-1 bg-zinc-100/80 rounded-2xl border border-zinc-200/60">
+            <button
+              type="button"
+              onClick={() => setExportCategory('all')}
+              className={`py-2 text-[12px] font-bold rounded-xl transition-all ${
+                exportCategory === 'all'
+                  ? 'bg-white text-zinc-900 shadow-xs'
+                  : 'text-zinc-600 hover:text-zinc-900'
+              }`}
+            >
+              Semua Data
+            </button>
+            <button
+              type="button"
+              onClick={() => setExportCategory('orders')}
+              className={`py-2 text-[12px] font-bold rounded-xl transition-all ${
+                exportCategory === 'orders'
+                  ? 'bg-white text-zinc-900 shadow-xs'
+                  : 'text-zinc-600 hover:text-zinc-900'
+              }`}
+            >
+              Order Saja
+            </button>
+            <button
+              type="button"
+              onClick={() => setExportCategory('stores')}
+              className={`py-2 text-[12px] font-bold rounded-xl transition-all ${
+                exportCategory === 'stores'
+                  ? 'bg-white text-zinc-900 shadow-xs'
+                  : 'text-zinc-600 hover:text-zinc-900'
+              }`}
+            >
+              Toko Saja
+            </button>
+          </div>
+
+          {/* Keterangan Kategori Ekspor */}
+          <div className="p-3 bg-orange-50/60 border border-orange-100 rounded-2xl text-[12px] text-orange-950 flex items-start gap-2.5">
+            <svg className="w-4 h-4 text-[#EA580C] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div className="leading-relaxed">
+              {exportCategory === 'all' && (
+                <span>
+                  <strong>Semua Data:</strong> Mencakup seluruh catatan pesanan ({orders.length} order) dan master pelanggan toko ({stores.length} toko beserta titik GPS). Cocok saat berpindah perangkat baru.
+                </span>
+              )}
+              {exportCategory === 'orders' && (
+                <span>
+                  <strong>Hanya Catatan Order:</strong> Mencakup riwayat pesanan aktif & arsip ({orders.length} order) tanpa mengubah data toko. Cocok untuk laporan harian atau arsip rutin.
+                </span>
+              )}
+              {exportCategory === 'stores' && (
+                <span>
+                  <strong>Hanya Data Toko & GPS:</strong> Mencakup daftar pelanggan ({stores.length} toko) dan titik koordinat GPS tersimpan. Cocok untuk berbagi data rute ke sales lain tanpa membagikan riwayat pesanan.
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Tombol Ekspor Cadangan */}
-        <div className="space-y-2 pt-2">
+        <div className="space-y-2 pt-1">
           <div className="flex gap-2">
             <button
               type="button"
@@ -302,43 +446,116 @@ function MoreTab({
 
       </div>
 
-      {/* Dialog Konfirmasi Pulihkan Data */}
+      {/* Dialog Konfirmasi Pulihkan Data Selektif */}
       {pendingRestoreData && (
         <div className="fixed inset-0 z-60 bg-zinc-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
           <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-100 animate-in zoom-in-95 duration-150 space-y-4">
             
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-100 text-[#EA580C] flex items-center justify-center mx-auto">
               <svg className="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
               </svg>
             </div>
 
             <div className="text-center">
               <h3 className="text-[17px] font-bold text-zinc-900 mb-1">
-                Konfirmasi Pulihkan Data?
+                Pilih Data yang Akan Dipulihkan
               </h3>
-              <p className="text-[12.5px] text-zinc-500 leading-relaxed">
-                Data saat ini akan digantikan dengan data dari file cadangan:
+              <p className="text-[12px] text-zinc-500 leading-relaxed">
+                File dibuat pada: <span className="font-semibold text-zinc-700">{pendingRestoreData.exportedAt}</span>
               </p>
             </div>
 
-            <div className="bg-zinc-50 p-3 rounded-2xl border border-zinc-100 text-[12.5px] space-y-1.5">
-              <div className="flex justify-between">
-                <span className="text-zinc-500">Jumlah Order:</span>
-                <span className="font-bold text-zinc-900">{pendingRestoreData.orders?.length || 0} order</span>
-              </div>
-              {pendingRestoreData.stores && (
-                <div className="flex justify-between">
-                  <span className="text-zinc-500">Data Toko:</span>
-                  <span className="font-bold text-zinc-900">{pendingRestoreData.stores?.length} toko</span>
+            {/* Pilihan Checkbox Selektif */}
+            <div className="space-y-2">
+              
+              {/* Checkbox Order */}
+              {pendingRestoreData.orders !== null ? (
+                <button
+                  type="button"
+                  onClick={() => toggleRestoreType('orders')}
+                  className={`w-full p-3.5 rounded-2xl border text-left transition-all flex items-center gap-3 ${
+                    pendingRestoreData.selectedTypes.orders
+                      ? 'bg-orange-50/60 border-orange-300 ring-1 ring-orange-200'
+                      : 'bg-zinc-50 border-zinc-200 opacity-60'
+                  }`}
+                >
+                  <div className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                    pendingRestoreData.selectedTypes.orders
+                      ? 'bg-[#EA580C] border-[#EA580C] text-white'
+                      : 'border-zinc-300 bg-white'
+                  }`}>
+                    {pendingRestoreData.selectedTypes.orders && (
+                      <svg className="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[13px] font-bold text-zinc-900">Catatan Order</span>
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800">
+                        {pendingRestoreData.orders.length} pesanan
+                      </span>
+                    </div>
+                    <p className="text-[11.5px] text-zinc-500 mt-0.5">
+                      Pulihkan riwayat pesanan aktif & arsip
+                    </p>
+                  </div>
+                </button>
+              ) : (
+                <div className="p-3 rounded-2xl bg-zinc-50 border border-zinc-200/60 text-[12px] text-zinc-400 italic">
+                  File ini tidak memuat data catatan order
                 </div>
               )}
-              <div className="flex justify-between">
-                <span className="text-zinc-500">Tanggal Cadangan:</span>
-                <span className="font-semibold text-zinc-700">{pendingRestoreData.exportedAt}</span>
-              </div>
+
+              {/* Checkbox Toko */}
+              {pendingRestoreData.stores !== null ? (
+                <button
+                  type="button"
+                  onClick={() => toggleRestoreType('stores')}
+                  className={`w-full p-3.5 rounded-2xl border text-left transition-all flex items-center gap-3 ${
+                    pendingRestoreData.selectedTypes.stores
+                      ? 'bg-orange-50/60 border-orange-300 ring-1 ring-orange-200'
+                      : 'bg-zinc-50 border-zinc-200 opacity-60'
+                  }`}
+                >
+                  <div className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                    pendingRestoreData.selectedTypes.stores
+                      ? 'bg-[#EA580C] border-[#EA580C] text-white'
+                      : 'border-zinc-300 bg-white'
+                  }`}>
+                    {pendingRestoreData.selectedTypes.stores && (
+                      <svg className="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[13px] font-bold text-zinc-900">Data Toko & Titik GPS</span>
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800">
+                        {pendingRestoreData.stores.length} toko
+                      </span>
+                    </div>
+                    <p className="text-[11.5px] text-zinc-500 mt-0.5">
+                      Pulihkan master toko & lokasi rute pelanggan
+                    </p>
+                  </div>
+                </button>
+              ) : (
+                <div className="p-3 rounded-2xl bg-zinc-50 border border-zinc-200/60 text-[12px] text-zinc-400 italic">
+                  File ini tidak memuat data master toko
+                </div>
+              )}
+
             </div>
 
+            <p className="text-[11px] text-zinc-400 text-center leading-normal">
+              * Data yang tidak dicentang tidak akan diganti atau ditimpa
+            </p>
+
+            {/* Aksi Tombol */}
             <div className="flex gap-2 pt-1">
               <button
                 type="button"
@@ -349,13 +566,18 @@ function MoreTab({
               </button>
               <button
                 type="button"
+                disabled={isRestoreButtonDisabled}
                 onClick={handleConfirmRestore}
-                className="flex-1 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-[13px] rounded-xl transition-all shadow-xs active:scale-95 flex items-center justify-center gap-1.5"
+                className={`flex-1 py-2.5 text-white font-semibold text-[13px] rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 ${
+                  isRestoreButtonDisabled
+                    ? 'bg-zinc-300 cursor-not-allowed text-zinc-500'
+                    : 'bg-[#EA580C] hover:bg-orange-700 active:scale-95'
+                }`}
               >
-                <svg className="w-4 h-4 text-emerald-400 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Ya, Pulihkan</span>
+                <span>Pulihkan Sekarang</span>
               </button>
             </div>
 
