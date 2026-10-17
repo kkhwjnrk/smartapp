@@ -332,18 +332,22 @@ function MoreTab({
       <button
         type="button"
         onClick={() => setActiveSubView('visits')}
-        className="w-full bg-white p-4.5 rounded-3xl border border-zinc-200/90 shadow-xs hover:border-zinc-300 hover:shadow-md transition-all active:scale-[0.99] text-left flex items-center justify-between gap-3 group"
+        className="w-full bg-white p-4.5 sm:p-5 rounded-3xl border border-zinc-200/90 shadow-xs hover:border-orange-300 hover:shadow-sm transition-all active:scale-[0.99] text-left flex items-center justify-between gap-3 group"
       >
-        <div className="flex items-center gap-3.5 min-w-0">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#EA580C] to-amber-600 text-white flex items-center justify-center font-bold text-[22px] shadow-sm shrink-0 group-hover:scale-105 transition-transform">
-            🎯
+        <div className="flex items-center gap-3.5 min-w-0 flex-1">
+          {/* Ikon Menu Navigasi */}
+          <div className="w-11 h-11 rounded-2xl bg-orange-50 text-[#EA580C] border border-orange-100 flex items-center justify-center shrink-0 group-hover:bg-[#EA580C] group-hover:text-white transition-all shadow-2xs">
+            <svg className="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
           </div>
-          <div className="min-w-0">
+
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <h3 className="text-[15px] font-bold text-zinc-900 group-hover:text-[#EA580C] transition-colors truncate">
                 Target & Jadwal Kunjungan
               </h3>
-              <span className="text-[9.5px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.2 rounded-md shrink-0">
+              <span className="text-[9.5px] font-bold bg-blue-50 text-blue-700 border border-blue-200/70 px-1.5 py-0.2 rounded-md shrink-0">
                 Sadix
               </span>
             </div>
@@ -351,11 +355,10 @@ function MoreTab({
               Buka rekap harian min. 12 & jadwal rute 2x/bulan
             </p>
             <div className="flex items-center gap-2 mt-2 flex-wrap">
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                todayVisitCount >= 12
-                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                  : 'bg-orange-50 text-orange-700 border border-orange-200'
-              }`}>
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${todayVisitCount >= 12
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : 'bg-orange-50 text-orange-700 border border-orange-200'
+                }`}>
                 Hari Ini: {todayVisitCount}/12 Toko
               </span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 border border-zinc-200/80">
@@ -594,238 +597,242 @@ function MoreTab({
       </div>
 
       {/* MODAL DIALOG KONFIRMASI PEMULIHAN PINTAR (SMART SELECTIVE RESTORE) */}
-      {pendingRestoreData && (
-        <div className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-100 animate-in zoom-in-95 duration-200 space-y-4 max-h-[90vh] overflow-y-auto">
+      {
+        pendingRestoreData && (
+          <div className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+            <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-100 animate-in zoom-in-95 duration-200 space-y-4 max-h-[90vh] overflow-y-auto">
 
-            {/* Header Modal */}
-            <div className="text-center">
-              <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-100 text-[#EA580C] flex items-center justify-center mx-auto mb-2">
-                <svg className="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                </svg>
+              {/* Header Modal */}
+              <div className="text-center">
+                <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-100 text-[#EA580C] flex items-center justify-center mx-auto mb-2">
+                  <svg className="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  </svg>
+                </div>
+                <h3 className="text-[17px] font-bold text-zinc-900">
+                  Pilih Data yang Akan Dipulihkan
+                </h3>
+                <p className="text-[12px] text-zinc-500 mt-1">
+                  File: <span className="font-semibold text-zinc-700">{pendingRestoreData.fileName}</span>
+                </p>
+                <p className="text-[11px] text-zinc-400">
+                  Waktu ekspor: {pendingRestoreData.exportedAt}
+                </p>
               </div>
-              <h3 className="text-[17px] font-bold text-zinc-900">
-                Pilih Data yang Akan Dipulihkan
-              </h3>
-              <p className="text-[12px] text-zinc-500 mt-1">
-                File: <span className="font-semibold text-zinc-700">{pendingRestoreData.fileName}</span>
-              </p>
-              <p className="text-[11px] text-zinc-400">
-                Waktu ekspor: {pendingRestoreData.exportedAt}
-              </p>
-            </div>
 
-            {/* Checkbox Pilihan Data yang Ingin Dipulihkan */}
-            <div className="space-y-2.5">
-              <span className="text-[11.5px] font-bold text-zinc-700 block uppercase tracking-wider">
-                Centang data yang ingin dipulihkan:
-              </span>
+              {/* Checkbox Pilihan Data yang Ingin Dipulihkan */}
+              <div className="space-y-2.5">
+                <span className="text-[11.5px] font-bold text-zinc-700 block uppercase tracking-wider">
+                  Centang data yang ingin dipulihkan:
+                </span>
 
-              {/* Opsi 1: Data Order */}
-              <label className={`p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${!pendingRestoreData.hasOrders
-                ? 'bg-zinc-50 border-zinc-200 opacity-60 cursor-not-allowed'
-                : restoreOrdersChecked
-                  ? 'bg-orange-50/70 border-orange-300 ring-1 ring-orange-200'
-                  : 'bg-white border-zinc-200 hover:bg-zinc-50'
-                }`}>
-                <input
-                  type="checkbox"
-                  disabled={!pendingRestoreData.hasOrders}
-                  checked={restoreOrdersChecked && pendingRestoreData.hasOrders}
-                  onChange={(e) => setRestoreOrdersChecked(e.target.checked)}
-                  className="mt-1 w-4 h-4 text-orange-600 rounded-md border-zinc-300 focus:ring-orange-500 shrink-0"
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-[13px] font-bold text-zinc-900">
-                      Data Order & Riwayat Pesanan
-                    </span>
-                    {pendingRestoreData.hasOrders ? (
-                      <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] font-bold rounded-full">
-                        {pendingRestoreData.orders.length} Order
+                {/* Opsi 1: Data Order */}
+                <label className={`p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${!pendingRestoreData.hasOrders
+                  ? 'bg-zinc-50 border-zinc-200 opacity-60 cursor-not-allowed'
+                  : restoreOrdersChecked
+                    ? 'bg-orange-50/70 border-orange-300 ring-1 ring-orange-200'
+                    : 'bg-white border-zinc-200 hover:bg-zinc-50'
+                  }`}>
+                  <input
+                    type="checkbox"
+                    disabled={!pendingRestoreData.hasOrders}
+                    checked={restoreOrdersChecked && pendingRestoreData.hasOrders}
+                    onChange={(e) => setRestoreOrdersChecked(e.target.checked)}
+                    className="mt-1 w-4 h-4 text-orange-600 rounded-md border-zinc-300 focus:ring-orange-500 shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-[13px] font-bold text-zinc-900">
+                        Data Order & Riwayat Pesanan
                       </span>
-                    ) : (
-                      <span className="text-[10px] text-zinc-400 font-medium">
-                        Tidak ada di file
-                      </span>
+                      {pendingRestoreData.hasOrders ? (
+                        <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] font-bold rounded-full">
+                          {pendingRestoreData.orders.length} Order
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-zinc-400 font-medium">
+                          Tidak ada di file
+                        </span>
+                      )}
+                    </div>
+                    {pendingRestoreData.hasOrders && (
+                      <div className="text-[11.5px] text-zinc-500 mt-1 leading-snug">
+                        Di file: {pendingRestoreData.orders.filter(o => o.status === 'pending').length} aktif, {pendingRestoreData.orders.filter(o => o.status === 'completed').length} selesai
+                        <span className="text-zinc-400 block mt-0.5">
+                          (Saat ini di HP Anda: {orders.length} order)
+                        </span>
+                      </div>
                     )}
                   </div>
-                  {pendingRestoreData.hasOrders && (
-                    <div className="text-[11.5px] text-zinc-500 mt-1 leading-snug">
-                      Di file: {pendingRestoreData.orders.filter(o => o.status === 'pending').length} aktif, {pendingRestoreData.orders.filter(o => o.status === 'completed').length} selesai
-                      <span className="text-zinc-400 block mt-0.5">
-                        (Saat ini di HP Anda: {orders.length} order)
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </label>
+                </label>
 
-              {/* Opsi 2: Data Toko & GPS */}
-              <label className={`p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${!pendingRestoreData.hasStores
-                ? 'bg-zinc-50 border-zinc-200 opacity-60 cursor-not-allowed'
-                : restoreStoresChecked
-                  ? 'bg-orange-50/70 border-orange-300 ring-1 ring-orange-200'
-                  : 'bg-white border-zinc-200 hover:bg-zinc-50'
-                }`}>
-                <input
-                  type="checkbox"
-                  disabled={!pendingRestoreData.hasStores}
-                  checked={restoreStoresChecked && pendingRestoreData.hasStores}
-                  onChange={(e) => setRestoreStoresChecked(e.target.checked)}
-                  className="mt-1 w-4 h-4 text-orange-600 rounded-md border-zinc-300 focus:ring-orange-500 shrink-0"
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-[13px] font-bold text-zinc-900">
-                      Data Toko & Titik GPS
-                    </span>
-                    {pendingRestoreData.hasStores ? (
-                      <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">
-                        {pendingRestoreData.stores.length} Toko
+                {/* Opsi 2: Data Toko & GPS */}
+                <label className={`p-3.5 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${!pendingRestoreData.hasStores
+                  ? 'bg-zinc-50 border-zinc-200 opacity-60 cursor-not-allowed'
+                  : restoreStoresChecked
+                    ? 'bg-orange-50/70 border-orange-300 ring-1 ring-orange-200'
+                    : 'bg-white border-zinc-200 hover:bg-zinc-50'
+                  }`}>
+                  <input
+                    type="checkbox"
+                    disabled={!pendingRestoreData.hasStores}
+                    checked={restoreStoresChecked && pendingRestoreData.hasStores}
+                    onChange={(e) => setRestoreStoresChecked(e.target.checked)}
+                    className="mt-1 w-4 h-4 text-orange-600 rounded-md border-zinc-300 focus:ring-orange-500 shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-[13px] font-bold text-zinc-900">
+                        Data Toko & Titik GPS
                       </span>
-                    ) : (
-                      <span className="text-[10px] text-zinc-400 font-medium">
-                        Tidak ada di file
-                      </span>
+                      {pendingRestoreData.hasStores ? (
+                        <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">
+                          {pendingRestoreData.stores.length} Toko
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-zinc-400 font-medium">
+                          Tidak ada di file
+                        </span>
+                      )}
+                    </div>
+                    {pendingRestoreData.hasStores && (
+                      <div className="text-[11.5px] text-zinc-500 mt-1 leading-snug">
+                        Termasuk titik koordinat GPS & nomor pelanggan
+                        <span className="text-zinc-400 block mt-0.5">
+                          (Saat ini di HP Anda: {stores.length} toko, {storesWithGpsCount} ada GPS)
+                        </span>
+                      </div>
                     )}
                   </div>
-                  {pendingRestoreData.hasStores && (
-                    <div className="text-[11.5px] text-zinc-500 mt-1 leading-snug">
-                      Termasuk titik koordinat GPS & nomor pelanggan
-                      <span className="text-zinc-400 block mt-0.5">
-                        (Saat ini di HP Anda: {stores.length} toko, {storesWithGpsCount} ada GPS)
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </label>
+                </label>
+
+              </div>
+
+              {/* Tips Keamanan Koordinat GPS */}
+              <div className="p-3 bg-amber-50/90 rounded-2xl border border-amber-200/80 text-[11.5px] text-amber-900 leading-snug">
+                <span className="font-bold block mb-0.5">💡 Tips Aman:</span>
+                Jika Anda hanya ingin memperbarui riwayat pesanan tanpa mengubah titik GPS toko yang sudah Anda catat di HP saat ini, hilangkan centang pada <b>Data Toko & Titik GPS</b>.
+              </div>
+
+              {/* Tombol Aksi */}
+              <div className="flex gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setPendingRestoreData(null)}
+                  className="flex-1 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold text-[13px] rounded-2xl transition-colors"
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  disabled={(!restoreOrdersChecked || !pendingRestoreData.hasOrders) && (!restoreStoresChecked || !pendingRestoreData.hasStores)}
+                  onClick={handleConfirmRestore}
+                  className="flex-1 py-3 bg-zinc-900 hover:bg-zinc-800 disabled:bg-zinc-300 disabled:cursor-not-allowed text-white font-bold text-[13px] rounded-2xl transition-all shadow-sm active:scale-95 flex items-center justify-center gap-1.5"
+                >
+                  <svg className="w-4 h-4 text-emerald-400 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Pulihkan Terpilih</span>
+                </button>
+              </div>
 
             </div>
-
-            {/* Tips Keamanan Koordinat GPS */}
-            <div className="p-3 bg-amber-50/90 rounded-2xl border border-amber-200/80 text-[11.5px] text-amber-900 leading-snug">
-              <span className="font-bold block mb-0.5">💡 Tips Aman:</span>
-              Jika Anda hanya ingin memperbarui riwayat pesanan tanpa mengubah titik GPS toko yang sudah Anda catat di HP saat ini, hilangkan centang pada <b>Data Toko & Titik GPS</b>.
-            </div>
-
-            {/* Tombol Aksi */}
-            <div className="flex gap-2 pt-1">
-              <button
-                type="button"
-                onClick={() => setPendingRestoreData(null)}
-                className="flex-1 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold text-[13px] rounded-2xl transition-colors"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                disabled={(!restoreOrdersChecked || !pendingRestoreData.hasOrders) && (!restoreStoresChecked || !pendingRestoreData.hasStores)}
-                onClick={handleConfirmRestore}
-                className="flex-1 py-3 bg-zinc-900 hover:bg-zinc-800 disabled:bg-zinc-300 disabled:cursor-not-allowed text-white font-bold text-[13px] rounded-2xl transition-all shadow-sm active:scale-95 flex items-center justify-center gap-1.5"
-              >
-                <svg className="w-4 h-4 text-emerald-400 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Pulihkan Terpilih</span>
-              </button>
-            </div>
-
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* MODAL DIALOG KONFIRMASI UNDUH CADANGAN */}
-      {pendingExportType && (
-        <div
-          onClick={(e) => { if (e.target === e.currentTarget) setPendingExportType(null); }}
-          className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
-        >
-          <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-100 animate-in zoom-in-95 duration-200 space-y-4">
+      {
+        pendingExportType && (
+          <div
+            onClick={(e) => { if (e.target === e.currentTarget) setPendingExportType(null); }}
+            className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+          >
+            <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-100 animate-in zoom-in-95 duration-200 space-y-4">
 
-            {/* Header Modal */}
-            <div className="text-center">
-              <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-100 text-[#EA580C] flex items-center justify-center mx-auto mb-2">
-                <svg className="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-              </div>
-              <h3 className="text-[17px] font-bold text-zinc-900">
-                Konfirmasi Unduh Cadangan
-              </h3>
-              <p className="text-[12px] text-zinc-500 mt-1 leading-snug">
-                File cadangan akan diunduh ke memori perangkat ini:
-              </p>
-            </div>
-
-            {/* Rincian Data yang Akan Diunduh */}
-            <div className="p-3.5 bg-zinc-50/90 rounded-2xl border border-zinc-200/80 space-y-2 text-[12.5px]">
-              <div className="flex justify-between items-center pb-2 border-b border-zinc-200/60">
-                <span className="text-zinc-500">Tipe Cadangan:</span>
-                <span className="font-bold text-zinc-900">
-                  {pendingExportType === 'orders'
-                    ? 'Hanya Data Order'
-                    : pendingExportType === 'stores'
-                      ? 'Hanya Toko & GPS'
-                      : 'Semua Data (Lengkap)'}
-                </span>
+              {/* Header Modal */}
+              <div className="text-center">
+                <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-100 text-[#EA580C] flex items-center justify-center mx-auto mb-2">
+                  <svg className="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                </div>
+                <h3 className="text-[17px] font-bold text-zinc-900">
+                  Konfirmasi Unduh Cadangan
+                </h3>
+                <p className="text-[12px] text-zinc-500 mt-1 leading-snug">
+                  File cadangan akan diunduh ke memori perangkat ini:
+                </p>
               </div>
 
-              {(pendingExportType === 'all' || pendingExportType === 'orders') && (
-                <div className="flex justify-between items-center">
-                  <span className="text-zinc-500">Catatan Order:</span>
-                  <span className="font-semibold text-zinc-800">
-                    {orders.length} order ({pendingOrdersCount} aktif, {completedOrdersCount} arsip)
+              {/* Rincian Data yang Akan Diunduh */}
+              <div className="p-3.5 bg-zinc-50/90 rounded-2xl border border-zinc-200/80 space-y-2 text-[12.5px]">
+                <div className="flex justify-between items-center pb-2 border-b border-zinc-200/60">
+                  <span className="text-zinc-500">Tipe Cadangan:</span>
+                  <span className="font-bold text-zinc-900">
+                    {pendingExportType === 'orders'
+                      ? 'Hanya Data Order'
+                      : pendingExportType === 'stores'
+                        ? 'Hanya Toko & GPS'
+                        : 'Semua Data (Lengkap)'}
                   </span>
                 </div>
-              )}
 
-              {(pendingExportType === 'all' || pendingExportType === 'stores') && (
-                <div className="flex justify-between items-center">
-                  <span className="text-zinc-500">Data Toko & GPS:</span>
-                  <span className="font-semibold text-zinc-800">
-                    {stores.length} toko ({storesWithGpsCount} ada GPS)
-                  </span>
+                {(pendingExportType === 'all' || pendingExportType === 'orders') && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-zinc-500">Catatan Order:</span>
+                    <span className="font-semibold text-zinc-800">
+                      {orders.length} order ({pendingOrdersCount} aktif, {completedOrdersCount} arsip)
+                    </span>
+                  </div>
+                )}
+
+                {(pendingExportType === 'all' || pendingExportType === 'stores') && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-zinc-500">Data Toko & GPS:</span>
+                    <span className="font-semibold text-zinc-800">
+                      {stores.length} toko ({storesWithGpsCount} ada GPS)
+                    </span>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-center pt-2 border-t border-zinc-200/60 text-[11px] text-zinc-400">
+                  <span>Format File:</span>
+                  <span className="font-mono text-zinc-600 font-medium">.json</span>
                 </div>
-              )}
-
-              <div className="flex justify-between items-center pt-2 border-t border-zinc-200/60 text-[11px] text-zinc-400">
-                <span>Format File:</span>
-                <span className="font-mono text-zinc-600 font-medium">.json</span>
               </div>
-            </div>
 
-            {/* Tombol Aksi */}
-            <div className="flex gap-2 pt-1">
-              <button
-                type="button"
-                onClick={() => setPendingExportType(null)}
-                className="flex-1 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold text-[13px] rounded-2xl transition-colors"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const type = pendingExportType;
-                  setPendingExportType(null);
-                  handleExportBackup(type);
-                }}
-                className="flex-1 py-3 bg-[#EA580C] hover:bg-orange-700 active:scale-95 text-white font-bold text-[13px] rounded-2xl transition-all shadow-sm flex items-center justify-center gap-1.5"
-              >
-                <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                <span>Ya, Unduh File</span>
-              </button>
-            </div>
+              {/* Tombol Aksi */}
+              <div className="flex gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setPendingExportType(null)}
+                  className="flex-1 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold text-[13px] rounded-2xl transition-colors"
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const type = pendingExportType;
+                    setPendingExportType(null);
+                    handleExportBackup(type);
+                  }}
+                  className="flex-1 py-3 bg-[#EA580C] hover:bg-orange-700 active:scale-95 text-white font-bold text-[13px] rounded-2xl transition-all shadow-sm flex items-center justify-center gap-1.5"
+                >
+                  <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span>Ya, Unduh File</span>
+                </button>
+              </div>
 
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
-    </div>
+    </div >
   );
 }
 

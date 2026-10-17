@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
-import { 
-  getDailyVisitCount, 
-  getMonthlyVisitStats, 
-  getStoreVisitsForMonth, 
-  getStoreVisitStatus, 
-  isStoreMatch 
+import {
+  getDailyVisitCount,
+  getMonthlyVisitStats,
+  getStoreVisitsForMonth,
+  getStoreVisitStatus,
+  isStoreMatch
 } from '../../utils/visitUtils';
 
 function VisitsManagementView({
@@ -44,8 +44,8 @@ function VisitsManagementView({
       if (visitSearchQuery.trim()) {
         const q = visitSearchQuery.toLowerCase();
         const match = (store.name && store.name.toLowerCase().includes(q)) ||
-                      (store.customerId && store.customerId.toLowerCase().includes(q)) ||
-                      (store.routeCode && store.routeCode.toLowerCase().includes(q));
+          (store.customerId && store.customerId.toLowerCase().includes(q)) ||
+          (store.routeCode && store.routeCode.toLowerCase().includes(q));
         if (!match) return false;
       }
 
@@ -60,18 +60,10 @@ function VisitsManagementView({
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      
+
       {/* HEADER NAVIGASI HALAMAN TERSENDIRI */}
       <div className="bg-white p-4 rounded-3xl border border-zinc-200/90 shadow-xs flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
-          <button
-            type="button"
-            onClick={onBack}
-            className="w-9 h-9 rounded-2xl bg-zinc-100 hover:bg-zinc-200 active:scale-95 text-zinc-800 flex items-center justify-center font-bold text-[18px] transition-all shrink-0 shadow-2xs"
-            title="Kembali ke Menu Lainnya"
-          >
-            ←
-          </button>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
               <h2 className="text-[16px] font-black text-zinc-900 leading-tight truncate">
@@ -90,9 +82,12 @@ function VisitsManagementView({
         <button
           type="button"
           onClick={onBack}
-          className="text-[12px] font-bold text-zinc-600 hover:text-zinc-900 px-2.5 py-1.5 bg-zinc-100 hover:bg-zinc-200 rounded-xl transition-colors shrink-0"
+          className="flex items-center gap-1.5 text-[12px] font-bold text-zinc-700 hover:text-zinc-900 px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 rounded-xl transition-all active:scale-95 shrink-0"
         >
-          Kembali
+          <svg className="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span>Kembali</span>
         </button>
       </div>
 
@@ -104,11 +99,10 @@ function VisitsManagementView({
             <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
               Hari Ini
             </span>
-            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
-              todayVisitCount >= 12 
-                ? 'bg-emerald-100 text-emerald-800' 
-                : 'bg-orange-100 text-orange-800'
-            }`}>
+            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${todayVisitCount >= 12
+              ? 'bg-emerald-100 text-emerald-800'
+              : 'bg-orange-100 text-orange-800'
+              }`}>
               {todayVisitCount >= 12 ? '✓ Tercapai' : 'Target 12'}
             </span>
           </div>
@@ -118,8 +112,8 @@ function VisitsManagementView({
               <span className="text-[13px] font-bold text-zinc-500">/ 12 Toko</span>
             </div>
             <p className="text-[11px] text-zinc-500 mt-1.5">
-              {todayVisitCount >= 12 
-                ? 'Target minimal 12 toko terpenuhi! 🎉' 
+              {todayVisitCount >= 12
+                ? 'Target minimal 12 toko terpenuhi! 🎉'
                 : `Masih kurang ${12 - todayVisitCount} toko lagi`}
             </p>
           </div>
@@ -141,7 +135,7 @@ function VisitsManagementView({
               <span className="text-[13px] font-bold text-zinc-500">/ {monthlyStats.totalStores} Toko</span>
             </div>
             <div className="w-full h-2 bg-zinc-100 rounded-full mt-2 overflow-hidden border border-zinc-200/60">
-              <div 
+              <div
                 className="h-full bg-emerald-500 transition-all duration-500 rounded-full"
                 style={{ width: `${monthlyStats.completionPercent}%` }}
               />
@@ -203,7 +197,7 @@ function VisitsManagementView({
 
       {/* CARD 3: PANTAU & FILTER STATUS KUNJUNGAN SELURUH TOKO */}
       <div className="bg-white p-4.5 rounded-3xl border border-zinc-200/90 shadow-xs space-y-3">
-        
+
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-[14px] font-bold text-zinc-900 leading-tight">
@@ -218,57 +212,94 @@ function VisitsManagementView({
           </span>
         </div>
 
-        {/* Filter Chips Status Target 2x */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none pt-0.5">
+        {/* Filter Kartu Metrik Interaktif (Non-Pill, 4 Kolom) */}
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-2 pt-0.5">
+          {/* 1. Semua Toko */}
           <button
             type="button"
             onClick={() => setVisitStatusFilter('all')}
-            className={`px-3 py-1.5 rounded-xl text-[11.5px] font-bold whitespace-nowrap transition-all ${
-              visitStatusFilter === 'all'
-                ? 'bg-zinc-900 text-white shadow-xs'
-                : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-600'
-            }`}
+            className={`p-2 sm:p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center justify-between active:scale-95 ${visitStatusFilter === 'all'
+              ? 'bg-zinc-900 border-zinc-900 text-white shadow-xs ring-1 ring-zinc-900'
+              : 'bg-zinc-50 hover:bg-zinc-100 border-zinc-200/80 text-zinc-700'
+              }`}
           >
-            Semua ({stores.length})
+            <span className={`text-[17px] sm:text-[19px] font-black leading-none ${visitStatusFilter === 'all' ? 'text-white' : 'text-zinc-900'}`}>
+              {stores.length}
+            </span>
+            <div className="mt-1 w-full">
+              <span className="text-[10.5px] sm:text-[11px] font-bold block truncate leading-tight">
+                Semua
+              </span>
+              <span className={`text-[9px] block leading-tight mt-0.5 ${visitStatusFilter === 'all' ? 'text-zinc-300' : 'text-zinc-400'}`}>
+                Toko
+              </span>
+            </div>
           </button>
+
+          {/* 2. Belum Dikunjungi (0/2) */}
           <button
             type="button"
             onClick={() => setVisitStatusFilter('unvisited')}
-            className={`px-3 py-1.5 rounded-xl text-[11.5px] font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-              visitStatusFilter === 'unvisited'
-                ? 'bg-red-600 text-white shadow-xs'
-                : 'bg-red-50 hover:bg-red-100 text-red-700 border border-red-200/70'
-            }`}
+            className={`p-2 sm:p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center justify-between active:scale-95 ${visitStatusFilter === 'unvisited'
+              ? 'bg-red-600 border-red-600 text-white shadow-xs ring-1 ring-red-600'
+              : 'bg-red-50/60 hover:bg-red-50 border-red-200/70 text-red-800'
+              }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-            <span>Belum (0/2)</span>
-            <span className="opacity-75">({monthlyStats.unvisitedCount})</span>
+            <span className={`text-[17px] sm:text-[19px] font-black leading-none ${visitStatusFilter === 'unvisited' ? 'text-white' : 'text-red-600'}`}>
+              {monthlyStats.unvisitedCount}
+            </span>
+            <div className="mt-1 w-full">
+              <span className="text-[10.5px] sm:text-[11px] font-bold block truncate leading-tight">
+                Belum
+              </span>
+              <span className={`text-[9px] block leading-tight mt-0.5 ${visitStatusFilter === 'unvisited' ? 'text-red-100' : 'text-red-500'}`}>
+                0/2 Kunj.
+              </span>
+            </div>
           </button>
+
+          {/* 3. Kurang 1x (1/2) */}
           <button
             type="button"
             onClick={() => setVisitStatusFilter('partial')}
-            className={`px-3 py-1.5 rounded-xl text-[11.5px] font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-              visitStatusFilter === 'partial'
-                ? 'bg-amber-600 text-white shadow-xs'
-                : 'bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200/70'
-            }`}
+            className={`p-2 sm:p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center justify-between active:scale-95 ${visitStatusFilter === 'partial'
+              ? 'bg-amber-600 border-amber-600 text-white shadow-xs ring-1 ring-amber-600'
+              : 'bg-amber-50/60 hover:bg-amber-50 border-amber-200/70 text-amber-800'
+              }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-            <span>Kurang 1x (1/2)</span>
-            <span className="opacity-75">({monthlyStats.partialCount})</span>
+            <span className={`text-[17px] sm:text-[19px] font-black leading-none ${visitStatusFilter === 'partial' ? 'text-white' : 'text-amber-600'}`}>
+              {monthlyStats.partialCount}
+            </span>
+            <div className="mt-1 w-full">
+              <span className="text-[10.5px] sm:text-[11px] font-bold block truncate leading-tight">
+                Kurang
+              </span>
+              <span className={`text-[9px] block leading-tight mt-0.5 ${visitStatusFilter === 'partial' ? 'text-amber-100' : 'text-amber-600'}`}>
+                1/2 Kunj.
+              </span>
+            </div>
           </button>
+
+          {/* 4. Target 2x Selesai */}
           <button
             type="button"
             onClick={() => setVisitStatusFilter('completed')}
-            className={`px-3 py-1.5 rounded-xl text-[11.5px] font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-              visitStatusFilter === 'completed'
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/70'
-            }`}
+            className={`p-2 sm:p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center justify-between active:scale-95 ${visitStatusFilter === 'completed'
+              ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs ring-1 ring-emerald-600'
+              : 'bg-emerald-50/60 hover:bg-emerald-50 border-emerald-200/70 text-emerald-800'
+              }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            <span>Target 2x Selesai</span>
-            <span className="opacity-75">({monthlyStats.completedCount})</span>
+            <span className={`text-[17px] sm:text-[19px] font-black leading-none ${visitStatusFilter === 'completed' ? 'text-white' : 'text-emerald-600'}`}>
+              {monthlyStats.completedCount}
+            </span>
+            <div className="mt-1 w-full">
+              <span className="text-[10.5px] sm:text-[11px] font-bold block truncate leading-tight">
+                Selesai
+              </span>
+              <span className={`text-[9px] block leading-tight mt-0.5 ${visitStatusFilter === 'completed' ? 'text-emerald-100' : 'text-emerald-600'}`}>
+                Target 2x ✓
+              </span>
+            </div>
           </button>
         </div>
 
@@ -344,11 +375,10 @@ function VisitsManagementView({
                     <button
                       type="button"
                       onClick={() => onToggleVisitToday?.(store)}
-                      className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all active:scale-95 border ${
-                        isVisitedToday
-                          ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
-                          : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 shadow-2xs'
-                      }`}
+                      className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all active:scale-95 border ${isVisitedToday
+                        ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
+                        : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 shadow-2xs'
+                        }`}
                       title={isVisitedToday ? 'Batalkan tanda kunjungan hari ini' : 'Tandai kunjungan hari ini'}
                     >
                       {isVisitedToday ? '✓ Dikunjungi' : '+ Kunjungan'}
