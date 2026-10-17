@@ -180,13 +180,10 @@ function VisitsManagementView({
             <span className="w-8 h-8 rounded-2xl bg-blue-50 text-blue-600 border border-blue-200/70 flex items-center justify-center font-bold text-[15px] shadow-sm group-hover:scale-105 transition-transform">
               📋
             </span>
-            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
-              SPV Sadix
-            </span>
           </div>
           <div>
             <p className="text-[13.5px] font-black text-zinc-900 leading-tight">
-              Buat Jadwal (Sadix)
+              Buat Jadwal
             </p>
             <p className="text-[11px] text-zinc-500 mt-0.5">
               Pilih 12 toko sejalur & salin list ringkas
@@ -196,7 +193,7 @@ function VisitsManagementView({
       </div>
 
       {/* CARD 3: PANTAU & FILTER STATUS KUNJUNGAN SELURUH TOKO */}
-      <div className="bg-white p-4.5 rounded-3xl border border-zinc-200/90 shadow-xs space-y-3">
+      <div className="bg-white p-4 rounded-3xl border border-zinc-200/90 shadow-xs space-y-3">
 
         <div className="flex items-center justify-between">
           <div>

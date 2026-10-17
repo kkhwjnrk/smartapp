@@ -2,6 +2,7 @@ import React, { useState, useRef, useMemo } from 'react';
 import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
 import { getDailyVisitCount, getMonthlyVisitStats } from '../../utils/visitUtils';
 import VisitsManagementView from './VisitsManagementView';
+import OrderTargetProgressCard from './OrderTargetProgressCard';
 
 function MoreTab({
   orders = [],
@@ -503,6 +504,12 @@ function MoreTab({
         </div>
 
       </div>
+
+      {/* KARTU PROGRES TARGET NOMINAL ORDER */}
+      <OrderTargetProgressCard
+        orders={orders}
+        catalogItems={items}
+      />
 
       {/* SECTION 2: INFORMASI SISTEM & KATALOG */}
       <div className="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-xs space-y-3">
