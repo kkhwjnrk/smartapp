@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { calculateDistanceKm, formatDistance, getNavigationUrl } from '../../utils/geoUtils';
+import { getNavigationUrl } from '../../utils/geoUtils';
 
 function StoresMap({
   filteredStores = [],
@@ -14,12 +14,8 @@ function StoresMap({
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersLayerRef = useRef(null);
-  const userMarkerRef = useRef(null);
 
   const [selectedStore, setSelectedStore] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
-  const [isLocating, setIsLocating] = useState(false);
-  const [locationError, setLocationError] = useState(null);
 
   // Ambil toko-toko yang memiliki koordinat GPS valid
   const storesWithGps = useMemo(() => {
@@ -140,74 +136,14 @@ function StoresMap({
     }
   }, [storesWithGps, selectedStore]);
 
-  // 3. Deteksi Lokasi Sales Lapangan (Live GPS)
-  const handleLocateMe = () => {
-    if (!navigator.geolocation) {
-      alert('Perangkat Anda tidak mendukung fitur lokasi GPS.');
-      return;
-    }
-
-    setIsLocating(true);
-    setLocationError(null);
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setIsLocating(false);
-        const { latitude, longitude, accuracy } = pos.coords;
-        setUserLocation({ lat: latitude, lng: longitude, accuracy });
-
-        const map = mapInstanceRef.current;
-        if (!map) return;
-
-        // Perbarui Marker Lokasi User (Titik biru pulsing)
-        if (userMarkerRef.current) {
-          map.removeLayer(userMarkerRef.current);
-        }
-
-        const userPin = L.divIcon({
-          className: 'user-location-pin',
-          html: `
-            <div style="transform: translate(-50%, -50%);" class="relative flex items-center justify-center w-7 h-7">
-              <div class="absolute w-7 h-7 bg-blue-500/30 rounded-full animate-ping"></div>
-              <div class="w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-md z-10"></div>
-            </div>
-          `,
-          iconSize: [0, 0]
-        });
-
-        const marker = L.marker([latitude, longitude], { icon: userPin }).addTo(map);
-        userMarkerRef.current = marker;
-
-        map.setView([latitude, longitude], 14, { animate: true });
-      },
-      (err) => {
-        setIsLocating(false);
-        let msg = 'Gagal mendeteksi lokasi GPS.';
-        if (err.code === 1) msg = 'Izin akses lokasi ditolak. Aktifkan izin lokasi di pengaturan browser.';
-        else if (err.code === 2) msg = 'Sinyal GPS tidak tersedia.';
-        else if (err.code === 3) msg = 'Waktu deteksi GPS habis.';
-        setLocationError(msg);
-        setTimeout(() => setLocationError(null), 4000);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 30000
-      }
-    );
+  // Kontrol Perbesar / Perkecil Peta
+  const handleZoomIn = () => {
+    mapInstanceRef.current?.zoomIn();
   };
 
-  // 4. Hitung Jarak Toko Terpilih ke Lokasi Sales
-  const distanceToSelected = useMemo(() => {
-    if (!userLocation || !selectedStore?.lat || !selectedStore?.lng) return null;
-    const km = calculateDistanceKm(
-      userLocation.lat,
-      userLocation.lng,
-      selectedStore.lat,
-      selectedStore.lng
-    );
-    return formatDistance(km);
-  }, [userLocation, selectedStore]);
+  const handleZoomOut = () => {
+    mapInstanceRef.current?.zoomOut();
+  };
 
   // Tombol Reset Zoom ke Seluruh Toko
   const handleFitAllStores = () => {
@@ -248,34 +184,15 @@ function StoresMap({
 
       </div>
 
-      {/* FLOATING BUTTONS: LOKASI SAYA & RESET VIEW (POJOK KANAN) */}
+      {/* FLOATING CONTROLS: PUSATKAN RUTE & ZOOM (POJOK KANAN) */}
       <div className="absolute right-3 top-16 z-10 flex flex-col gap-2">
-        
-        {/* Tombol Lokasi Saya (GPS) */}
-        <button
-          type="button"
-          onClick={handleLocateMe}
-          disabled={isLocating}
-          className="w-11 h-11 bg-white hover:bg-zinc-50 active:scale-90 rounded-2xl border border-zinc-200 shadow-md text-zinc-700 flex items-center justify-center transition-all disabled:opacity-50"
-          title="Pusatkan ke Posisi Saya"
-        >
-          {isLocating ? (
-            <div className="w-5 h-5 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-          ) : (
-            <svg className={`w-5 h-5 ${userLocation ? 'text-blue-600' : 'text-zinc-700'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              <circle cx="12" cy="12" r="3" strokeWidth="2"/>
-            </svg>
-          )}
-        </button>
-
-        {/* Tombol Fit Semua Pin */}
+        {/* Tombol Pusatkan Rute / Tampilkan Semua Toko */}
         {storesWithGps.length > 0 && (
           <button
             type="button"
             onClick={handleFitAllStores}
-            className="w-11 h-11 bg-white hover:bg-zinc-50 active:scale-90 rounded-2xl border border-zinc-200 shadow-md text-zinc-700 flex items-center justify-center transition-all"
-            title="Tampilkan Semua Toko"
+            className="w-11 h-11 bg-white/95 backdrop-blur-md hover:bg-white active:scale-90 rounded-2xl border border-zinc-200/90 shadow-md text-zinc-700 hover:text-[#EA580C] flex items-center justify-center transition-all"
+            title="Pusatkan Seluruh Toko / Rute"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
@@ -283,14 +200,30 @@ function StoresMap({
           </button>
         )}
 
-      </div>
-
-      {/* NOTIFIKASI ERROR LOKASI GPS */}
-      {locationError && (
-        <div className="absolute top-16 left-3 right-16 z-20 bg-red-600 text-white text-[12px] p-2.5 rounded-2xl shadow-lg animate-in fade-in">
-          {locationError}
+        {/* Group Kontrol Zoom In / Out Ramah Jempol */}
+        <div className="bg-white/95 backdrop-blur-md rounded-2xl border border-zinc-200/90 shadow-md flex flex-col overflow-hidden divide-y divide-zinc-100">
+          <button
+            type="button"
+            onClick={handleZoomIn}
+            className="w-11 h-11 hover:bg-zinc-50 active:scale-90 text-zinc-700 hover:text-zinc-900 flex items-center justify-center transition-all"
+            title="Perbesar Peta (+)"
+          >
+            <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={handleZoomOut}
+            className="w-11 h-11 hover:bg-zinc-50 active:scale-90 text-zinc-700 hover:text-zinc-900 flex items-center justify-center transition-all"
+            title="Perkecil Peta (-)"
+          >
+            <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" />
+            </svg>
+          </button>
         </div>
-      )}
+      </div>
 
       {/* BANNER JIKA TIDAK ADA TOKO BERKOORDINAT GPS */}
       {storesWithGps.length === 0 && (
@@ -333,12 +266,6 @@ function StoresMap({
                   <span className="px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-lg text-[10px] font-bold">
                     {selectedStore.routeCode || 'TANPA RUTE'}
                   </span>
-                  {distanceToSelected && (
-                    <span className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-[10px] font-bold flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-                      {distanceToSelected}
-                    </span>
-                  )}
                 </div>
 
                 <h3 className="font-bold text-[15px] text-zinc-900 truncate leading-snug">
