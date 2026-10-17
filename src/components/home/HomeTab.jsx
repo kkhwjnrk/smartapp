@@ -3,6 +3,22 @@ import { formatStoreCustomerHeader } from '../../utils/formatters';
 import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
 import { getDailyVisitCount, getMonthlyVisitStats } from '../../utils/visitUtils';
 
+const INDO_DAYS = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const INDO_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour >= 4 && hour < 11) return 'Selamat Pagi';
+  if (hour >= 11 && hour < 15) return 'Selamat Siang';
+  if (hour >= 15 && hour < 18) return 'Selamat Sore';
+  return 'Selamat Malam';
+}
+
+function getTodayFormattedText() {
+  const now = new Date();
+  return `${INDO_DAYS[now.getDay()]}, ${now.getDate()} ${INDO_MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+}
+
 function HomeTab({ 
   orders = [], 
   stores = [], 
@@ -24,28 +40,14 @@ function HomeTab({
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedStore, setCopiedStore] = useState('');
 
-  const todayIso = useMemo(() => getTodayIso(), []);
+  const [todayIso] = useState(getTodayIso);
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
   const todayVisitCount = useMemo(() => getDailyVisitCount(visits, todayIso), [visits, todayIso]);
   const monthlyStats = useMemo(() => getMonthlyVisitStats(stores, visits, currentMonthKey), [stores, visits, currentMonthKey]);
 
-
-  // Sapaan Waktu Otomatis
-  const greeting = useMemo(() => {
-    const hour = new Date().getHours();
-    if (hour >= 4 && hour < 11) return 'Selamat Pagi';
-    if (hour >= 11 && hour < 15) return 'Selamat Siang';
-    if (hour >= 15 && hour < 18) return 'Selamat Sore';
-    return 'Selamat Malam';
-  }, []);
-
-  // Format Tanggal Hari Ini (Indonesia)
-  const todayText = useMemo(() => {
-    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-    const now = new Date();
-    return `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-  }, []);
+  // Sapaan Waktu Otomatis & Tanggal Hari Ini
+  const [greeting] = useState(getGreeting);
+  const [todayText] = useState(getTodayFormattedText);
 
   // Order Aktif / Pending (Urut dari terlama dulu di atas)
   const pendingOrders = useMemo(() => {

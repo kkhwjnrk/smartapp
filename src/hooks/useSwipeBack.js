@@ -28,12 +28,9 @@ export function useSwipeBack({
   const isLockedOutRef = useRef(false);
   const currentDragXRef = useRef(0);
 
-  // Reset all states when unmounting or toggling enabled
+  // Clean up gesture tracking refs when disabled
   useEffect(() => {
     if (!enabled) {
-      setDragX(0);
-      setIsSwiping(false);
-      setIsExiting(false);
       isTrackingRef.current = false;
       isSwipingRef.current = false;
       isLockedOutRef.current = false;
@@ -60,7 +57,7 @@ export function useSwipeBack({
   }, [edgeWidth, enabled, isExiting]);
 
   const handleMove = useCallback((clientX, clientY, e) => {
-    if (!isTrackingRef.current || isLockedOutRef.current || isExiting) return;
+    if (!enabled || !isTrackingRef.current || isLockedOutRef.current || isExiting) return;
 
     const deltaX = clientX - startXRef.current;
     const deltaY = clientY - startYRef.current;
@@ -92,7 +89,7 @@ export function useSwipeBack({
       currentDragXRef.current = clampedX;
       setDragX(clampedX);
     }
-  }, [isExiting]);
+  }, [enabled, isExiting]);
 
   const handleEnd = useCallback(() => {
     if (!isTrackingRef.current && !isSwipingRef.current) return;
@@ -173,35 +170,40 @@ export function useSwipeBack({
     window.addEventListener('mouseup', onWindowMouseUp);
   }, [edgeWidth, enabled, isExiting, handleStart, handleMove, handleEnd]);
 
+  // Derived gesture states (pure, no cascading renders)
+  const effectiveDragX = enabled ? dragX : 0;
+  const effectiveIsSwiping = enabled ? isSwiping : false;
+  const effectiveIsExiting = enabled ? isExiting : false;
+
   // Dynamic transform and transition styles for the sliding page
   const containerStyle = {
-    transform: isExiting 
+    transform: effectiveIsExiting 
       ? 'translateX(100%)' 
-      : dragX > 0 
-        ? `translateX(${dragX}px)` 
+      : effectiveDragX > 0 
+        ? `translateX(${effectiveDragX}px)` 
         : undefined,
-    transition: isSwiping 
+    transition: effectiveIsSwiping 
       ? 'none' 
-      : isExiting 
+      : effectiveIsExiting 
         ? 'transform 0.22s cubic-bezier(0.32, 0.72, 0, 1)' 
-        : dragX === 0 
+        : effectiveDragX === 0 
           ? 'transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1)' 
           : undefined,
-    boxShadow: (dragX > 0 || isExiting) 
+    boxShadow: (effectiveDragX > 0 || effectiveIsExiting) 
       ? '-12px 0 28px rgba(0, 0, 0, 0.16)' 
       : undefined,
-    willChange: isSwiping ? 'transform' : undefined,
+    willChange: effectiveIsSwiping ? 'transform' : undefined,
   };
 
   const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
-  const dragProgress = Math.min(1, dragX / Math.min(threshold, screenWidth * 0.3));
-  const backdropOpacity = dragX > 0 ? Math.max(0.05, 1 - (dragX / screenWidth)) : 1;
+  const dragProgress = Math.min(1, effectiveDragX / Math.min(threshold, screenWidth * 0.3));
+  const backdropOpacity = effectiveDragX > 0 ? Math.max(0.05, 1 - (effectiveDragX / screenWidth)) : 1;
 
   return {
-    isSwiping,
-    dragX,
+    isSwiping: effectiveIsSwiping,
+    dragX: effectiveDragX,
     dragProgress,
-    isExiting,
+    isExiting: effectiveIsExiting,
     containerStyle,
     backdropOpacity,
     handlers: {

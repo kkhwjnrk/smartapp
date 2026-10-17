@@ -13,11 +13,19 @@ function OrderModal({
   onDelete,
   onClose
 }) {
-  const [storeName, setStoreName] = useState('');
-  const [customerId, setCustomerId] = useState('');
-  const [routeCode, setRouteCode] = useState('');
-  const [dateIso, setDateIso] = useState(getTodayIso());
-  const [orderItems, setOrderItems] = useState([]);
+  const [storeName, setStoreName] = useState(() => modalOrder?.storeName || '');
+  const [customerId, setCustomerId] = useState(() => {
+    if (modalOrder?.customerId) return modalOrder.customerId;
+    if (modalOrder?.storeName && Array.isArray(stores)) {
+      const cleanName = modalOrder.storeName.toLowerCase().trim();
+      const matched = stores.find(s => s.name?.toLowerCase().trim() === cleanName);
+      if (matched?.customerId) return matched.customerId;
+    }
+    return '';
+  });
+  const [routeCode, setRouteCode] = useState(() => modalOrder?.routeCode || '');
+  const [dateIso, setDateIso] = useState(() => modalOrder?.dateIso || getTodayIso());
+  const [orderItems, setOrderItems] = useState(() => modalOrder?.items ? [...modalOrder.items] : []);
 
   // Searchable Select Toko (Popup Picker)
   const [isStorePickerOpen, setIsStorePickerOpen] = useState(false);
@@ -33,41 +41,6 @@ function OrderModal({
 
   // Dialog Konfirmasi Simpan Order
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
-
-  // Inisialisasi form saat modal terbuka
-  useEffect(() => {
-    if (isOpen) {
-      if (modalOrder) {
-        setStoreName(modalOrder.storeName || '');
-        setCustomerId(modalOrder.customerId || '');
-        setRouteCode(modalOrder.routeCode || '');
-        setDateIso(modalOrder.dateIso || getTodayIso());
-        setOrderItems(modalOrder.items ? [...modalOrder.items] : []);
-
-        // Jika customerId belum ada di data order lama, coba cocokkan ke stores
-        if (!modalOrder.customerId && modalOrder.storeName) {
-          const cleanName = modalOrder.storeName.toLowerCase().trim();
-          const matched = stores.find(s => s.name?.toLowerCase().trim() === cleanName);
-          if (matched?.customerId) {
-            setCustomerId(matched.customerId);
-          }
-        }
-      } else {
-        setDateIso(getTodayIso());
-        setStoreName('');
-        setCustomerId('');
-        setRouteCode('');
-        setOrderItems([]);
-      }
-      setSearchQuery('');
-      setSelectedCatalogItem(null);
-      setItemQty('');
-      setShowItemSuggestions(false);
-      setIsStorePickerOpen(false);
-      setStoreSearchQuery('');
-      setShowSaveConfirm(false);
-    }
-  }, [isOpen, modalOrder, stores]);
 
   // Fokuskan input pencarian toko saat picker dibuka
   useEffect(() => {

@@ -1,7 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { getTodayIso, formatFullIndonesianDate, getCurrentMonthKey } from '../../utils/date';
+import { formatFullIndonesianDate, getCurrentMonthKey } from '../../utils/date';
 import { getStoreVisitsForMonth, generateSadixScheduleText } from '../../utils/visitUtils';
+
+function getTomorrowIso() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
 
 function SadixScheduleModal({
   isOpen,
@@ -10,17 +19,7 @@ function SadixScheduleModal({
   visits = [],
   routesList = []
 }) {
-  // Default tanggal: besok (atau hari ini)
-  const defaultDate = useMemo(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 1);
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
-  }, []);
-
-  const [scheduleDateIso, setScheduleDateIso] = useState(defaultDate);
+  const [scheduleDateIso, setScheduleDateIso] = useState(getTomorrowIso);
   const [selectedRoute, setSelectedRoute] = useState(routesList.find(r => r !== 'Semua') || 'Semua');
   const [selectedStoreIds, setSelectedStoreIds] = useState(new Set());
   const [copyFeedback, setCopyFeedback] = useState(false);
@@ -266,7 +265,7 @@ function SadixScheduleModal({
               Tidak ada toko pada rute ini.
             </div>
           ) : (
-            prioritizedStoresInRoute.map((store, idx) => {
+            prioritizedStoresInRoute.map((store) => {
               const key = store.id || store.customerId || store.name;
               const isSelected = selectedStoreIds.has(key);
               const storeMonthVisits = getStoreVisitsForMonth(store, visits, currentMonthKey);

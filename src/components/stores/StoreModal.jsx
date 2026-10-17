@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { parseGoogleMapsInput, isShortGoogleMapsUrl } from '../../utils/geoUtils';
 
 function StoreModal({ 
@@ -21,17 +21,16 @@ function StoreModal({
   const dragStartY = useRef(0);
   const currentDragY = useRef(0);
 
-  // Reset status saat modal dibuka/tutup
-  useEffect(() => {
-    if (isOpen) {
-      setGpsStatus('');
-      setGpsLoading(false);
-      setMapsInput('');
-      setResolvingLink(false);
-      setShowGpsHelp(false);
-      setDragY(0);
-    }
-  }, [isOpen]);
+  // Helper reset dan tutup modal
+  const handleClose = () => {
+    setGpsStatus('');
+    setGpsLoading(false);
+    setMapsInput('');
+    setResolvingLink(false);
+    setShowGpsHelp(false);
+    setDragY(0);
+    onClose?.();
+  };
 
   if (!isOpen) return null;
 
@@ -221,7 +220,7 @@ function StoreModal({
         style={{
           opacity: dragY > 0 ? Math.max(0.1, 1 - dragY / 250) : undefined
         }}
-        onClick={onClose}
+        onClick={handleClose}
       ></div>
 
       {/* Sheet Content Container */}
@@ -568,7 +567,7 @@ function StoreModal({
             <div className="flex-1 flex gap-2.5">
               <button 
                 type="button" 
-                onClick={onClose} 
+                onClick={handleClose} 
                 className="flex-1 py-3 text-zinc-600 bg-zinc-100 hover:bg-zinc-200 rounded-xl font-semibold text-[13.5px] transition-colors"
               >
                 Batal

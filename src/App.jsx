@@ -714,15 +714,18 @@ function App() {
       />
 
       {/* Catat Order Toko Modal */}
-      <OrderModal
-        isOpen={showOrderModal}
-        modalOrder={modalOrder}
-        catalogItems={items}
-        stores={stores}
-        onSave={saveOrder}
-        onDelete={deleteOrder}
-        onClose={() => setShowOrderModal(false)}
-      />
+      {showOrderModal && (
+        <OrderModal
+          key={modalOrder?.id || 'new-order'}
+          isOpen={showOrderModal}
+          modalOrder={modalOrder}
+          catalogItems={items}
+          stores={stores}
+          onSave={saveOrder}
+          onDelete={deleteOrder}
+          onClose={() => setShowOrderModal(false)}
+        />
+      )}
 
       {/* Route Picker Bottom Sheet */}
       <RouteSheet
@@ -742,23 +745,27 @@ function App() {
       />
 
       {/* Modal Rekap Kunjungan Harian Malam Hari */}
-      <VisitRecapModal
-        isOpen={showVisitRecapModal}
-        onClose={() => setShowVisitRecapModal(false)}
-        stores={stores}
-        visits={visits}
-        onSaveDayVisits={saveDayVisits}
-        routesList={routesList}
-      />
+      {showVisitRecapModal && (
+        <VisitRecapModal
+          isOpen={showVisitRecapModal}
+          onClose={() => setShowVisitRecapModal(false)}
+          stores={stores}
+          visits={visits}
+          onSaveDayVisits={saveDayVisits}
+          routesList={routesList}
+        />
+      )}
 
       {/* Modal Perencana Jadwal Kunjungan (Sadix / SPV) */}
-      <SadixScheduleModal
-        isOpen={showSadixScheduleModal}
-        onClose={() => setShowSadixScheduleModal(false)}
-        stores={stores}
-        visits={visits}
-        routesList={routesList}
-      />
+      {showSadixScheduleModal && (
+        <SadixScheduleModal
+          isOpen={showSadixScheduleModal}
+          onClose={() => setShowSadixScheduleModal(false)}
+          stores={stores}
+          visits={visits}
+          routesList={routesList}
+        />
+      )}
 
       {/* iOS Home Screen Install Helper Banner */}
       <IosInstallPrompt />

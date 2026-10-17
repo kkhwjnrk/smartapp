@@ -1,4 +1,4 @@
-import { formatFullIndonesianDate, getCurrentMonthKey } from './date';
+import { getCurrentMonthKey } from './date';
 
 /**
  * Normalisasi ID toko atau Customer ID untuk pencocokan yang akurat

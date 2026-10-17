@@ -1,7 +1,19 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { getTodayIso, formatFullIndonesianDate, getCurrentMonthKey } from '../../utils/date';
+import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
 import { getStoreVisitsForMonth, isStoreMatch } from '../../utils/visitUtils';
+
+function getInitialCheckedStores(dateIso, visits = [], stores = []) {
+  const dayVisits = visits.filter(v => v.dateIso === dateIso);
+  const initialChecked = new Set();
+  dayVisits.forEach(v => {
+    const matched = stores.find(s => isStoreMatch(v, s));
+    if (matched) {
+      initialChecked.add(matched.id || matched.customerId || matched.name);
+    }
+  });
+  return initialChecked;
+}
 
 function VisitRecapModal({
   isOpen,
@@ -11,29 +23,13 @@ function VisitRecapModal({
   onSaveDayVisits,
   routesList = []
 }) {
-  const [selectedDateIso, setSelectedDateIso] = useState(getTodayIso());
+  const [selectedDateIso, setSelectedDateIso] = useState(getTodayIso);
   const [selectedRoute, setSelectedRoute] = useState('Semua');
   const [searchQuery, setSearchQuery] = useState('');
-  const [checkedStoreIds, setCheckedStoreIds] = useState(new Set());
+  const [checkedStoreIds, setCheckedStoreIds] = useState(() => 
+    getInitialCheckedStores(getTodayIso(), visits, stores)
+  );
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
-
-  // Saat modal dibuka atau tanggal berubah, sinkronkan toko yang sudah tercatat kunjungan pada tanggal ini
-  useEffect(() => {
-    if (isOpen) {
-      const dayVisits = visits.filter(v => v.dateIso === selectedDateIso);
-      const initialChecked = new Set();
-      
-      dayVisits.forEach(v => {
-        // Cari kecocokan toko
-        const matched = stores.find(s => isStoreMatch(v, s));
-        if (matched) {
-          initialChecked.add(matched.id || matched.customerId || matched.name);
-        }
-      });
-
-      setCheckedStoreIds(initialChecked);
-    }
-  }, [isOpen, selectedDateIso, visits, stores]);
 
   // Filter rute unik (tanpa 'Semua')
   const availableRoutes = useMemo(() => {
@@ -195,7 +191,11 @@ function VisitRecapModal({
               <input
                 type="date"
                 value={selectedDateIso}
-                onChange={e => setSelectedDateIso(e.target.value)}
+                onChange={e => {
+                  const newDate = e.target.value;
+                  setSelectedDateIso(newDate);
+                  setCheckedStoreIds(getInitialCheckedStores(newDate, visits, stores));
+                }}
                 className="w-full px-3 py-2 bg-white border border-zinc-300 rounded-xl text-[12.5px] font-bold text-zinc-900 focus:outline-none focus:border-zinc-500 shadow-2xs"
               />
             </div>
