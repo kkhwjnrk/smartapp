@@ -35,6 +35,14 @@ const STORES_DATA_VERSION = 'v2_168_stores';
 
 function App() {
   const [activeTab, setActiveTab] = useState('home');
+  const [moreSubView, setMoreSubView] = useState('menu'); // 'menu' | 'visits'
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === 'more') {
+      setMoreSubView('menu');
+    }
+  };
 
   // Storage for Pricelist dengan migrasi versi otomatis ke dataset PDF baru
   const [items, setItems] = useState(() => {
@@ -587,6 +595,10 @@ function App() {
             visits={visits}
             onOpenVisitRecap={() => setShowVisitRecapModal(true)}
             onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
+            onOpenVisitsPage={() => {
+              setActiveTab('more');
+              setMoreSubView('visits');
+            }}
           />
         )}
 
@@ -657,6 +669,8 @@ function App() {
             onOpenVisitRecap={() => setShowVisitRecapModal(true)}
             onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
             onToggleVisitToday={toggleVisitToday}
+            subView={moreSubView}
+            setSubView={setMoreSubView}
           />
         )}
       </main>
@@ -723,7 +737,7 @@ function App() {
       {/* Bottom Navigation Bar */}
       <BottomNav
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
         cartCount={pendingOrdersCount}
       />
 

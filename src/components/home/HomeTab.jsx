@@ -18,7 +18,8 @@ function HomeTab({
   onOpenMore,
   visits = [],
   onOpenVisitRecap,
-  onOpenSadixSchedule
+  onOpenSadixSchedule,
+  onOpenVisitsPage
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedStore, setCopiedStore] = useState('');
@@ -229,6 +230,19 @@ function HomeTab({
             <span>📋 Jadwal SPV (Sadix)</span>
           </button>
         </div>
+
+        {onOpenVisitsPage && (
+          <button
+            type="button"
+            onClick={onOpenVisitsPage}
+            className="w-full py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-xl text-[11.5px] font-bold transition-all flex items-center justify-center gap-1 active:scale-98"
+          >
+            <span>Buka Halaman Target & Jadwal</span>
+            <svg className="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* 3. BENTO GRID STATISTIK UTAMA */}
