@@ -1,21 +1,12 @@
 import React from 'react';
-import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
-import { getStoreVisitsForMonth, getStoreVisitStatus, isStoreMatch } from '../../utils/visitUtils';
 
-function StoreCard({ store, isEditMode, onEdit, onDelete, visits = [], onToggleVisitToday }) {
+function StoreCard({ store, isEditMode, onEdit, onDelete }) {
   const hasCoordinates = store.lat !== undefined && store.lat !== null && store.lat !== '' &&
                          store.lng !== undefined && store.lng !== null && store.lng !== '';
 
   const mapsUrl = hasCoordinates 
     ? `https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lng}`
     : null;
-
-  const todayIso = getTodayIso();
-  const currentMonthKey = getCurrentMonthKey();
-  const storeMonthVisits = getStoreVisitsForMonth(store, visits, currentMonthKey);
-  const monthVisitCount = storeMonthVisits.length;
-  const isVisitedToday = visits.some(v => v.dateIso === todayIso && isStoreMatch(v, store));
-  const visitStatus = getStoreVisitStatus(monthVisitCount);
 
   return (
     <div 
@@ -24,7 +15,7 @@ function StoreCard({ store, isEditMode, onEdit, onDelete, visits = [], onToggleV
         isEditMode ? 'cursor-pointer hover:border-zinc-400 hover:shadow-md' : 'hover:shadow-md'
       }`}
     >
-      {/* Header Card: Customer ID, Route Code, Status Kunjungan 2x & Actions */}
+      {/* Header Card: Customer ID, Route Code & Actions */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-1.5 flex-wrap">
           {store.customerId && (
@@ -38,11 +29,6 @@ function StoreCard({ store, isEditMode, onEdit, onDelete, visits = [], onToggleV
               : 'bg-zinc-100 text-zinc-500 border border-zinc-200/60'
           }`}>
             {store.routeCode || 'TANPA RUTE'}
-          </span>
-          {/* Badge Target Kunjungan Bulanan (Minimal 2x) */}
-          <span className={`px-2 py-0.5 rounded-lg text-[10.5px] font-bold border flex items-center gap-1 shadow-2xs ${visitStatus.bgClass}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${visitStatus.dotClass}`}></span>
-            <span>{visitStatus.shortLabel}</span>
           </span>
           {hasCoordinates && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-[10px] font-medium">
@@ -111,28 +97,8 @@ function StoreCard({ store, isEditMode, onEdit, onDelete, visits = [], onToggleV
         </div>
       )}
 
-      {/* Action Bar: Google Maps + Catat Kunjungan Hari Ini */}
-      <div className="pt-2 border-t border-zinc-100 flex items-center justify-between gap-2 mt-1">
-        {/* Tombol Cepat Kunjungan Hari Ini */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleVisitToday?.(store);
-          }}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11.5px] font-bold transition-all active:scale-95 border shadow-2xs ${
-            isVisitedToday
-              ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-              : 'bg-zinc-50 hover:bg-zinc-100 text-zinc-700 border-zinc-200'
-          }`}
-          title={isVisitedToday ? 'Batalkan tanda kunjungan hari ini' : 'Tandai toko ini dikunjungi hari ini'}
-        >
-          <svg className={`w-3.5 h-3.5 ${isVisitedToday ? 'text-emerald-600' : 'text-zinc-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d={isVisitedToday ? "M5 13l4 4L19 7" : "M12 4v16m8-8H4"} />
-          </svg>
-          <span>{isVisitedToday ? 'Dikunjungi Hari Ini' : '+ Kunjungan'}</span>
-        </button>
-
+      {/* Action Bar: Google Maps */}
+      <div className="pt-2 border-t border-zinc-100 flex items-center justify-end gap-2 mt-1">
         {hasCoordinates ? (
           <a
             href={mapsUrl}

@@ -627,10 +627,6 @@ function App() {
             onOpenEditModal={openEditStore}
             onDeleteStore={deleteStore}
             onOpenAddOrder={openAddOrder}
-            visits={visits}
-            onOpenVisitRecap={() => setShowVisitRecapModal(true)}
-            onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
-            onToggleVisitToday={toggleVisitToday}
           />
         )}
 
@@ -657,6 +653,10 @@ function App() {
             items={items}
             visits={visits}
             setVisits={setVisits}
+            routesList={routesList}
+            onOpenVisitRecap={() => setShowVisitRecapModal(true)}
+            onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
+            onToggleVisitToday={toggleVisitToday}
           />
         )}
       </main>

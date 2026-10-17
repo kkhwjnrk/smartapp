@@ -112,46 +112,17 @@ export function getMonthlyVisitStats(stores = [], visits = [], monthKey = getCur
 }
 
 /**
- * Membuat format teks jadwal kunjungan rapi untuk diserahkan ke SPV / disalin ke WhatsApp
+ * Membuat format teks jadwal kunjungan ringkas: list nama toko dan ID customer
  */
 export function generateSadixScheduleText({
-  dateIso,
-  routeCode = 'SEMUA RUTE',
-  selectedStores = [],
-  visits = [],
-  monthKey = getCurrentMonthKey()
+  selectedStores = []
 }) {
-  const formattedDate = formatFullIndonesianDate(dateIso);
-  const total = selectedStores.length;
-  const isTargetMet = total >= 12;
+  if (!Array.isArray(selectedStores) || selectedStores.length === 0) {
+    return '';
+  }
 
-  let text = `*JADWAL KUNJUNGAN SALES - DAYTONA*\n`;
-  text += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-  text += `📅 Hari/Tanggal : ${formattedDate}\n`;
-  text += `📍 Rute Target  : ${routeCode || 'Semua Rute'}\n`;
-  text += `🏪 Total Target : ${total} Toko ${isTargetMet ? '(Target min. 12 terpenuhi ✅)' : '(Perhatian: di bawah target 12 toko ⚠️)'}\n`;
-  text += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-  text += `*DAFTAR TOKO KUNJUNGAN:*\n`;
-
-  selectedStores.forEach((store, idx) => {
-    const storeVisits = getStoreVisitsForMonth(store, visits, monthKey);
-    const nextVisitNumber = storeVisits.length + 1;
-    const cid = store.customerId ? `[${store.customerId}] ` : '';
-    const visitNote = storeVisits.length === 0 
-      ? `(Kunjungan ke-1 / Blm pernah bln ini)` 
-      : storeVisits.length === 1 
-        ? `(Kunjungan ke-2 / Menuntaskan target)` 
-        : `(Kunjungan ke-${nextVisitNumber})`;
-
-    text += `${idx + 1}. ${cid}${store.name}\n`;
-    text += `   • Status: ${visitNote}\n`;
-    if (store.address) {
-      text += `   • Alamat: ${store.address}\n`;
-    }
-  });
-
-  text += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
-  text += `Catatan: Mohon diatur pada jadwal akun Sadix. Terima kasih! 🙏`;
-
-  return text;
+  return selectedStores.map((store, idx) => {
+    const cid = store.customerId?.trim() ? ` - ${store.customerId.trim()}` : '';
+    return `${idx + 1}. ${store.name}${cid}`;
+  }).join('\n');
 }

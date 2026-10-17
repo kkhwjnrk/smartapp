@@ -102,16 +102,12 @@ function SadixScheduleModal({
   const selectedCount = selectedStoresList.length;
   const isTargetMet = selectedCount >= 12;
 
-  // Teks format Sadix / WhatsApp
+  // Teks format ringkas daftar toko & ID customer untuk SPV
   const generatedText = useMemo(() => {
     return generateSadixScheduleText({
-      dateIso: scheduleDateIso,
-      routeCode: selectedRoute,
-      selectedStores: selectedStoresList,
-      visits: visits,
-      monthKey: currentMonthKey
+      selectedStores: selectedStoresList
     });
-  }, [scheduleDateIso, selectedRoute, selectedStoresList, visits, currentMonthKey]);
+  }, [selectedStoresList]);
 
   // Salin teks ke Clipboard untuk dikirim ke WA SPV
   const handleCopyText = async () => {
@@ -345,7 +341,7 @@ function SadixScheduleModal({
           <div className="p-3 bg-zinc-100 border-t border-zinc-200 shrink-0 space-y-1.5">
             <div className="flex items-center justify-between text-[11px]">
               <span className="font-bold text-zinc-700 flex items-center gap-1">
-                <span>📋 Pratinjau Format SPV:</span>
+                <span>📋 Pratinjau Daftar Toko & ID:</span>
                 <span className="text-zinc-500 font-normal">({selectedCount} Toko)</span>
               </span>
               <button
@@ -356,7 +352,7 @@ function SadixScheduleModal({
                 Unduh .TXT
               </button>
             </div>
-            <div className="p-2.5 bg-white border border-zinc-200/90 rounded-xl font-mono text-[11px] text-zinc-800 max-h-24 overflow-y-auto leading-relaxed select-all">
+            <div className="p-2.5 bg-white border border-zinc-200/90 rounded-xl font-mono text-[11.5px] text-zinc-800 max-h-28 overflow-y-auto leading-relaxed select-all">
               {generatedText}
             </div>
           </div>
@@ -405,7 +401,7 @@ function SadixScheduleModal({
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                   </svg>
-                  <span>Salin untuk SPV</span>
+                  <span>Salin List Toko</span>
                 </>
               )}
             </button>
