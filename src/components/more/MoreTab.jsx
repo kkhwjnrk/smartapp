@@ -276,12 +276,12 @@ function MoreTab({
   }
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-300 pb-12">
+    <div className="space-y-3 sm:space-y-4 animate-in fade-in duration-300 pb-20">
 
       {/* Header Info Aplikasi */}
-      <div className="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-xs flex items-center gap-4">
+      <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-zinc-200/80 shadow-2xs flex items-center gap-3.5">
         {/* Logo Resmi Sistem Daytona */}
-        <div className="w-14 h-14 shrink-0 rounded-2xl overflow-hidden shadow-xs flex items-center justify-center">
+        <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-xl overflow-hidden shadow-2xs flex items-center justify-center bg-[#EA580C]">
           <svg
             className="w-full h-full"
             viewBox="0 0 512 512"
@@ -301,20 +301,23 @@ function MoreTab({
           </svg>
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h2 className="text-[17px] font-bold text-zinc-900 leading-tight">
+          <div className="flex items-center gap-2">
+            <h2 className="text-[16px] sm:text-[17px] font-bold text-zinc-900 leading-tight">
               SmartApp
             </h2>
+            <span className="text-[10px] font-bold text-orange-700 bg-orange-50 border border-orange-200/80 px-2 py-0.5 rounded-full">
+              Daytona
+            </span>
           </div>
-          <p className="text-[12px] text-zinc-500 mt-1 leading-snug">
-            Aplikasi produktifitas kerja
+          <p className="text-[11.5px] text-zinc-500 mt-0.5 leading-snug truncate">
+            Aplikasi Penjualan & Kunjungan Toko
           </p>
         </div>
       </div>
 
       {/* Notifikasi Status Pesan */}
       {importStatus && (
-        <div className={`p-4 rounded-2xl text-[13px] font-medium border flex items-start justify-between gap-3 animate-in fade-in duration-200 ${importStatus.type === 'success'
+        <div className={`p-3.5 rounded-2xl text-[12.5px] font-medium border flex items-start justify-between gap-3 animate-in fade-in duration-200 ${importStatus.type === 'success'
           ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
           : 'bg-red-50 text-red-800 border-red-200'
           }`}>
@@ -329,35 +332,35 @@ function MoreTab({
         </div>
       )}
 
-      {/* MENU KARTU NAVIGASI: TARGET & JADWAL KUNJUNGAN TOKO (SADIX) */}
+      {/* MENU KARTU NAVIGASI: TARGET & JADWAL KUNJUNGAN TOKO */}
       <button
         type="button"
         onClick={() => setActiveSubView('visits')}
-        className="w-full bg-white p-5 rounded-3xl border border-zinc-200/90 shadow-xs hover:border-zinc-300 hover:shadow-md transition-all active:scale-[0.99] text-left flex items-center justify-between gap-3 group"
+        className="w-full bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs hover:border-zinc-300 hover:shadow-sm transition-all active:scale-[0.99] text-left flex items-center justify-between gap-3 group"
       >
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <h3 className="text-[15px] font-bold text-zinc-900 group-hover:text-[#EA580C] transition-colors truncate">
+            <h3 className="text-[14.5px] sm:text-[15px] font-bold text-zinc-900 group-hover:text-[#EA580C] transition-colors truncate">
               Target & Jadwal Kunjungan
             </h3>
           </div>
-          <p className="text-[12px] text-zinc-500 mt-0.5 truncate">
-            Rekap harian min. 12 toko & pantau target 2x sebulan
+          <p className="text-[11.5px] text-zinc-500 mt-0.5 truncate">
+            Rekap harian min. 12 toko & target 2x sebulan
           </p>
-          <div className="flex items-center gap-2 mt-2 flex-wrap">
-            <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${todayVisitCount >= 12
+          <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${todayVisitCount >= 12
               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
               : 'bg-orange-50 text-orange-700 border border-orange-200'
               }`}>
-              Hari Ini: {todayVisitCount}/12 Toko
+              Hari Ini: {todayVisitCount}/12
             </span>
-            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-600 border border-zinc-200/80">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 border border-zinc-200/80">
               Target 2x: {monthlyStats.completedCount}/{monthlyStats.totalStores} ({monthlyStats.completionPercent}%)
             </span>
           </div>
         </div>
 
-        <div className="w-9 h-9 rounded-2xl bg-zinc-100 group-hover:bg-[#EA580C] group-hover:text-white text-zinc-400 flex items-center justify-center transition-all shrink-0">
+        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl sm:rounded-2xl bg-zinc-100 group-hover:bg-[#EA580C] group-hover:text-white text-zinc-400 flex items-center justify-center transition-all shrink-0">
           <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
@@ -365,27 +368,27 @@ function MoreTab({
       </button>
 
       {/* SECTION 1: CADANGAN & KEAMANAN DATA MODULAR */}
-      <div className="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-xs space-y-4">
+      <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-zinc-200/80 shadow-2xs space-y-3.5">
 
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-zinc-100 text-zinc-700 flex items-center justify-center shrink-0">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-zinc-100 text-zinc-700 flex items-center justify-center shrink-0">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
           </div>
           <div className="min-w-0 flex-1">
-            <h3 className="text-[15px] font-bold text-zinc-900 leading-tight">
+            <h3 className="text-[14px] sm:text-[15px] font-bold text-zinc-900 leading-tight">
               Cadangan & Pemulihan Data
             </h3>
-            <p className="text-[12px] text-zinc-500 mt-0.5">
-              {orders.length} riwayat order · {stores.length} toko terdaftar
+            <p className="text-[11.5px] text-zinc-500 mt-0.5 truncate">
+              {orders.length} order · {stores.length} toko terdaftar
             </p>
           </div>
         </div>
 
         {/* OPSI CADANGKAN DATA (EXPORT) */}
-        <div className="space-y-2.5 pt-1">
-          <span className="text-[11px] font-bold text-zinc-400 block uppercase tracking-wider">
+        <div className="space-y-2 pt-0.5">
+          <span className="text-[10.5px] font-bold text-zinc-400 block uppercase tracking-wider">
             Cadangkan Data (Ekspor)
           </span>
 
@@ -393,27 +396,27 @@ function MoreTab({
           <button
             type="button"
             onClick={() => setPendingExportType('all')}
-            className="w-full p-3.5 bg-gradient-to-r from-orange-600 to-[#EA580C] hover:from-orange-700 hover:to-orange-600 active:scale-98 text-white rounded-2xl transition-all shadow-xs flex items-center justify-between text-left group"
+            className="w-full p-3 bg-gradient-to-r from-orange-600 to-[#EA580C] hover:from-orange-700 hover:to-orange-600 active:scale-98 text-white rounded-xl sm:rounded-2xl transition-all shadow-2xs flex items-center justify-between text-left group"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                <svg className="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-[13.5px]">Cadangkan Semua Data</span>
-                  <span className="px-2 py-0.5 bg-white/25 text-[10px] font-bold rounded-full uppercase tracking-wider">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold text-[12.5px] sm:text-[13px] truncate">Cadangkan Semua Data</span>
+                  <span className="px-1.5 py-0.2 bg-white/25 text-[9px] font-bold rounded uppercase tracking-wider shrink-0">
                     Lengkap
                   </span>
                 </div>
-                <p className="text-[11.5px] text-orange-100 mt-0.5">
-                  Order ({orders.length}) + Data Toko ({stores.length}) + Kunjungan ({visits.length})
+                <p className="text-[11px] text-orange-100 mt-0.5 truncate">
+                  {orders.length} Order · {stores.length} Toko · {visits.length} Kunjungan
                 </p>
               </div>
             </div>
-            <svg className="w-5 h-5 text-white/80 group-hover:translate-x-0.5 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-white/80 group-hover:translate-x-0.5 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
             </svg>
           </button>
@@ -424,41 +427,32 @@ function MoreTab({
             <button
               type="button"
               onClick={() => setPendingExportType('orders')}
-              className="p-3 bg-zinc-50 hover:bg-zinc-100 active:scale-98 border border-zinc-200/80 rounded-2xl transition-all text-left flex flex-col justify-between"
+              className="py-2.5 px-3 bg-zinc-50 hover:bg-zinc-100 active:scale-98 border border-zinc-200/80 rounded-xl transition-all text-left flex items-center gap-2"
             >
-              <div className="flex items-center gap-2 text-zinc-800 font-bold text-[12.5px]">
-                <svg className="w-4 h-4 text-orange-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-                <span>Hanya Order</span>
+              <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0" />
+              <div className="min-w-0">
+                <span className="font-bold text-zinc-800 text-[11.5px] block truncate">Hanya Order</span>
+                <span className="text-[10px] text-zinc-500 block truncate">{orders.length} pesanan</span>
               </div>
-              <span className="text-[11px] text-zinc-500 mt-1 block">
-                {orders.length} riwayat pesanan
-              </span>
             </button>
 
             {/* Hanya Toko & GPS */}
             <button
               type="button"
               onClick={() => setPendingExportType('stores')}
-              className="p-3 bg-zinc-50 hover:bg-zinc-100 active:scale-98 border border-zinc-200/80 rounded-2xl transition-all text-left flex flex-col justify-between"
+              className="py-2.5 px-3 bg-zinc-50 hover:bg-zinc-100 active:scale-98 border border-zinc-200/80 rounded-xl transition-all text-left flex items-center gap-2"
             >
-              <div className="flex items-center gap-2 text-zinc-800 font-bold text-[12.5px]">
-                <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>Hanya Toko & GPS</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <div className="min-w-0">
+                <span className="font-bold text-zinc-800 text-[11.5px] block truncate">Toko & GPS</span>
+                <span className="text-[10px] text-zinc-500 block truncate">{stores.length} toko</span>
               </div>
-              <span className="text-[11px] text-zinc-500 mt-1 block">
-                {stores.length} toko ({storesWithGpsCount} GPS)
-              </span>
             </button>
           </div>
 
           {/* Utilitas Salin Teks JSON */}
-          <div className="pt-0.5 flex items-center justify-between text-[11.5px] px-1">
-            <span className="text-zinc-500">Kirim tanpa unduh file:</span>
+          <div className="pt-0.5 flex items-center justify-between text-[11px] px-1">
+            <span className="text-zinc-500">Tanpa unduh file:</span>
             <button
               type="button"
               onClick={() => handleCopyBackupText('all')}
@@ -467,14 +461,14 @@ function MoreTab({
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
               </svg>
-              <span>{copyStatus === 'all' ? 'Tersalin ke Clipboard!' : 'Salin Teks JSON'}</span>
+              <span>{copyStatus === 'all' ? 'Tersalin!' : 'Salin JSON'}</span>
             </button>
           </div>
         </div>
 
         {/* OPSI PULIHKAN DATA (RESTORE) */}
-        <div className="space-y-2 pt-3 border-t border-zinc-100">
-          <span className="text-[11px] font-bold text-zinc-400 block uppercase tracking-wider">
+        <div className="space-y-2 pt-2.5 border-t border-zinc-100">
+          <span className="text-[10.5px] font-bold text-zinc-400 block uppercase tracking-wider">
             Pulihkan Cadangan (Impor)
           </span>
 
@@ -490,17 +484,13 @@ function MoreTab({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="w-full py-3.5 bg-zinc-900 hover:bg-zinc-800 active:scale-98 text-white font-bold text-[13px] rounded-2xl transition-all shadow-xs flex items-center justify-center gap-2"
+            className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 active:scale-98 text-white font-bold text-[12.5px] rounded-xl sm:rounded-2xl transition-all shadow-2xs flex items-center justify-center gap-2"
           >
             <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
             <span>Pilih File Cadangan (.json)</span>
           </button>
-
-          <p className="text-[11.5px] text-zinc-400 text-center">
-            Pilihan data yang dipulihkan dapat ditentukan setelah file dipilih.
-          </p>
         </div>
 
       </div>
@@ -512,47 +502,47 @@ function MoreTab({
       />
 
       {/* SECTION 2: INFORMASI SISTEM & KATALOG */}
-      <div className="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-xs space-y-3">
+      <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-zinc-200/80 shadow-2xs space-y-2.5">
 
-        <h3 className="text-[14px] font-bold text-zinc-900 leading-tight">
+        <h3 className="text-[13.5px] sm:text-[14px] font-bold text-zinc-900 leading-tight">
           Informasi Sistem
         </h3>
 
-        <div className="divide-y divide-zinc-100 text-[12.5px]">
+        <div className="divide-y divide-zinc-100 text-[12px]">
 
-          <div className="py-2.5 flex items-center justify-between">
+          <div className="py-2 flex items-center justify-between">
             <div>
               <span className="font-semibold text-zinc-800 block">Katalog Daytona</span>
-              <span className="text-[11px] text-zinc-400">Pricelist PDF V2</span>
+              <span className="text-[10.5px] text-zinc-400">Pricelist PDF V2</span>
             </div>
-            <span className="px-2.5 py-0.5 bg-zinc-100 text-zinc-700 rounded-lg text-[11px] font-mono font-bold">
+            <span className="px-2 py-0.5 bg-zinc-100 text-zinc-700 rounded-lg text-[10.5px] font-mono font-bold">
               {items.length || 568} Part
             </span>
           </div>
 
-          <div className="py-2.5 flex items-center justify-between">
+          <div className="py-2 flex items-center justify-between">
             <div>
               <span className="font-semibold text-zinc-800 block">Skema Diskon Otomatis</span>
-              <span className="text-[11px] text-zinc-400">Dihitung per item pesanan</span>
+              <span className="text-[10.5px] text-zinc-400">Dihitung per item pesanan</span>
             </div>
-            <span className="px-2.5 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/70 rounded-lg text-[11px] font-bold">
+            <span className="px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/70 rounded-lg text-[10.5px] font-bold">
               24% · 27% · 29%
             </span>
           </div>
 
-          <div className="py-2.5 flex items-center justify-between">
+          <div className="py-2 flex items-center justify-between">
             <div>
               <span className="font-semibold text-zinc-800 block">Penyimpanan Offline</span>
-              <span className="text-[11px] text-zinc-400">Tersimpan lokal di perangkat</span>
+              <span className="text-[10.5px] text-zinc-400">Tersimpan lokal di perangkat</span>
             </div>
-            <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/70 rounded-lg text-[11px] font-semibold">
+            <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/70 rounded-lg text-[10.5px] font-semibold">
               LocalStorage ✓
             </span>
           </div>
 
-          <div className="py-2.5 flex items-center justify-between">
+          <div className="py-2 flex items-center justify-between">
             <span className="font-semibold text-zinc-800">Versi Sistem</span>
-            <span className="text-zinc-500 text-[11.5px] font-medium">
+            <span className="text-zinc-500 text-[11px] font-medium">
               v2.0 PWA
             </span>
           </div>

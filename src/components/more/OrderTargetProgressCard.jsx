@@ -64,26 +64,21 @@ function OrderTargetProgressCard({
 
   return (
     <>
-      <div className="bg-white p-4.5 sm:p-5 rounded-3xl border border-zinc-200/90 shadow-xs space-y-3">
+      <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs space-y-3">
         
-        {/* Header: Label Target & Nominal */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">
-              Target Nominal Order ({currentMonthLabel})
+        {/* Baris 1: Judul & Persentase Capaian */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="text-[12px] sm:text-[13px] font-bold text-zinc-900 truncate">
+              Target Nominal Order
             </span>
-            <div className="flex items-baseline gap-1.5 mt-0.5 flex-wrap">
-              <span className="text-[20px] sm:text-[22px] font-black text-zinc-900 leading-tight">
-                Rp {Math.round(totalNet).toLocaleString('id-ID')}
-              </span>
-              <span className="text-[12px] font-bold text-zinc-400">
-                / Rp {targetNominal.toLocaleString('id-ID')}
-              </span>
-            </div>
+            <span className="text-[10px] font-semibold text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded-full shrink-0">
+              {currentMonthLabel}
+            </span>
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className={`px-2.5 py-0.5 rounded-full text-[11.5px] font-black border ${
+            <span className={`px-2 py-0.5 rounded-full text-[11px] font-black border ${
               isAchieved
                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                 : 'bg-orange-50 text-orange-700 border border-orange-200'
@@ -96,8 +91,8 @@ function OrderTargetProgressCard({
                 setInputTargetValue(String(targetNominal));
                 setIsEditingTarget(true);
               }}
-              className="p-1 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded-xl transition-all"
-              title="Atur Target Nominal"
+              className="p-1 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 active:scale-90 rounded-lg transition-all"
+              title="Ubah Target Nominal"
             >
               <svg className="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -106,8 +101,18 @@ function OrderTargetProgressCard({
           </div>
         </div>
 
-        {/* PROGRESS BAR */}
-        <div className="w-full h-3 bg-zinc-100 rounded-full overflow-hidden p-0.5 border border-zinc-200/70">
+        {/* Baris 2: Nominal Capaian & Target */}
+        <div className="flex items-baseline justify-between gap-2">
+          <span className="text-[20px] sm:text-[22px] font-black text-zinc-900 tracking-tight leading-none">
+            Rp {Math.round(totalNet).toLocaleString('id-ID')}
+          </span>
+          <span className="text-[11.5px] font-bold text-zinc-400 shrink-0">
+            Target: Rp {targetNominal.toLocaleString('id-ID')}
+          </span>
+        </div>
+
+        {/* Baris 3: Progress Bar */}
+        <div className="w-full h-2.5 bg-zinc-100 rounded-full overflow-hidden p-0.5 border border-zinc-200/60">
           <div
             className={`h-full rounded-full transition-all duration-700 ease-out ${
               isAchieved
@@ -118,17 +123,14 @@ function OrderTargetProgressCard({
           />
         </div>
 
-        {/* Keterangan Status Sisa Target Sederhana */}
-        <div className="text-[11px] text-zinc-500 flex items-center justify-between pt-0.5">
+        {/* Baris 4: Keterangan Sisa Target */}
+        <div className="text-[11px] text-zinc-500 pt-0.5">
           <span className={isAchieved ? 'text-emerald-700 font-bold' : 'text-zinc-500 font-medium'}>
             {isAchieved ? (
               <>🎉 Target tercapai! (+Rp {Math.abs(remainingNominal).toLocaleString('id-ID')})</>
             ) : (
-              <>Kurang Rp {remainingNominal.toLocaleString('id-ID')} lagi</>
+              <>Kurang <b className="text-zinc-700">Rp {remainingNominal.toLocaleString('id-ID')}</b> lagi</>
             )}
-          </span>
-          <span className="text-zinc-400 font-medium">
-            {percent}% tercapai
           </span>
         </div>
 
