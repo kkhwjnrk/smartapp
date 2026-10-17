@@ -82,7 +82,7 @@ function VisitsManagementView({
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1.5 text-[12px] font-bold text-zinc-700 hover:text-zinc-900 px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 rounded-xl transition-all active:scale-95 shrink-0"
+          className="text-[12px] font-bold text-zinc-600 hover:text-zinc-900 px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 active:scale-95 rounded-xl transition-all shrink-0 flex items-center gap-1"
         >
           <svg className="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -212,117 +212,89 @@ function VisitsManagementView({
           </span>
         </div>
 
-        {/* Filter Kartu Metrik Interaktif (Non-Pill, 4 Kolom) */}
-        <div className="grid grid-cols-4 gap-1.5 sm:gap-2 pt-0.5">
-          {/* 1. Semua Toko */}
-          <button
-            type="button"
-            onClick={() => setVisitStatusFilter('all')}
-            className={`p-2 sm:p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center justify-between active:scale-95 ${visitStatusFilter === 'all'
-              ? 'bg-zinc-900 border-zinc-900 text-white shadow-xs ring-1 ring-zinc-900'
-              : 'bg-zinc-50 hover:bg-zinc-100 border-zinc-200/80 text-zinc-700'
-              }`}
-          >
-            <span className={`text-[17px] sm:text-[19px] font-black leading-none ${visitStatusFilter === 'all' ? 'text-white' : 'text-zinc-900'}`}>
-              {stores.length}
-            </span>
-            <div className="mt-1 w-full">
-              <span className="text-[10.5px] sm:text-[11px] font-bold block truncate leading-tight">
-                Semua
-              </span>
-              <span className={`text-[9px] block leading-tight mt-0.5 ${visitStatusFilter === 'all' ? 'text-zinc-300' : 'text-zinc-400'}`}>
-                Toko
-              </span>
+        {/* KONTROL FILTER REGULER: STATUS KUNJUNGAN, RUTE, & PENCARIAN (BUKAN PILL) */}
+        <div className="space-y-2 pt-0.5">
+          <div className="grid grid-cols-2 gap-2">
+            {/* Dropdown Status Target Kunjungan */}
+            <div>
+              <label className="block text-[10.5px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                Status Kunjungan
+              </label>
+              <select
+                value={visitStatusFilter}
+                onChange={e => setVisitStatusFilter(e.target.value)}
+                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-[11.5px] font-bold text-zinc-800 focus:outline-none focus:border-zinc-400 focus:bg-white transition-all shadow-2xs"
+              >
+                <option value="all">Semua Status ({stores.length})</option>
+                <option value="unvisited">Belum Dikunjungi (0/2) ({monthlyStats.unvisitedCount})</option>
+                <option value="partial">Kurang 1x Kunjungan (1/2) ({monthlyStats.partialCount})</option>
+                <option value="completed">Target 2x Selesai ({monthlyStats.completedCount})</option>
+              </select>
             </div>
-          </button>
 
-          {/* 2. Belum Dikunjungi (0/2) */}
-          <button
-            type="button"
-            onClick={() => setVisitStatusFilter('unvisited')}
-            className={`p-2 sm:p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center justify-between active:scale-95 ${visitStatusFilter === 'unvisited'
-              ? 'bg-red-600 border-red-600 text-white shadow-xs ring-1 ring-red-600'
-              : 'bg-red-50/60 hover:bg-red-50 border-red-200/70 text-red-800'
-              }`}
-          >
-            <span className={`text-[17px] sm:text-[19px] font-black leading-none ${visitStatusFilter === 'unvisited' ? 'text-white' : 'text-red-600'}`}>
-              {monthlyStats.unvisitedCount}
-            </span>
-            <div className="mt-1 w-full">
-              <span className="text-[10.5px] sm:text-[11px] font-bold block truncate leading-tight">
-                Belum
-              </span>
-              <span className={`text-[9px] block leading-tight mt-0.5 ${visitStatusFilter === 'unvisited' ? 'text-red-100' : 'text-red-500'}`}>
-                0/2 Kunj.
-              </span>
+            {/* Dropdown Kode Rute */}
+            <div>
+              <label className="block text-[10.5px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                Kode Rute
+              </label>
+              <select
+                value={selectedVisitRoute}
+                onChange={e => setSelectedVisitRoute(e.target.value)}
+                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-[11.5px] font-bold text-zinc-800 focus:outline-none focus:border-zinc-400 focus:bg-white transition-all shadow-2xs"
+              >
+                <option value="Semua">Semua Rute</option>
+                {routesList.filter(r => r !== 'Semua').map(r => (
+                  <option key={r} value={r}>{r}</option>
+                ))}
+              </select>
             </div>
-          </button>
+          </div>
 
-          {/* 3. Kurang 1x (1/2) */}
-          <button
-            type="button"
-            onClick={() => setVisitStatusFilter('partial')}
-            className={`p-2 sm:p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center justify-between active:scale-95 ${visitStatusFilter === 'partial'
-              ? 'bg-amber-600 border-amber-600 text-white shadow-xs ring-1 ring-amber-600'
-              : 'bg-amber-50/60 hover:bg-amber-50 border-amber-200/70 text-amber-800'
-              }`}
-          >
-            <span className={`text-[17px] sm:text-[19px] font-black leading-none ${visitStatusFilter === 'partial' ? 'text-white' : 'text-amber-600'}`}>
-              {monthlyStats.partialCount}
-            </span>
-            <div className="mt-1 w-full">
-              <span className="text-[10.5px] sm:text-[11px] font-bold block truncate leading-tight">
-                Kurang
-              </span>
-              <span className={`text-[9px] block leading-tight mt-0.5 ${visitStatusFilter === 'partial' ? 'text-amber-100' : 'text-amber-600'}`}>
-                1/2 Kunj.
-              </span>
+          {/* Input Pencarian Nama Toko / ID Customer */}
+          <div className="relative">
+            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-zinc-400">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </div>
-          </button>
+            <input
+              type="text"
+              placeholder="Cari nama toko, ID customer, atau alamat..."
+              value={visitSearchQuery}
+              onChange={e => setVisitSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-8 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-[12px] placeholder:text-zinc-400 text-zinc-900 focus:outline-none focus:border-zinc-400 focus:bg-white transition-all font-medium"
+            />
+            {visitSearchQuery && (
+              <button
+                type="button"
+                onClick={() => setVisitSearchQuery('')}
+                className="absolute inset-y-0 right-2.5 my-auto w-4 h-4 rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-600 flex items-center justify-center text-[11px] font-bold transition-colors"
+                title="Hapus pencarian"
+              >
+                ×
+              </button>
+            )}
+          </div>
 
-          {/* 4. Target 2x Selesai */}
-          <button
-            type="button"
-            onClick={() => setVisitStatusFilter('completed')}
-            className={`p-2 sm:p-2.5 rounded-2xl border text-center transition-all flex flex-col items-center justify-between active:scale-95 ${visitStatusFilter === 'completed'
-              ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs ring-1 ring-emerald-600'
-              : 'bg-emerald-50/60 hover:bg-emerald-50 border-emerald-200/70 text-emerald-800'
-              }`}
-          >
-            <span className={`text-[17px] sm:text-[19px] font-black leading-none ${visitStatusFilter === 'completed' ? 'text-white' : 'text-emerald-600'}`}>
-              {monthlyStats.completedCount}
+          {/* Bar Info Menampilkan dan Tombol Reset Filter */}
+          <div className="flex items-center justify-between text-[11px] pt-0.5 px-0.5">
+            <span className="text-zinc-500 font-medium">
+              Menampilkan <span className="font-bold text-zinc-800">{filteredVisitStores.length}</span> dari {stores.length} toko
             </span>
-            <div className="mt-1 w-full">
-              <span className="text-[10.5px] sm:text-[11px] font-bold block truncate leading-tight">
-                Selesai
-              </span>
-              <span className={`text-[9px] block leading-tight mt-0.5 ${visitStatusFilter === 'completed' ? 'text-emerald-100' : 'text-emerald-600'}`}>
-                Target 2x ✓
-              </span>
-            </div>
-          </button>
-        </div>
-
-        {/* Kontrol Tambahan: Dropdown Rute & Input Pencarian */}
-        <div className="flex gap-2 pt-0.5">
-          <select
-            value={selectedVisitRoute}
-            onChange={e => setSelectedVisitRoute(e.target.value)}
-            className="px-2.5 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-[11.5px] font-bold text-zinc-800 focus:outline-none focus:border-zinc-400 shrink-0"
-          >
-            <option value="Semua">Semua Rute</option>
-            {routesList.filter(r => r !== 'Semua').map(r => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
-
-          <input
-            type="text"
-            placeholder="Cari toko / ID customer..."
-            value={visitSearchQuery}
-            onChange={e => setVisitSearchQuery(e.target.value)}
-            className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-[11.5px] placeholder:text-zinc-400 text-zinc-900 focus:outline-none focus:border-zinc-400"
-          />
+            {(visitStatusFilter !== 'all' || selectedVisitRoute !== 'Semua' || visitSearchQuery.trim()) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setVisitStatusFilter('all');
+                  setSelectedVisitRoute('Semua');
+                  setVisitSearchQuery('');
+                }}
+                className="text-[#EA580C] hover:underline font-bold text-[11px]"
+              >
+                Reset Filter
+              </button>
+            )}
+          </div>
         </div>
 
         {/* DAFTAR TOKO DENGAN STATUS TARGET KUNJUNGAN */}
