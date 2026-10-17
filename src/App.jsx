@@ -189,11 +189,39 @@ function App() {
   };
 
   const saveOrder = (orderData) => {
+    // 1. Simpan atau perbarui catatan order
     if (modalOrder && modalOrder.id) {
       setOrders(prev => prev.map(o => o.id === modalOrder.id ? orderData : o));
     } else {
       setOrders(prev => [orderData, ...prev]);
     }
+
+    // 2. Otomatis sinkronkan rute ke data toko master jika rute diinput
+    if (orderData.routeCode?.trim() && (orderData.customerId || orderData.storeName)) {
+      setStores(prevStores => {
+        let storeUpdated = false;
+        const normalizedRoute = orderData.routeCode.trim().toUpperCase();
+
+        const updated = prevStores.map(s => {
+          const matchById = orderData.customerId && s.customerId && s.customerId.trim().toLowerCase() === orderData.customerId.trim().toLowerCase();
+          const matchByName = orderData.storeName && s.name && s.name.trim().toLowerCase() === orderData.storeName.trim().toLowerCase();
+
+          if (matchById || matchByName) {
+            if (s.routeCode?.trim() !== normalizedRoute) {
+              storeUpdated = true;
+              return {
+                ...s,
+                routeCode: normalizedRoute
+              };
+            }
+          }
+          return s;
+        });
+
+        return storeUpdated ? updated : prevStores;
+      });
+    }
+
     setShowOrderModal(false);
   };
 

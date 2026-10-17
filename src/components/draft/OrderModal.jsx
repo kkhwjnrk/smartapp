@@ -85,6 +85,29 @@ function OrderModal({
     }).slice(0, 80);
   }, [storeSearchQuery, stores]);
 
+  // Daftar rute unik dari data master toko untuk saran autocomplete
+  const existingRoutes = useMemo(() => {
+    const set = new Set();
+    stores.forEach(s => {
+      if (s.routeCode && s.routeCode.trim()) {
+        set.add(s.routeCode.trim().toUpperCase());
+      }
+    });
+    return Array.from(set).sort();
+  }, [stores]);
+
+  // Identifikasi toko yang dipilih di data master stores
+  const matchedStore = useMemo(() => {
+    if (!storeName.trim()) return null;
+    return stores.find(s => 
+      (customerId && s.customerId && s.customerId.trim().toLowerCase() === customerId.trim().toLowerCase()) ||
+      (s.name && s.name.trim().toLowerCase() === storeName.trim().toLowerCase())
+    );
+  }, [storeName, customerId, stores]);
+
+  const isStoreMissingRoute = Boolean(matchedStore && !matchedStore.routeCode?.trim());
+  const isRouteModified = Boolean(matchedStore && matchedStore.routeCode?.trim() && routeCode.trim().toUpperCase() !== matchedStore.routeCode.trim().toUpperCase());
+
   // Autocomplete pencarian barang katalog (multi-token search)
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
@@ -450,16 +473,37 @@ function OrderModal({
                 />
               </div>
               <div>
-                <label className="block text-[11.5px] font-semibold text-zinc-600 mb-1">
-                  Kode Rute {isStoreSelected ? '(Otomatis)' : ''}
+                <label className="block text-[11.5px] font-semibold text-zinc-600 mb-1 flex items-center justify-between">
+                  <span>Kode Rute</span>
+                  {isStoreSelected && isStoreMissingRoute && (
+                    <span className="text-[10px] text-amber-700 font-bold bg-amber-50 border border-amber-200/80 px-1.5 py-0.2 rounded-md">
+                      Belum ada rute
+                    </span>
+                  )}
                 </label>
                 <input
                   type="text"
-                  placeholder={isStoreSelected ? "Rute toko..." : "Otomatis dari toko..."}
-                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-[13px] font-medium uppercase text-orange-600 focus:bg-white focus:outline-none focus:border-zinc-400"
+                  list="order-route-suggestions"
+                  placeholder={isStoreSelected ? (isStoreMissingRoute ? "Ketik kode rute baru..." : "Rute toko...") : "Otomatis dari toko..."}
+                  className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-[13px] font-bold uppercase text-orange-600 focus:bg-white focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-200 transition-all placeholder:font-normal placeholder:normal-case placeholder:text-zinc-400"
                   value={routeCode}
                   onChange={e => setRouteCode(e.target.value.toUpperCase())}
                 />
+                <datalist id="order-route-suggestions">
+                  {existingRoutes.map(r => (
+                    <option key={r} value={r} />
+                  ))}
+                </datalist>
+
+                {/* Indikator rute otomatis tersimpan ke data toko */}
+                {isStoreSelected && routeCode.trim() && (isStoreMissingRoute || isRouteModified) && (
+                  <p className="mt-1 flex items-center gap-1 text-[10.5px] text-emerald-700 font-medium leading-tight animate-in fade-in">
+                    <svg className="w-3 h-3 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Otomatis disimpan ke data toko</span>
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -929,12 +973,29 @@ function OrderModal({
                 <span className="font-bold text-zinc-900 text-[13.5px] leading-tight block">
                   {storeName}
                 </span>
-                {customerId && (
-                  <span className="inline-block mt-0.5 font-mono font-bold text-[10.5px] text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.2 rounded">
-                    ID: {customerId}
-                  </span>
-                )}
+                <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                  {customerId && (
+                    <span className="font-mono font-bold text-[10.5px] text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.2 rounded">
+                      ID: {customerId}
+                    </span>
+                  )}
+                  {routeCode && (
+                    <span className="font-bold text-[10.5px] text-orange-800 bg-orange-50 border border-orange-200 px-1.5 py-0.2 rounded">
+                      Rute: {routeCode}
+                    </span>
+                  )}
+                </div>
               </div>
+
+              {/* Catatan otomatisasi penyimpanan rute */}
+              {routeCode.trim() && (isStoreMissingRoute || isRouteModified) && (
+                <div className="bg-emerald-50 border border-emerald-200/80 rounded-xl p-2 text-[11px] text-emerald-800 flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Data rute "{routeCode.trim()}" akan otomatis disimpan ke data toko.</span>
+                </div>
+              )}
 
               <div className="border-t border-zinc-200/60 pt-2 flex items-center justify-between">
                 <div>
