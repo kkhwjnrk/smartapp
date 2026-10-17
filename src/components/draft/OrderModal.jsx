@@ -29,6 +29,7 @@ function OrderModal({
   const [selectedCatalogItem, setSelectedCatalogItem] = useState(null);
   const [itemQty, setItemQty] = useState('');
   const [showItemSuggestions, setShowItemSuggestions] = useState(false);
+  const qtyInputRef = useRef(null);
 
   // Dialog Konfirmasi Simpan Order
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
@@ -167,13 +168,25 @@ function OrderModal({
       return;
     }
 
-    const qty = Math.max(1, parseInt(itemQty, 10) || 1);
+    if (!selectedCatalogItem && !searchQuery.trim()) {
+      alert('Silakan pilih part number terlebih dahulu.');
+      return;
+    }
+
+    const parsedQty = parseInt(itemQty, 10);
+    if (!itemQty.trim() || isNaN(parsedQty) || parsedQty <= 0) {
+      alert('Mohon masukkan jumlah (Qty) terlebih dahulu.');
+      qtyInputRef.current?.focus();
+      return;
+    }
+
+    const qty = parsedQty;
 
     let newItem = null;
     if (selectedCatalogItem) {
       newItem = {
         pn: selectedCatalogItem.pn,
-        description: selectedCatalogItem.description,
+        description: selectedCatalogItem.description || '',
         qty: qty
       };
     } else if (searchQuery.trim()) {
@@ -270,6 +283,10 @@ function OrderModal({
   const totalQty = orderItems.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
   const orderSummary = useMemo(() => calculateOrderSummary(orderItems, catalogItems), [orderItems, catalogItems]);
   const isStoreSelected = Boolean(storeName.trim());
+  const hasPartSelected = Boolean(selectedCatalogItem || searchQuery.trim());
+  const parsedItemQty = parseInt(itemQty, 10);
+  const isQtyValid = Boolean(itemQty.trim() && !isNaN(parsedItemQty) && parsedItemQty > 0);
+  const canAddItem = Boolean(isStoreSelected && hasPartSelected && isQtyValid);
 
   const {
     isSwiping,
@@ -590,6 +607,9 @@ function OrderModal({
                           setSelectedCatalogItem(item);
                           setSearchQuery('');
                           setShowItemSuggestions(false);
+                          setTimeout(() => {
+                            qtyInputRef.current?.focus();
+                          }, 50);
                         }}
                         className="w-full text-left p-3 hover:bg-orange-50/70 active:bg-orange-100 transition-colors flex flex-col gap-1 group"
                       >
@@ -619,8 +639,15 @@ function OrderModal({
                   <button
                     type="button"
                     onClick={() => {
-                      setSelectedCatalogItem(null);
+                      setSelectedCatalogItem({
+                        pn: searchQuery.trim(),
+                        description: ''
+                      });
+                      setSearchQuery('');
                       setShowItemSuggestions(false);
+                      setTimeout(() => {
+                        qtyInputRef.current?.focus();
+                      }, 50);
                     }}
                     className="w-full text-left p-3 bg-orange-50/60 hover:bg-orange-100 text-orange-800 font-semibold text-[12px] border-t border-orange-100 flex items-center justify-between"
                   >
@@ -645,11 +672,29 @@ function OrderModal({
                       </span>
                     )}
                   </div>
-                  <p className="text-[13.5px] font-bold text-zinc-900 leading-snug break-words whitespace-normal">
-                    {selectedCatalogItem.description}
-                  </p>
-                  <p className="text-[11px] text-zinc-500 mt-1 font-medium">
-                    ✓ Masukkan jumlah PCS dan klik Tambah ke Daftar
+                  {selectedCatalogItem.description && (
+                    <p className="text-[13.5px] font-bold text-zinc-900 leading-snug break-words whitespace-normal">
+                      {selectedCatalogItem.description}
+                    </p>
+                  )}
+                  <p className={`text-[11px] mt-1.5 font-medium flex items-center gap-1.5 ${
+                    isQtyValid ? 'text-emerald-700' : 'text-amber-700'
+                  }`}>
+                    {isQtyValid ? (
+                      <>
+                        <svg className="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Qty: <b>{itemQty} PCS</b> — Siap ditambahkan ke daftar</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-3.5 h-3.5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>Masukkan jumlah (Qty) di bawah sebelum menambah ke daftar</span>
+                      </>
+                    )}
                   </p>
                 </div>
                 <button
@@ -657,6 +702,7 @@ function OrderModal({
                   onClick={() => {
                     setSelectedCatalogItem(null);
                     setSearchQuery('');
+                    setItemQty('');
                   }}
                   className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-orange-100 rounded-lg transition-colors shrink-0"
                   title="Ganti Item"
@@ -672,15 +718,24 @@ function OrderModal({
             <div className="flex gap-2.5">
               <div className="w-32">
                 <input
+                  ref={qtyInputRef}
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
                   disabled={!isStoreSelected}
                   placeholder="Qty (PCS)"
-                  onKeyDown={handleNumericKeyDown}
+                  onKeyDown={(e) => {
+                    handleNumericKeyDown(e);
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddItem();
+                    }
+                  }}
                   className={`w-full px-3 py-2.5 border rounded-xl text-center font-bold text-[14px] transition-all ${
                     isStoreSelected
-                      ? 'bg-zinc-50 border-zinc-300 text-zinc-900 focus:bg-white focus:outline-none focus:border-zinc-500'
+                      ? hasPartSelected && !isQtyValid
+                        ? 'bg-amber-50/60 border-amber-400 text-zinc-900 focus:bg-white focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200'
+                        : 'bg-zinc-50 border-zinc-300 text-zinc-900 focus:bg-white focus:outline-none focus:border-zinc-500'
                       : 'bg-zinc-100 border-zinc-200 text-zinc-400 cursor-not-allowed'
                   }`}
                   value={itemQty}
@@ -689,12 +744,12 @@ function OrderModal({
               </div>
               <button
                 type="button"
-                disabled={!isStoreSelected || (!selectedCatalogItem && !searchQuery.trim())}
+                disabled={!canAddItem}
                 onClick={handleAddItem}
-                className={`flex-1 py-2.5 text-white font-semibold text-[13px] rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 ${
-                  isStoreSelected && (selectedCatalogItem || searchQuery.trim())
-                    ? 'bg-zinc-900 hover:bg-zinc-800 active:scale-98 cursor-pointer'
-                    : 'bg-zinc-400/80 cursor-not-allowed opacity-60'
+                className={`flex-1 py-2.5 font-semibold text-[13px] rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 ${
+                  canAddItem
+                    ? 'bg-zinc-900 hover:bg-zinc-800 text-white active:scale-98 cursor-pointer'
+                    : 'bg-zinc-200 text-zinc-400 border border-zinc-200 cursor-not-allowed select-none'
                 }`}
               >
                 <span>+ Tambah ke Daftar</span>
