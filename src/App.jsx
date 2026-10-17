@@ -24,6 +24,10 @@ import ItemModal from './components/pricelist/ItemModal';
 import StoreModal from './components/stores/StoreModal';
 import RouteSheet from './components/stores/RouteSheet';
 import OrderModal from './components/draft/OrderModal';
+import VisitRecapModal from './components/stores/VisitRecapModal';
+import SadixScheduleModal from './components/stores/SadixScheduleModal';
+import { getTodayIso } from './utils/date';
+import { isStoreMatch } from './utils/visitUtils';
 
 const PRICELIST_DATA_VERSION = 'v2_568_official_pdf';
 
@@ -130,6 +134,27 @@ function App() {
     localStorage.setItem('daytona_orders', JSON.stringify(orders));
   }, [orders]);
 
+  // Visits State (Tracking Kunjungan Toko: Min 2x/Bulan per Toko, Min 12 Toko/Hari)
+  const [visits, setVisits] = useState(() => {
+    const saved = localStorage.getItem('daytona_visits');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('daytona_visits', JSON.stringify(visits));
+  }, [visits]);
+
+  // Modal Rekap Kunjungan Malam & Jadwal SPV (Sadix)
+  const [showVisitRecapModal, setShowVisitRecapModal] = useState(false);
+  const [showSadixScheduleModal, setShowSadixScheduleModal] = useState(false);
+
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [modalOrder, setModalOrder] = useState(null);
 
@@ -222,6 +247,30 @@ function App() {
       });
     }
 
+    // 3. Otomatis catat kunjungan pada tanggal order jika belum tercatat
+    if (orderData.storeName || orderData.customerId) {
+      const visitDateIso = orderData.dateIso || getTodayIso();
+      setVisits(prev => {
+        const alreadyVisited = prev.some(v => 
+          v.dateIso === visitDateIso && 
+          ((orderData.customerId && v.customerId?.toLowerCase() === orderData.customerId.toLowerCase()) ||
+           (orderData.storeName && v.storeName?.toLowerCase() === orderData.storeName.toLowerCase()))
+        );
+        if (alreadyVisited) return prev;
+        const newVisit = {
+          id: `visit_${visitDateIso}_${Date.now()}`,
+          storeId: null,
+          customerId: orderData.customerId || '',
+          storeName: orderData.storeName || '',
+          routeCode: orderData.routeCode || '',
+          dateIso: visitDateIso,
+          monthKey: visitDateIso.substring(0, 7),
+          createdAt: Date.now()
+        };
+        return [...prev, newVisit];
+      });
+    }
+
     setShowOrderModal(false);
   };
 
@@ -231,6 +280,47 @@ function App() {
       setOrders(prev => prev.filter(o => o.id !== orderId));
       setShowOrderModal(false);
     }
+  };
+
+  // Simpan rekap kunjungan dari checklist modal malam hari
+  const saveDayVisits = ({ dateIso, selectedStores }) => {
+    setVisits(prev => {
+      const otherDaysVisits = prev.filter(v => v.dateIso !== dateIso);
+      const newVisitsForDay = selectedStores.map(store => ({
+        id: `visit_${dateIso}_${store.id || store.customerId || Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+        storeId: store.id || null,
+        customerId: store.customerId || '',
+        storeName: store.name,
+        routeCode: store.routeCode || '',
+        dateIso: dateIso,
+        monthKey: dateIso.substring(0, 7),
+        createdAt: Date.now()
+      }));
+      return [...otherDaysVisits, ...newVisitsForDay];
+    });
+  };
+
+  // Toggle tanda kunjungan toko hari ini dari StoreCard atau Peta
+  const toggleVisitToday = (store) => {
+    const todayIso = getTodayIso();
+    setVisits(prev => {
+      const existingIndex = prev.findIndex(v => v.dateIso === todayIso && isStoreMatch(v, store));
+      if (existingIndex >= 0) {
+        return prev.filter((_, idx) => idx !== existingIndex);
+      } else {
+        const newVisit = {
+          id: `visit_${todayIso}_${store.id || store.customerId || Date.now()}`,
+          storeId: store.id || null,
+          customerId: store.customerId || '',
+          storeName: store.name,
+          routeCode: store.routeCode || '',
+          dateIso: todayIso,
+          monthKey: todayIso.substring(0, 7),
+          createdAt: Date.now()
+        };
+        return [...prev, newVisit];
+      }
+    });
   };
 
   // Modals & States
@@ -494,6 +584,9 @@ function App() {
               setShowCategorySheet(true);
             }}
             onOpenMore={() => setActiveTab('more')}
+            visits={visits}
+            onOpenVisitRecap={() => setShowVisitRecapModal(true)}
+            onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
           />
         )}
 
@@ -534,6 +627,10 @@ function App() {
             onOpenEditModal={openEditStore}
             onDeleteStore={deleteStore}
             onOpenAddOrder={openAddOrder}
+            visits={visits}
+            onOpenVisitRecap={() => setShowVisitRecapModal(true)}
+            onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
+            onToggleVisitToday={toggleVisitToday}
           />
         )}
 
@@ -558,6 +655,8 @@ function App() {
             stores={stores}
             setStores={setStores}
             items={items}
+            visits={visits}
+            setVisits={setVisits}
           />
         )}
       </main>
@@ -626,6 +725,25 @@ function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         cartCount={pendingOrdersCount}
+      />
+
+      {/* Modal Rekap Kunjungan Harian Malam Hari */}
+      <VisitRecapModal
+        isOpen={showVisitRecapModal}
+        onClose={() => setShowVisitRecapModal(false)}
+        stores={stores}
+        visits={visits}
+        onSaveDayVisits={saveDayVisits}
+        routesList={routesList}
+      />
+
+      {/* Modal Perencana Jadwal Kunjungan (Sadix / SPV) */}
+      <SadixScheduleModal
+        isOpen={showSadixScheduleModal}
+        onClose={() => setShowSadixScheduleModal(false)}
+        stores={stores}
+        visits={visits}
+        routesList={routesList}
       />
 
       {/* iOS Home Screen Install Helper Banner */}

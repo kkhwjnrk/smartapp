@@ -5,7 +5,9 @@ function MoreTab({
   setOrders,
   stores = [],
   setStores,
-  items = []
+  items = [],
+  visits = [],
+  setVisits
 }) {
   const [importStatus, setImportStatus] = useState(null);
   const [pendingExportType, setPendingExportType] = useState(null); // 'all' | 'orders' | 'stores' | null
@@ -41,9 +43,9 @@ function MoreTab({
         typeLabel = `Data Toko & GPS (${stores.length} toko, ${storesWithGpsCount} GPS)`;
       } else {
         // all
-        dataToExport = { orders, stores };
+        dataToExport = { orders, stores, visits };
         filename = `daytona_backup_semua_${dateStr}_${timeStr}.json`;
-        typeLabel = `Semua Data (${orders.length} order, ${stores.length} toko)`;
+        typeLabel = `Semua Data (${orders.length} order, ${stores.length} toko, ${visits.length} riwayat kunjungan)`;
       }
 
       const backupPayload = {
@@ -97,7 +99,7 @@ function MoreTab({
       let dataToCopy = {};
       if (type === 'orders') dataToCopy = { orders };
       else if (type === 'stores') dataToCopy = { stores };
-      else dataToCopy = { orders, stores };
+      else dataToCopy = { orders, stores, visits };
 
       const backupPayload = {
         appName: 'SmartApp Daytona',
@@ -216,6 +218,13 @@ function MoreTab({
         localStorage.setItem('daytona_stores', JSON.stringify(pendingRestoreData.stores));
         setStores(pendingRestoreData.stores);
         summaryRestored.push(`${pendingRestoreData.stores.length} Toko & GPS`);
+      }
+
+      // Pulihkan Data Riwayat Kunjungan jika tersedia
+      if (pendingRestoreData.visits && Array.isArray(pendingRestoreData.visits) && setVisits) {
+        localStorage.setItem('daytona_visits', JSON.stringify(pendingRestoreData.visits));
+        setVisits(pendingRestoreData.visits);
+        summaryRestored.push(`${pendingRestoreData.visits.length} Kunjungan`);
       }
 
       setPendingRestoreData(null);

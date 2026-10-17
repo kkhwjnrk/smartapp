@@ -1,12 +1,21 @@
 import React from 'react';
+import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
+import { getStoreVisitsForMonth, getStoreVisitStatus, isStoreMatch } from '../../utils/visitUtils';
 
-function StoreCard({ store, isEditMode, onEdit, onDelete }) {
+function StoreCard({ store, isEditMode, onEdit, onDelete, visits = [], onToggleVisitToday }) {
   const hasCoordinates = store.lat !== undefined && store.lat !== null && store.lat !== '' &&
                          store.lng !== undefined && store.lng !== null && store.lng !== '';
 
   const mapsUrl = hasCoordinates 
     ? `https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lng}`
     : null;
+
+  const todayIso = getTodayIso();
+  const currentMonthKey = getCurrentMonthKey();
+  const storeMonthVisits = getStoreVisitsForMonth(store, visits, currentMonthKey);
+  const monthVisitCount = storeMonthVisits.length;
+  const isVisitedToday = visits.some(v => v.dateIso === todayIso && isStoreMatch(v, store));
+  const visitStatus = getStoreVisitStatus(monthVisitCount);
 
   return (
     <div 
@@ -15,7 +24,7 @@ function StoreCard({ store, isEditMode, onEdit, onDelete }) {
         isEditMode ? 'cursor-pointer hover:border-zinc-400 hover:shadow-md' : 'hover:shadow-md'
       }`}
     >
-      {/* Header Card: Customer ID, Route Code & Actions */}
+      {/* Header Card: Customer ID, Route Code, Status Kunjungan 2x & Actions */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-1.5 flex-wrap">
           {store.customerId && (
@@ -30,10 +39,15 @@ function StoreCard({ store, isEditMode, onEdit, onDelete }) {
           }`}>
             {store.routeCode || 'TANPA RUTE'}
           </span>
+          {/* Badge Target Kunjungan Bulanan (Minimal 2x) */}
+          <span className={`px-2 py-0.5 rounded-lg text-[10.5px] font-bold border flex items-center gap-1 shadow-2xs ${visitStatus.bgClass}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${visitStatus.dotClass}`}></span>
+            <span>{visitStatus.shortLabel}</span>
+          </span>
           {hasCoordinates && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-[10px] font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              GPS Aktif
+              GPS
             </span>
           )}
         </div>
@@ -97,40 +111,52 @@ function StoreCard({ store, isEditMode, onEdit, onDelete }) {
         </div>
       )}
 
-      {/* Google Maps Action / Coordinate Status */}
-      <div className="pt-1 border-t border-zinc-100 flex items-center justify-between gap-2 mt-1">
+      {/* Action Bar: Google Maps + Catat Kunjungan Hari Ini */}
+      <div className="pt-2 border-t border-zinc-100 flex items-center justify-between gap-2 mt-1">
+        {/* Tombol Cepat Kunjungan Hari Ini */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleVisitToday?.(store);
+          }}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11.5px] font-bold transition-all active:scale-95 border shadow-2xs ${
+            isVisitedToday
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+              : 'bg-zinc-50 hover:bg-zinc-100 text-zinc-700 border-zinc-200'
+          }`}
+          title={isVisitedToday ? 'Batalkan tanda kunjungan hari ini' : 'Tandai toko ini dikunjungi hari ini'}
+        >
+          <svg className={`w-3.5 h-3.5 ${isVisitedToday ? 'text-emerald-600' : 'text-zinc-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d={isVisitedToday ? "M5 13l4 4L19 7" : "M12 4v16m8-8H4"} />
+          </svg>
+          <span>{isVisitedToday ? 'Dikunjungi Hari Ini' : '+ Kunjungan'}</span>
+        </button>
+
         {hasCoordinates ? (
-          <div className="flex items-center justify-between w-full gap-2">
-            <span className="text-[11px] text-zinc-400 font-mono truncate">
-              {Number(store.lat).toFixed(4)}, {Number(store.lng).toFixed(4)}
-            </span>
-            <a
-              href={mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-[12px] font-medium rounded-xl transition-all shadow-sm active:scale-95 shrink-0"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              <span>Buka Maps</span>
-            </a>
-          </div>
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.stopPropagation()}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-[11.5px] font-bold rounded-xl transition-all shadow-sm active:scale-95 shrink-0"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>Buka Maps</span>
+          </a>
         ) : (
-          <div className="flex items-center justify-between w-full">
-            <span className="text-[11.5px] text-zinc-400 italic">
-              Belum ada koordinat Maps
-            </span>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(store);
-              }}
-              className="text-[11.5px] font-semibold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 px-2.5 py-1 rounded-lg border border-orange-200/80 transition-colors active:scale-95 flex items-center gap-1"
-            >
-              <span>+ Pasang Titik</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(store);
+            }}
+            className="text-[11px] font-bold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 px-2.5 py-1.5 rounded-xl border border-orange-200/80 transition-colors active:scale-95 flex items-center gap-1 shrink-0"
+          >
+            <span>+ Titik GPS</span>
+          </button>
         )}
       </div>
     </div>

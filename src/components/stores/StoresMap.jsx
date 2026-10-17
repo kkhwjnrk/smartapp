@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { getNavigationUrl } from '../../utils/geoUtils';
+import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
+import { getStoreVisitsForMonth, getStoreVisitStatus, isStoreMatch } from '../../utils/visitUtils';
 
 function StoresMap({
   filteredStores = [],
@@ -9,13 +11,31 @@ function StoresMap({
   onOpenRouteSheet,
   onOpenAddOrder,
   onOpenEditModal,
-  onSwitchToList
+  onSwitchToList,
+  visits = [],
+  onToggleVisitToday
 }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersLayerRef = useRef(null);
 
   const [selectedStore, setSelectedStore] = useState(null);
+  const todayIso = useMemo(() => getTodayIso(), []);
+  const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
+
+  const selectedStoreVisits = useMemo(() => {
+    if (!selectedStore) return [];
+    return getStoreVisitsForMonth(selectedStore, visits, currentMonthKey);
+  }, [selectedStore, visits, currentMonthKey]);
+
+  const isSelectedStoreVisitedToday = useMemo(() => {
+    if (!selectedStore) return false;
+    return visits.some(v => v.dateIso === todayIso && isStoreMatch(v, selectedStore));
+  }, [selectedStore, visits, todayIso]);
+
+  const selectedStoreVisitStatus = useMemo(() => {
+    return getStoreVisitStatus(selectedStoreVisits.length);
+  }, [selectedStoreVisits]);
 
   // Ambil toko-toko yang memiliki koordinat GPS valid
   const storesWithGps = useMemo(() => {
@@ -266,6 +286,11 @@ function StoresMap({
                   <span className="px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-lg text-[10px] font-bold">
                     {selectedStore.routeCode || 'TANPA RUTE'}
                   </span>
+                  {/* Badge Target Kunjungan Bulanan (Minimal 2x) */}
+                  <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border flex items-center gap-1 shadow-2xs ${selectedStoreVisitStatus.bgClass}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${selectedStoreVisitStatus.dotClass}`}></span>
+                    <span>{selectedStoreVisitStatus.shortLabel}</span>
+                  </span>
                 </div>
 
                 <h3 className="font-bold text-[15px] text-zinc-900 truncate leading-snug">
@@ -291,12 +316,31 @@ function StoresMap({
             {/* Tombol Aksi Lapangan */}
             <div className="flex items-center gap-2 pt-1">
               
+              {/* Tombol Tandai Kunjungan Hari Ini */}
+              {onToggleVisitToday && (
+                <button
+                  type="button"
+                  onClick={() => onToggleVisitToday(selectedStore)}
+                  className={`px-3 py-2.5 rounded-2xl text-[12px] font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95 border ${
+                    isSelectedStoreVisitedToday
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs'
+                      : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border-zinc-200'
+                  }`}
+                  title={isSelectedStoreVisitedToday ? 'Batalkan tanda kunjungan hari ini' : 'Tandai kunjungan hari ini'}
+                >
+                  <svg className={`w-3.5 h-3.5 ${isSelectedStoreVisitedToday ? 'text-emerald-600' : 'text-zinc-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d={isSelectedStoreVisitedToday ? "M5 13l4 4L19 7" : "M12 4v16m8-8H4"} />
+                  </svg>
+                  <span>{isSelectedStoreVisitedToday ? 'Dikunjungi' : '+ Kunjungan'}</span>
+                </button>
+              )}
+
               {/* Tombol Petunjuk Arah / Rute Navigasi Google Maps */}
               <a
                 href={getNavigationUrl(selectedStore.lat, selectedStore.lng)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 py-2.5 bg-zinc-100 hover:bg-zinc-200 active:scale-95 rounded-2xl text-zinc-800 text-[12.5px] font-bold flex items-center justify-center gap-1.5 transition-all"
+                className="flex-1 py-2.5 bg-zinc-100 hover:bg-zinc-200 active:scale-95 rounded-2xl text-zinc-800 text-[12px] font-bold flex items-center justify-center gap-1.5 transition-all"
               >
                 <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -310,7 +354,7 @@ function StoresMap({
                 <button
                   type="button"
                   onClick={() => onOpenAddOrder(selectedStore)}
-                  className="flex-1 py-2.5 bg-[#EA580C] hover:bg-orange-700 active:scale-95 rounded-2xl text-white text-[12.5px] font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                  className="flex-1 py-2.5 bg-[#EA580C] hover:bg-orange-700 active:scale-95 rounded-2xl text-white text-[12px] font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm"
                 >
                   <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />

@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { formatStoreCustomerHeader } from '../../utils/formatters';
+import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
+import { getDailyVisitCount, getMonthlyVisitStats } from '../../utils/visitUtils';
 
 function HomeTab({ 
   orders = [], 
@@ -13,10 +15,18 @@ function HomeTab({
   onOpenAddOrder, 
   onOpenEditOrder,
   onOpenCategories,
-  onOpenMore 
+  onOpenMore,
+  visits = [],
+  onOpenVisitRecap,
+  onOpenSadixSchedule
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedStore, setCopiedStore] = useState('');
+
+  const todayIso = useMemo(() => getTodayIso(), []);
+  const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
+  const todayVisitCount = useMemo(() => getDailyVisitCount(visits, todayIso), [visits, todayIso]);
+  const monthlyStats = useMemo(() => getMonthlyVisitStats(stores, visits, currentMonthKey), [stores, visits, currentMonthKey]);
 
 
   // Sapaan Waktu Otomatis
@@ -155,6 +165,71 @@ function HomeTab({
           </button>
         </div>
       </form>
+
+      {/* 2.5 TARGET KUNJUNGAN TOKO (BULANAN 2X & HARIAN MIN 12) */}
+      <div className="bg-white rounded-3xl p-4.5 border border-zinc-200/90 shadow-xs space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center font-bold text-[14px] shrink-0 shadow-2xs">
+              🎯
+            </span>
+            <div>
+              <h3 className="font-bold text-[14px] text-zinc-900 leading-tight">
+                Target Kunjungan Toko
+              </h3>
+              <p className="text-[11px] text-zinc-500">
+                Min. 2x sebulan per toko · Min. 12 toko/hari
+              </p>
+            </div>
+          </div>
+          <span className={`text-[10.5px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
+            todayVisitCount >= 12 ? 'bg-emerald-100 text-emerald-800' : 'bg-orange-100 text-orange-950'
+          }`}>
+            Hari ini: {todayVisitCount}/12
+          </span>
+        </div>
+
+        {/* Progress Bar Capaian Bulanan 2x */}
+        <div className="p-3 bg-zinc-50 rounded-2xl border border-zinc-200/70 space-y-2">
+          <div className="flex items-center justify-between text-[11.5px]">
+            <span className="font-bold text-zinc-700">
+              Capaian 2x Kunjungan Bulan Ini
+            </span>
+            <span className="font-mono font-bold text-zinc-900">
+              {monthlyStats.completedCount} / {monthlyStats.totalStores} Toko ({monthlyStats.completionPercent}%)
+            </span>
+          </div>
+          <div className="w-full bg-zinc-200 rounded-full h-2 overflow-hidden">
+            <div 
+              className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+              style={{ width: `${monthlyStats.completionPercent}%` }}
+            ></div>
+          </div>
+          <div className="flex items-center justify-between text-[10.5px] text-zinc-500 font-medium pt-0.5">
+            <span className="text-red-700 font-semibold">🔴 0x: {monthlyStats.unvisitedCount}</span>
+            <span className="text-amber-700 font-semibold">🟡 1x: {monthlyStats.partialCount}</span>
+            <span className="text-emerald-700 font-bold">🟢 Selesai (≥2x): {monthlyStats.completedCount}</span>
+          </div>
+        </div>
+
+        {/* Tombol Aksi Cepat: Rekap Malam & Jadwal SPV */}
+        <div className="grid grid-cols-2 gap-2 pt-0.5">
+          <button
+            type="button"
+            onClick={onOpenVisitRecap}
+            className="py-2.5 px-3 bg-zinc-900 hover:bg-zinc-800 active:scale-95 text-white rounded-xl text-[12px] font-bold transition-all shadow-xs flex items-center justify-center gap-1.5"
+          >
+            <span>🌙 Rekap Malam</span>
+          </button>
+          <button
+            type="button"
+            onClick={onOpenSadixSchedule}
+            className="py-2.5 px-3 bg-blue-50 hover:bg-blue-100 active:scale-95 text-blue-700 border border-blue-200 rounded-xl text-[12px] font-bold transition-all shadow-xs flex items-center justify-center gap-1.5"
+          >
+            <span>📋 Jadwal SPV (Sadix)</span>
+          </button>
+        </div>
+      </div>
 
       {/* 3. BENTO GRID STATISTIK UTAMA */}
       <div className="grid grid-cols-2 gap-3">
