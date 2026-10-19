@@ -12,7 +12,7 @@ function StatusConfirmModal({
   const isCompleted = order.status === 'completed';
 
   const modalContent = (
-    <div className="fixed inset-0 z-70 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4" style={{ zIndex: 100 }}>
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-zinc-900/50 backdrop-blur-xs transition-opacity"
