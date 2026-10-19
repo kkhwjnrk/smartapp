@@ -118,7 +118,7 @@ function DiscountSheet({ item, onClose }) {
 
         {/* Skema Diskon Grosir */}
         <div className="space-y-1 pb-2">
-          <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2 ml-1">Skema Diskon Grosir Daytona</h4>
+          <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2 ml-1">Skema Diskon Grosir</h4>
 
           <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
             <span className="text-[15px] font-medium text-zinc-700">Diskon 24%</span>

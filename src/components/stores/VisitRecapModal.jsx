@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
 import { getStoreVisitsForMonth, isStoreMatch } from '../../utils/visitUtils';
+import useSwipeBack from '../../hooks/useSwipeBack';
 
 function getInitialCheckedStores(dateIso, visits = [], stores = []) {
   const dayVisits = visits.filter(v => v.dateIso === dateIso);
@@ -31,6 +32,21 @@ function VisitRecapModal({
     getInitialCheckedStores(initialDateIso || getTodayIso(), visits, stores)
   );
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
+
+  const {
+    isSwiping,
+    dragX,
+    dragProgress,
+    isExiting,
+    containerStyle,
+    backdropOpacity,
+    handlers: swipeHandlers
+  } = useSwipeBack({
+    onBack: onClose,
+    edgeWidth: 60,
+    threshold: 85,
+    enabled: isOpen
+  });
 
   // Filter rute unik (tanpa 'Semua')
   const availableRoutes = useMemo(() => {
@@ -119,11 +135,41 @@ function VisitRecapModal({
       <div 
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
+        style={{
+          opacity: backdropOpacity,
+          transition: isSwiping ? 'none' : 'opacity 0.25s ease'
+        }}
       />
 
-      {/* Modal Dialog Card */}
-      <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden border border-zinc-200 animate-in zoom-in-95 duration-200">
-        
+      {/* Modal Dialog Card with Edge Swipe-Back */}
+      <div 
+        {...swipeHandlers}
+        style={containerStyle}
+        className={`relative w-full max-w-lg bg-white rounded-3xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden border border-zinc-200 ${
+          dragX === 0 && !isExiting ? 'animate-in zoom-in-95 duration-200' : ''
+        }`}
+      >
+        {/* iOS-Style Left-Edge Swipe Hint / Indicator */}
+        {dragX > 10 && (
+          <div 
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-50 pointer-events-none flex items-center justify-center transition-all duration-100"
+            style={{
+              opacity: Math.min(1, dragX / 30),
+              transform: `translateY(-50%) scale(${0.8 + dragProgress * 0.3})`
+            }}
+          >
+            <div className={`p-2.5 rounded-full shadow-lg border backdrop-blur-md transition-colors ${
+              dragProgress >= 1 
+                ? 'bg-[#EA580C] text-white border-orange-500 shadow-orange-500/30' 
+                : 'bg-white/95 text-zinc-700 border-zinc-200 shadow-zinc-900/10'
+            }`}>
+              <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </div>
+          </div>
+        )}
+
         {/* HEADER: Judul & Tanggal Rekap */}
         <div className="p-4 bg-zinc-900 text-white flex items-start justify-between gap-3 shrink-0">
           <div>

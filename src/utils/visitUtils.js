@@ -112,9 +112,9 @@ export function getMonthlyVisitStats(stores = [], visits = [], monthKey = getCur
 }
 
 /**
- * Membuat format teks jadwal kunjungan ringkas: list nama toko dan ID customer
+ * Membuat format teks jadwal kunjungan ringkas: list nama toko dan ID customer untuk diserahkan ke SPV
  */
-export function generateSadixScheduleText({
+export function generateSpvScheduleText({
   selectedStores = []
 }) {
   if (!Array.isArray(selectedStores) || selectedStores.length === 0) {
@@ -126,3 +126,6 @@ export function generateSadixScheduleText({
     return `${idx + 1}. ${store.name}${cid}`;
   }).join('\n');
 }
+
+// Alias kompatibilitas
+export const generateSadixScheduleText = generateSpvScheduleText;

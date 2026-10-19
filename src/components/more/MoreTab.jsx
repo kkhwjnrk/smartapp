@@ -69,7 +69,7 @@ function MoreTab({
       }
 
       const backupPayload = {
-        appName: 'SmartApp Daytona',
+        appName: 'SmartApp',
         version: '2.0',
         backupType: type, // 'all' | 'orders' | 'stores'
         exportedAt: now.toISOString(),
@@ -122,7 +122,7 @@ function MoreTab({
       else dataToCopy = { orders, stores, visits };
 
       const backupPayload = {
-        appName: 'SmartApp Daytona',
+        appName: 'SmartApp',
         version: '2.0',
         backupType: type,
         exportedAt: new Date().toISOString(),
@@ -180,14 +180,14 @@ function MoreTab({
         const hasStores = Array.isArray(extractedStores) && extractedStores.length > 0;
 
         if (!hasOrders && !hasStores) {
-          throw new Error('File tidak memuat data order maupun data toko Daytona yang valid.');
+          throw new Error('File tidak memuat data order maupun data toko yang valid.');
         }
 
         const detectedType = parsed.backupType || (hasOrders && hasStores ? 'all' : hasOrders ? 'orders' : 'stores');
 
         setPendingRestoreData({
           fileName: file.name,
-          appName: parsed.appName || 'Cadangan Daytona',
+          appName: parsed.appName || 'Cadangan SmartApp',
           exportedAt: parsed.exportedDateFormatted || parsed.exportedAt || 'Waktu tidak tercatat',
           backupType: detectedType,
           hasOrders,
@@ -260,7 +260,7 @@ function MoreTab({
     }
   };
 
-  // Tampilkan halaman khusus Target & Jadwal Kunjungan (Sadix) jika subView 'visits' dipilih
+  // Tampilkan halaman khusus Target & Jadwal Kunjungan jika subView 'visits' dipilih
   if (activeSubView === 'visits') {
     return (
       <VisitsManagementView
@@ -281,7 +281,7 @@ function MoreTab({
 
       {/* Header Info Aplikasi */}
       <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-zinc-200/80 shadow-2xs flex items-center gap-3.5">
-        {/* Logo Resmi Sistem Daytona */}
+        {/* Logo Resmi SmartApp */}
         <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-xl overflow-hidden shadow-2xs flex items-center justify-center bg-[#EA580C]">
           <svg
             className="w-full h-full"
@@ -307,7 +307,7 @@ function MoreTab({
               SmartApp
             </h2>
             <span className="text-[10px] font-bold text-orange-700 bg-orange-50 border border-orange-200/80 px-2 py-0.5 rounded-full">
-              Daytona
+              Sales
             </span>
           </div>
           <p className="text-[11.5px] text-zinc-500 mt-0.5 leading-snug truncate">
@@ -368,7 +368,63 @@ function MoreTab({
         </div>
       </button>
 
-      {/* SECTION 1: CADANGAN & KEAMANAN DATA MODULAR */}
+      {/* KARTU PROGRES TARGET NOMINAL ORDER */}
+      <OrderTargetProgressCard
+        orders={orders}
+        catalogItems={items}
+      />
+
+      {/* SECTION 1: INFORMASI SISTEM & KATALOG */}
+      <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-zinc-200/80 shadow-2xs space-y-2.5">
+
+        <h3 className="text-[13.5px] sm:text-[14px] font-bold text-zinc-900 leading-tight">
+          Informasi Sistem
+        </h3>
+
+        <div className="divide-y divide-zinc-100 text-[12px]">
+
+          <div className="py-2 flex items-center justify-between">
+            <div>
+              <span className="font-semibold text-zinc-800 block">Katalog Daytona</span>
+              <span className="text-[10.5px] text-zinc-400">Pricelist PDF V2</span>
+            </div>
+            <span className="px-2 py-0.5 bg-zinc-100 text-zinc-700 rounded-lg text-[10.5px] font-mono font-bold">
+              {items.length || 568} Part
+            </span>
+          </div>
+
+          <div className="py-2 flex items-center justify-between">
+            <div>
+              <span className="font-semibold text-zinc-800 block">Skema Diskon Otomatis</span>
+              <span className="text-[10.5px] text-zinc-400">Dihitung per item pesanan</span>
+            </div>
+            <span className="px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/70 rounded-lg text-[10.5px] font-bold">
+              24% · 27% · 29%
+            </span>
+          </div>
+
+          <div className="py-2 flex items-center justify-between">
+            <div>
+              <span className="font-semibold text-zinc-800 block">Penyimpanan Offline</span>
+              <span className="text-[10.5px] text-zinc-400">Tersimpan lokal di perangkat</span>
+            </div>
+            <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/70 rounded-lg text-[10.5px] font-semibold">
+              LocalStorage ✓
+            </span>
+          </div>
+
+          <div className="py-2 flex items-center justify-between">
+            <span className="font-semibold text-zinc-800">Versi Sistem</span>
+            <span className="text-zinc-500 text-[11px] font-medium">
+              v2.0 PWA
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* SECTION 2: CADANGAN & KEAMANAN DATA MODULAR */}
       <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-zinc-200/80 shadow-2xs space-y-3.5">
 
         <div className="flex items-center gap-2.5">
@@ -492,62 +548,6 @@ function MoreTab({
             </svg>
             <span>Pilih File Cadangan (.json)</span>
           </button>
-        </div>
-
-      </div>
-
-      {/* KARTU PROGRES TARGET NOMINAL ORDER */}
-      <OrderTargetProgressCard
-        orders={orders}
-        catalogItems={items}
-      />
-
-      {/* SECTION 2: INFORMASI SISTEM & KATALOG */}
-      <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-zinc-200/80 shadow-2xs space-y-2.5">
-
-        <h3 className="text-[13.5px] sm:text-[14px] font-bold text-zinc-900 leading-tight">
-          Informasi Sistem
-        </h3>
-
-        <div className="divide-y divide-zinc-100 text-[12px]">
-
-          <div className="py-2 flex items-center justify-between">
-            <div>
-              <span className="font-semibold text-zinc-800 block">Katalog Daytona</span>
-              <span className="text-[10.5px] text-zinc-400">Pricelist PDF V2</span>
-            </div>
-            <span className="px-2 py-0.5 bg-zinc-100 text-zinc-700 rounded-lg text-[10.5px] font-mono font-bold">
-              {items.length || 568} Part
-            </span>
-          </div>
-
-          <div className="py-2 flex items-center justify-between">
-            <div>
-              <span className="font-semibold text-zinc-800 block">Skema Diskon Otomatis</span>
-              <span className="text-[10.5px] text-zinc-400">Dihitung per item pesanan</span>
-            </div>
-            <span className="px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/70 rounded-lg text-[10.5px] font-bold">
-              24% · 27% · 29%
-            </span>
-          </div>
-
-          <div className="py-2 flex items-center justify-between">
-            <div>
-              <span className="font-semibold text-zinc-800 block">Penyimpanan Offline</span>
-              <span className="text-[10.5px] text-zinc-400">Tersimpan lokal di perangkat</span>
-            </div>
-            <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/70 rounded-lg text-[10.5px] font-semibold">
-              LocalStorage ✓
-            </span>
-          </div>
-
-          <div className="py-2 flex items-center justify-between">
-            <span className="font-semibold text-zinc-800">Versi Sistem</span>
-            <span className="text-zinc-500 text-[11px] font-medium">
-              v2.0 PWA
-            </span>
-          </div>
-
         </div>
 
       </div>

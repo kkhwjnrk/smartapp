@@ -159,7 +159,7 @@ function App() {
     localStorage.setItem('daytona_visits', JSON.stringify(visits));
   }, [visits]);
 
-  // Modal Rekap Kunjungan Malam & Jadwal SPV (Sadix)
+  // Modal Rekap Kunjungan Malam & Jadwal SPV
   const [showVisitRecapModal, setShowVisitRecapModal] = useState(false);
   const [recapInitialDateIso, setRecapInitialDateIso] = useState(null);
   const [showSadixScheduleModal, setShowSadixScheduleModal] = useState(false);
@@ -743,7 +743,7 @@ function App() {
         />
       )}
 
-      {/* Modal Perencana Jadwal Kunjungan (Sadix / SPV) */}
+      {/* Modal Perencana Jadwal Kunjungan (SPV) */}
       {showSadixScheduleModal && (
         <SadixScheduleModal
           isOpen={showSadixScheduleModal}

@@ -7,6 +7,7 @@ import {
   getStoreVisitStatus,
   isStoreMatch
 } from '../../utils/visitUtils';
+import useSwipeBack from '../../hooks/useSwipeBack';
 
 function VisitsManagementView({
   stores = [],
@@ -23,13 +24,26 @@ function VisitsManagementView({
   const todayVisitCount = useMemo(() => getDailyVisitCount(visits, todayIso), [visits, todayIso]);
   const monthlyStats = useMemo(() => getMonthlyVisitStats(stores, visits, currentMonthKey), [stores, visits, currentMonthKey]);
 
+  const {
+    dragX,
+    dragProgress,
+    isExiting,
+    containerStyle,
+    handlers: swipeHandlers
+  } = useSwipeBack({
+    onBack,
+    edgeWidth: 60,
+    threshold: 85,
+    enabled: true
+  });
+
   // Tab Tampilan: 'dates' (Riwayat per Tanggal) | 'stores' (Pantau Target Toko)
   const [activeTab, setActiveTab] = useState('dates');
 
   // State untuk Tab Riwayat per Tanggal
   const [dateSearchQuery, setDateSearchQuery] = useState('');
   const [expandedDates, setExpandedDates] = useState(() => new Set([todayIso]));
-  
+
   // State untuk Modal "Ganti Tanggal Kunjungan"
   const [moveModalData, setMoveModalData] = useState(null); // { fromDateIso, count }
   const [newTargetDateIso, setNewTargetDateIso] = useState(todayIso);
@@ -66,7 +80,7 @@ function VisitsManagementView({
     return visitsByDate.filter(group => {
       const dateText = formatDateWithDay(group.dateIso).toLowerCase();
       if (dateText.includes(q) || group.dateIso.includes(q)) return true;
-      return group.visits.some(v => 
+      return group.visits.some(v =>
         (v.storeName && v.storeName.toLowerCase().includes(q)) ||
         (v.customerId && v.customerId.toLowerCase().includes(q)) ||
         (v.routeCode && v.routeCode.toLowerCase().includes(q))
@@ -183,7 +197,33 @@ function VisitsManagementView({
   };
 
   return (
-    <div className="space-y-3.5 animate-in fade-in duration-200 pb-16">
+    <div 
+      {...swipeHandlers}
+      style={containerStyle}
+      className={`space-y-3.5 pb-16 relative ${
+        dragX === 0 && !isExiting ? 'animate-in fade-in duration-200' : ''
+      }`}
+    >
+      {/* iOS-Style Left-Edge Swipe Hint / Indicator */}
+      {dragX > 10 && (
+        <div 
+          className="fixed left-3 top-1/2 -translate-y-1/2 z-50 pointer-events-none flex items-center justify-center transition-all duration-100"
+          style={{
+            opacity: Math.min(1, dragX / 30),
+            transform: `translateY(-50%) scale(${0.8 + dragProgress * 0.3})`
+          }}
+        >
+          <div className={`p-2.5 rounded-full shadow-lg border backdrop-blur-md transition-colors ${
+            dragProgress >= 1 
+              ? 'bg-[#EA580C] text-white border-orange-500 shadow-orange-500/30' 
+              : 'bg-white/95 text-zinc-700 border-zinc-200 shadow-zinc-900/10'
+          }`}>
+            <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </div>
+        </div>
+      )}
 
       {/* HEADER NAVIGASI RINGKAS (1 TOMBOL KEMBALI & BUAT JADWAL) */}
       <div className="bg-white p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs flex items-center justify-between gap-2.5">
@@ -198,7 +238,6 @@ function VisitsManagementView({
             <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
-            <span>Kembali</span>
           </button>
           <div className="h-4 w-px bg-zinc-200 shrink-0"></div>
           <h2 className="text-[14.5px] font-black text-zinc-900 leading-tight truncate">
@@ -206,7 +245,7 @@ function VisitsManagementView({
           </h2>
         </div>
 
-        {/* Tombol Buat Jadwal SPV Sadix di Kanan Atas */}
+        {/* Tombol Buat Jadwal SPV di Kanan Atas */}
         <button
           type="button"
           onClick={onOpenSadixSchedule}
@@ -227,11 +266,10 @@ function VisitsManagementView({
             </span>
           </div>
 
-          <span className={`text-[10.5px] font-black px-2.5 py-0.5 rounded-full border ${
-            todayVisitCount >= 12
-              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-              : 'bg-orange-50 text-orange-800 border-orange-200'
-          }`}>
+          <span className={`text-[10.5px] font-black px-2.5 py-0.5 rounded-full border ${todayVisitCount >= 12
+            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+            : 'bg-orange-50 text-orange-800 border-orange-200'
+            }`}>
             {todayVisitCount >= 12 ? '✓ Target 12 Tercapai' : `Kurang ${12 - todayVisitCount} Toko`}
           </span>
         </div>
@@ -256,9 +294,8 @@ function VisitsManagementView({
         {/* Progress Bar Target 12 Toko Hari Ini */}
         <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden border border-zinc-200/60">
           <div
-            className={`h-full transition-all duration-500 rounded-full ${
-              todayVisitCount >= 12 ? 'bg-emerald-500' : 'bg-[#EA580C]'
-            }`}
+            className={`h-full transition-all duration-500 rounded-full ${todayVisitCount >= 12 ? 'bg-emerald-500' : 'bg-[#EA580C]'
+              }`}
             style={{ width: `${Math.min(100, Math.round((todayVisitCount / 12) * 100))}%` }}
           />
         </div>
@@ -269,16 +306,14 @@ function VisitsManagementView({
         <button
           type="button"
           onClick={() => setActiveTab('dates')}
-          className={`flex-1 py-2 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-1.5 ${
-            activeTab === 'dates'
-              ? 'bg-white text-zinc-900 shadow-sm'
-              : 'text-zinc-600 hover:text-zinc-900'
-          }`}
+          className={`flex-1 py-2 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-1.5 ${activeTab === 'dates'
+            ? 'bg-white text-zinc-900 shadow-sm'
+            : 'text-zinc-600 hover:text-zinc-900'
+            }`}
         >
           <span>📅 Riwayat per Tanggal</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            activeTab === 'dates' ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-300/70 text-zinc-700'
-          }`}>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${activeTab === 'dates' ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-300/70 text-zinc-700'
+            }`}>
             {visitsByDate.length}
           </span>
         </button>
@@ -286,16 +321,14 @@ function VisitsManagementView({
         <button
           type="button"
           onClick={() => setActiveTab('stores')}
-          className={`flex-1 py-2 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-1.5 ${
-            activeTab === 'stores'
-              ? 'bg-white text-zinc-900 shadow-sm'
-              : 'text-zinc-600 hover:text-zinc-900'
-          }`}
+          className={`flex-1 py-2 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-1.5 ${activeTab === 'stores'
+            ? 'bg-white text-zinc-900 shadow-sm'
+            : 'text-zinc-600 hover:text-zinc-900'
+            }`}
         >
           <span>🎯 Status Target Toko</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            activeTab === 'stores' ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-300/70 text-zinc-700'
-          }`}>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${activeTab === 'stores' ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-300/70 text-zinc-700'
+            }`}>
             {stores.length}
           </span>
         </button>
@@ -306,7 +339,7 @@ function VisitsManagementView({
       {/* ======================================================== */}
       {activeTab === 'dates' && (
         <div className="space-y-3 animate-in fade-in duration-150">
-          
+
           {/* Kolom Pencarian Riwayat Tanggal / Toko */}
           <div className="relative">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-zinc-400">
@@ -341,8 +374,8 @@ function VisitsManagementView({
               </div>
               <p className="text-[13.5px] font-bold text-zinc-900">Belum Ada Riwayat Kunjungan</p>
               <p className="text-[11.5px] text-zinc-500 mt-1 max-w-xs mx-auto">
-                {dateSearchQuery 
-                  ? 'Tidak ada tanggal atau toko yang cocok dengan pencarian Anda.' 
+                {dateSearchQuery
+                  ? 'Tidak ada tanggal atau toko yang cocok dengan pencarian Anda.'
                   : 'Catat rekap kunjungan malam hari untuk mulai mendokumentasikan kunjungan.'}
               </p>
               <button
@@ -379,11 +412,10 @@ function VisitsManagementView({
                           )}
                         </div>
 
-                        <span className={`text-[10.5px] font-black px-2.5 py-0.5 rounded-full border ${
-                          isTargetAchieved
-                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                            : 'bg-orange-50 text-orange-800 border-orange-200'
-                        }`}>
+                        <span className={`text-[10.5px] font-black px-2.5 py-0.5 rounded-full border ${isTargetAchieved
+                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                          : 'bg-orange-50 text-orange-800 border-orange-200'
+                          }`}>
                           {group.count} Toko {isTargetAchieved ? '✓ Target' : ''}
                         </span>
                       </div>
@@ -502,7 +534,7 @@ function VisitsManagementView({
       {/* ======================================================== */}
       {activeTab === 'stores' && (
         <div className="bg-white p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs space-y-3 animate-in fade-in duration-150">
-          
+
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-[13.5px] font-bold text-zinc-900 leading-tight">
@@ -628,11 +660,10 @@ function VisitsManagementView({
                       <button
                         type="button"
                         onClick={() => onToggleVisitToday?.(store)}
-                        className={`px-2.5 py-1.5 rounded-xl text-[10.5px] font-bold transition-all active:scale-95 border ${
-                          isVisitedToday
-                            ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
-                            : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 shadow-2xs'
-                        }`}
+                        className={`px-2.5 py-1.5 rounded-xl text-[10.5px] font-bold transition-all active:scale-95 border ${isVisitedToday
+                          ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
+                          : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 shadow-2xs'
+                          }`}
                         title={isVisitedToday ? 'Batalkan tanda kunjungan hari ini' : 'Tandai kunjungan hari ini'}
                       >
                         {isVisitedToday ? '✓ Dikunjungi' : '+ Kunjungan'}
@@ -651,13 +682,13 @@ function VisitsManagementView({
       {/* MODAL GANTI TANGGAL KUNJUNGAN (PINDAHKAN REKAP SEKALIGUS)  */}
       {/* ======================================================== */}
       {moveModalData && (
-        <div 
+        <div
           onClick={(e) => { if (e.target === e.currentTarget) setMoveModalData(null); }}
           className="fixed inset-0 z-100 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
           style={{ zIndex: 100 }}
         >
           <div className="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-zinc-100 animate-in zoom-in-95 duration-200 space-y-4">
-            
+
             <div className="text-center">
               <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 mx-auto flex items-center justify-center text-[22px] mb-2 shadow-xs">
                 📅

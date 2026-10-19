@@ -39,7 +39,7 @@ function Header({
               <span className="flex items-center gap-2">
                 <span>SmartApp</span>
                 <span className="px-1.5 py-0.5 bg-orange-600 text-white rounded-md text-[10px] font-black font-mono tracking-wider uppercase shadow-2xs">
-                  Daytona
+                  Sales
                 </span>
               </span>
             )}
