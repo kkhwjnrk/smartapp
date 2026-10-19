@@ -266,6 +266,7 @@ function MoreTab({
       <VisitsManagementView
         stores={stores}
         visits={visits}
+        setVisits={setVisits}
         routesList={routesList}
         onOpenVisitRecap={onOpenVisitRecap}
         onOpenSadixSchedule={onOpenSadixSchedule}

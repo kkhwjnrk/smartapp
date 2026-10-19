@@ -17,17 +17,18 @@ function getInitialCheckedStores(dateIso, visits = [], stores = []) {
 
 function VisitRecapModal({
   isOpen,
+  initialDateIso,
   onClose,
   stores = [],
   visits = [],
   onSaveDayVisits,
   routesList = []
 }) {
-  const [selectedDateIso, setSelectedDateIso] = useState(getTodayIso);
+  const [selectedDateIso, setSelectedDateIso] = useState(() => initialDateIso || getTodayIso());
   const [selectedRoute, setSelectedRoute] = useState('Semua');
   const [searchQuery, setSearchQuery] = useState('');
   const [checkedStoreIds, setCheckedStoreIds] = useState(() => 
-    getInitialCheckedStores(getTodayIso(), visits, stores)
+    getInitialCheckedStores(initialDateIso || getTodayIso(), visits, stores)
   );
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
 

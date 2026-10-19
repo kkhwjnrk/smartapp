@@ -161,7 +161,13 @@ function App() {
 
   // Modal Rekap Kunjungan Malam & Jadwal SPV (Sadix)
   const [showVisitRecapModal, setShowVisitRecapModal] = useState(false);
+  const [recapInitialDateIso, setRecapInitialDateIso] = useState(null);
   const [showSadixScheduleModal, setShowSadixScheduleModal] = useState(false);
+
+  const openVisitRecap = (dateIso) => {
+    setRecapInitialDateIso(dateIso || getTodayIso());
+    setShowVisitRecapModal(true);
+  };
 
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [modalOrder, setModalOrder] = useState(null);
@@ -569,7 +575,7 @@ function App() {
             }}
             onOpenMore={() => setActiveTab('more')}
             visits={visits}
-            onOpenVisitRecap={() => setShowVisitRecapModal(true)}
+            onOpenVisitRecap={() => openVisitRecap(getTodayIso())}
             onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
             onOpenVisitsPage={() => {
               setActiveTab('more');
@@ -642,7 +648,7 @@ function App() {
             visits={visits}
             setVisits={setVisits}
             routesList={routesList}
-            onOpenVisitRecap={() => setShowVisitRecapModal(true)}
+            onOpenVisitRecap={openVisitRecap}
             onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
             onToggleVisitToday={toggleVisitToday}
             subView={moreSubView}
@@ -723,8 +729,13 @@ function App() {
       {/* Modal Rekap Kunjungan Harian Malam Hari */}
       {showVisitRecapModal && (
         <VisitRecapModal
+          key={recapInitialDateIso || 'today'}
           isOpen={showVisitRecapModal}
-          onClose={() => setShowVisitRecapModal(false)}
+          initialDateIso={recapInitialDateIso}
+          onClose={() => {
+            setShowVisitRecapModal(false);
+            setRecapInitialDateIso(null);
+          }}
           stores={stores}
           visits={visits}
           onSaveDayVisits={saveDayVisits}

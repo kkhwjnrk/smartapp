@@ -3,6 +3,32 @@ export const INDO_MONTHS = [
   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
 ];
 
+export const INDO_DAYS = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+/**
+ * Format tanggal beserta nama hari: "Senin, 19 Oktober 2026"
+ */
+export function formatDateWithDay(input) {
+  if (!input) return '';
+  if (typeof input === 'string') {
+    const isoMatch = input.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (isoMatch) {
+      const y = parseInt(isoMatch[1], 10);
+      const m = parseInt(isoMatch[2], 10) - 1;
+      const d = parseInt(isoMatch[3], 10);
+      const dateObj = new Date(y, m, d);
+      const dayName = INDO_DAYS[dateObj.getDay()];
+      return `${dayName}, ${d} ${INDO_MONTHS[m]} ${y}`;
+    }
+  }
+  const dateObj = new Date(input);
+  if (!isNaN(dateObj.getTime())) {
+    const dayName = INDO_DAYS[dateObj.getDay()];
+    return `${dayName}, ${dateObj.getDate()} ${INDO_MONTHS[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+  }
+  return formatFullIndonesianDate(input);
+}
+
 /**
  * Format tanggal ke format lengkap bahasa Indonesia: "11 Oktober 2026"
  */
