@@ -185,139 +185,83 @@ function VisitsManagementView({
   return (
     <div className="space-y-3.5 animate-in fade-in duration-200 pb-16">
 
-      {/* HEADER NAVIGASI */}
-      <div className="bg-white p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs flex items-center justify-between gap-3">
+      {/* HEADER NAVIGASI RINGKAS (1 TOMBOL KEMBALI & BUAT JADWAL) */}
+      <div className="bg-white p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs flex items-center justify-between gap-2.5">
         <div className="flex items-center gap-2 min-w-0">
+          {/* Tepat 1 Tombol Kembali */}
           <button
             type="button"
             onClick={onBack}
-            className="w-8 h-8 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 flex items-center justify-center transition-all active:scale-95 shrink-0"
+            className="flex items-center gap-1 text-zinc-600 hover:text-zinc-950 font-semibold text-[13px] px-2 py-1.5 -ml-1 rounded-xl hover:bg-zinc-100 transition-colors active:scale-95 shrink-0"
             title="Kembali ke Menu Lainnya"
           >
             <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
+            <span>Kembali</span>
           </button>
-          <div className="min-w-0">
-            <h2 className="text-[15.5px] font-black text-zinc-900 leading-tight truncate">
-              Target & Jadwal Kunjungan
-            </h2>
-            <p className="text-[11px] text-zinc-500 truncate">
-              Rekap harian, riwayat tanggal & target 2x sebulan
-            </p>
-          </div>
+          <div className="h-4 w-px bg-zinc-200 shrink-0"></div>
+          <h2 className="text-[14.5px] font-black text-zinc-900 leading-tight truncate">
+            Target & Jadwal Kunjungan
+          </h2>
         </div>
 
-        <button
-          type="button"
-          onClick={onBack}
-          className="text-[11.5px] font-bold text-zinc-600 hover:text-zinc-900 px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 active:scale-95 rounded-xl transition-all shrink-0"
-        >
-          Kembali
-        </button>
-      </div>
-
-      {/* RINGKASAN STATUS: HARI INI & TARGET BULANAN 2X */}
-      <div className="grid grid-cols-2 gap-2.5">
-        {/* Box 1: Capaian Hari Ini */}
-        <div className="p-3.5 sm:p-4 bg-white rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-[10.5px] font-bold text-zinc-500 uppercase tracking-wider">
-              Hari Ini
-            </span>
-            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
-              todayVisitCount >= 12
-                ? 'bg-emerald-100 text-emerald-800'
-                : 'bg-orange-100 text-orange-800'
-            }`}>
-              {todayVisitCount >= 12 ? '✓ Tercapai' : 'Target 12'}
-            </span>
-          </div>
-          <div className="mt-2.5">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-[24px] font-black text-zinc-900 leading-none">{todayVisitCount}</span>
-              <span className="text-[12px] font-bold text-zinc-500">/ 12 Toko</span>
-            </div>
-            <p className="text-[10.5px] text-zinc-500 mt-1 truncate">
-              {todayVisitCount >= 12
-                ? 'Target minimal 12 toko terpenuhi! 🎉'
-                : `Kurang ${12 - todayVisitCount} toko lagi`}
-            </p>
-          </div>
-        </div>
-
-        {/* Box 2: Target Bulanan 2x */}
-        <div className="p-3.5 sm:p-4 bg-white rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-[10.5px] font-bold text-zinc-500 uppercase tracking-wider">
-              Target 2x Bulan Ini
-            </span>
-            <span className="text-[10.5px] font-black text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded-full border border-zinc-200/60">
-              {monthlyStats.completionPercent}%
-            </span>
-          </div>
-          <div className="mt-2.5">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-[24px] font-black text-zinc-900 leading-none">{monthlyStats.completedCount}</span>
-              <span className="text-[12px] font-bold text-zinc-500">/ {monthlyStats.totalStores} Toko</span>
-            </div>
-            <div className="w-full h-2 bg-zinc-100 rounded-full mt-2 overflow-hidden border border-zinc-200/60">
-              <div
-                className="h-full bg-emerald-500 transition-all duration-500 rounded-full"
-                style={{ width: `${monthlyStats.completionPercent}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* DUA TOMBOL AKSI UTAMA (REKAP MALAM HARI & BUAT JADWAL SADIX) */}
-      <div className="grid grid-cols-2 gap-2.5">
-        <button
-          type="button"
-          onClick={() => onOpenVisitRecap?.(todayIso)}
-          className="p-3.5 sm:p-4 bg-gradient-to-br from-zinc-900 to-zinc-800 text-white rounded-2xl sm:rounded-3xl border border-zinc-800 shadow-sm flex flex-col justify-between text-left active:scale-[0.98] transition-all hover:border-zinc-600 group"
-        >
-          <div className="flex items-center justify-between w-full mb-2.5">
-            <span className="w-7 h-7 rounded-xl bg-[#EA580C] text-white flex items-center justify-center font-bold text-[14px] shadow-sm group-hover:scale-105 transition-transform">
-              🌙
-            </span>
-            <span className="text-[9.5px] font-bold text-zinc-400 bg-white/10 px-2 py-0.5 rounded-full">
-              Malam Hari
-            </span>
-          </div>
-          <div>
-            <p className="text-[13px] font-black text-white leading-tight">
-              Rekap Kunjungan
-            </p>
-            <p className="text-[10.5px] text-zinc-300 mt-0.5">
-              Checklist toko hari ini
-            </p>
-          </div>
-        </button>
-
+        {/* Tombol Buat Jadwal SPV Sadix di Kanan Atas */}
         <button
           type="button"
           onClick={onOpenSadixSchedule}
-          className="p-3.5 sm:p-4 bg-white hover:bg-zinc-50 text-zinc-900 rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs flex flex-col justify-between text-left active:scale-[0.98] transition-all group"
+          className="text-[11.5px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 px-2.5 py-1.5 rounded-xl transition-all active:scale-95 shrink-0 flex items-center gap-1 shadow-2xs"
         >
-          <div className="flex items-center justify-between w-full mb-2.5">
-            <span className="w-7 h-7 rounded-xl bg-blue-50 text-blue-600 border border-blue-200/70 flex items-center justify-center font-bold text-[14px] shadow-sm group-hover:scale-105 transition-transform">
-              📋
-            </span>
-            <span className="text-[9.5px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60">
-              Sadix SPV
-            </span>
-          </div>
-          <div>
-            <p className="text-[13px] font-black text-zinc-900 leading-tight">
-              Buat Jadwal
-            </p>
-            <p className="text-[10.5px] text-zinc-500 mt-0.5">
-              Pilih 12 toko sejalur
-            </p>
-          </div>
+          <span>📋</span>
+          <span>Buat Jadwal</span>
         </button>
+      </div>
+
+      {/* CARD CAPAIAN HARI INI (FOKUS & PRAKTIS DENGAN TOMBOL REKAP HARI INI) */}
+      <div className="p-4 bg-white rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs space-y-2.5">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
+            <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
+              Kunjungan Hari Ini
+            </span>
+          </div>
+
+          <span className={`text-[10.5px] font-black px-2.5 py-0.5 rounded-full border ${
+            todayVisitCount >= 12
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+              : 'bg-orange-50 text-orange-800 border-orange-200'
+          }`}>
+            {todayVisitCount >= 12 ? '✓ Target 12 Tercapai' : `Kurang ${12 - todayVisitCount} Toko`}
+          </span>
+        </div>
+
+        <div className="flex items-baseline justify-between gap-3 pt-0.5">
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-[26px] font-black text-zinc-900 leading-none">{todayVisitCount}</span>
+            <span className="text-[12.5px] font-bold text-zinc-400">/ 12 Toko Target</span>
+          </div>
+
+          {/* Tombol Rekap Langsung Hari Ini */}
+          <button
+            type="button"
+            onClick={() => onOpenVisitRecap?.(todayIso)}
+            className="px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-[12px] font-bold transition-all active:scale-95 shadow-2xs flex items-center gap-1.5 shrink-0"
+          >
+            <span>🌙</span>
+            <span>{todayVisitCount > 0 ? 'Edit Rekap Hari Ini' : '+ Rekap Hari Ini'}</span>
+          </button>
+        </div>
+
+        {/* Progress Bar Target 12 Toko Hari Ini */}
+        <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden border border-zinc-200/60">
+          <div
+            className={`h-full transition-all duration-500 rounded-full ${
+              todayVisitCount >= 12 ? 'bg-emerald-500' : 'bg-[#EA580C]'
+            }`}
+            style={{ width: `${Math.min(100, Math.round((todayVisitCount / 12) * 100))}%` }}
+          />
+        </div>
       </div>
 
       {/* SEGMENTED SWITCHER: RIWAYAT PER TANGGAL VS STATUS TARGET TOKO */}
@@ -325,7 +269,7 @@ function VisitsManagementView({
         <button
           type="button"
           onClick={() => setActiveTab('dates')}
-          className={`flex-1 py-2 rounded-xl text-[12.5px] font-bold transition-all flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-2 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-1.5 ${
             activeTab === 'dates'
               ? 'bg-white text-zinc-900 shadow-sm'
               : 'text-zinc-600 hover:text-zinc-900'
@@ -342,7 +286,7 @@ function VisitsManagementView({
         <button
           type="button"
           onClick={() => setActiveTab('stores')}
-          className={`flex-1 py-2 rounded-xl text-[12.5px] font-bold transition-all flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-2 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-1.5 ${
             activeTab === 'stores'
               ? 'bg-white text-zinc-900 shadow-sm'
               : 'text-zinc-600 hover:text-zinc-900'
@@ -375,13 +319,13 @@ function VisitsManagementView({
               placeholder="Cari tanggal (contoh: 19 Oktober) atau nama toko..."
               value={dateSearchQuery}
               onChange={e => setDateSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-8 py-2.5 bg-white border border-zinc-200 rounded-2xl text-[12.5px] placeholder:text-zinc-400 text-zinc-900 focus:outline-none focus:border-zinc-400 shadow-2xs font-medium"
+              className="w-full pl-9 pr-8 py-2 bg-white border border-zinc-200 rounded-2xl text-[12px] placeholder:text-zinc-400 text-zinc-900 focus:outline-none focus:border-zinc-400 shadow-2xs font-medium"
             />
             {dateSearchQuery && (
               <button
                 type="button"
                 onClick={() => setDateSearchQuery('')}
-                className="absolute inset-y-0 right-2.5 my-auto w-5 h-5 rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-600 flex items-center justify-center text-[12px] font-bold"
+                className="absolute inset-y-0 right-2.5 my-auto w-4 h-4 rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-600 flex items-center justify-center text-[11px] font-bold"
                 title="Hapus pencarian"
               >
                 ×
@@ -391,12 +335,12 @@ function VisitsManagementView({
 
           {/* Daftar Kartu per Tanggal */}
           {filteredVisitsByDate.length === 0 ? (
-            <div className="py-12 text-center bg-white rounded-3xl border border-zinc-200/80 shadow-2xs px-4">
-              <div className="w-12 h-12 mx-auto bg-zinc-100 rounded-full flex items-center justify-center text-zinc-400 mb-3">
-                <span className="text-[22px]">📅</span>
+            <div className="py-10 text-center bg-white rounded-3xl border border-zinc-200/80 shadow-2xs px-4">
+              <div className="w-11 h-11 mx-auto bg-zinc-100 rounded-full flex items-center justify-center text-zinc-400 mb-2.5">
+                <span className="text-[20px]">📅</span>
               </div>
-              <p className="text-[14px] font-bold text-zinc-900">Belum Ada Riwayat Kunjungan</p>
-              <p className="text-[12px] text-zinc-500 mt-1 max-w-xs mx-auto">
+              <p className="text-[13.5px] font-bold text-zinc-900">Belum Ada Riwayat Kunjungan</p>
+              <p className="text-[11.5px] text-zinc-500 mt-1 max-w-xs mx-auto">
                 {dateSearchQuery 
                   ? 'Tidak ada tanggal atau toko yang cocok dengan pencarian Anda.' 
                   : 'Catat rekap kunjungan malam hari untuk mulai mendokumentasikan kunjungan.'}
@@ -404,7 +348,7 @@ function VisitsManagementView({
               <button
                 type="button"
                 onClick={() => onOpenVisitRecap?.(todayIso)}
-                className="mt-4 px-4 py-2 bg-zinc-900 text-white rounded-xl text-[12px] font-bold hover:bg-zinc-800 transition-colors shadow-2xs"
+                className="mt-3.5 px-4 py-2 bg-zinc-900 text-white rounded-xl text-[11.5px] font-bold hover:bg-zinc-800 transition-colors shadow-2xs"
               >
                 + Mulai Rekap Hari Ini
               </button>
@@ -425,17 +369,17 @@ function VisitsManagementView({
                     <div className="p-3.5 sm:p-4">
                       <div className="flex items-center justify-between gap-2 flex-wrap mb-2">
                         <div className="flex items-center gap-1.5 flex-wrap min-w-0">
-                          <span className="text-[14px] font-black text-zinc-900">
+                          <span className="text-[13.5px] font-black text-zinc-900">
                             {formatDateWithDay(group.dateIso)}
                           </span>
                           {isToday && (
-                            <span className="text-[9.5px] font-black bg-blue-100 text-blue-800 px-2 py-0.2 rounded-full border border-blue-200">
+                            <span className="text-[9px] font-black bg-blue-100 text-blue-800 px-2 py-0.2 rounded-full border border-blue-200">
                               Hari Ini
                             </span>
                           )}
                         </div>
 
-                        <span className={`text-[11px] font-black px-2.5 py-0.5 rounded-full border ${
+                        <span className={`text-[10.5px] font-black px-2.5 py-0.5 rounded-full border ${
                           isTargetAchieved
                             ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                             : 'bg-orange-50 text-orange-800 border-orange-200'
@@ -450,7 +394,7 @@ function VisitsManagementView({
                         <button
                           type="button"
                           onClick={() => onOpenVisitRecap?.(group.dateIso)}
-                          className="px-2.5 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-xl text-[11px] font-bold transition-all active:scale-95 flex items-center gap-1"
+                          className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-xl text-[11px] font-bold transition-all active:scale-95 flex items-center gap-1"
                           title="Buka checklist untuk menambah / mengurangi toko pada tanggal ini"
                         >
                           <svg className="w-3.5 h-3.5 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -463,7 +407,7 @@ function VisitsManagementView({
                         <button
                           type="button"
                           onClick={() => handleOpenMoveModal(group.dateIso, group.count)}
-                          className="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 rounded-xl text-[11px] font-bold transition-all active:scale-95 flex items-center gap-1"
+                          className="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 rounded-xl text-[11px] font-bold transition-all active:scale-95 flex items-center gap-1"
                           title="Ubah / pindahkan seluruh data kunjungan ke tanggal lain"
                         >
                           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -476,7 +420,7 @@ function VisitsManagementView({
                         <button
                           type="button"
                           onClick={() => handleDeleteDate(group.dateIso, group.count)}
-                          className="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200/80 rounded-xl text-[11px] font-bold transition-all active:scale-95 flex items-center gap-1 ml-auto"
+                          className="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200/80 rounded-xl text-[11px] font-bold transition-all active:scale-95 flex items-center gap-1 ml-auto"
                           title="Hapus seluruh data kunjungan pada tanggal ini"
                         >
                           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -490,7 +434,7 @@ function VisitsManagementView({
                       <button
                         type="button"
                         onClick={() => toggleDateExpanded(group.dateIso)}
-                        className="mt-2.5 w-full py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 transition-colors border border-zinc-200/60"
+                        className="mt-2 w-full py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 transition-colors border border-zinc-200/60"
                       >
                         <span>{isExpanded ? 'Tutup Daftar Toko' : `Lihat ${group.count} Toko yang Dikunjungi`}</span>
                         <svg className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -557,15 +501,15 @@ function VisitsManagementView({
       {/* TAB 2: PANTAU STATUS TARGET TOKO (2X PER BULAN)           */}
       {/* ======================================================== */}
       {activeTab === 'stores' && (
-        <div className="bg-white p-4 rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs space-y-3 animate-in fade-in duration-150">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs space-y-3 animate-in fade-in duration-150">
           
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-[13.5px] font-bold text-zinc-900 leading-tight">
-                Status Capaian Toko
+                Status Target Toko (2x Sebulan)
               </h3>
               <p className="text-[11px] text-zinc-500 mt-0.5">
-                Target minimal 2x kunjungan sebulan per toko
+                Cek toko yang belum atau sudah mencapai target
               </p>
             </div>
             <span className="text-[11px] font-bold text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded-lg">
