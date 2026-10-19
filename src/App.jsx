@@ -255,30 +255,6 @@ function App() {
       });
     }
 
-    // 3. Otomatis catat kunjungan pada tanggal order jika belum tercatat
-    if (orderData.storeName || orderData.customerId) {
-      const visitDateIso = orderData.dateIso || getTodayIso();
-      setVisits(prev => {
-        const alreadyVisited = prev.some(v => 
-          v.dateIso === visitDateIso && 
-          ((orderData.customerId && v.customerId?.toLowerCase() === orderData.customerId.toLowerCase()) ||
-           (orderData.storeName && v.storeName?.toLowerCase() === orderData.storeName.toLowerCase()))
-        );
-        if (alreadyVisited) return prev;
-        const newVisit = {
-          id: `visit_${visitDateIso}_${Date.now()}`,
-          storeId: null,
-          customerId: orderData.customerId || '',
-          storeName: orderData.storeName || '',
-          routeCode: orderData.routeCode || '',
-          dateIso: visitDateIso,
-          monthKey: visitDateIso.substring(0, 7),
-          createdAt: Date.now()
-        };
-        return [...prev, newVisit];
-      });
-    }
-
     setShowOrderModal(false);
   };
 
