@@ -17,7 +17,8 @@ function MoreTab({
   onOpenSadixSchedule,
   onToggleVisitToday,
   subView,
-  setSubView
+  setSubView,
+  onReturnFromVisits
 }) {
   const [internalSubView, setInternalSubView] = useState('menu');
   const activeSubView = subView || internalSubView;
@@ -260,24 +261,27 @@ function MoreTab({
     }
   };
 
-  // Tampilkan halaman khusus Target & Jadwal Kunjungan jika subView 'visits' dipilih
-  if (activeSubView === 'visits') {
-    return (
-      <VisitsManagementView
-        stores={stores}
-        visits={visits}
-        setVisits={setVisits}
-        routesList={routesList}
-        onOpenVisitRecap={onOpenVisitRecap}
-        onOpenSadixSchedule={onOpenSadixSchedule}
-        onToggleVisitToday={onToggleVisitToday}
-        onBack={() => setActiveSubView('menu')}
-      />
-    );
-  }
-
   return (
     <div className="space-y-3 sm:space-y-4 animate-in fade-in duration-300 pb-20">
+
+      {/* Full-screen Subpage Target & Jadwal Kunjungan dengan Swipe-Back */}
+      {activeSubView === 'visits' && (
+        <VisitsManagementView
+          stores={stores}
+          visits={visits}
+          setVisits={setVisits}
+          routesList={routesList}
+          onOpenVisitRecap={onOpenVisitRecap}
+          onOpenSadixSchedule={onOpenSadixSchedule}
+          onToggleVisitToday={onToggleVisitToday}
+          onBack={() => {
+            setActiveSubView('menu');
+            if (onReturnFromVisits) {
+              onReturnFromVisits();
+            }
+          }}
+        />
+      )}
 
       {/* Header Info Aplikasi */}
       <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-zinc-200/80 shadow-2xs flex items-center gap-3.5">

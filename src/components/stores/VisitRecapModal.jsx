@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
 import { getStoreVisitsForMonth, isStoreMatch } from '../../utils/visitUtils';
 import useSwipeBack from '../../hooks/useSwipeBack';
+import SwipeBackHint from '../common/SwipeBackHint';
 
 function getInitialCheckedStores(dateIso, visits = [], stores = []) {
   const dayVisits = visits.filter(v => v.dateIso === dateIso);
@@ -34,8 +35,10 @@ function VisitRecapModal({
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
 
   const {
+    containerRef,
     isSwiping,
     dragX,
+    dragDirection,
     dragProgress,
     isExiting,
     containerStyle,
@@ -43,9 +46,10 @@ function VisitRecapModal({
     handlers: swipeHandlers
   } = useSwipeBack({
     onBack: onClose,
-    edgeWidth: 60,
-    threshold: 85,
-    enabled: isOpen
+    edgeWidth: 100,
+    threshold: 75,
+    enabled: isOpen,
+    direction: 'both'
   });
 
   // Filter rute unik (tanpa 'Semua')
@@ -130,7 +134,7 @@ function VisitRecapModal({
   if (!isOpen) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-5 overflow-hidden">
       {/* Backdrop Dimmed */}
       <div 
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -143,32 +147,30 @@ function VisitRecapModal({
 
       {/* Modal Dialog Card with Edge Swipe-Back */}
       <div 
+        ref={containerRef}
         {...swipeHandlers}
         style={containerStyle}
-        className={`relative w-full max-w-lg bg-white rounded-3xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden border border-zinc-200 ${
+        className={`relative w-full h-full sm:h-auto sm:max-h-[92vh] sm:rounded-3xl rounded-none bg-white shadow-2xl flex flex-col overflow-hidden border-0 sm:border border-zinc-200 ${
           dragX === 0 && !isExiting ? 'animate-in zoom-in-95 duration-200' : ''
         }`}
       >
-        {/* iOS-Style Left-Edge Swipe Hint / Indicator */}
-        {dragX > 10 && (
-          <div 
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-50 pointer-events-none flex items-center justify-center transition-all duration-100"
-            style={{
-              opacity: Math.min(1, dragX / 30),
-              transform: `translateY(-50%) scale(${0.8 + dragProgress * 0.3})`
-            }}
-          >
-            <div className={`p-2.5 rounded-full shadow-lg border backdrop-blur-md transition-colors ${
-              dragProgress >= 1 
-                ? 'bg-[#EA580C] text-white border-orange-500 shadow-orange-500/30' 
-                : 'bg-white/95 text-zinc-700 border-zinc-200 shadow-zinc-900/10'
-            }`}>
-              <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </div>
-          </div>
-        )}
+        {/* Left & Right Edge Gesture Strips for instant touch response */}
+        <div 
+          className="absolute left-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
+          {...swipeHandlers}
+        />
+        <div 
+          className="absolute right-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
+          {...swipeHandlers}
+        />
+
+        {/* Dynamic Bidirectional Swipe Hint Indicator */}
+        <SwipeBackHint
+          dragX={dragX}
+          dragProgress={dragProgress}
+          dragDirection={dragDirection}
+          accent="orange"
+        />
 
         {/* HEADER: Judul & Tanggal Rekap */}
         <div className="p-4 bg-zinc-900 text-white flex items-start justify-between gap-3 shrink-0">

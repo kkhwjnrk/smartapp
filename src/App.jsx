@@ -36,11 +36,13 @@ const STORES_DATA_VERSION = 'v2_168_stores';
 function App() {
   const [activeTab, setActiveTab] = useState('home');
   const [moreSubView, setMoreSubView] = useState('menu'); // 'menu' | 'visits'
+  const [visitsOriginTab, setVisitsOriginTab] = useState('more');
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     if (tab === 'more') {
       setMoreSubView('menu');
+      setVisitsOriginTab('more');
     }
   };
 
@@ -578,6 +580,7 @@ function App() {
             onOpenVisitRecap={() => openVisitRecap(getTodayIso())}
             onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
             onOpenVisitsPage={() => {
+              setVisitsOriginTab('home');
               setActiveTab('more');
               setMoreSubView('visits');
             }}
@@ -653,6 +656,12 @@ function App() {
             onToggleVisitToday={toggleVisitToday}
             subView={moreSubView}
             setSubView={setMoreSubView}
+            onReturnFromVisits={() => {
+              if (visitsOriginTab === 'home') {
+                setActiveTab('home');
+                setVisitsOriginTab('more');
+              }
+            }}
           />
         )}
       </main>

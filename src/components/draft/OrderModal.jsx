@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { formatFullIndonesianDate, getTodayIso } from '../../utils/date';
 import { calculateOrderSummary } from '../../utils/formatters';
 import useSwipeBack from '../../hooks/useSwipeBack';
+import SwipeBackHint from '../common/SwipeBackHint';
 
 function OrderModal({
   isOpen,
@@ -262,8 +263,10 @@ function OrderModal({
   const canAddItem = Boolean(isStoreSelected && hasPartSelected && isQtyValid);
 
   const {
+    containerRef,
     isSwiping,
     dragX,
+    dragDirection,
     dragProgress,
     isExiting,
     containerStyle,
@@ -271,9 +274,10 @@ function OrderModal({
     handlers: swipeHandlers
   } = useSwipeBack({
     onBack: onClose,
-    edgeWidth: 60,
-    threshold: 85,
-    enabled: isOpen && !isStorePickerOpen && !showSaveConfirm
+    edgeWidth: 100,
+    threshold: 75,
+    enabled: isOpen && !isStorePickerOpen && !showSaveConfirm,
+    direction: 'both'
   });
 
   if (!isOpen) return null;
@@ -291,32 +295,30 @@ function OrderModal({
 
       {/* Main Sliding Order Form Screen */}
       <div 
+        ref={containerRef}
         {...swipeHandlers}
         style={containerStyle}
-        className={`relative w-full h-full bg-zinc-50 flex flex-col shadow-2xl ${
+        className={`relative w-full h-full bg-zinc-50 flex flex-col shadow-2xl overflow-hidden ${
           dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
         }`}
       >
-        {/* iOS-Style Left-Edge Swipe Hint / Indicator */}
-        {dragX > 10 && (
-          <div 
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-50 pointer-events-none flex items-center justify-center transition-all duration-100"
-            style={{
-              opacity: Math.min(1, dragX / 30),
-              transform: `translateY(-50%) scale(${0.8 + dragProgress * 0.3})`
-            }}
-          >
-            <div className={`p-2.5 rounded-full shadow-lg border backdrop-blur-md transition-colors ${
-              dragProgress >= 1 
-                ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-500/30' 
-                : 'bg-white/95 text-zinc-700 border-zinc-200 shadow-zinc-900/10'
-            }`}>
-              <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </div>
-          </div>
-        )}
+        {/* Left & Right Edge Gesture Strips for instant touch response */}
+        <div 
+          className="absolute left-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
+          {...swipeHandlers}
+        />
+        <div 
+          className="absolute right-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
+          {...swipeHandlers}
+        />
+
+        {/* Dynamic Bidirectional Swipe Hint Indicator */}
+        <SwipeBackHint
+          dragX={dragX}
+          dragProgress={dragProgress}
+          dragDirection={dragDirection}
+          accent="emerald"
+        />
       
       {/* 1. TOP HEADER BAR (Halaman Penuh) */}
       <div className="bg-white border-b border-zinc-200 px-4 py-3 shrink-0 flex items-center justify-between gap-3 shadow-2xs pt-safe">

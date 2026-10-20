@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { getTodayIso, getCurrentMonthKey, formatDateWithDay } from '../../utils/date';
 import {
   getDailyVisitCount,
@@ -8,6 +9,7 @@ import {
   isStoreMatch
 } from '../../utils/visitUtils';
 import useSwipeBack from '../../hooks/useSwipeBack';
+import SwipeBackHint from '../common/SwipeBackHint';
 
 function VisitsManagementView({
   stores = [],
@@ -25,16 +27,21 @@ function VisitsManagementView({
   const monthlyStats = useMemo(() => getMonthlyVisitStats(stores, visits, currentMonthKey), [stores, visits, currentMonthKey]);
 
   const {
+    containerRef,
+    isSwiping,
     dragX,
+    dragDirection,
     dragProgress,
     isExiting,
     containerStyle,
+    backdropOpacity,
     handlers: swipeHandlers
   } = useSwipeBack({
     onBack,
-    edgeWidth: 60,
-    threshold: 85,
-    enabled: true
+    edgeWidth: 100,
+    threshold: 75,
+    enabled: true,
+    direction: 'both'
   });
 
   // Tab Tampilan: 'dates' (Riwayat per Tanggal) | 'stores' (Pantau Target Toko)
@@ -196,68 +203,81 @@ function VisitsManagementView({
     setMoveModalData(null);
   };
 
-  return (
-    <div 
-      {...swipeHandlers}
-      style={containerStyle}
-      className={`space-y-3.5 pb-16 relative ${
-        dragX === 0 && !isExiting ? 'animate-in fade-in duration-200' : ''
-      }`}
-    >
-      {/* iOS-Style Left-Edge Swipe Hint / Indicator */}
-      {dragX > 10 && (
-        <div 
-          className="fixed left-3 top-1/2 -translate-y-1/2 z-50 pointer-events-none flex items-center justify-center transition-all duration-100"
-          style={{
-            opacity: Math.min(1, dragX / 30),
-            transform: `translateY(-50%) scale(${0.8 + dragProgress * 0.3})`
-          }}
-        >
-          <div className={`p-2.5 rounded-full shadow-lg border backdrop-blur-md transition-colors ${
-            dragProgress >= 1 
-              ? 'bg-[#EA580C] text-white border-orange-500 shadow-orange-500/30' 
-              : 'bg-white/95 text-zinc-700 border-zinc-200 shadow-zinc-900/10'
-          }`}>
-            <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </div>
-        </div>
-      )}
+  const fullPageContent = (
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Dimmed Backdrop Scrim */}
+      <div 
+        className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity pointer-events-none"
+        style={{
+          opacity: backdropOpacity,
+          transition: isSwiping ? 'none' : 'opacity 0.25s ease'
+        }}
+      />
 
-      {/* HEADER NAVIGASI RINGKAS (1 TOMBOL KEMBALI & BUAT JADWAL) */}
-      <div className="bg-white p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs flex items-center justify-between gap-2.5">
-        <div className="flex items-center gap-2 min-w-0">
-          {/* Tepat 1 Tombol Kembali */}
+      {/* Main Full-Screen Sliding View */}
+      <div 
+        ref={containerRef}
+        {...swipeHandlers}
+        style={containerStyle}
+        className={`relative w-full h-full bg-[#F8F9FA] flex flex-col shadow-2xl overflow-hidden ${
+          dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
+        }`}
+      >
+        {/* Left & Right Edge Gesture Strips for instant touch response */}
+        <div 
+          className="absolute left-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
+          {...swipeHandlers}
+        />
+        <div 
+          className="absolute right-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
+          {...swipeHandlers}
+        />
+
+        {/* Dynamic Bidirectional Swipe Hint Indicator */}
+        <SwipeBackHint
+          dragX={dragX}
+          dragProgress={dragProgress}
+          dragDirection={dragDirection}
+          accent="orange"
+        />
+
+        {/* TOP HEADER BAR (Fixed at top with safe-area padding) */}
+        <div className="bg-white border-b border-zinc-200/90 px-4 py-3 shrink-0 flex items-center justify-between gap-2.5 shadow-2xs pt-safe">
+          <div className="flex items-center gap-2 min-w-0">
+            {/* Tepat 1 Tombol Kembali */}
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex items-center gap-1 text-zinc-600 hover:text-zinc-950 font-semibold text-[13.5px] px-2 py-1.5 -ml-1 rounded-xl hover:bg-zinc-100 transition-colors active:scale-95 shrink-0"
+              title="Kembali"
+            >
+              <svg className="w-4.5 h-4.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>Kembali</span>
+            </button>
+            <div className="h-4 w-px bg-zinc-200 shrink-0"></div>
+            <h2 className="text-[15px] font-black text-zinc-900 leading-tight truncate">
+              Target & Jadwal Kunjungan
+            </h2>
+          </div>
+
+          {/* Tombol Buat Jadwal SPV di Kanan Atas */}
           <button
             type="button"
-            onClick={onBack}
-            className="flex items-center gap-1 text-zinc-600 hover:text-zinc-950 font-semibold text-[13px] px-2 py-1.5 -ml-1 rounded-xl hover:bg-zinc-100 transition-colors active:scale-95 shrink-0"
-            title="Kembali ke Menu Lainnya"
+            onClick={onOpenSadixSchedule}
+            className="text-[12px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 px-3 py-1.5 rounded-xl transition-all active:scale-95 shrink-0 flex items-center gap-1 shadow-2xs"
           >
-            <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
+            <span>📋</span>
+            <span>Buat Jadwal</span>
           </button>
-          <div className="h-4 w-px bg-zinc-200 shrink-0"></div>
-          <h2 className="text-[14.5px] font-black text-zinc-900 leading-tight truncate">
-            Target & Jadwal Kunjungan
-          </h2>
         </div>
 
-        {/* Tombol Buat Jadwal SPV di Kanan Atas */}
-        <button
-          type="button"
-          onClick={onOpenSadixSchedule}
-          className="text-[11.5px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 px-2.5 py-1.5 rounded-xl transition-all active:scale-95 shrink-0 flex items-center gap-1 shadow-2xs"
-        >
-          <span>📋</span>
-          <span>Buat Jadwal</span>
-        </button>
-      </div>
+        {/* Scrollable Body Content */}
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3.5 pb-24 max-w-lg mx-auto w-full">
 
-      {/* CARD CAPAIAN HARI INI (FOKUS & PRAKTIS DENGAN TOMBOL REKAP HARI INI) */}
-      <div className="p-4 bg-white rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs space-y-2.5">
+          {/* CARD CAPAIAN HARI INI (FOKUS & PRAKTIS DENGAN TOMBOL REKAP HARI INI) */}
+          <div className="p-4 bg-white rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs space-y-2.5">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
@@ -749,8 +769,12 @@ function VisitsManagementView({
         </div>
       )}
 
+        </div>
+      </div>
     </div>
   );
+
+  return createPortal(fullPageContent, document.body);
 }
 
 export default VisitsManagementView;
