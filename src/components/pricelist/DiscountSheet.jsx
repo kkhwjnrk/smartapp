@@ -83,15 +83,10 @@ function DiscountSheet({ item, onClose }) {
         {/* Header Rincian Barang: PN di Kiri, Kategori di Pojok Kanan Atas */}
         <div className="flex justify-between items-start mb-5">
           <div className="flex-1 pr-3">
-            <div className="mb-1.5 flex items-center gap-1.5 flex-wrap">
+            <div className="mb-1.5">
               <span className="inline-block text-[14px] font-bold text-[#EA580C] font-mono tracking-tight bg-orange-50/90 px-2.5 py-0.5 rounded-lg border border-orange-200/70">
                 PN: {item.pn}
               </span>
-              {item.subCategory && (
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200">
-                  {item.subCategory}
-                </span>
-              )}
             </div>
             <div className="text-[17px] font-bold text-zinc-900 leading-snug">{item.description}</div>
           </div>

@@ -45,15 +45,10 @@ function ItemCard({
         <div className="flex-1 min-w-0">
 
           {/* PN Berwarna Oranye Daytona khas racing, tegas & jelas */}
-          <div className="mb-1.5 flex items-center gap-1.5 flex-wrap">
+          <div className="mb-1.5">
             <span className="inline-block text-[14px] font-bold text-[#EA580C] font-mono tracking-tight bg-orange-50/90 px-2.5 py-0.5 rounded-lg border border-orange-200/70 shadow-[0_1px_2px_rgba(234,88,12,0.06)]">
               PN: {item.pn}
             </span>
-            {item.subCategory && (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200/60 truncate max-w-[170px]">
-                {item.subCategory}
-              </span>
-            )}
           </div>
 
           {/* Nama / Deskripsi Barang */}
