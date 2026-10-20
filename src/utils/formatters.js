@@ -180,3 +180,15 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
   };
 };
 
+/**
+ * Komparator pengurutan item katalog berdasarkan Part Number terkecil ke terbesar (natural/numeric ascending).
+ */
+export const comparePartNumbers = (a, b) => {
+  const numA = parseInt(String(a?.pn || '').replace(/[^0-9]/g, ''), 10);
+  const numB = parseInt(String(b?.pn || '').replace(/[^0-9]/g, ''), 10);
+  if (!isNaN(numA) && !isNaN(numB) && numA !== numB) {
+    return numA - numB;
+  }
+  return String(a?.pn || '').localeCompare(String(b?.pn || ''), undefined, { numeric: true, sensitivity: 'base' });
+};
+

@@ -4,6 +4,7 @@ import initialStores from './data/stores.json';
 import initialOrders from './data/orders.json';
 import { ensureValidCategory } from './constants/categories';
 import { getCurrentMonthKey, getOrderMonthKey } from './utils/date';
+import { comparePartNumbers } from './utils/formatters';
 
 // Layout Components
 import Header from './components/layout/Header';
@@ -51,7 +52,7 @@ function App() {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map(item => {
+          const list = parsed.map(item => {
             const rawHet = item.het !== undefined && item.het !== null
               ? Number(item.het)
               : (parseFloat(String(item.price || 0).replace(/[^0-9]/g, '')) || 0);
@@ -65,6 +66,7 @@ function App() {
               category: ensureValidCategory(item)
             };
           });
+          return list.sort(comparePartNumbers);
         }
       } catch {}
     }
@@ -74,7 +76,7 @@ function App() {
     return initialPricelist.map(item => ({
       ...item,
       category: ensureValidCategory(item)
-    }));
+    })).sort(comparePartNumbers);
   });
 
   useEffect(() => {
@@ -373,26 +375,20 @@ function App() {
   const filteredItems = useMemo(() => {
     const queryTokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
 
-    return items
-      .filter(item => {
-        if (selectedCategory !== 'Semua' && item.category !== selectedCategory) {
-          return false;
-        }
-        if (selectedSubCategory !== 'Semua' && item.subCategory !== selectedSubCategory) {
-          return false;
-        }
-        if (queryTokens.length > 0) {
-          const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
-          const allMatch = queryTokens.every(token => combined.includes(token));
-          if (!allMatch) return false;
-        }
-        return true;
-      })
-      .sort((a, b) => {
-        const nameCompare = (a.description || '').localeCompare(b.description || '', 'id', { numeric: true, sensitivity: 'base' });
-        if (nameCompare !== 0) return nameCompare;
-        return (a.pn || '').localeCompare(b.pn || '', 'id', { numeric: true });
-      });
+    return items.filter(item => {
+      if (selectedCategory !== 'Semua' && item.category !== selectedCategory) {
+        return false;
+      }
+      if (selectedSubCategory !== 'Semua' && item.subCategory !== selectedSubCategory) {
+        return false;
+      }
+      if (queryTokens.length > 0) {
+        const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
+        const allMatch = queryTokens.every(token => combined.includes(token));
+        if (!allMatch) return false;
+      }
+      return true;
+    }).sort(comparePartNumbers);
   }, [items, selectedCategory, selectedSubCategory, query]);
 
   // CRUD Logic
@@ -442,13 +438,13 @@ function App() {
     };
 
     if (modalItem) {
-      setItems(prev => prev.map(i => i.pn === modalItem.pn ? itemToSave : i));
+      setItems(prev => prev.map(i => i.pn === modalItem.pn ? itemToSave : i).sort(comparePartNumbers));
     } else {
       if (items.some(i => i.pn === formData.pn.trim())) {
         alert('Part Number sudah terdaftar!');
         return;
       }
-      setItems(prev => [itemToSave, ...prev]);
+      setItems(prev => [...prev, itemToSave].sort(comparePartNumbers));
     }
     setShowItemModal(false);
   };
