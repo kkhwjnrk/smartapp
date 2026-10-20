@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { getTodayIso, getCurrentMonthKey } from '../../utils/date';
 import { getStoreVisitsForMonth, isStoreMatch } from '../../utils/visitUtils';
+import useSwipeBack from '../../hooks/useSwipeBack';
 
 function getInitialCheckedStores(dateIso, visits = [], stores = []) {
   const dayVisits = visits.filter(v => v.dateIso === dateIso);
@@ -31,6 +32,21 @@ function VisitRecapModal({
     getInitialCheckedStores(initialDateIso || getTodayIso(), visits, stores)
   );
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
+
+  const {
+    containerRef,
+    isSwiping,
+    dragX,
+    isExiting,
+    containerStyle,
+    backdropOpacity,
+    handlers: swipeHandlers
+  } = useSwipeBack({
+    onBack: onClose,
+    edgeWidth: 90,
+    threshold: 70,
+    enabled: isOpen
+  });
 
   // Filter rute unik (tanpa 'Semua')
   const availableRoutes = useMemo(() => {
@@ -118,12 +134,22 @@ function VisitRecapModal({
       {/* Dimmed Backdrop Scrim */}
       <div 
         className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity"
+        style={{
+          opacity: backdropOpacity,
+          transition: isSwiping ? 'none' : 'opacity 0.25s ease',
+          pointerEvents: isSwiping ? 'none' : 'auto'
+        }}
         onClick={onClose}
       />
 
       {/* Recap Modal Screen */}
       <div 
-        className="relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl animate-in slide-in-from-right duration-200"
+        ref={containerRef}
+        {...swipeHandlers}
+        style={containerStyle}
+        className={`relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl ${
+          dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-200' : ''
+        }`}
       >
         {/* HEADER: Judul & Tanggal Rekap */}
         <div className="p-4 bg-zinc-900 text-white flex items-start justify-between gap-3 shrink-0 pt-safe">
@@ -263,7 +289,7 @@ function VisitRecapModal({
         </div>
 
         {/* LIST TOKO UNTUK DICENTANG */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2 divide-y divide-zinc-100">
+        <div className="flex-1 overflow-y-auto p-3 space-y-2 divide-y divide-zinc-100 touch-pan-y">
           {displayedStores.length === 0 ? (
             <div className="p-8 text-center text-zinc-400 text-[13px]">
               Tidak ada toko yang cocok dengan pencarian / rute ini.

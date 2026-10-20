@@ -1,4 +1,11 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useId } from 'react';
+
+/**
+ * Global stack of active swipe-back instances.
+ * Ensures that when multiple full pages or modals are mounted simultaneously,
+ * ONLY the topmost (frontmost) full page receives and responds to swipe-back gestures.
+ */
+let activeSwipeStack = [];
 
 /**
  * Custom hook for native-feeling edge swipe-back gesture (PWA / iOS / Android style).
@@ -7,21 +14,28 @@ import { useState, useRef, useCallback, useEffect } from 'react';
  *
  * @param {Object} options
  * @param {Function} options.onBack - Callback triggered when back swipe completes
- * @param {number} [options.edgeWidth=85] - Max px from left edge where swipe can start
- * @param {number} [options.threshold=70] - Distance in px needed to confirm dismissal
+ * @param {number} [options.edgeWidth=120] - Max px from left edge where swipe can start
+ * @param {number} [options.threshold=55] - Distance in px needed to confirm dismissal
  * @param {boolean} [options.enabled=true] - Whether gesture tracking is enabled
  */
 export function useSwipeBack({
   onBack,
-  edgeWidth = 85,
-  threshold = 70,
+  edgeWidth = 120,
+  threshold = 55,
   enabled = true
 }) {
   const [dragX, setDragX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
+  const instanceId = useId();
   const containerRef = useRef(null);
+  const onBackRef = useRef(onBack);
+
+  useEffect(() => {
+    onBackRef.current = onBack;
+  }, [onBack]);
+
   const startXRef = useRef(0);
   const startYRef = useRef(0);
   const startTimeRef = useRef(0);
@@ -30,25 +44,43 @@ export function useSwipeBack({
   const isLockedOutRef = useRef(false);
   const currentDragXRef = useRef(0);
 
-  // Clean up gesture tracking refs when disabled
+  // Manage instance registration in global stack
   useEffect(() => {
-    if (!enabled) {
+    if (enabled && !isExiting) {
+      activeSwipeStack = activeSwipeStack.filter(id => id !== instanceId);
+      activeSwipeStack.push(instanceId);
+    } else {
+      activeSwipeStack = activeSwipeStack.filter(id => id !== instanceId);
       isTrackingRef.current = false;
       isSwipingRef.current = false;
       isLockedOutRef.current = false;
       currentDragXRef.current = 0;
     }
-  }, [enabled]);
 
-  // Check if touch or mouse coordinate is within edge zone
+    return () => {
+      activeSwipeStack = activeSwipeStack.filter(id => id !== instanceId);
+    };
+  }, [enabled, isExiting, instanceId]);
+
+  // Check if this instance is the frontmost active one
+  const isTopmost = useCallback(() => {
+    if (activeSwipeStack.length === 0) return false;
+    return activeSwipeStack[activeSwipeStack.length - 1] === instanceId;
+  }, [instanceId]);
+
+  // Check if touch or mouse coordinate is within the generous left edge zone
   const checkIsWithinEdge = useCallback((clientX) => {
-    // 1. Direct screen left edge (0 to edgeWidth px)
-    if (clientX <= edgeWidth) return true;
+    // Determine effective edge width: at least 120px or 35% of viewport width
+    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
+    const effectiveEdgeWidth = Math.max(edgeWidth, Math.min(150, screenWidth * 0.35));
 
-    // 2. Relative to container's left edge (useful when centered on wider screens or tablets)
+    // 1. Direct screen left edge (0 to effectiveEdgeWidth)
+    if (clientX <= effectiveEdgeWidth) return true;
+
+    // 2. Relative to container's left edge (for centered layouts on tablets/desktop)
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
-      if (clientX >= rect.left && clientX <= rect.left + edgeWidth) {
+      if (clientX >= rect.left && clientX <= rect.left + effectiveEdgeWidth) {
         return true;
       }
     }
@@ -56,7 +88,7 @@ export function useSwipeBack({
     return false;
   }, [edgeWidth]);
 
-  // Handle release of gesture
+  // Handle release of gesture (touchend / mouseup)
   const handleRelease = useCallback(() => {
     const wasSwiping = isSwipingRef.current;
     const finalDragX = currentDragXRef.current;
@@ -69,13 +101,13 @@ export function useSwipeBack({
 
     if (wasSwiping) {
       const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
-      const dynamicThreshold = Math.min(threshold, screenWidth * 0.22);
+      const dynamicThreshold = Math.min(threshold, 55, screenWidth * 0.18);
 
-      // Trigger back if dragged past dynamic threshold or flicked quickly to right
-      if (finalDragX > dynamicThreshold || (velocity > 0.22 && finalDragX > 25)) {
+      // Trigger back if dragged past threshold or flicked quickly to right
+      if (finalDragX > dynamicThreshold || (velocity > 0.16 && finalDragX > 20)) {
         setIsExiting(true);
         setTimeout(() => {
-          onBack?.();
+          onBackRef.current?.();
         }, 180);
       } else {
         // Snap back with smooth spring
@@ -86,11 +118,23 @@ export function useSwipeBack({
       setDragX(0);
       setIsSwiping(false);
     }
-  }, [threshold, onBack]);
+  }, [threshold]);
 
-  // Start touch tracking
-  const startTracking = useCallback((clientX, clientY) => {
+  // Start gesture tracking
+  const startTracking = useCallback((clientX, clientY, target) => {
     if (!enabled || isExiting) return false;
+    if (!isTopmost()) return false;
+
+    // If target is provided, verify it belongs to this instance's DOM tree
+    if (target && containerRef.current) {
+      const wrapper = containerRef.current.parentElement;
+      const isInContainer = containerRef.current.contains(target);
+      const isInWrapper = wrapper && wrapper.contains(target);
+      if (!isInContainer && !isInWrapper) {
+        return false;
+      }
+    }
+
     if (!checkIsWithinEdge(clientX)) return false;
 
     startXRef.current = clientX;
@@ -102,42 +146,56 @@ export function useSwipeBack({
     isLockedOutRef.current = false;
 
     return true;
-  }, [enabled, isExiting, checkIsWithinEdge]);
+  }, [enabled, isExiting, isTopmost, checkIsWithinEdge]);
 
-  // Native non-passive touch listeners on window during touch interaction to prevent touchcancel drops
+  // Capture-phase native touch listeners on window for instant responsiveness without browser interference
   useEffect(() => {
     if (!enabled || isExiting) return;
+
+    const onNativeTouchStart = (e) => {
+      if (!enabled || isExiting) return;
+      if (!e.touches || e.touches.length !== 1) return;
+      if (!isTopmost()) return;
+
+      const touch = e.touches[0];
+      startTracking(touch.clientX, touch.clientY, e.target);
+    };
 
     const onNativeTouchMove = (e) => {
       if (!isTrackingRef.current || isLockedOutRef.current || isExiting) return;
       if (!e.touches || e.touches.length !== 1) return;
+      if (!isTopmost()) return;
 
       const touch = e.touches[0];
       const deltaX = touch.clientX - startXRef.current;
       const deltaY = touch.clientY - startYRef.current;
+      const absY = Math.abs(deltaY);
 
       // Gesture direction disambiguation
       if (!isSwipingRef.current) {
         // Disallow leftward swipe: only left-to-right swipe is permitted
-        if (deltaX < -8) {
+        if (deltaX < -5) {
           isLockedOutRef.current = true;
           isTrackingRef.current = false;
           return;
         }
 
-        // Horizontal swipe detected early: moved rightward by > 6px and horizontal dominates
-        if (deltaX > 6 && deltaX > Math.abs(deltaY) * 0.75) {
+        // Horizontal swipe detected early: rightward movement dominates
+        if (deltaX > 2 && deltaX >= absY * 0.5) {
           isSwipingRef.current = true;
           setIsSwiping(true);
           if (e.cancelable) e.preventDefault();
           const clampedX = Math.max(0, deltaX);
           currentDragXRef.current = clampedX;
           setDragX(clampedX);
+          return;
         }
+
         // Vertical scroll dominant: release gesture to allow natural scrolling
-        else if (Math.abs(deltaY) > 16 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2) {
+        if (absY > 8 && absY > deltaX) {
           isLockedOutRef.current = true;
           isTrackingRef.current = false;
+          return;
         }
         return;
       }
@@ -152,16 +210,20 @@ export function useSwipeBack({
     };
 
     const onNativeTouchEnd = () => {
+      if (!isTopmost()) return;
       if (isTrackingRef.current || isSwipingRef.current) {
         handleRelease();
       }
     };
 
     const onNativeTouchCancel = () => {
-      if (isSwipingRef.current && currentDragXRef.current > threshold * 0.6) {
+      if (!isTopmost()) return;
+      // If user was actively swiping and Android system edge or browser dispatched touchcancel:
+      // complete dismissal if dragged past 30px so it feels responsive rather than aborting.
+      if (isSwipingRef.current && currentDragXRef.current > 30) {
         setIsExiting(true);
         setTimeout(() => {
-          onBack?.();
+          onBackRef.current?.();
         }, 180);
       } else {
         setDragX(0);
@@ -173,58 +235,29 @@ export function useSwipeBack({
       currentDragXRef.current = 0;
     };
 
-    window.addEventListener('touchmove', onNativeTouchMove, { passive: false });
-    window.addEventListener('touchend', onNativeTouchEnd, { passive: true });
-    window.addEventListener('touchcancel', onNativeTouchCancel, { passive: true });
+    // Register with CAPTURE phase: intercepts event at window root BEFORE any child scroll container can consume it
+    window.addEventListener('touchstart', onNativeTouchStart, { capture: true, passive: true });
+    window.addEventListener('touchmove', onNativeTouchMove, { capture: true, passive: false });
+    window.addEventListener('touchend', onNativeTouchEnd, { capture: true, passive: true });
+    window.addEventListener('touchcancel', onNativeTouchCancel, { capture: true, passive: true });
 
     return () => {
-      window.removeEventListener('touchmove', onNativeTouchMove);
-      window.removeEventListener('touchend', onNativeTouchEnd);
-      window.removeEventListener('touchcancel', onNativeTouchCancel);
+      window.removeEventListener('touchstart', onNativeTouchStart, { capture: true });
+      window.removeEventListener('touchmove', onNativeTouchMove, { capture: true });
+      window.removeEventListener('touchend', onNativeTouchEnd, { capture: true });
+      window.removeEventListener('touchcancel', onNativeTouchCancel, { capture: true });
     };
-  }, [enabled, isExiting, handleRelease, threshold, onBack]);
+  }, [enabled, isExiting, handleRelease, isTopmost, startTracking]);
 
-  // Touch event handlers for React JSX binding
-  const onTouchStart = useCallback((e) => {
-    if (e.touches && e.touches.length === 1) {
-      startTracking(e.touches[0].clientX, e.touches[0].clientY);
-    }
-  }, [startTracking]);
-
-  const onTouchMove = useCallback((e) => {
-    if (!isTrackingRef.current || isLockedOutRef.current) return;
-    if (e.touches && e.touches.length === 1) {
-      const deltaX = e.touches[0].clientX - startXRef.current;
-      const deltaY = e.touches[0].clientY - startYRef.current;
-      if (!isSwipingRef.current && deltaX > 6 && deltaX > Math.abs(deltaY) * 0.75) {
-        isSwipingRef.current = true;
-        setIsSwiping(true);
-        if (e.cancelable && e.preventDefault) e.preventDefault();
-      }
-      if (isSwipingRef.current) {
-        if (e.cancelable && e.preventDefault) e.preventDefault();
-        const clampedX = Math.max(0, deltaX);
-        currentDragXRef.current = clampedX;
-        setDragX(clampedX);
-      }
-    }
-  }, []);
-
-  const onTouchEnd = useCallback(() => {
-    handleRelease();
-  }, [handleRelease]);
-
-  const onTouchCancel = useCallback(() => {
-    setDragX(0);
-    setIsSwiping(false);
-    isTrackingRef.current = false;
-    isSwipingRef.current = false;
-  }, []);
-
-  // Mouse event handlers for desktop testing
+  // Mouse event handlers for desktop testing (click & drag from left edge of modal)
   const onMouseDown = useCallback((e) => {
     if (e.button !== 0 || !enabled || isExiting) return;
-    if (!startTracking(e.clientX, e.clientY)) return;
+    if (!isTopmost()) return;
+
+    // Do not hijack input fields or buttons on mouse click
+    if (e.target && e.target.closest('input, textarea, select')) return;
+
+    if (!startTracking(e.clientX, e.clientY, e.target)) return;
 
     const onWindowMouseMove = (moveEvent) => {
       if (!isTrackingRef.current || isLockedOutRef.current || isExiting) return;
@@ -233,19 +266,19 @@ export function useSwipeBack({
       const deltaY = moveEvent.clientY - startYRef.current;
 
       if (!isSwipingRef.current) {
-        if (deltaX < -8) {
+        if (deltaX < -5) {
           isLockedOutRef.current = true;
           isTrackingRef.current = false;
           return;
         }
 
-        if (deltaX > 6 && deltaX > Math.abs(deltaY) * 0.75) {
+        if (deltaX > 4 && deltaX > Math.abs(deltaY) * 0.5) {
           isSwipingRef.current = true;
           setIsSwiping(true);
           const clampedX = Math.max(0, deltaX);
           currentDragXRef.current = clampedX;
           setDragX(clampedX);
-        } else if (Math.abs(deltaY) > 16 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2) {
+        } else if (Math.abs(deltaY) > 10 && Math.abs(deltaY) > deltaX) {
           isLockedOutRef.current = true;
           isTrackingRef.current = false;
         }
@@ -267,9 +300,9 @@ export function useSwipeBack({
 
     window.addEventListener('mousemove', onWindowMouseMove);
     window.addEventListener('mouseup', onWindowMouseUp);
-  }, [enabled, isExiting, startTracking, handleRelease]);
+  }, [enabled, isExiting, isTopmost, startTracking, handleRelease]);
 
-  // Derived gesture states
+  // Derived gesture states (safely reset when disabled)
   const effectiveDragX = enabled ? dragX : 0;
   const effectiveIsSwiping = enabled ? isSwiping : false;
   const effectiveIsExiting = enabled ? isExiting : false;
@@ -298,7 +331,7 @@ export function useSwipeBack({
   };
 
   const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
-  const dragProgress = Math.min(1, effectiveDragX / Math.min(threshold, screenWidth * 0.22));
+  const dragProgress = Math.min(1, effectiveDragX / Math.min(threshold, 55, screenWidth * 0.18));
   const backdropOpacity = effectiveDragX > 0 ? Math.max(0, 1 - (effectiveDragX / (screenWidth * 0.75))) : 1;
 
   return {
@@ -311,10 +344,6 @@ export function useSwipeBack({
     containerStyle,
     backdropOpacity,
     handlers: {
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      onTouchCancel,
       onMouseDown,
     }
   };

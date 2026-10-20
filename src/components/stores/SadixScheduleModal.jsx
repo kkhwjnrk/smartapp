@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { formatFullIndonesianDate, getCurrentMonthKey } from '../../utils/date';
 import { getStoreVisitsForMonth, generateSpvScheduleText } from '../../utils/visitUtils';
+import useSwipeBack from '../../hooks/useSwipeBack';
 
 function getTomorrowIso() {
   const d = new Date();
@@ -24,6 +25,21 @@ function SadixScheduleModal({
   const [selectedStoreIds, setSelectedStoreIds] = useState(new Set());
   const [copyFeedback, setCopyFeedback] = useState(false);
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
+
+  const {
+    containerRef,
+    isSwiping,
+    dragX,
+    isExiting,
+    containerStyle,
+    backdropOpacity,
+    handlers: swipeHandlers
+  } = useSwipeBack({
+    onBack: onClose,
+    edgeWidth: 90,
+    threshold: 70,
+    enabled: isOpen
+  });
 
   // Filter rute unik (tanpa 'Semua')
   const availableRoutes = useMemo(() => {
@@ -147,12 +163,22 @@ function SadixScheduleModal({
       {/* Dimmed Backdrop Scrim */}
       <div 
         className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity"
+        style={{
+          opacity: backdropOpacity,
+          transition: isSwiping ? 'none' : 'opacity 0.25s ease',
+          pointerEvents: isSwiping ? 'none' : 'auto'
+        }}
         onClick={onClose}
       />
 
       {/* Schedule Modal Screen */}
       <div 
-        className="relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl animate-in slide-in-from-right duration-200"
+        ref={containerRef}
+        {...swipeHandlers}
+        style={containerStyle}
+        className={`relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl ${
+          dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-200' : ''
+        }`}
       >
         {/* HEADER */}
         <div className="p-4 bg-zinc-900 text-white flex items-start justify-between gap-3 shrink-0 pt-safe">
@@ -239,7 +265,7 @@ function SadixScheduleModal({
         </div>
 
         {/* LIST TOKO PRIORITAS DALAM RUTE INI */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+        <div className="flex-1 overflow-y-auto p-3 space-y-2 touch-pan-y">
           <div className="flex items-center justify-between text-[11px] px-1 text-zinc-400 font-bold uppercase tracking-wider">
             <span>Daftar Toko ({prioritizedStoresInRoute.length})</span>
             <div className="flex items-center gap-2">

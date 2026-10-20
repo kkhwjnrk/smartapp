@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { formatFullIndonesianDate, getTodayIso } from '../../utils/date';
 import { calculateOrderSummary } from '../../utils/formatters';
+import useSwipeBack from '../../hooks/useSwipeBack';
 
 function OrderModal({
   isOpen,
@@ -260,6 +261,21 @@ function OrderModal({
   const isQtyValid = Boolean(itemQty.trim() && !isNaN(parsedItemQty) && parsedItemQty > 0);
   const canAddItem = Boolean(isStoreSelected && hasPartSelected && isQtyValid);
 
+  const {
+    containerRef,
+    isSwiping,
+    dragX,
+    isExiting,
+    containerStyle,
+    backdropOpacity,
+    handlers: swipeHandlers
+  } = useSwipeBack({
+    onBack: onClose,
+    edgeWidth: 90,
+    threshold: 70,
+    enabled: isOpen && !isStorePickerOpen && !showSaveConfirm
+  });
+
   if (!isOpen) return null;
 
   const modalContent = (
@@ -267,12 +283,22 @@ function OrderModal({
       {/* Dimmed Backdrop Scrim */}
       <div 
         className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity"
+        style={{
+          opacity: backdropOpacity,
+          transition: isSwiping ? 'none' : 'opacity 0.25s ease',
+          pointerEvents: isSwiping ? 'none' : 'auto'
+        }}
         onClick={onClose}
       />
 
       {/* Main Order Form Screen */}
       <div 
-        className="relative w-full h-full max-w-lg mx-auto bg-zinc-50 flex flex-col shadow-2xl animate-in slide-in-from-right duration-200"
+        ref={containerRef}
+        {...swipeHandlers}
+        style={containerStyle}
+        className={`relative w-full h-full max-w-lg mx-auto bg-zinc-50 flex flex-col shadow-2xl ${
+          dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-200' : ''
+        }`}
       >
       
       {/* 1. TOP HEADER BAR (Halaman Penuh) */}
@@ -314,7 +340,7 @@ function OrderModal({
       </div>
 
       {/* 2. SCROLLABLE FORM BODY */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 touch-pan-y">
         <div className="max-w-2xl mx-auto space-y-4 pb-28">
 
           {/* SECTION TOKO: Select Rapi Tanpa Menampilkan List Memanjang di Awal */}

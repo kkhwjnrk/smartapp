@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { formatFullIndonesianDate } from '../../utils/date';
 import { formatStoreCustomerHeader, calculateOrderSummary } from '../../utils/formatters';
+import useSwipeBack from '../../hooks/useSwipeBack';
 
 function OrderDetailModal({
   isOpen,
@@ -19,6 +20,21 @@ function OrderDetailModal({
   const [copiedPn, setCopiedPn] = useState(null);
   const [copiedAll, setCopiedAll] = useState(false);
   const [copiedStoreHeader, setCopiedStoreHeader] = useState(false);
+
+  const {
+    containerRef,
+    isSwiping,
+    dragX,
+    isExiting,
+    containerStyle,
+    backdropOpacity,
+    handlers: swipeHandlers
+  } = useSwipeBack({
+    onBack: onClose,
+    edgeWidth: 90,
+    threshold: 70,
+    enabled: isOpen && !!order
+  });
 
   if (!isOpen || !order) return null;
 
@@ -45,12 +61,22 @@ function OrderDetailModal({
       {/* Dimmed Backdrop Scrim */}
       <div 
         className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity"
+        style={{
+          opacity: backdropOpacity,
+          transition: isSwiping ? 'none' : 'opacity 0.25s ease',
+          pointerEvents: isSwiping ? 'none' : 'auto'
+        }}
         onClick={onClose}
       />
 
       {/* Main Detail Screen */}
       <div 
-        className="relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl animate-in slide-in-from-right duration-200"
+        ref={containerRef}
+        {...swipeHandlers}
+        style={containerStyle}
+        className={`relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl ${
+          dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-200' : ''
+        }`}
       >
       
       {/* Top Header Bar */}
@@ -193,7 +219,7 @@ function OrderDetailModal({
       </div>
 
       {/* Main Content: Daftar Semua Item */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 touch-pan-y">
         <div className="max-w-2xl mx-auto space-y-3 pb-24">
           
           <div className="flex items-center justify-between px-1 mb-1">

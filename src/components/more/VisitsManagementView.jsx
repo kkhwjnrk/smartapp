@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { getTodayIso, getCurrentMonthKey, formatDateWithDay } from '../../utils/date';
 import {
@@ -24,12 +24,6 @@ function VisitsManagementView({
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
   const todayVisitCount = useMemo(() => getDailyVisitCount(visits, todayIso), [visits, todayIso]);
   const monthlyStats = useMemo(() => getMonthlyVisitStats(stores, visits, currentMonthKey), [stores, visits, currentMonthKey]);
-  const [hasEntered, setHasEntered] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setHasEntered(true), 260);
-    return () => clearTimeout(t);
-  }, []);
 
   const {
     containerRef,
@@ -41,7 +35,7 @@ function VisitsManagementView({
     handlers: swipeHandlers
   } = useSwipeBack({
     onBack,
-    edgeWidth: 85,
+    edgeWidth: 90,
     threshold: 70,
     enabled: true
   });
@@ -209,11 +203,13 @@ function VisitsManagementView({
     <div className="fixed inset-0 z-50 overflow-hidden flex justify-center">
       {/* Dimmed Backdrop Scrim */}
       <div 
-        className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity pointer-events-none"
+        className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity"
         style={{
           opacity: backdropOpacity,
-          transition: isSwiping ? 'none' : 'opacity 0.25s ease'
+          transition: isSwiping ? 'none' : 'opacity 0.25s ease',
+          pointerEvents: isSwiping ? 'none' : 'auto'
         }}
+        onClick={onBack}
       />
 
       <div 
@@ -221,7 +217,7 @@ function VisitsManagementView({
         {...swipeHandlers}
         style={containerStyle}
         className={`relative w-full h-full max-w-lg mx-auto bg-zinc-50 flex flex-col shadow-2xl ${
-          !hasEntered && dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
+          dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
         }`}
       >
         {/* HEADER NAVIGASI RINGKAS (1 TOMBOL KEMBALI & BUAT JADWAL) */}
@@ -257,7 +253,7 @@ function VisitsManagementView({
         </div>
 
         {/* Scrollable Content Container */}
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3.5 pb-24">
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3.5 pb-24 touch-pan-y">
 
       {/* CARD CAPAIAN HARI INI (FOKUS & PRAKTIS DENGAN TOMBOL REKAP HARI INI) */}
       <div className="p-4 bg-white rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs space-y-2.5">
