@@ -44,23 +44,32 @@ function App() {
     }
   };
 
-  // Storage for Pricelist dengan migrasi versi otomatis ke dataset PDF baru
+  // Storage for Pricelist dengan pemeliharaan data tersimpan & normalisasi aman
   const [items, setItems] = useState(() => {
-    const savedVersion = localStorage.getItem('daytona_pricelist_version');
     const saved = localStorage.getItem('daytona_pricelist');
-    if (saved && savedVersion === PRICELIST_DATA_VERSION) {
+    if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.het !== undefined) {
-          return parsed.map(item => ({
-            ...item,
-            category: ensureValidCategory(item)
-          }));
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map(item => {
+            const rawHet = item.het !== undefined && item.het !== null
+              ? Number(item.het)
+              : (parseFloat(String(item.price || 0).replace(/[^0-9]/g, '')) || 0);
+            return {
+              ...item,
+              het: rawHet,
+              d24: item.d24 ?? Math.round(rawHet * 0.76),
+              d27: item.d27 ?? Math.round(rawHet * 0.73),
+              d29: item.d29 ?? Math.round(rawHet * 0.71),
+              price: item.price || (rawHet > 0 ? rawHet.toLocaleString('id-ID') : '0'),
+              category: ensureValidCategory(item)
+            };
+          });
         }
       } catch {}
     }
 
-    // Auto-update ke data 568 item baru dengan harga net dan subkategori lengkap
+    // Default ke dataset katalog resmi jika localStorage belum memiliki data
     localStorage.setItem('daytona_pricelist_version', PRICELIST_DATA_VERSION);
     return initialPricelist.map(item => ({
       ...item,
@@ -73,14 +82,13 @@ function App() {
     localStorage.setItem('daytona_pricelist_version', PRICELIST_DATA_VERSION);
   }, [items]);
 
-  // Storage for Stores dengan migrasi otomatis ke 168 toko resmi
+  // Storage for Stores dengan pemeliharaan data tersimpan & normalisasi aman
   const [stores, setStores] = useState(() => {
-    const savedVersion = localStorage.getItem('daytona_stores_version');
     const saved = localStorage.getItem('daytona_stores');
-    if (saved && savedVersion === STORES_DATA_VERSION) {
+    if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= 100 && parsed[0]?.customerId) {
+        if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed;
         }
       } catch {}
@@ -388,7 +396,8 @@ function App() {
       description: '',
       price: '',
       qty: '1',
-      category: selectedCategory !== 'Semua' ? selectedCategory : 'Busi'
+      category: selectedCategory !== 'Semua' ? selectedCategory : 'Busi',
+      subCategory: ''
     });
     setModalItem(null);
     setShowItemModal(true);
@@ -397,7 +406,8 @@ function App() {
   const openEditModal = (item) => {
     setFormData({
       ...item,
-      category: item.category || 'Busi'
+      category: item.category || 'Busi',
+      subCategory: item.subCategory || ''
     });
     setModalItem(item);
     setShowItemModal(true);
@@ -407,9 +417,22 @@ function App() {
     e.preventDefault();
     if (!formData.pn.trim() || !formData.description.trim()) return;
 
+    // Normalisasi harga HET dan hitung diskon resmi otomatis
+    const rawNumeric = parseFloat(String(formData.price).replace(/[^0-9]/g, '')) || 0;
+    const formattedPrice = rawNumeric > 0 ? rawNumeric.toLocaleString('id-ID') : (formData.price || '0');
+
     const itemToSave = {
       ...formData,
-      category: formData.category || 'Busi'
+      pn: formData.pn.trim(),
+      description: formData.description.trim(),
+      price: formattedPrice,
+      het: rawNumeric,
+      d24: Math.round(rawNumeric * 0.76),
+      d27: Math.round(rawNumeric * 0.73),
+      d29: Math.round(rawNumeric * 0.71),
+      qty: String(formData.qty || '1'),
+      category: formData.category || 'Busi',
+      subCategory: formData.subCategory || modalItem?.subCategory || ''
     };
 
     if (modalItem) {
