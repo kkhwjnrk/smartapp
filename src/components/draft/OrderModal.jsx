@@ -86,10 +86,17 @@ function OrderModal({
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const tokens = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
-    return catalogItems.filter(item => {
-      const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
-      return tokens.every(t => combined.includes(t));
-    }).slice(0, 30);
+    return catalogItems
+      .filter(item => {
+        const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
+        return tokens.every(t => combined.includes(t));
+      })
+      .sort((a, b) => {
+        const nameCompare = (a.description || '').localeCompare(b.description || '', 'id', { numeric: true, sensitivity: 'base' });
+        if (nameCompare !== 0) return nameCompare;
+        return (a.pn || '').localeCompare(b.pn || '', 'id', { numeric: true });
+      })
+      .slice(0, 30);
   }, [searchQuery, catalogItems]);
 
   // Pilih toko dari searchable select

@@ -373,20 +373,26 @@ function App() {
   const filteredItems = useMemo(() => {
     const queryTokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
 
-    return items.filter(item => {
-      if (selectedCategory !== 'Semua' && item.category !== selectedCategory) {
-        return false;
-      }
-      if (selectedSubCategory !== 'Semua' && item.subCategory !== selectedSubCategory) {
-        return false;
-      }
-      if (queryTokens.length > 0) {
-        const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
-        const allMatch = queryTokens.every(token => combined.includes(token));
-        if (!allMatch) return false;
-      }
-      return true;
-    });
+    return items
+      .filter(item => {
+        if (selectedCategory !== 'Semua' && item.category !== selectedCategory) {
+          return false;
+        }
+        if (selectedSubCategory !== 'Semua' && item.subCategory !== selectedSubCategory) {
+          return false;
+        }
+        if (queryTokens.length > 0) {
+          const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
+          const allMatch = queryTokens.every(token => combined.includes(token));
+          if (!allMatch) return false;
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        const nameCompare = (a.description || '').localeCompare(b.description || '', 'id', { numeric: true, sensitivity: 'base' });
+        if (nameCompare !== 0) return nameCompare;
+        return (a.pn || '').localeCompare(b.pn || '', 'id', { numeric: true });
+      });
   }, [items, selectedCategory, selectedSubCategory, query]);
 
   // CRUD Logic
