@@ -1,8 +1,7 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { formatFullIndonesianDate, getCurrentMonthKey } from '../../utils/date';
 import { getStoreVisitsForMonth, generateSpvScheduleText } from '../../utils/visitUtils';
-import useSwipeBack from '../../hooks/useSwipeBack';
 
 function getTomorrowIso() {
   const d = new Date();
@@ -25,27 +24,6 @@ function SadixScheduleModal({
   const [selectedStoreIds, setSelectedStoreIds] = useState(new Set());
   const [copyFeedback, setCopyFeedback] = useState(false);
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
-  const [hasEntered, setHasEntered] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setHasEntered(true), 260);
-    return () => clearTimeout(t);
-  }, []);
-
-  const {
-    containerRef,
-    isSwiping,
-    dragX,
-    isExiting,
-    containerStyle,
-    backdropOpacity,
-    handlers: swipeHandlers
-  } = useSwipeBack({
-    onBack: onClose,
-    edgeWidth: 85,
-    threshold: 70,
-    enabled: isOpen
-  });
 
   // Filter rute unik (tanpa 'Semua')
   const availableRoutes = useMemo(() => {
@@ -168,21 +146,13 @@ function SadixScheduleModal({
     <div className="fixed inset-0 z-50 overflow-hidden flex justify-center">
       {/* Dimmed Backdrop Scrim */}
       <div 
-        className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity pointer-events-none"
-        style={{
-          opacity: backdropOpacity,
-          transition: isSwiping ? 'none' : 'opacity 0.25s ease'
-        }}
+        className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity"
+        onClick={onClose}
       />
 
-      {/* Full-Screen Sliding Schedule Page with Edge Swipe-Back */}
+      {/* Schedule Modal Screen */}
       <div 
-        ref={containerRef}
-        {...swipeHandlers}
-        style={containerStyle}
-        className={`relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl ${
-          !hasEntered && dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
-        }`}
+        className="relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl animate-in slide-in-from-right duration-200"
       >
         {/* HEADER */}
         <div className="p-4 bg-zinc-900 text-white flex items-start justify-between gap-3 shrink-0 pt-safe">

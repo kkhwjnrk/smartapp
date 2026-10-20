@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { formatFullIndonesianDate } from '../../utils/date';
 import { formatStoreCustomerHeader, calculateOrderSummary } from '../../utils/formatters';
-import useSwipeBack from '../../hooks/useSwipeBack';
 
 function OrderDetailModal({
   isOpen,
@@ -20,27 +19,6 @@ function OrderDetailModal({
   const [copiedPn, setCopiedPn] = useState(null);
   const [copiedAll, setCopiedAll] = useState(false);
   const [copiedStoreHeader, setCopiedStoreHeader] = useState(false);
-  const [hasEntered, setHasEntered] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setHasEntered(true), 260);
-    return () => clearTimeout(t);
-  }, []);
-
-  const {
-    containerRef,
-    isSwiping,
-    dragX,
-    isExiting,
-    containerStyle,
-    backdropOpacity,
-    handlers: swipeHandlers
-  } = useSwipeBack({
-    onBack: onClose,
-    edgeWidth: 85,
-    threshold: 70,
-    enabled: isOpen && !!order
-  });
 
   if (!isOpen || !order) return null;
 
@@ -48,7 +26,6 @@ function OrderDetailModal({
   const formattedDate = formatFullIndonesianDate(order.date || order.createdAt);
   const formattedStoreText = formatStoreCustomerHeader(order, stores);
   const orderSummary = calculateOrderSummary(order.items, catalogItems);
-
 
   const handleCopySinglePn = (pn) => {
     navigator.clipboard.writeText(pn);
@@ -64,24 +41,16 @@ function OrderDetailModal({
   };
 
   const modalContent = (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-hidden flex justify-center">
       {/* Dimmed Backdrop Scrim */}
       <div 
-        className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity pointer-events-none"
-        style={{
-          opacity: backdropOpacity,
-          transition: isSwiping ? 'none' : 'opacity 0.25s ease'
-        }}
+        className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity"
+        onClick={onClose}
       />
 
-      {/* Main Sliding Detail Screen */}
+      {/* Main Detail Screen */}
       <div 
-        ref={containerRef}
-        {...swipeHandlers}
-        style={containerStyle}
-        className={`relative w-full h-full bg-white flex flex-col shadow-2xl ${
-          !hasEntered && dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
-        }`}
+        className="relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl animate-in slide-in-from-right duration-200"
       >
       
       {/* Top Header Bar */}

@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { parseGoogleMapsInput, isShortGoogleMapsUrl } from '../../utils/geoUtils';
-import useSwipeBack from '../../hooks/useSwipeBack';
 
 function StoreModal({ 
   isOpen, 
@@ -32,21 +31,6 @@ function StoreModal({
     setDragY(0);
     onClose?.();
   };
-
-  const {
-    containerRef,
-    isSwiping: isHorizontalSwiping,
-    dragX: swipeDragX,
-    isExiting: isSwipeExiting,
-    containerStyle: swipeContainerStyle,
-    backdropOpacity: swipeBackdropOpacity,
-    handlers: swipeHandlers
-  } = useSwipeBack({
-    onBack: handleClose,
-    edgeWidth: 85,
-    threshold: 70,
-    enabled: isOpen
-  });
 
   if (!isOpen) return null;
 
@@ -234,28 +218,17 @@ function StoreModal({
       <div 
         className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" 
         style={{
-          opacity: swipeDragX > 0 || isSwipeExiting ? swipeBackdropOpacity : dragY > 0 ? Math.max(0.1, 1 - dragY / 250) : undefined,
-          transition: isHorizontalSwiping ? 'none' : 'opacity 0.25s ease'
+          opacity: dragY > 0 ? Math.max(0.1, 1 - dragY / 250) : undefined,
+          transition: isDragging ? 'none' : 'opacity 0.25s ease'
         }}
         onClick={handleClose}
       ></div>
 
       {/* Sheet Content Container */}
       <div 
-        ref={containerRef}
-        {...swipeHandlers}
         style={{
-          ...swipeContainerStyle,
-          transform: swipeDragX > 0 || isSwipeExiting
-            ? swipeContainerStyle.transform 
-            : dragY !== 0 ? `translateY(${dragY}px)` : undefined,
-          transition: isHorizontalSwiping || isDragging
-            ? 'none' 
-            : isSwipeExiting 
-              ? swipeContainerStyle.transition
-              : dragY === 0 && swipeDragX === 0
-                ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)' 
-                : undefined
+          transform: dragY !== 0 ? `translateY(${dragY}px)` : undefined,
+          transition: isDragging ? 'none' : dragY === 0 ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)' : undefined
         }}
         className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-6 pt-3 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300 max-h-[92vh] flex flex-col"
       >
