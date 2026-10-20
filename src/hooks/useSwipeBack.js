@@ -1,33 +1,25 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 
 /**
- * Custom hook for native-feeling PWA edge swipe-back & horizontal slide-back gesture.
- * Supports:
- * - Slide to right (from left edge or screen: deltaX > 0)
- * - Slide to left ("slide kiri" / Android right-edge back: deltaX < 0)
- * - Native non-passive touch listeners to prevent browser cancellation
- * - High-precision velocity & distance threshold evaluation
+ * Custom hook for native-feeling edge swipe-back gesture (PWA / iOS / Android style).
+ * Slides full pages and views rightward when swiping from the left edge, and dismisses on release.
+ * Strictly left-to-right swipe only. Zero visual indicators.
  *
  * @param {Object} options
  * @param {Function} options.onBack - Callback triggered when back swipe completes
- * @param {number} [options.edgeWidth=100] - Margin from edges where edge-specific touches start
- * @param {number} [options.threshold=75] - Distance in px needed to confirm dismissal
+ * @param {number} [options.edgeWidth=85] - Max px from left edge where swipe can start
+ * @param {number} [options.threshold=70] - Distance in px needed to confirm dismissal
  * @param {boolean} [options.enabled=true] - Whether gesture tracking is enabled
- * @param {'both'|'right'|'left'} [options.direction='both'] - Allowed swipe directions ('both', 'right', 'left')
- * @param {boolean} [options.allowAnywhere=true] - Allow horizontal swipe anywhere on screen (not strictly edges)
  */
 export function useSwipeBack({
   onBack,
-  edgeWidth = 100,
-  threshold = 75,
-  enabled = true,
-  direction = 'both',
-  allowAnywhere = true
+  edgeWidth = 85,
+  threshold = 70,
+  enabled = true
 }) {
-  const [dragOffset, setDragOffset] = useState(0); // Signed: >0 (right), <0 (left)
+  const [dragX, setDragX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
-  const [exitDirection, setExitDirection] = useState('right'); // 'right' | 'left'
 
   const containerRef = useRef(null);
   const startXRef = useRef(0);
@@ -36,145 +28,41 @@ export function useSwipeBack({
   const isTrackingRef = useRef(false);
   const isSwipingRef = useRef(false);
   const isLockedOutRef = useRef(false);
-  const currentDragOffsetRef = useRef(0);
-  const swipeDirectionRef = useRef(null); // 'right' | 'left' | null
+  const currentDragXRef = useRef(0);
 
-  // Reset tracking refs when disabled or unmounted
+  // Clean up gesture tracking refs when disabled
   useEffect(() => {
     if (!enabled) {
       isTrackingRef.current = false;
       isSwipingRef.current = false;
       isLockedOutRef.current = false;
-      currentDragOffsetRef.current = 0;
-      swipeDirectionRef.current = null;
+      currentDragXRef.current = 0;
     }
   }, [enabled]);
 
-  const getEffectiveEdgeWidth = useCallback(() => {
-    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
-    return Math.max(edgeWidth, Math.min(140, screenWidth * 0.35));
-  }, [edgeWidth]);
+  // Check if touch or mouse coordinate is within edge zone
+  const checkIsWithinEdge = useCallback((clientX) => {
+    // 1. Direct screen left edge (0 to edgeWidth px)
+    if (clientX <= edgeWidth) return true;
 
-  const handleStart = useCallback((clientX, clientY, target) => {
-    if (!enabled || isExiting) return;
-
-    // Do not interfere if user is interacting with an input or textarea
-    // unless touching near the outer edges (within 35px)
-    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
-      const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
-      const isNearEdge = clientX <= 35 || clientX >= screenWidth - 35;
-      if (!isNearEdge) {
-        isTrackingRef.current = false;
-        return;
-      }
-    }
-
-    let effectiveLeft = 0;
-    let containerWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
+    // 2. Relative to container's left edge (useful when centered on wider screens or tablets)
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
-      effectiveLeft = rect.left;
-      containerWidth = rect.width || containerWidth;
-    }
-
-    const touchXRelativeToLeft = clientX - effectiveLeft;
-    const touchXRelativeToRight = containerWidth - touchXRelativeToLeft;
-    const maxEdge = getEffectiveEdgeWidth();
-
-    // If edge-only restriction is requested, verify touch starts near left or right edge
-    if (!allowAnywhere) {
-      const inLeftZone = touchXRelativeToLeft >= 0 && touchXRelativeToLeft <= maxEdge;
-      const inRightZone = touchXRelativeToRight >= 0 && touchXRelativeToRight <= maxEdge;
-      if (!inLeftZone && !inRightZone) {
-        isTrackingRef.current = false;
-        return;
+      if (clientX >= rect.left && clientX <= rect.left + edgeWidth) {
+        return true;
       }
     }
 
-    startXRef.current = clientX;
-    startYRef.current = clientY;
-    startTimeRef.current = Date.now();
-    currentDragOffsetRef.current = 0;
-    swipeDirectionRef.current = null;
-    isTrackingRef.current = true;
-    isSwipingRef.current = false;
-    isLockedOutRef.current = false;
-  }, [enabled, isExiting, allowAnywhere, getEffectiveEdgeWidth]);
+    return false;
+  }, [edgeWidth]);
 
-  const handleMove = useCallback((clientX, clientY, e) => {
-    if (!enabled || !isTrackingRef.current || isLockedOutRef.current || isExiting) return;
-
-    const deltaX = clientX - startXRef.current;
-    const deltaY = clientY - startYRef.current;
-    const absX = Math.abs(deltaX);
-    const absY = Math.abs(deltaY);
-
-    // Initial gesture disambiguation
-    if (!isSwipingRef.current) {
-      // Check if user has moved thumb enough to detect intent
-      if (absX >= 7 || absY >= 10) {
-        // Horizontal displacement dominant: activate swipe-to-back
-        if (absX > 6 && absX > absY * 0.6) {
-          if (deltaX > 0 && (direction === 'both' || direction === 'right')) {
-            isSwipingRef.current = true;
-            swipeDirectionRef.current = 'right';
-            setIsSwiping(true);
-          } else if (deltaX < 0 && (direction === 'both' || direction === 'left')) {
-            isSwipingRef.current = true;
-            swipeDirectionRef.current = 'left';
-            setIsSwiping(true);
-          } else {
-            // Direction not allowed
-            isLockedOutRef.current = true;
-            isTrackingRef.current = false;
-            return;
-          }
-        } else if (absY > 12 && absY > absX) {
-          // Vertical scrolling dominant: lockout gesture to allow smooth native scroll
-          isLockedOutRef.current = true;
-          isTrackingRef.current = false;
-          return;
-        }
-      }
-    }
-
-    // Actively swiping horizontally
-    if (isSwipingRef.current) {
-      if (e && e.cancelable && e.preventDefault) {
-        e.preventDefault();
-      }
-
-      let activeOffset = deltaX;
-      if (swipeDirectionRef.current === 'right') {
-        activeOffset = Math.max(0, deltaX);
-      } else if (swipeDirectionRef.current === 'left') {
-        activeOffset = Math.min(0, deltaX);
-      }
-
-      currentDragOffsetRef.current = activeOffset;
-      setDragOffset(activeOffset);
-    }
-  }, [enabled, isExiting, direction]);
-
-  const handleEnd = useCallback((finalClientX) => {
-    if (!isTrackingRef.current && !isSwipingRef.current) return;
-
+  // Handle release of gesture
+  const handleRelease = useCallback(() => {
     const wasSwiping = isSwipingRef.current;
-    let finalOffset = currentDragOffsetRef.current;
-    if (finalClientX !== undefined && wasSwiping) {
-      const calculated = finalClientX - startXRef.current;
-      if (swipeDirectionRef.current === 'right') {
-        finalOffset = Math.max(0, calculated);
-      } else if (swipeDirectionRef.current === 'left') {
-        finalOffset = Math.min(0, calculated);
-      }
-    }
-
+    const finalDragX = currentDragXRef.current;
     const elapsed = Date.now() - startTimeRef.current;
-    const absOffset = Math.abs(finalOffset);
-    const velocity = elapsed > 0 ? absOffset / elapsed : 0; // px per ms
+    const velocity = elapsed > 0 ? finalDragX / elapsed : 0; // px per ms
 
-    // Reset tracking flags
     isTrackingRef.current = false;
     isSwipingRef.current = false;
     isLockedOutRef.current = false;
@@ -183,167 +71,241 @@ export function useSwipeBack({
       const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
       const dynamicThreshold = Math.min(threshold, screenWidth * 0.22);
 
-      // Trigger back if dragged past threshold or flicked quickly
-      const shouldDismiss = absOffset > dynamicThreshold || (velocity > 0.28 && absOffset > 25);
-
-      if (shouldDismiss) {
-        const exitDir = finalOffset < 0 ? 'left' : 'right';
-        setExitDirection(exitDir);
+      // Trigger back if dragged past dynamic threshold or flicked quickly to right
+      if (finalDragX > dynamicThreshold || (velocity > 0.22 && finalDragX > 25)) {
         setIsExiting(true);
         setTimeout(() => {
           onBack?.();
-        }, 220);
+        }, 180);
       } else {
-        // Snap back to normal with smooth spring animation
-        setDragOffset(0);
+        // Snap back with smooth spring
+        setDragX(0);
         setIsSwiping(false);
-        swipeDirectionRef.current = null;
       }
+    } else {
+      setDragX(0);
+      setIsSwiping(false);
     }
   }, [threshold, onBack]);
 
-  const handleCancel = useCallback(() => {
-    // If user dragged substantially before cancel, treat as end instead of abrupt abort
-    if (isSwipingRef.current && Math.abs(currentDragOffsetRef.current) >= threshold) {
-      handleEnd();
-      return;
-    }
-    setDragOffset(0);
-    setIsSwiping(false);
-    isTrackingRef.current = false;
+  // Start touch tracking
+  const startTracking = useCallback((clientX, clientY) => {
+    if (!enabled || isExiting) return false;
+    if (!checkIsWithinEdge(clientX)) return false;
+
+    startXRef.current = clientX;
+    startYRef.current = clientY;
+    startTimeRef.current = Date.now();
+    currentDragXRef.current = 0;
+    isTrackingRef.current = true;
     isSwipingRef.current = false;
     isLockedOutRef.current = false;
-    currentDragOffsetRef.current = 0;
-    swipeDirectionRef.current = null;
-  }, [handleEnd, threshold]);
 
-  // Attach native non-passive DOM listeners directly to containerRef element
-  // This guarantees that e.preventDefault() works on mobile Chrome/Safari and prevents touchcancel
+    return true;
+  }, [enabled, isExiting, checkIsWithinEdge]);
+
+  // Native non-passive touch listeners on window during touch interaction to prevent touchcancel drops
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el || !enabled) return;
-
-    const onNativeTouchStart = (e) => {
-      if (e.touches.length === 1) {
-        handleStart(e.touches[0].clientX, e.touches[0].clientY, e.target);
-      }
-    };
+    if (!enabled || isExiting) return;
 
     const onNativeTouchMove = (e) => {
-      if (e.touches.length === 1) {
-        handleMove(e.touches[0].clientX, e.touches[0].clientY, e);
+      if (!isTrackingRef.current || isLockedOutRef.current || isExiting) return;
+      if (!e.touches || e.touches.length !== 1) return;
+
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - startXRef.current;
+      const deltaY = touch.clientY - startYRef.current;
+
+      // Gesture direction disambiguation
+      if (!isSwipingRef.current) {
+        // Disallow leftward swipe: only left-to-right swipe is permitted
+        if (deltaX < -8) {
+          isLockedOutRef.current = true;
+          isTrackingRef.current = false;
+          return;
+        }
+
+        // Horizontal swipe detected early: moved rightward by > 6px and horizontal dominates
+        if (deltaX > 6 && deltaX > Math.abs(deltaY) * 0.75) {
+          isSwipingRef.current = true;
+          setIsSwiping(true);
+          if (e.cancelable) e.preventDefault();
+          const clampedX = Math.max(0, deltaX);
+          currentDragXRef.current = clampedX;
+          setDragX(clampedX);
+        }
+        // Vertical scroll dominant: release gesture to allow natural scrolling
+        else if (Math.abs(deltaY) > 16 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2) {
+          isLockedOutRef.current = true;
+          isTrackingRef.current = false;
+        }
+        return;
+      }
+
+      // Actively swiping rightward
+      if (isSwipingRef.current) {
+        if (e.cancelable) e.preventDefault();
+        const clampedX = Math.max(0, deltaX);
+        currentDragXRef.current = clampedX;
+        setDragX(clampedX);
       }
     };
 
-    const onNativeTouchEnd = (e) => {
-      const clientX = e.changedTouches?.[0]?.clientX ?? currentDragOffsetRef.current;
-      handleEnd(clientX);
+    const onNativeTouchEnd = () => {
+      if (isTrackingRef.current || isSwipingRef.current) {
+        handleRelease();
+      }
     };
 
     const onNativeTouchCancel = () => {
-      handleCancel();
+      if (isSwipingRef.current && currentDragXRef.current > threshold * 0.6) {
+        setIsExiting(true);
+        setTimeout(() => {
+          onBack?.();
+        }, 180);
+      } else {
+        setDragX(0);
+        setIsSwiping(false);
+      }
+      isTrackingRef.current = false;
+      isSwipingRef.current = false;
+      isLockedOutRef.current = false;
+      currentDragXRef.current = 0;
     };
 
-    el.addEventListener('touchstart', onNativeTouchStart, { passive: true });
-    el.addEventListener('touchmove', onNativeTouchMove, { passive: false });
-    el.addEventListener('touchend', onNativeTouchEnd, { passive: true });
-    el.addEventListener('touchcancel', onNativeTouchCancel, { passive: true });
+    window.addEventListener('touchmove', onNativeTouchMove, { passive: false });
+    window.addEventListener('touchend', onNativeTouchEnd, { passive: true });
+    window.addEventListener('touchcancel', onNativeTouchCancel, { passive: true });
 
     return () => {
-      el.removeEventListener('touchstart', onNativeTouchStart);
-      el.removeEventListener('touchmove', onNativeTouchMove);
-      el.removeEventListener('touchend', onNativeTouchEnd);
-      el.removeEventListener('touchcancel', onNativeTouchCancel);
+      window.removeEventListener('touchmove', onNativeTouchMove);
+      window.removeEventListener('touchend', onNativeTouchEnd);
+      window.removeEventListener('touchcancel', onNativeTouchCancel);
     };
-  }, [enabled, handleStart, handleMove, handleEnd, handleCancel]);
+  }, [enabled, isExiting, handleRelease, threshold, onBack]);
 
-  // Mouse event handlers for desktop testing & pair programming
+  // Touch event handlers for React JSX binding
+  const onTouchStart = useCallback((e) => {
+    if (e.touches && e.touches.length === 1) {
+      startTracking(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, [startTracking]);
+
+  const onTouchMove = useCallback((e) => {
+    if (!isTrackingRef.current || isLockedOutRef.current) return;
+    if (e.touches && e.touches.length === 1) {
+      const deltaX = e.touches[0].clientX - startXRef.current;
+      const deltaY = e.touches[0].clientY - startYRef.current;
+      if (!isSwipingRef.current && deltaX > 6 && deltaX > Math.abs(deltaY) * 0.75) {
+        isSwipingRef.current = true;
+        setIsSwiping(true);
+        if (e.cancelable && e.preventDefault) e.preventDefault();
+      }
+      if (isSwipingRef.current) {
+        if (e.cancelable && e.preventDefault) e.preventDefault();
+        const clampedX = Math.max(0, deltaX);
+        currentDragXRef.current = clampedX;
+        setDragX(clampedX);
+      }
+    }
+  }, []);
+
+  const onTouchEnd = useCallback(() => {
+    handleRelease();
+  }, [handleRelease]);
+
+  const onTouchCancel = useCallback(() => {
+    setDragX(0);
+    setIsSwiping(false);
+    isTrackingRef.current = false;
+    isSwipingRef.current = false;
+  }, []);
+
+  // Mouse event handlers for desktop testing
   const onMouseDown = useCallback((e) => {
     if (e.button !== 0 || !enabled || isExiting) return;
-
-    handleStart(e.clientX, e.clientY, e.target);
+    if (!startTracking(e.clientX, e.clientY)) return;
 
     const onWindowMouseMove = (moveEvent) => {
-      handleMove(moveEvent.clientX, moveEvent.clientY, moveEvent);
+      if (!isTrackingRef.current || isLockedOutRef.current || isExiting) return;
+
+      const deltaX = moveEvent.clientX - startXRef.current;
+      const deltaY = moveEvent.clientY - startYRef.current;
+
+      if (!isSwipingRef.current) {
+        if (deltaX < -8) {
+          isLockedOutRef.current = true;
+          isTrackingRef.current = false;
+          return;
+        }
+
+        if (deltaX > 6 && deltaX > Math.abs(deltaY) * 0.75) {
+          isSwipingRef.current = true;
+          setIsSwiping(true);
+          const clampedX = Math.max(0, deltaX);
+          currentDragXRef.current = clampedX;
+          setDragX(clampedX);
+        } else if (Math.abs(deltaY) > 16 && Math.abs(deltaY) > Math.abs(deltaX) * 1.2) {
+          isLockedOutRef.current = true;
+          isTrackingRef.current = false;
+        }
+        return;
+      }
+
+      if (isSwipingRef.current) {
+        const clampedX = Math.max(0, deltaX);
+        currentDragXRef.current = clampedX;
+        setDragX(clampedX);
+      }
     };
 
-    const onWindowMouseUp = (upEvent) => {
+    const onWindowMouseUp = () => {
       window.removeEventListener('mousemove', onWindowMouseMove);
       window.removeEventListener('mouseup', onWindowMouseUp);
-      handleEnd(upEvent.clientX);
+      handleRelease();
     };
 
     window.addEventListener('mousemove', onWindowMouseMove);
     window.addEventListener('mouseup', onWindowMouseUp);
-  }, [enabled, isExiting, handleStart, handleMove, handleEnd]);
-
-  // Fallback React touch handlers (for JSX spreading)
-  const onTouchStart = useCallback((e) => {
-    if (e.touches.length === 1) {
-      handleStart(e.touches[0].clientX, e.touches[0].clientY, e.target);
-    }
-  }, [handleStart]);
-
-  const onTouchMove = useCallback((e) => {
-    if (e.touches.length === 1) {
-      handleMove(e.touches[0].clientX, e.touches[0].clientY, e);
-    }
-  }, [handleMove]);
-
-  const onTouchEnd = useCallback((e) => {
-    const clientX = e.changedTouches?.[0]?.clientX ?? currentDragOffsetRef.current;
-    handleEnd(clientX);
-  }, [handleEnd]);
+  }, [enabled, isExiting, startTracking, handleRelease]);
 
   // Derived gesture states
-  const effectiveDragOffset = enabled ? dragOffset : 0;
+  const effectiveDragX = enabled ? dragX : 0;
   const effectiveIsSwiping = enabled ? isSwiping : false;
   const effectiveIsExiting = enabled ? isExiting : false;
-  const absDrag = Math.abs(effectiveDragOffset);
 
-  // Direction indicator
-  const dragDirection = effectiveDragOffset > 0 ? 'right' : effectiveDragOffset < 0 ? 'left' : null;
-
-  // Transform styles
-  const getTransform = () => {
-    if (effectiveIsExiting) {
-      return exitDirection === 'left' ? 'translateX(-100%)' : 'translateX(100%)';
-    }
-    if (effectiveDragOffset !== 0) {
-      return `translateX(${effectiveDragOffset}px)`;
-    }
-    return undefined;
-  };
-
+  // Dynamic transform and transition styles for the sliding page
   const containerStyle = {
-    transform: getTransform(),
-    transition: effectiveIsSwiping
-      ? 'none'
-      : effectiveIsExiting
-        ? 'transform 0.22s cubic-bezier(0.32, 0.72, 0, 1)'
-        : effectiveDragOffset === 0
-          ? 'transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1)'
+    transform: effectiveIsExiting 
+      ? 'translateX(100%)' 
+      : effectiveDragX > 0 
+        ? `translateX(${effectiveDragX}px)` 
+        : undefined,
+    transition: effectiveIsSwiping 
+      ? 'none' 
+      : effectiveIsExiting 
+        ? 'transform 0.18s cubic-bezier(0.32, 0.72, 0, 1)' 
+        : effectiveDragX === 0 
+          ? 'transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1)' 
           : undefined,
-    boxShadow: (absDrag > 0 || effectiveIsExiting)
-      ? exitDirection === 'left' || effectiveDragOffset < 0
-        ? '12px 0 32px rgba(0, 0, 0, 0.22)'
-        : '-12px 0 32px rgba(0, 0, 0, 0.22)'
+    boxShadow: (effectiveDragX > 0 || effectiveIsExiting) 
+      ? '-12px 0 28px rgba(0, 0, 0, 0.18)' 
       : undefined,
     willChange: effectiveIsSwiping ? 'transform' : undefined,
-    touchAction: effectiveIsSwiping ? 'none' : 'pan-y'
+    touchAction: 'pan-y',
+    userSelect: effectiveIsSwiping ? 'none' : undefined,
+    WebkitUserSelect: effectiveIsSwiping ? 'none' : undefined
   };
 
   const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
-  const dynamicThreshold = Math.min(threshold, screenWidth * 0.22);
-  const dragProgress = Math.min(1, absDrag / dynamicThreshold);
-  const backdropOpacity = absDrag > 0 ? Math.max(0.05, 1 - (absDrag / screenWidth)) : 1;
+  const dragProgress = Math.min(1, effectiveDragX / Math.min(threshold, screenWidth * 0.22));
+  const backdropOpacity = effectiveDragX > 0 ? Math.max(0, 1 - (effectiveDragX / (screenWidth * 0.75))) : 1;
 
   return {
+    ref: containerRef,
     containerRef,
     isSwiping: effectiveIsSwiping,
-    dragX: absDrag, // Always positive magnitude for backwards compatibility with dragX > 10
-    dragOffset: effectiveDragOffset, // Signed displacement: >0 (right), <0 (left)
-    dragDirection,
+    dragX: effectiveDragX,
     dragProgress,
     isExiting: effectiveIsExiting,
     containerStyle,
@@ -352,7 +314,7 @@ export function useSwipeBack({
       onTouchStart,
       onTouchMove,
       onTouchEnd,
-      onTouchCancel: handleCancel,
+      onTouchCancel,
       onMouseDown,
     }
   };

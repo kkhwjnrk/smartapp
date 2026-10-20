@@ -30,8 +30,7 @@ function HomeTab({
   onOpenCategories,
   visits = [],
   onOpenVisitRecap,
-  onOpenSadixSchedule,
-  onOpenVisitsPage
+  onOpenSadixSchedule
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedStore, setCopiedStore] = useState('');
@@ -215,13 +214,10 @@ function HomeTab({
         </div>
 
         {/* KARTU 2: KUNJUNGAN HARI INI */}
-        <div 
-          onClick={() => onOpenVisitsPage && onOpenVisitsPage()}
-          className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-zinc-200/90 shadow-2xs flex flex-col justify-between cursor-pointer hover:border-zinc-300 transition-all group"
-        >
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-zinc-200/90 shadow-2xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] sm:text-[11.5px] font-bold text-zinc-400 tracking-wider uppercase group-hover:text-zinc-700 transition-colors">
+              <span className="text-[11px] sm:text-[11.5px] font-bold text-zinc-400 tracking-wider uppercase">
                 Kunjungan Hari Ini
               </span>
               <span className={`text-[10.5px] font-bold px-2 py-0.5 rounded-full border ${
@@ -251,15 +247,10 @@ function HomeTab({
                 style={{ width: `${Math.min(100, Math.round((todayVisitCount / 12) * 100))}%` }}
               />
             </div>
-            <p className="text-[11.5px] text-zinc-500 mt-1.5 flex items-center justify-between">
-              <span>
-                {todayVisitCount >= 12 
-                  ? 'Target minimal 12 kunjungan telah terpenuhi.' 
-                  : `Tersisa ${Math.max(0, 12 - todayVisitCount)} toko lagi untuk mencapai target.`}
-              </span>
-              <span className="text-[11px] font-bold text-[#EA580C] group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5 shrink-0 ml-1">
-                Buka Jadwal →
-              </span>
+            <p className="text-[11.5px] text-zinc-500 mt-1.5">
+              {todayVisitCount >= 12 
+                ? 'Luar biasa! Target minimal 12 kunjungan telah terpenuhi.' 
+                : `Tersisa ${Math.max(0, 12 - todayVisitCount)} toko lagi untuk mencapai target harian.`}
             </p>
           </div>
 
@@ -267,20 +258,14 @@ function HomeTab({
           <div className="grid grid-cols-2 gap-2 mt-3.5 pt-3 border-t border-zinc-100">
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onOpenVisitRecap) onOpenVisitRecap();
-              }}
+              onClick={onOpenVisitRecap}
               className="py-2.5 px-3 bg-zinc-900 hover:bg-zinc-800 active:scale-95 text-white rounded-xl text-[12px] font-bold transition-all shadow-2xs flex items-center justify-center gap-1.5"
             >
               <span>🌙 Rekap Hari Ini</span>
             </button>
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onOpenSadixSchedule) onOpenSadixSchedule();
-              }}
+              onClick={onOpenSadixSchedule}
               className="py-2.5 px-3 bg-blue-50 hover:bg-blue-100 active:scale-95 text-blue-700 border border-blue-200/80 rounded-xl text-[12px] font-bold transition-all shadow-2xs flex items-center justify-center gap-1.5"
             >
               <span>📋 Jadwal SPV</span>

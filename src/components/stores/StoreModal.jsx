@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { parseGoogleMapsInput, isShortGoogleMapsUrl } from '../../utils/geoUtils';
 import useSwipeBack from '../../hooks/useSwipeBack';
-import SwipeBackHint from '../common/SwipeBackHint';
 
 function StoreModal({ 
   isOpen, 
@@ -38,18 +37,15 @@ function StoreModal({
     containerRef,
     isSwiping: isHorizontalSwiping,
     dragX: swipeDragX,
-    dragDirection: swipeDragDirection,
-    dragProgress: swipeDragProgress,
     isExiting: isSwipeExiting,
     containerStyle: swipeContainerStyle,
     backdropOpacity: swipeBackdropOpacity,
     handlers: swipeHandlers
   } = useSwipeBack({
     onBack: handleClose,
-    edgeWidth: 100,
-    threshold: 75,
-    enabled: isOpen,
-    direction: 'both'
+    edgeWidth: 85,
+    threshold: 70,
+    enabled: isOpen
   });
 
   if (!isOpen) return null;
@@ -233,65 +229,43 @@ function StoreModal({
   const hasCoordinates = formData.lat && formData.lng;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-end justify-center overflow-hidden">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" 
         style={{
-          opacity: isHorizontalSwiping || isSwipeExiting || swipeDragX > 0 
-            ? swipeBackdropOpacity 
-            : dragY > 0 ? Math.max(0.1, 1 - dragY / 250) : undefined,
+          opacity: swipeDragX > 0 || isSwipeExiting ? swipeBackdropOpacity : dragY > 0 ? Math.max(0.1, 1 - dragY / 250) : undefined,
           transition: isHorizontalSwiping ? 'none' : 'opacity 0.25s ease'
         }}
         onClick={handleClose}
-      />
+      ></div>
 
-      {/* Sheet / Full Screen Content Container */}
+      {/* Sheet Content Container */}
       <div 
         ref={containerRef}
         {...swipeHandlers}
         style={{
           ...swipeContainerStyle,
-          transform: isHorizontalSwiping || isSwipeExiting || swipeDragX > 0 
+          transform: swipeDragX > 0 || isSwipeExiting
             ? swipeContainerStyle.transform 
             : dragY !== 0 ? `translateY(${dragY}px)` : undefined,
-          transition: isHorizontalSwiping 
+          transition: isHorizontalSwiping || isDragging
             ? 'none' 
-            : isSwipeExiting
+            : isSwipeExiting 
               ? swipeContainerStyle.transition
-              : isDragging 
-                ? 'none' 
-                : 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+              : dragY === 0 && swipeDragX === 0
+                ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)' 
+                : undefined
         }}
-        className={`relative bg-white w-full max-w-md h-full sm:h-auto sm:max-h-[92vh] rounded-none sm:rounded-3xl p-5 sm:p-6 pt-3 shadow-2xl flex flex-col overflow-hidden ${
-          swipeDragX === 0 && !isSwipeExiting && !isDragging ? 'animate-in slide-in-from-bottom-[100%] sm:zoom-in-95 duration-250' : ''
-        }`}
+        className="relative bg-white w-full max-w-md rounded-t-[2.5rem] p-6 pt-3 shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300 max-h-[92vh] flex flex-col"
       >
-        {/* Left & Right Edge Gesture Strips for instant touch response */}
-        <div 
-          className="absolute left-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
-          {...swipeHandlers}
-        />
-        <div 
-          className="absolute right-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
-          {...swipeHandlers}
-        />
-
-        {/* Dynamic Bidirectional Swipe Hint Indicator */}
-        <SwipeBackHint
-          dragX={swipeDragX}
-          dragProgress={swipeDragProgress}
-          dragDirection={swipeDragDirection}
-          accent="orange"
-        />
-
-        {/* Garis Handle Interaktif Drag-down to Dismiss (Desktop/Tablet) */}
+        {/* Garis Handle Interaktif Drag-down to Dismiss */}
         <div
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className="w-full hidden sm:flex justify-center items-center pt-1 pb-3 cursor-grab active:cursor-grabbing touch-none select-none group shrink-0"
+          className="w-full flex justify-center items-center pt-1 pb-3 cursor-grab active:cursor-grabbing touch-none select-none group shrink-0"
           aria-label="Tarik ke bawah untuk menutup"
         >
           <div className={`w-14 h-1.5 rounded-full transition-all duration-150 ${
@@ -299,35 +273,16 @@ function StoreModal({
           }`}></div>
         </div>
 
-        {/* Modal Title & Back button on Mobile */}
-        <div className="flex items-center justify-between mb-3 shrink-0 pt-safe sm:pt-0">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handleClose}
-              className="sm:hidden flex items-center gap-1 text-zinc-600 hover:text-zinc-950 font-semibold text-[13px] px-2 py-1 -ml-2 rounded-xl hover:bg-zinc-100 transition-colors"
-            >
-              <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-              <span>Kembali</span>
-            </button>
-            <div className="min-w-0">
-              <h2 className="text-[17px] sm:text-[18px] font-bold text-zinc-900 tracking-tight">
-                {modalStore ? 'Edit Data Toko' : 'Tambah Toko Baru'}
-              </h2>
-              <p className="text-[11.5px] sm:text-[12px] text-zinc-500">
-                {modalStore ? 'Perbarui data rute & titik lokasi toko' : 'Tambahkan data pelanggan & koordinat rute'}
-              </p>
-            </div>
+        {/* Modal Title */}
+        <div className="flex items-center justify-between mb-4 shrink-0">
+          <div>
+            <h2 className="text-[18px] font-bold text-zinc-900 tracking-tight">
+              {modalStore ? 'Edit Data Toko' : 'Tambah Toko Baru'}
+            </h2>
+            <p className="text-[12px] text-zinc-500">
+              {modalStore ? 'Perbarui data rute & titik lokasi toko' : 'Tambahkan data pelanggan & koordinat rute'}
+            </p>
           </div>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="hidden sm:flex w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 items-center justify-center text-[18px] font-bold transition-colors shrink-0"
-          >
-            ×
-          </button>
         </div>
 
         {/* Scrollable Form Body */}

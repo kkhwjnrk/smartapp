@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { getTodayIso, getCurrentMonthKey, formatDateWithDay } from '../../utils/date';
 import {
@@ -9,7 +9,6 @@ import {
   isStoreMatch
 } from '../../utils/visitUtils';
 import useSwipeBack from '../../hooks/useSwipeBack';
-import SwipeBackHint from '../common/SwipeBackHint';
 
 function VisitsManagementView({
   stores = [],
@@ -25,23 +24,26 @@ function VisitsManagementView({
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
   const todayVisitCount = useMemo(() => getDailyVisitCount(visits, todayIso), [visits, todayIso]);
   const monthlyStats = useMemo(() => getMonthlyVisitStats(stores, visits, currentMonthKey), [stores, visits, currentMonthKey]);
+  const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHasEntered(true), 260);
+    return () => clearTimeout(t);
+  }, []);
 
   const {
     containerRef,
-    isSwiping,
     dragX,
-    dragDirection,
-    dragProgress,
+    isSwiping,
     isExiting,
     containerStyle,
     backdropOpacity,
     handlers: swipeHandlers
   } = useSwipeBack({
     onBack,
-    edgeWidth: 100,
-    threshold: 75,
-    enabled: true,
-    direction: 'both'
+    edgeWidth: 85,
+    threshold: 70,
+    enabled: true
   });
 
   // Tab Tampilan: 'dates' (Riwayat per Tanggal) | 'stores' (Pantau Target Toko)
@@ -203,8 +205,8 @@ function VisitsManagementView({
     setMoveModalData(null);
   };
 
-  const fullPageContent = (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+  const pageContent = (
+    <div className="fixed inset-0 z-50 overflow-hidden flex justify-center">
       {/* Dimmed Backdrop Scrim */}
       <div 
         className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity pointer-events-none"
@@ -214,44 +216,25 @@ function VisitsManagementView({
         }}
       />
 
-      {/* Main Full-Screen Sliding View */}
       <div 
         ref={containerRef}
         {...swipeHandlers}
         style={containerStyle}
-        className={`relative w-full h-full bg-[#F8F9FA] flex flex-col shadow-2xl overflow-hidden ${
-          dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
+        className={`relative w-full h-full max-w-lg mx-auto bg-zinc-50 flex flex-col shadow-2xl ${
+          !hasEntered && dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
         }`}
       >
-        {/* Left & Right Edge Gesture Strips for instant touch response */}
-        <div 
-          className="absolute left-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
-          {...swipeHandlers}
-        />
-        <div 
-          className="absolute right-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
-          {...swipeHandlers}
-        />
-
-        {/* Dynamic Bidirectional Swipe Hint Indicator */}
-        <SwipeBackHint
-          dragX={dragX}
-          dragProgress={dragProgress}
-          dragDirection={dragDirection}
-          accent="orange"
-        />
-
-        {/* TOP HEADER BAR (Fixed at top with safe-area padding) */}
-        <div className="bg-white border-b border-zinc-200/90 px-4 py-3 shrink-0 flex items-center justify-between gap-2.5 shadow-2xs pt-safe">
+        {/* HEADER NAVIGASI RINGKAS (1 TOMBOL KEMBALI & BUAT JADWAL) */}
+        <div className="bg-white border-b border-zinc-200/80 px-4 py-3 shrink-0 flex items-center justify-between gap-2.5 shadow-2xs pt-safe">
           <div className="flex items-center gap-2 min-w-0">
             {/* Tepat 1 Tombol Kembali */}
             <button
               type="button"
               onClick={onBack}
-              className="flex items-center gap-1 text-zinc-600 hover:text-zinc-950 font-semibold text-[13.5px] px-2 py-1.5 -ml-1 rounded-xl hover:bg-zinc-100 transition-colors active:scale-95 shrink-0"
-              title="Kembali"
+              className="flex items-center gap-1.5 text-zinc-600 hover:text-zinc-950 font-semibold text-[14px] px-2 py-1 -ml-2 rounded-xl hover:bg-zinc-100 transition-colors active:scale-95 shrink-0"
+              title="Kembali ke Menu Lainnya"
             >
-              <svg className="w-4.5 h-4.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
               <span>Kembali</span>
@@ -273,11 +256,11 @@ function VisitsManagementView({
           </button>
         </div>
 
-        {/* Scrollable Body Content */}
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3.5 pb-24 max-w-lg mx-auto w-full">
+        {/* Scrollable Content Container */}
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3.5 pb-24">
 
-          {/* CARD CAPAIAN HARI INI (FOKUS & PRAKTIS DENGAN TOMBOL REKAP HARI INI) */}
-          <div className="p-4 bg-white rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs space-y-2.5">
+      {/* CARD CAPAIAN HARI INI (FOKUS & PRAKTIS DENGAN TOMBOL REKAP HARI INI) */}
+      <div className="p-4 bg-white rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-2xs space-y-2.5">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
@@ -774,7 +757,7 @@ function VisitsManagementView({
     </div>
   );
 
-  return createPortal(fullPageContent, document.body);
+  return createPortal(pageContent, document.body);
 }
 
 export default VisitsManagementView;

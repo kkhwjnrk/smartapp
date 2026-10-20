@@ -1,9 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { formatFullIndonesianDate, getCurrentMonthKey } from '../../utils/date';
 import { getStoreVisitsForMonth, generateSpvScheduleText } from '../../utils/visitUtils';
 import useSwipeBack from '../../hooks/useSwipeBack';
-import SwipeBackHint from '../common/SwipeBackHint';
 
 function getTomorrowIso() {
   const d = new Date();
@@ -26,23 +25,26 @@ function SadixScheduleModal({
   const [selectedStoreIds, setSelectedStoreIds] = useState(new Set());
   const [copyFeedback, setCopyFeedback] = useState(false);
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
+  const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHasEntered(true), 260);
+    return () => clearTimeout(t);
+  }, []);
 
   const {
     containerRef,
     isSwiping,
     dragX,
-    dragDirection,
-    dragProgress,
     isExiting,
     containerStyle,
     backdropOpacity,
     handlers: swipeHandlers
   } = useSwipeBack({
     onBack: onClose,
-    edgeWidth: 100,
-    threshold: 75,
-    enabled: isOpen,
-    direction: 'both'
+    edgeWidth: 85,
+    threshold: 70,
+    enabled: isOpen
   });
 
   // Filter rute unik (tanpa 'Semua')
@@ -163,46 +165,27 @@ function SadixScheduleModal({
   if (!isOpen) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-5 overflow-hidden">
-      {/* Backdrop Dimmed */}
+    <div className="fixed inset-0 z-50 overflow-hidden flex justify-center">
+      {/* Dimmed Backdrop Scrim */}
       <div 
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
+        className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity pointer-events-none"
         style={{
           opacity: backdropOpacity,
           transition: isSwiping ? 'none' : 'opacity 0.25s ease'
         }}
       />
 
-      {/* Modal Dialog Card with Edge Swipe-Back */}
+      {/* Full-Screen Sliding Schedule Page with Edge Swipe-Back */}
       <div 
         ref={containerRef}
         {...swipeHandlers}
         style={containerStyle}
-        className={`relative w-full h-full sm:h-auto sm:max-h-[92vh] sm:rounded-3xl rounded-none bg-white shadow-2xl flex flex-col overflow-hidden border-0 sm:border border-zinc-200 ${
-          dragX === 0 && !isExiting ? 'animate-in zoom-in-95 duration-200' : ''
+        className={`relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl ${
+          !hasEntered && dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
         }`}
       >
-        {/* Left & Right Edge Gesture Strips for instant touch response */}
-        <div 
-          className="absolute left-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
-          {...swipeHandlers}
-        />
-        <div 
-          className="absolute right-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
-          {...swipeHandlers}
-        />
-
-        {/* Dynamic Bidirectional Swipe Hint Indicator */}
-        <SwipeBackHint
-          dragX={dragX}
-          dragProgress={dragProgress}
-          dragDirection={dragDirection}
-          accent="zinc"
-        />
-
         {/* HEADER */}
-        <div className="p-4 bg-zinc-900 text-white flex items-start justify-between gap-3 shrink-0">
+        <div className="p-4 bg-zinc-900 text-white flex items-start justify-between gap-3 shrink-0 pt-safe">
           <div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>

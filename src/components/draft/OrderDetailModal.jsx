@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { formatFullIndonesianDate } from '../../utils/date';
 import { formatStoreCustomerHeader, calculateOrderSummary } from '../../utils/formatters';
 import useSwipeBack from '../../hooks/useSwipeBack';
-import SwipeBackHint from '../common/SwipeBackHint';
 
 function OrderDetailModal({
   isOpen,
@@ -21,23 +20,26 @@ function OrderDetailModal({
   const [copiedPn, setCopiedPn] = useState(null);
   const [copiedAll, setCopiedAll] = useState(false);
   const [copiedStoreHeader, setCopiedStoreHeader] = useState(false);
+  const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHasEntered(true), 260);
+    return () => clearTimeout(t);
+  }, []);
 
   const {
     containerRef,
     isSwiping,
     dragX,
-    dragDirection,
-    dragProgress,
     isExiting,
     containerStyle,
     backdropOpacity,
     handlers: swipeHandlers
   } = useSwipeBack({
     onBack: onClose,
-    edgeWidth: 100,
-    threshold: 75,
-    enabled: isOpen && !!order,
-    direction: 'both'
+    edgeWidth: 85,
+    threshold: 70,
+    enabled: isOpen && !!order
   });
 
   if (!isOpen || !order) return null;
@@ -77,27 +79,10 @@ function OrderDetailModal({
         ref={containerRef}
         {...swipeHandlers}
         style={containerStyle}
-        className={`relative w-full h-full bg-white flex flex-col shadow-2xl overflow-hidden ${
-          dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
+        className={`relative w-full h-full bg-white flex flex-col shadow-2xl ${
+          !hasEntered && dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-250' : ''
         }`}
       >
-        {/* Left & Right Edge Gesture Strips for instant touch response */}
-        <div 
-          className="absolute left-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
-          {...swipeHandlers}
-        />
-        <div 
-          className="absolute right-0 top-0 bottom-0 w-12 z-40 touch-none pointer-events-auto"
-          {...swipeHandlers}
-        />
-
-        {/* Dynamic Bidirectional Swipe Hint Indicator */}
-        <SwipeBackHint
-          dragX={dragX}
-          dragProgress={dragProgress}
-          dragDirection={dragDirection}
-          accent="emerald"
-        />
       
       {/* Top Header Bar */}
       <div className="bg-white border-b border-zinc-200 px-4 py-3 shrink-0 flex items-center justify-between gap-3 shadow-2xs pt-safe">
