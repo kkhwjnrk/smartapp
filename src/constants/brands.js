@@ -3,7 +3,7 @@ export const BRANDS = [
     id: 'daytona',
     name: 'Daytona',
     tagline: 'Racing & Performance Parts',
-    description: 'Busi Ignimax & Iridium, Kampas Rem Lapinus, Vanbelt, Roller, Per CVT, Pulley, dan sparepart performa lainnya.',
+    description: 'Busi Ignimax/Iridium, Kampas Rem Lapinus, Vanbelt, Roller, Per CVT, Pulley, dll.',
     accentColor: '#EA580C',
     theme: {
       badge: 'bg-orange-50 text-[#EA580C] border-orange-200/80',
@@ -14,7 +14,7 @@ export const BRANDS = [
       ringFocus: 'focus:ring-orange-400 focus:border-orange-400'
     },
     discountGroup: 'daytona_group',
-    discountLabel: 'Diskon: 24% · 27% · 29%',
+    discountLabel: 'Grup Diskon: 24% · 27% · 29%',
     discountTiers: ['het', '24', '27', '29'],
     storageKey: 'daytona_pricelist',
     versionKey: 'daytona_pricelist_version',
@@ -24,7 +24,7 @@ export const BRANDS = [
     id: 'dura',
     name: 'Dura',
     tagline: 'Quality Motorcycle Parts',
-    description: 'Suku cadang motor harian & komersial berkualitas tinggi. Skema diskon terakumulasi bersama Daytona.',
+    description: 'Suku cadang motor harian & komersial. Bergabung dalam 1 nota & akumulasi diskon dengan Daytona.',
     accentColor: '#0284C7',
     theme: {
       badge: 'bg-sky-50 text-sky-700 border-sky-200/80',
@@ -35,7 +35,7 @@ export const BRANDS = [
       ringFocus: 'focus:ring-sky-400 focus:border-sky-400'
     },
     discountGroup: 'daytona_group',
-    discountLabel: 'Diskon: Gabung Daytona (24% · 27% · 29%)',
+    discountLabel: 'Grup Diskon: Gabung Daytona (24% · 27% · 29%)',
     discountTiers: ['het', '24', '27', '29'],
     storageKey: 'dura_pricelist',
     versionKey: 'dura_pricelist_version',
@@ -45,7 +45,7 @@ export const BRANDS = [
     id: 'osram',
     name: 'Osram',
     tagline: 'Automotive Lighting Solutions',
-    description: 'Solusi pencahayaan lampu halogen, all-season, dan bohlam LED motor presisi tinggi.',
+    description: 'Solusi pencahayaan lampu halogen, LED, dan bohlam motor presisi tinggi.',
     accentColor: '#D97706',
     theme: {
       badge: 'bg-amber-50 text-amber-800 border-amber-200/80',
@@ -56,7 +56,7 @@ export const BRANDS = [
       ringFocus: 'focus:ring-amber-400 focus:border-amber-400'
     },
     discountGroup: 'osram',
-    discountLabel: 'Diskon: Skema Khusus Osram',
+    discountLabel: 'Skema Diskon Khusus Osram',
     discountTiers: ['het'],
     storageKey: 'osram_pricelist',
     versionKey: 'osram_pricelist_version',
