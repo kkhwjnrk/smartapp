@@ -1,31 +1,88 @@
 import React, { useRef } from 'react';
 import ItemCard from './ItemCard';
+import BrandHub from './BrandHub';
+import { getBrandById } from '../../constants/brands';
+import useSwipeBack from '../../hooks/useSwipeBack';
 
 function PricelistTab({
-  filteredItems,
-  query,
-  setQuery,
-  selectedCategory,
-  setSelectedCategory,
+  selectedBrandId = null,
+  setSelectedBrandId = () => {},
+  brandCounts = {},
+  items = [],
+  filteredItems = [],
+  query = '',
+  setQuery = () => {},
+  selectedCategory = 'Semua',
+  setSelectedCategory = () => {},
   selectedSubCategory = 'Semua',
   setSelectedSubCategory = () => {},
   availableSubCategories = [],
   selectedDiscountTier = 'het',
   setSelectedDiscountTier = () => {},
-  categoryCounts,
-  onOpenCategorySheet,
-  isEditMode,
-  onOpenAddModal,
-  onOpenEditModal,
-  onOpenDiscountSheet
+  categoryCounts = {},
+  onOpenCategorySheet = () => {},
+  isEditMode = false,
+  onOpenAddModal = () => {},
+  onOpenEditModal = () => {},
+  onOpenDiscountSheet = () => {}
 }) {
   const searchInputRef = useRef(null);
 
-  return (
-    <div className="space-y-3.5 animate-in fade-in duration-500">
+  // Gesture Swipe-Back: Geser sisi kiri ke kanan untuk kembali ke Brand Hub
+  const { containerRef, swipeHandlers, containerStyle, isSwiping } = useSwipeBack({
+    onBack: () => setSelectedBrandId(null),
+    enabled: Boolean(selectedBrandId)
+  });
 
-      {/* Sticky Search & Category Control Bar */}
+  // Tampilan 1: Jika belum memilih brand -> Tampilkan Brand Hub Cards
+  if (!selectedBrandId) {
+    return (
+      <BrandHub
+        brandCounts={brandCounts}
+        onSelectBrand={(brandId) => {
+          setSelectedBrandId(brandId);
+          setQuery('');
+          setSelectedCategory('Semua');
+          setSelectedSubCategory('Semua');
+        }}
+      />
+    );
+  }
+
+  const activeBrand = getBrandById(selectedBrandId);
+  const showDiscountTiers = activeBrand.discountTiers && activeBrand.discountTiers.length > 1;
+
+  // Tampilan 2: Tampilan Katalog Lengkap untuk Brand yang Dipilih
+  return (
+    <div 
+      ref={containerRef}
+      {...swipeHandlers}
+      style={containerStyle}
+      className={`space-y-3.5 animate-in fade-in duration-300 ${isSwiping ? 'select-none' : ''}`}
+    >
+      {/* Sticky Top Bar: Navigasi Kembali ke Brand Hub & Kontrol Katalog */}
       <div className="sticky top-[58px] z-20 bg-[#FDFDFD] pb-2.5 pt-1 space-y-2.5">
+        
+        {/* Baris Navigasi Atas: Tombol Kembali ke Semua Brand & Badge Brand Aktif */}
+        <div className="flex items-center justify-between px-0.5">
+          <button
+            type="button"
+            onClick={() => setSelectedBrandId(null)}
+            className="inline-flex items-center gap-1.5 text-zinc-600 hover:text-zinc-950 font-bold text-[13.5px] px-2.5 py-1.5 -ml-1.5 rounded-xl hover:bg-zinc-100 transition-colors active:scale-95"
+            title="Kembali ke pilihan brand"
+          >
+            <svg className="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Semua Brand</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            <span className={`text-[12px] font-bold px-2.5 py-1 rounded-xl border ${activeBrand.theme.badge}`}>
+              {activeBrand.name}
+            </span>
+          </div>
+        </div>
 
         {/* Kolom Cari dengan Tombol X */}
         <div className="relative">
@@ -37,7 +94,7 @@ function PricelistTab({
           <input
             ref={searchInputRef}
             type="text"
-            placeholder="Cari part number, nama, motor (beat, vario, nmax)..."
+            placeholder={`Cari part ${activeBrand.name} (part number, nama, motor)...`}
             className="w-full pl-12 pr-11 py-3 bg-white border border-zinc-200 rounded-2xl focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 text-[14.5px] font-medium placeholder:font-normal placeholder:text-zinc-400 shadow-sm transition-all"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -109,55 +166,57 @@ function PricelistTab({
           )}
         </div>
 
-        {/* Row 3: Quick Discount Tier Toggle Buttons */}
-        <div className="bg-zinc-100 p-1 rounded-2xl flex items-center gap-1 border border-zinc-200/70 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]">
-          <button
-            type="button"
-            onClick={() => setSelectedDiscountTier('het')}
-            className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
-              selectedDiscountTier === 'het'
-                ? 'bg-white text-zinc-900 shadow-sm'
-                : 'text-zinc-500 hover:text-zinc-800'
-            }`}
-          >
-            HET
-          </button>
-          <button
-            type="button"
-            onClick={() => setSelectedDiscountTier('24')}
-            className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
-              selectedDiscountTier === '24'
-                ? 'bg-[#EA580C] text-white shadow-sm'
-                : 'text-zinc-500 hover:text-zinc-800'
-            }`}
-          >
-            Disc 24%
-          </button>
-          <button
-            type="button"
-            onClick={() => setSelectedDiscountTier('27')}
-            className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
-              selectedDiscountTier === '27'
-                ? 'bg-[#EA580C] text-white shadow-sm'
-                : 'text-zinc-500 hover:text-zinc-800'
-            }`}
-          >
-            Disc 27%
-          </button>
-          <button
-            type="button"
-            onClick={() => setSelectedDiscountTier('29')}
-            className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
-              selectedDiscountTier === '29'
-                ? 'bg-[#EA580C] text-white shadow-sm'
-                : 'text-zinc-500 hover:text-zinc-800'
-            }`}
-          >
-            Disc 29%
-          </button>
-        </div>
+        {/* Row 3: Quick Discount Tier Toggle Buttons (Jika brand mendukung tier diskon grosir) */}
+        {showDiscountTiers && (
+          <div className="bg-zinc-100 p-1 rounded-2xl flex items-center gap-1 border border-zinc-200/70 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]">
+            <button
+              type="button"
+              onClick={() => setSelectedDiscountTier('het')}
+              className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
+                selectedDiscountTier === 'het'
+                  ? 'bg-white text-zinc-900 shadow-sm'
+                  : 'text-zinc-500 hover:text-zinc-800'
+              }`}
+            >
+              HET
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedDiscountTier('24')}
+              className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
+                selectedDiscountTier === '24'
+                  ? 'bg-[#EA580C] text-white shadow-sm'
+                  : 'text-zinc-500 hover:text-zinc-800'
+              }`}
+            >
+              Disc 24%
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedDiscountTier('27')}
+              className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
+                selectedDiscountTier === '27'
+                  ? 'bg-[#EA580C] text-white shadow-sm'
+                  : 'text-zinc-500 hover:text-zinc-800'
+              }`}
+            >
+              Disc 27%
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedDiscountTier('29')}
+              className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
+                selectedDiscountTier === '29'
+                  ? 'bg-[#EA580C] text-white shadow-sm'
+                  : 'text-zinc-500 hover:text-zinc-800'
+              }`}
+            >
+              Disc 29%
+            </button>
+          </div>
+        )}
 
-        {/* Row 4: Sub-Category Horizontal Scrollable Pills (muncul saat pilih kategori spesifik) */}
+        {/* Row 4: Sub-Category Horizontal Scrollable Pills */}
         {selectedCategory !== 'Semua' && availableSubCategories.length > 1 && (
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5 scrollbar-none no-scrollbar -mx-1 px-1">
             <button
@@ -197,7 +256,7 @@ function PricelistTab({
               <>Menampilkan {filteredItems.length} item {selectedDiscountTier !== 'het' ? `(Netto ${selectedDiscountTier}%)` : ''}</>
             )}
           </span>
-          {(selectedCategory !== 'Semua' || selectedSubCategory !== 'Semua' || query.trim().length > 0 || selectedDiscountTier !== 'het') && (
+          {(selectedCategory !== 'Semua' || selectedSubCategory !== 'Semua' || query.trim().length > 0 || (showDiscountTiers && selectedDiscountTier !== 'het')) && (
             <button
               onClick={() => {
                 setSelectedCategory('Semua');
@@ -215,7 +274,7 @@ function PricelistTab({
         {/* Mode Edit Banner */}
         {isEditMode && (
           <div className="mt-2 bg-zinc-50 border border-zinc-200 p-3 rounded-2xl flex justify-between items-center animate-in fade-in">
-            <span className="text-[13px] text-zinc-600 font-medium px-2">Mode kelola aktif</span>
+            <span className="text-[13px] text-zinc-600 font-medium px-2">Mode kelola {activeBrand.name} aktif</span>
             <button
               onClick={onOpenAddModal}
               className="px-4 py-2 bg-zinc-900 text-white font-medium text-[13px] rounded-xl hover:bg-zinc-800 transition-colors"
@@ -226,8 +285,38 @@ function PricelistTab({
         )}
       </div>
 
-      {/* Empty State */}
-      {filteredItems.length === 0 && (
+      {/* Empty State: Belum Ada Data Item Sama Sekali di Brand Ini */}
+      {items.length === 0 && (
+        <div className="text-center py-16 bg-white rounded-3xl border border-zinc-200 mt-2 p-6 shadow-xs">
+          <div 
+            className="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center font-black text-[20px] mb-3 select-none shadow-2xs"
+            style={{
+              backgroundColor: `${activeBrand.accentColor}15`,
+              color: activeBrand.accentColor,
+              border: `1.5px solid ${activeBrand.accentColor}30`
+            }}
+          >
+            {activeBrand.name.substring(0, 2).toUpperCase()}
+          </div>
+          <p className="text-zinc-900 text-[16px] font-bold">Katalog {activeBrand.name} Siap Diisi</p>
+          <p className="text-zinc-500 text-[13px] mt-1 max-w-sm mx-auto leading-relaxed">
+            Pricelist brand ini belum memiliki data part. Anda dapat menambahkan item baru melalui tombol di bawah atau menunggu data resmi diimpor.
+          </p>
+          <button
+            type="button"
+            onClick={onOpenAddModal}
+            className="mt-5 px-5 py-2.5 bg-zinc-900 text-white rounded-xl text-[13px] font-semibold hover:bg-zinc-800 transition-colors active:scale-95 inline-flex items-center gap-2 shadow-xs"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Tambah Barang {activeBrand.name}</span>
+          </button>
+        </div>
+      )}
+
+      {/* Empty State: Ada data barang tapi pencarian/filter tidak cocok */}
+      {items.length > 0 && filteredItems.length === 0 && (
         <div className="text-center py-20 bg-white rounded-3xl border border-zinc-200 mt-2">
           <div className="w-12 h-12 mx-auto bg-zinc-100 rounded-full flex items-center justify-center text-zinc-400 mb-3">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -245,7 +334,7 @@ function PricelistTab({
             }}
             className="mt-4 px-4 py-2 bg-zinc-100 text-zinc-700 rounded-xl text-[13px] font-medium hover:bg-zinc-200 transition-colors"
           >
-            Tampilkan Semua Barang
+            Tampilkan Semua Barang {activeBrand.name}
           </button>
         </div>
       )}

@@ -254,6 +254,18 @@ function OrderDetailModal({
                       <span className="font-mono font-bold text-[#EA580C] text-[16px] tracking-tight">
                         {item.pn}
                       </span>
+
+                      {item.brand && (
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase font-sans ${
+                          item.brand === 'dura'
+                            ? 'bg-sky-100 text-sky-700 border border-sky-200'
+                            : item.brand === 'osram'
+                            ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                            : 'bg-orange-100 text-[#EA580C] border border-orange-200'
+                        }`}>
+                          {item.brand}
+                        </span>
+                      )}
                       
                       <span className="text-zinc-300 font-bold">:</span>
                       

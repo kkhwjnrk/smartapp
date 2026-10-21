@@ -82,6 +82,8 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
       totalNet: 0,
       totalQty: 0,
       discountPercentage: 24,
+      daytonaGroupNet: 0,
+      osramNet: 0,
       formattedText: 'Rp 0 (24%)'
     };
   }
@@ -100,6 +102,7 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
   let totalHet = 0;
   let totalQty = 0;
 
+  // Resolusi data item & tandai grup brand (Daytona + Dura = 1 grup diskon, Osram = mandiri)
   const resolvedItems = orderItems.map(orderItem => {
     const pnKey = String(orderItem.pn || '').trim().toLowerCase();
     const catalogItem = catalogMap.get(pnKey);
@@ -120,41 +123,44 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
         : parseFloat(String(orderItem.het).replace(/\./g, '')) || 0;
     }
 
+    const brand = String(orderItem.brand || catalogItem?.brand || 'daytona').toLowerCase();
+    const isDaytonaGroup = brand === 'daytona' || brand === 'dura';
+
     totalHet += het * qty;
-    return { catalogItem, qty, het };
+    return { catalogItem, orderItem, qty, het, brand, isDaytonaGroup };
   });
 
-  // 1. Hitung total dasar dengan diskon awal 24% (harga diskon per pcs dikali qty)
-  let totalNet24 = 0;
-  resolvedItems.forEach(({ catalogItem, qty, het }) => {
+  // 1. Hitung total dasar Daytona + Dura dengan diskon 24% terlebih dahulu
+  let totalNet24DaytonaGroup = 0;
+  resolvedItems.filter(i => i.isDaytonaGroup).forEach(({ catalogItem, qty, het }) => {
     let price24 = 0;
     if (catalogItem && catalogItem.d24) {
       price24 = catalogItem.d24;
     } else {
       price24 = Math.round(het * (1 - 0.24));
     }
-    totalNet24 += price24 * qty;
+    totalNet24DaytonaGroup += price24 * qty;
   });
 
-  // 2. Tentukan persentase diskon pintar berdasarkan total nominal setelah diskon:
+  // 2. Tentukan persentase diskon gabungan Daytona + Dura berdasarkan nominal akumulasi:
   // <= 3 juta diskon 24%
-  // 3 juta s/d 10 juta diskon 27% (naik saat nominal tembus > 3 juta)
-  // >= 10 juta diskon 29% (naik saat nominal tembus >= 10 juta)
+  // > 3 juta s/d < 10 juta diskon 27%
+  // >= 10 juta diskon 29%
   let discountPercentage = 24;
-  if (totalNet24 >= 10000000) {
+  if (totalNet24DaytonaGroup >= 10000000) {
     discountPercentage = 29;
-  } else if (totalNet24 > 3000000) {
+  } else if (totalNet24DaytonaGroup > 3000000) {
     discountPercentage = 27;
   } else {
     discountPercentage = 24;
   }
 
-  // 3. Hitung Total Net Bersih sesuai tier diskon yang berlaku
-  let totalNet = 0;
+  // 3. Hitung Total Net Daytona Group dengan tier diskon gabungan
+  let daytonaGroupNet = 0;
   if (discountPercentage === 24) {
-    totalNet = totalNet24;
+    daytonaGroupNet = totalNet24DaytonaGroup;
   } else {
-    resolvedItems.forEach(({ catalogItem, qty, het }) => {
+    resolvedItems.filter(i => i.isDaytonaGroup).forEach(({ catalogItem, qty, het }) => {
       let itemNetPrice = 0;
       if (catalogItem) {
         if (discountPercentage === 27 && catalogItem.d27) {
@@ -167,8 +173,31 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
       } else {
         itemNetPrice = Math.round(het * (1 - discountPercentage / 100));
       }
-      totalNet += itemNetPrice * qty;
+      daytonaGroupNet += itemNetPrice * qty;
     });
+  }
+
+  // 4. Hitung Total Net Osram (dihitung mandiri / belum bergabung diskon Daytona)
+  let osramNet = 0;
+  resolvedItems.filter(i => !i.isDaytonaGroup).forEach(({ catalogItem, qty, het }) => {
+    let itemPrice = 0;
+    if (catalogItem && typeof catalogItem.net === 'number') {
+      itemPrice = catalogItem.net;
+    } else {
+      itemPrice = het;
+    }
+    osramNet += itemPrice * qty;
+  });
+
+  const totalNet = daytonaGroupNet + osramNet;
+  const hasDaytonaGroup = resolvedItems.some(i => i.isDaytonaGroup);
+  const hasOsram = resolvedItems.some(i => !i.isDaytonaGroup);
+
+  let formattedText = `Rp ${Math.round(totalNet).toLocaleString('id-ID')}`;
+  if (hasDaytonaGroup && !hasOsram) {
+    formattedText = `Rp ${Math.round(totalNet).toLocaleString('id-ID')} (${discountPercentage}%)`;
+  } else if (hasDaytonaGroup && hasOsram) {
+    formattedText = `Rp ${Math.round(totalNet).toLocaleString('id-ID')} (${discountPercentage}%*)`;
   }
 
   return {
@@ -176,7 +205,9 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
     totalNet,
     totalQty,
     discountPercentage,
-    formattedText: `Rp ${Math.round(totalNet).toLocaleString('id-ID')} (${discountPercentage}%)`
+    daytonaGroupNet,
+    osramNet,
+    formattedText
   };
 };
 

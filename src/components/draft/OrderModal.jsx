@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { formatFullIndonesianDate, getTodayIso } from '../../utils/date';
 import { calculateOrderSummary, comparePartNumbers } from '../../utils/formatters';
+import { BRANDS } from '../../constants/brands';
 import useSwipeBack from '../../hooks/useSwipeBack';
 
 function OrderModal({
   isOpen,
   modalOrder,
   catalogItems = [],
+  brandCatalogs = {},
   stores = [],
   onSave,
   onDelete,
@@ -33,6 +35,7 @@ function OrderModal({
   const storeSearchInputRef = useRef(null);
 
   // Input tambah item katalog
+  const [activeSearchBrand, setActiveSearchBrand] = useState('daytona');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCatalogItem, setSelectedCatalogItem] = useState(null);
   const [itemQty, setItemQty] = useState('');
@@ -82,15 +85,23 @@ function OrderModal({
   const isStoreMissingRoute = Boolean(matchedStore && !matchedStore.routeCode?.trim());
   const isRouteModified = Boolean(matchedStore && matchedStore.routeCode?.trim() && routeCode.trim().toUpperCase() !== matchedStore.routeCode.trim().toUpperCase());
 
-  // Autocomplete pencarian barang katalog (multi-token search)
+  // Katalog aktif sesuai brand yang dipilih di pencarian
+  const currentBrandCatalog = useMemo(() => {
+    if (brandCatalogs && brandCatalogs[activeSearchBrand]) {
+      return brandCatalogs[activeSearchBrand];
+    }
+    return catalogItems.filter(item => (item.brand || 'daytona') === activeSearchBrand);
+  }, [brandCatalogs, activeSearchBrand, catalogItems]);
+
+  // Autocomplete pencarian barang katalog (multi-token search) sesuai brand aktif
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const tokens = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
-    return catalogItems.filter(item => {
+    return currentBrandCatalog.filter(item => {
       const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
       return tokens.every(t => combined.includes(t));
     }).sort(comparePartNumbers).slice(0, 30);
-  }, [searchQuery, catalogItems]);
+  }, [searchQuery, currentBrandCatalog]);
 
   // Pilih toko dari searchable select
   const handleSelectStore = (store) => {
@@ -160,13 +171,15 @@ function OrderModal({
       newItem = {
         pn: selectedCatalogItem.pn,
         description: selectedCatalogItem.description || '',
-        qty: qty
+        qty: qty,
+        brand: selectedCatalogItem.brand || activeSearchBrand
       };
     } else if (searchQuery.trim()) {
       newItem = {
         pn: searchQuery.trim(),
         description: '',
-        qty: qty
+        qty: qty,
+        brand: activeSearchBrand
       };
     }
 
@@ -494,10 +507,39 @@ function OrderModal({
               </label>
               {isStoreSelected && (
                 <span className="text-[11px] text-zinc-400">
-                  {catalogItems.length} part katalog
+                  {currentBrandCatalog.length} part {activeSearchBrand.toUpperCase()}
                 </span>
               )}
             </div>
+
+            {/* Pemilih Brand Tab: Daytona, Dura, Osram */}
+            {isStoreSelected && (
+              <div className="flex items-center gap-1.5 bg-zinc-100 p-1 rounded-2xl border border-zinc-200/70">
+                {BRANDS.map(b => {
+                  const count = (brandCatalogs[b.id] || []).length;
+                  const isActive = activeSearchBrand === b.id;
+                  return (
+                    <button
+                      key={b.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveSearchBrand(b.id);
+                        setSelectedCatalogItem(null);
+                        setSearchQuery('');
+                      }}
+                      className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all ${
+                        isActive
+                          ? `${b.theme.activeTab} shadow-xs`
+                          : 'text-zinc-600 hover:text-zinc-900'
+                      }`}
+                    >
+                      <span>{b.name}</span>
+                      <span className="ml-1 text-[10.5px] opacity-75 font-normal">({count})</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Warning banner jika toko belum dipilih */}
             {!isStoreSelected && (
@@ -516,7 +558,7 @@ function OrderModal({
                   type="text"
                   disabled={!isStoreSelected}
                   placeholder={isStoreSelected 
-                    ? "Cari part: ketik 'beat', 'busi', 'roller', atau PN..." 
+                    ? `Cari part ${activeSearchBrand.toUpperCase()}: ketik nama, motor, atau PN...` 
                     : "Pilih toko terlebih dahulu di atas untuk mencari part..."}
                   className={`w-full pl-9 pr-8 py-2.5 border rounded-xl text-[13.5px] font-medium transition-all ${
                     isStoreSelected 
@@ -737,13 +779,24 @@ function OrderModal({
                   >
                     {/* Info Part Lengkap */}
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-[12.5px] font-bold text-zinc-400 select-none">
                           {idx + 1}.
                         </span>
                         <span className="font-mono font-bold text-[#EA580C] text-[15px]">
                           {item.pn}
                         </span>
+                        {item.brand && (
+                          <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${
+                            item.brand === 'dura'
+                              ? 'bg-sky-100 text-sky-700 border border-sky-200'
+                              : item.brand === 'osram'
+                              ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                              : 'bg-orange-100 text-[#EA580C] border border-orange-200'
+                          }`}>
+                            {item.brand}
+                          </span>
+                        )}
                       </div>
                       {item.description && (
                         <p className="text-[12.5px] text-zinc-700 font-medium mt-0.5 leading-snug break-words whitespace-normal">

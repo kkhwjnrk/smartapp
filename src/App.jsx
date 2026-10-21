@@ -5,6 +5,7 @@ import initialOrders from './data/orders.json';
 import { ensureValidCategory } from './constants/categories';
 import { getCurrentMonthKey, getOrderMonthKey } from './utils/date';
 import { comparePartNumbers } from './utils/formatters';
+import { getBrandName } from './constants/brands';
 
 // Layout Components
 import Header from './components/layout/Header';
@@ -45,8 +46,10 @@ function App() {
     }
   };
 
-  // Storage for Pricelist dengan pemeliharaan data tersimpan & normalisasi aman
-  const [items, setItems] = useState(() => {
+  const [selectedBrandId, setSelectedBrandId] = useState(null); // null = Brand Hub; 'daytona' | 'dura' | 'osram'
+
+  // Storage for Daytona Pricelist dengan pemeliharaan data tersimpan & normalisasi aman
+  const [daytonaItems, setDaytonaItems] = useState(() => {
     const saved = localStorage.getItem('daytona_pricelist');
     if (saved) {
       try {
@@ -58,6 +61,7 @@ function App() {
               : (parseFloat(String(item.price || 0).replace(/[^0-9]/g, '')) || 0);
             return {
               ...item,
+              brand: 'daytona',
               het: rawHet,
               d24: item.d24 ?? Math.round(rawHet * 0.76),
               d27: item.d27 ?? Math.round(rawHet * 0.73),
@@ -75,14 +79,102 @@ function App() {
     localStorage.setItem('daytona_pricelist_version', PRICELIST_DATA_VERSION);
     return initialPricelist.map(item => ({
       ...item,
+      brand: 'daytona',
       category: ensureValidCategory(item)
     })).sort(comparePartNumbers);
   });
 
   useEffect(() => {
-    localStorage.setItem('daytona_pricelist', JSON.stringify(items));
+    localStorage.setItem('daytona_pricelist', JSON.stringify(daytonaItems));
     localStorage.setItem('daytona_pricelist_version', PRICELIST_DATA_VERSION);
-  }, [items]);
+  }, [daytonaItems]);
+
+  // Storage for Dura Pricelist
+  const [duraItems, setDuraItems] = useState(() => {
+    const saved = localStorage.getItem('dura_pricelist');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map(item => {
+            const rawHet = item.het !== undefined && item.het !== null
+              ? Number(item.het)
+              : (parseFloat(String(item.price || 0).replace(/[^0-9]/g, '')) || 0);
+            return {
+              ...item,
+              brand: 'dura',
+              het: rawHet,
+              d24: item.d24 ?? Math.round(rawHet * 0.76),
+              d27: item.d27 ?? Math.round(rawHet * 0.73),
+              d29: item.d29 ?? Math.round(rawHet * 0.71),
+              price: item.price || (rawHet > 0 ? rawHet.toLocaleString('id-ID') : '0'),
+              category: ensureValidCategory(item)
+            };
+          }).sort(comparePartNumbers);
+        }
+      } catch {}
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dura_pricelist', JSON.stringify(duraItems));
+  }, [duraItems]);
+
+  // Storage for Osram Pricelist
+  const [osramItems, setOsramItems] = useState(() => {
+    const saved = localStorage.getItem('osram_pricelist');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map(item => {
+            const rawHet = item.het !== undefined && item.het !== null
+              ? Number(item.het)
+              : (parseFloat(String(item.price || 0).replace(/[^0-9]/g, '')) || 0);
+            return {
+              ...item,
+              brand: 'osram',
+              het: rawHet,
+              price: item.price || (rawHet > 0 ? rawHet.toLocaleString('id-ID') : '0'),
+              category: ensureValidCategory(item)
+            };
+          }).sort(comparePartNumbers);
+        }
+      } catch {}
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('osram_pricelist', JSON.stringify(osramItems));
+  }, [osramItems]);
+
+  // Items untuk brand yang sedang aktif dilihat
+  const currentBrandItems = useMemo(() => {
+    if (selectedBrandId === 'dura') return duraItems;
+    if (selectedBrandId === 'osram') return osramItems;
+    return daytonaItems;
+  }, [selectedBrandId, daytonaItems, duraItems, osramItems]);
+
+  // Gabungan semua katalog untuk pencarian order dan riwayat order
+  const allCatalogItems = useMemo(() => {
+    return [...daytonaItems, ...duraItems, ...osramItems];
+  }, [daytonaItems, duraItems, osramItems]);
+
+  // Kamus katalog per brand untuk modal order
+  const brandCatalogs = useMemo(() => ({
+    daytona: daytonaItems,
+    dura: duraItems,
+    osram: osramItems
+  }), [daytonaItems, duraItems, osramItems]);
+
+  // Jumlah item per brand untuk badge di BrandHub
+  const brandCounts = useMemo(() => ({
+    daytona: daytonaItems.length,
+    dura: duraItems.length,
+    osram: osramItems.length
+  }), [daytonaItems.length, duraItems.length, osramItems.length]);
 
   // Storage for Stores dengan pemeliharaan data tersimpan & normalisasi aman
   const [stores, setStores] = useState(() => {
@@ -349,33 +441,33 @@ function App() {
     }
   }, [discountItem, showCategorySheet, showItemModal, showStoreModal, showRouteSheet, showOrderModal]);
 
-  // Hitung jumlah item per kategori
+  // Hitung jumlah item per kategori pada brand aktif
   const categoryCounts = useMemo(() => {
-    const counts = { 'Semua': items.length };
-    items.forEach(item => {
+    const counts = { 'Semua': currentBrandItems.length };
+    currentBrandItems.forEach(item => {
       const cat = item.category || 'Lainnya';
       counts[cat] = (counts[cat] || 0) + 1;
     });
     return counts;
-  }, [items]);
+  }, [currentBrandItems]);
 
-  // Subkategori yang tersedia untuk kategori yang dipilih
+  // Subkategori yang tersedia untuk kategori yang dipilih pada brand aktif
   const availableSubCategories = useMemo(() => {
     if (selectedCategory === 'Semua') return [];
     const subs = new Set();
-    items.forEach(item => {
+    currentBrandItems.forEach(item => {
       if (item.category === selectedCategory && item.subCategory) {
         subs.add(item.subCategory);
       }
     });
     return Array.from(subs);
-  }, [items, selectedCategory]);
+  }, [currentBrandItems, selectedCategory]);
 
-  // Filter items berdasarkan Kategori, Subkategori, dan Smart Multi-token Search
+  // Filter items berdasarkan Kategori, Subkategori, dan Smart Multi-token Search pada brand aktif
   const filteredItems = useMemo(() => {
     const queryTokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
 
-    return items.filter(item => {
+    return currentBrandItems.filter(item => {
       if (selectedCategory !== 'Semua' && item.category !== selectedCategory) {
         return false;
       }
@@ -389,7 +481,7 @@ function App() {
       }
       return true;
     }).sort(comparePartNumbers);
-  }, [items, selectedCategory, selectedSubCategory, query]);
+  }, [currentBrandItems, selectedCategory, selectedSubCategory, query]);
 
   // CRUD Logic
   const openAddModal = () => {
@@ -398,6 +490,7 @@ function App() {
       description: '',
       price: '',
       qty: '1',
+      brand: selectedBrandId || 'daytona',
       category: selectedCategory !== 'Semua' ? selectedCategory : 'Busi',
       subCategory: ''
     });
@@ -408,6 +501,7 @@ function App() {
   const openEditModal = (item) => {
     setFormData({
       ...item,
+      brand: item.brand || selectedBrandId || 'daytona',
       category: item.category || 'Busi',
       subCategory: item.subCategory || ''
     });
@@ -423,8 +517,11 @@ function App() {
     const rawNumeric = parseFloat(String(formData.price).replace(/[^0-9]/g, '')) || 0;
     const formattedPrice = rawNumeric > 0 ? rawNumeric.toLocaleString('id-ID') : (formData.price || '0');
 
+    const targetBrand = modalItem?.brand || formData.brand || selectedBrandId || 'daytona';
+
     const itemToSave = {
       ...formData,
+      brand: targetBrand,
       pn: formData.pn.trim(),
       description: formData.description.trim(),
       price: formattedPrice,
@@ -437,21 +534,51 @@ function App() {
       subCategory: formData.subCategory || modalItem?.subCategory || ''
     };
 
-    if (modalItem) {
-      setItems(prev => prev.map(i => i.pn === modalItem.pn ? itemToSave : i).sort(comparePartNumbers));
-    } else {
-      if (items.some(i => i.pn === formData.pn.trim())) {
-        alert('Part Number sudah terdaftar!');
-        return;
+    if (targetBrand === 'dura') {
+      if (modalItem) {
+        setDuraItems(prev => prev.map(i => i.pn === modalItem.pn ? itemToSave : i).sort(comparePartNumbers));
+      } else {
+        if (duraItems.some(i => i.pn === formData.pn.trim())) {
+          alert('Part Number sudah terdaftar di Dura!');
+          return;
+        }
+        setDuraItems(prev => [...prev, itemToSave].sort(comparePartNumbers));
       }
-      setItems(prev => [...prev, itemToSave].sort(comparePartNumbers));
+    } else if (targetBrand === 'osram') {
+      if (modalItem) {
+        setOsramItems(prev => prev.map(i => i.pn === modalItem.pn ? itemToSave : i).sort(comparePartNumbers));
+      } else {
+        if (osramItems.some(i => i.pn === formData.pn.trim())) {
+          alert('Part Number sudah terdaftar di Osram!');
+          return;
+        }
+        setOsramItems(prev => [...prev, itemToSave].sort(comparePartNumbers));
+      }
+    } else {
+      if (modalItem) {
+        setDaytonaItems(prev => prev.map(i => i.pn === modalItem.pn ? itemToSave : i).sort(comparePartNumbers));
+      } else {
+        if (daytonaItems.some(i => i.pn === formData.pn.trim())) {
+          alert('Part Number sudah terdaftar di Daytona!');
+          return;
+        }
+        setDaytonaItems(prev => [...prev, itemToSave].sort(comparePartNumbers));
+      }
     }
     setShowItemModal(false);
   };
 
   const deleteItem = () => {
+    if (!modalItem) return;
+    const targetBrand = modalItem.brand || selectedBrandId || 'daytona';
     if (window.confirm(`Hapus barang ini secara permanen?\n\nPN: ${modalItem.pn}\nNama: ${modalItem.description}`)) {
-      setItems(prev => prev.filter(i => i.pn !== modalItem.pn));
+      if (targetBrand === 'dura') {
+        setDuraItems(prev => prev.filter(i => i.pn !== modalItem.pn));
+      } else if (targetBrand === 'osram') {
+        setOsramItems(prev => prev.filter(i => i.pn !== modalItem.pn));
+      } else {
+        setDaytonaItems(prev => prev.filter(i => i.pn !== modalItem.pn));
+      }
       setShowItemModal(false);
     }
   };
@@ -561,6 +688,7 @@ function App() {
       {/* Top Header */}
       <Header
         activeTab={activeTab}
+        selectedBrandName={selectedBrandId ? getBrandName(selectedBrandId) : null}
         isEditMode={isEditMode}
         setIsEditMode={setIsEditMode}
         isStoreEditMode={isStoreEditMode}
@@ -578,11 +706,12 @@ function App() {
           <HomeTab
             orders={orders}
             stores={stores}
-            items={items}
+            items={allCatalogItems}
             routesList={routesList}
             routeCounts={routeCounts}
             onOpenDraft={() => setActiveTab('draft')}
             onOpenPricelist={(category, queryText) => {
+              setSelectedBrandId('daytona');
               if (category) setSelectedCategory(category);
               if (queryText !== undefined) setQuery(queryText);
               setActiveTab('pricelist');
@@ -595,6 +724,7 @@ function App() {
             onOpenAddOrder={openAddOrder}
             onOpenEditOrder={openEditOrder}
             onOpenCategories={() => {
+              setSelectedBrandId('daytona');
               setActiveTab('pricelist');
               setShowCategorySheet(true);
             }}
@@ -611,7 +741,10 @@ function App() {
 
         {activeTab === 'pricelist' && (
           <PricelistTab
-            items={items}
+            selectedBrandId={selectedBrandId}
+            setSelectedBrandId={setSelectedBrandId}
+            brandCounts={brandCounts}
+            items={currentBrandItems}
             filteredItems={filteredItems}
             query={query}
             setQuery={setQuery}
@@ -653,7 +786,7 @@ function App() {
           <DraftTab
             orders={orders}
             stores={stores}
-            catalogItems={items}
+            catalogItems={allCatalogItems}
             onToggleOrderStatus={toggleOrderStatus}
             onOpenAddOrder={openAddOrder}
             onOpenEditOrder={openEditOrder}
@@ -669,7 +802,7 @@ function App() {
             setOrders={setOrders}
             stores={stores}
             setStores={setStores}
-            items={items}
+            items={allCatalogItems}
             visits={visits}
             setVisits={setVisits}
             routesList={routesList}
@@ -703,6 +836,7 @@ function App() {
         modalItem={modalItem}
         formData={formData}
         setFormData={setFormData}
+        currentBrandId={selectedBrandId || 'daytona'}
         onSave={saveItem}
         onDelete={deleteItem}
         onClose={() => setShowItemModal(false)}
@@ -726,7 +860,8 @@ function App() {
           key={modalOrder?.id || 'new-order'}
           isOpen={showOrderModal}
           modalOrder={modalOrder}
-          catalogItems={items}
+          catalogItems={allCatalogItems}
+          brandCatalogs={brandCatalogs}
           stores={stores}
           onSave={saveOrder}
           onDelete={deleteOrder}

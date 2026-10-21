@@ -1,8 +1,11 @@
 import React from 'react';
 import { CATEGORIES } from '../../constants/categories';
+import { getBrandById } from '../../constants/brands';
 
-function ItemModal({ isOpen, modalItem, formData, setFormData, onSave, onDelete, onClose }) {
+function ItemModal({ isOpen, modalItem, formData, setFormData, onSave, onDelete, onClose, currentBrandId = 'daytona' }) {
   if (!isOpen) return null;
+
+  const brand = getBrandById(formData.brand || currentBrandId);
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
@@ -13,9 +16,14 @@ function ItemModal({ isOpen, modalItem, formData, setFormData, onSave, onDelete,
       <div 
         className="relative bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-200"
       >
-        <h2 className="text-[18px] font-semibold text-zinc-900 mb-5">
-          {modalItem ? 'Edit Informasi Barang' : 'Tambah Barang Baru'}
-        </h2>
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-[18px] font-semibold text-zinc-900">
+            {modalItem ? 'Edit Informasi Barang' : 'Tambah Barang Baru'}
+          </h2>
+          <span className={`text-[11px] font-bold px-2.5 py-1 rounded-xl border ${brand.theme.badge}`}>
+            {brand.name}
+          </span>
+        </div>
         
         <form onSubmit={onSave} className="space-y-4">
           <div>

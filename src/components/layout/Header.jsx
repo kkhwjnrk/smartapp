@@ -7,6 +7,7 @@ import {
 
 function Header({
   activeTab,
+  selectedBrandName,
   isEditMode,
   setIsEditMode,
   isStoreEditMode,
@@ -17,7 +18,7 @@ function Header({
   currentMonthKey,
   onOpenAddOrder
 }) {
-  const showEditButton = activeTab === 'pricelist' || activeTab === 'stores';
+  const showEditButton = (activeTab === 'pricelist' && selectedBrandName) || activeTab === 'stores';
   const currentIsEdit = activeTab === 'stores' ? isStoreEditMode : isEditMode;
 
   const toggleEdit = () => {
@@ -44,7 +45,7 @@ function Header({
               </span>
             )}
             {activeTab === 'draft' && "Catatan Order"}
-            {activeTab === 'pricelist' && "Pricelist"}
+            {activeTab === 'pricelist' && (selectedBrandName ? `Pricelist ${selectedBrandName}` : "Pricelist")}
             {activeTab === 'stores' && "Data Toko"}
             {activeTab === 'more' && "Fitur & Pengaturan"}
           </h1>
