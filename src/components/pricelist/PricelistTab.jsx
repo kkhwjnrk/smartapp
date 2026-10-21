@@ -289,11 +289,9 @@ function PricelistTab({
       {items.length === 0 && (
         <div className="text-center py-16 bg-white rounded-3xl border border-zinc-200 mt-2 p-6 shadow-xs">
           <div 
-            className="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center font-black text-[20px] mb-3 select-none shadow-2xs"
+            className="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center font-black text-[20px] text-white mb-3 select-none shadow-sm"
             style={{
-              backgroundColor: `${activeBrand.accentColor}15`,
-              color: activeBrand.accentColor,
-              border: `1.5px solid ${activeBrand.accentColor}30`
+              backgroundColor: activeBrand.accentColor
             }}
           >
             {activeBrand.name.substring(0, 2).toUpperCase()}
