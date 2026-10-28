@@ -18,7 +18,7 @@ export const BRANDS = [
     discountTiers: ['het', '24', '27', '29'],
     storageKey: 'daytona_pricelist',
     versionKey: 'daytona_pricelist_version',
-    version: 'v2_568_official_pdf'
+    version: 'v3_612_official_pdf'
   },
   {
     id: 'dura',

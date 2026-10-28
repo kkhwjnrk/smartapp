@@ -31,7 +31,7 @@ import SadixScheduleModal from './components/stores/SadixScheduleModal';
 import { getTodayIso } from './utils/date';
 import { isStoreMatch } from './utils/visitUtils';
 
-const PRICELIST_DATA_VERSION = 'v2_568_official_pdf';
+const PRICELIST_DATA_VERSION = 'v3_612_official_pdf';
 
 const STORES_DATA_VERSION = 'v2_168_stores';
 
@@ -48,40 +48,55 @@ function App() {
 
   const [selectedBrandId, setSelectedBrandId] = useState(null); // null = Brand Hub; 'daytona' | 'dura' | 'osram'
 
-  // Storage for Daytona Pricelist dengan pemeliharaan data tersimpan & normalisasi aman
+  // Storage for Daytona Pricelist dengan pemeliharaan data tersimpan, sinkronisasi katalog resmi, & normalisasi aman
   const [daytonaItems, setDaytonaItems] = useState(() => {
     const saved = localStorage.getItem('daytona_pricelist');
-    if (saved) {
+    const savedVersion = localStorage.getItem('daytona_pricelist_version');
+
+    const normalize = (item) => {
+      const rawHet = item.het !== undefined && item.het !== null
+        ? Number(item.het)
+        : (parseFloat(String(item.price || 0).replace(/[^0-9]/g, '')) || 0);
+      return {
+        ...item,
+        brand: 'daytona',
+        het: rawHet,
+        d24: item.d24 ?? Math.round(rawHet * 0.76),
+        d27: item.d27 ?? Math.round(rawHet * 0.73),
+        d29: item.d29 ?? Math.round(rawHet * 0.71),
+        price: item.price || (rawHet > 0 ? rawHet.toLocaleString('id-ID') : '0'),
+        category: ensureValidCategory(item)
+      };
+    };
+
+    if (saved && savedVersion === PRICELIST_DATA_VERSION) {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          const list = parsed.map(item => {
-            const rawHet = item.het !== undefined && item.het !== null
-              ? Number(item.het)
-              : (parseFloat(String(item.price || 0).replace(/[^0-9]/g, '')) || 0);
-            return {
-              ...item,
-              brand: 'daytona',
-              het: rawHet,
-              d24: item.d24 ?? Math.round(rawHet * 0.76),
-              d27: item.d27 ?? Math.round(rawHet * 0.73),
-              d29: item.d29 ?? Math.round(rawHet * 0.71),
-              price: item.price || (rawHet > 0 ? rawHet.toLocaleString('id-ID') : '0'),
-              category: ensureValidCategory(item)
-            };
-          });
-          return list.sort(comparePartNumbers);
+          return parsed.map(normalize).sort(comparePartNumbers);
         }
       } catch {}
     }
 
-    // Default ke dataset katalog resmi jika localStorage belum memiliki data
+    // Jika belum ada data ATAU versi katalog resmi diperbarui:
+    // Muat 612 item resmi terbaru, sekaligus pertahankan item kustom yang dibuat pengguna
+    let merged = initialPricelist.map(normalize);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const officialPns = new Set(initialPricelist.map(x => String(x.pn)));
+          const userCustomItems = parsed.filter(x => !officialPns.has(String(x.pn)));
+          if (userCustomItems.length > 0) {
+            merged = [...merged, ...userCustomItems.map(normalize)];
+          }
+        }
+      } catch {}
+    }
+
     localStorage.setItem('daytona_pricelist_version', PRICELIST_DATA_VERSION);
-    return initialPricelist.map(item => ({
-      ...item,
-      brand: 'daytona',
-      category: ensureValidCategory(item)
-    })).sort(comparePartNumbers);
+    localStorage.setItem('daytona_pricelist', JSON.stringify(merged));
+    return merged.sort(comparePartNumbers);
   });
 
   useEffect(() => {

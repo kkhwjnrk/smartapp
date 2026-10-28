@@ -43,7 +43,7 @@ export const categorizeItem = (item) => {
   }
 
   // 2. Per Sentrik (Clutch shoe spring / per sentrik)
-  if (d.includes('per sentrik') || d.includes('clutch shoe spring') || d.includes('spring set(5pcs), clutch shoe') || d.includes('spring set (3pcs), clutch shoe') || d.includes('per ganda') || d.includes('centrifugal spring')) {
+  if (d.includes('per sentrik') || d.includes('clutch shoe spring') || d.includes('spring set(5pcs), clutch shoe') || d.includes('spring set (3pcs), clutch shoe') || d.includes('spring set(3pcs), clutch shoe') || d.includes('per ganda') || d.includes('centrifugal spring')) {
     return 'Per Sentrik';
   }
 
@@ -178,7 +178,7 @@ export const categorizeItem = (item) => {
   }
 
   // 29. Mesin
-  if (d.includes('oil filter') || d.includes('exhaust') || d.includes('knalpot') || d.includes('engine') || d.includes('piston') || d.includes('cylinder block') || d.includes('blok seher') || d.includes('noken as') || d.includes('camshaft') || d.includes('crankshaft') || d.includes('kruk as') || d.includes('mesin') || d.includes('muffler') || d.includes('gasket') || d.includes('packing') || d.includes('silinder') || d.includes('ignition coil') || d.includes('koil')) {
+  if (d.includes('oil filter') || d.includes('exhaust') || d.includes('knalpot') || d.includes('engine') || d.includes('piston') || d.includes('cylinder block') || d.includes('blok seher') || d.includes('noken as') || d.includes('camshaft') || d.includes('crankshaft') || d.includes('kruk as') || d.includes('mesin') || d.includes('muffler') || d.includes('gasket') || d.includes('packing') || d.includes('silinder') || d.includes('ignition coil') || d.includes('koil') || d.includes('connecting rod') || d.includes('stang seher') || d.includes('carburetor') || d.includes('karburator')) {
     return 'Mesin';
   }
 
