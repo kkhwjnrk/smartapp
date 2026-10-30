@@ -28,7 +28,7 @@ function VisitRecapModal({
   const [selectedDateIso, setSelectedDateIso] = useState(() => initialDateIso || getTodayIso());
   const [selectedRoute, setSelectedRoute] = useState('Semua');
   const [searchQuery, setSearchQuery] = useState('');
-  const [checkedStoreIds, setCheckedStoreIds] = useState(() => 
+  const [checkedStoreIds, setCheckedStoreIds] = useState(() =>
     getInitialCheckedStores(initialDateIso || getTodayIso(), visits, stores)
   );
   const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
@@ -53,7 +53,7 @@ function VisitRecapModal({
     return routesList.filter(r => r !== 'Semua');
   }, [routesList]);
 
-  // Daftar toko yang terfilter
+  // Daftar toko yang terfilter - SELALU DIURUTKAN SESUAI ABJAD A-Z
   const displayedStores = useMemo(() => {
     let result = stores;
     if (selectedRoute !== 'Semua') {
@@ -61,13 +61,13 @@ function VisitRecapModal({
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
-      result = result.filter(s => 
+      result = result.filter(s =>
         (s.name && s.name.toLowerCase().includes(q)) ||
         (s.customerId && s.customerId.toLowerCase().includes(q)) ||
         (s.routeCode && s.routeCode.toLowerCase().includes(q))
       );
     }
-    return result;
+    return [...result].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   }, [stores, selectedRoute, searchQuery]);
 
   // Hitung jumlah toko terpilih hari ini
@@ -132,7 +132,7 @@ function VisitRecapModal({
   const modalContent = (
     <div className="fixed inset-0 z-50 overflow-hidden flex justify-center">
       {/* Dimmed Backdrop Scrim */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity"
         style={{
           opacity: backdropOpacity,
@@ -143,13 +143,12 @@ function VisitRecapModal({
       />
 
       {/* Recap Modal Screen */}
-      <div 
+      <div
         ref={containerRef}
         {...swipeHandlers}
         style={containerStyle}
-        className={`relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl ${
-          dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-200' : ''
-        }`}
+        className={`relative w-full h-full max-w-lg mx-auto bg-white flex flex-col shadow-2xl ${dragX === 0 && !isExiting ? 'animate-in slide-in-from-right duration-200' : ''
+          }`}
       >
         {/* HEADER: Judul & Tanggal Rekap */}
         <div className="p-4 bg-zinc-900 text-white flex items-start justify-between gap-3 shrink-0 pt-safe">
@@ -174,34 +173,30 @@ function VisitRecapModal({
         </div>
 
         {/* BAR INDIKATOR TARGET 12 TOKO */}
-        <div className={`px-4 py-3 shrink-0 border-b flex items-center justify-between gap-3 ${
-          isTargetAchieved ? 'bg-emerald-50 border-emerald-200' : 'bg-orange-50/70 border-orange-200/80'
-        }`}>
+        <div className={`px-4 py-3 shrink-0 border-b flex items-center justify-between gap-3 ${isTargetAchieved ? 'bg-emerald-50 border-emerald-200' : 'bg-orange-50/70 border-orange-200/80'
+          }`}>
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className={`w-9 h-9 rounded-2xl flex items-center justify-center font-black text-[15px] shrink-0 ${
-              isTargetAchieved ? 'bg-emerald-600 text-white shadow-sm' : 'bg-[#EA580C] text-white shadow-sm'
-            }`}>
+            <div className={`w-9 h-9 rounded-2xl flex items-center justify-center font-black text-[15px] shrink-0 ${isTargetAchieved ? 'bg-emerald-600 text-white shadow-sm' : 'bg-[#EA580C] text-white shadow-sm'
+              }`}>
               {checkedCount}
             </div>
             <div className="min-w-0">
-              <p className={`text-[12.5px] font-bold truncate ${
-                isTargetAchieved ? 'text-emerald-900' : 'text-zinc-900'
-              }`}>
-                {isTargetAchieved 
-                  ? 'Target Harian 12 Toko Tercapai! 🎉' 
+              <p className={`text-[12.5px] font-bold truncate ${isTargetAchieved ? 'text-emerald-900' : 'text-zinc-900'
+                }`}>
+                {isTargetAchieved
+                  ? 'Target Harian 12 Toko Tercapai! 🎉'
                   : `${checkedCount} / 12 Toko Terpilih`}
               </p>
               <p className="text-[11px] text-zinc-500 font-medium">
-                {isTargetAchieved 
-                  ? 'Luar biasa, capaian harian sudah memenuhi target.' 
+                {isTargetAchieved
+                  ? 'Luar biasa, capaian harian sudah memenuhi target.'
                   : `Kurang ${Math.max(0, 12 - checkedCount)} toko lagi untuk mencapai target harian.`}
               </p>
             </div>
           </div>
           <div className="text-right shrink-0">
-            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-              isTargetAchieved ? 'bg-emerald-200/80 text-emerald-900' : 'bg-orange-200/80 text-orange-950'
-            }`}>
+            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${isTargetAchieved ? 'bg-emerald-200/80 text-emerald-900' : 'bg-orange-200/80 text-orange-950'
+              }`}>
               Min. 12 Toko
             </span>
           </div>
@@ -209,7 +204,7 @@ function VisitRecapModal({
 
         {/* KONTROL TANGGAL, FILTER RUTE & CARI */}
         <div className="p-3 bg-zinc-50 border-b border-zinc-200/80 space-y-2 shrink-0">
-          
+
           <div className="flex gap-2">
             {/* Input Pemilih Tanggal */}
             <div className="flex-1">
@@ -298,7 +293,7 @@ function VisitRecapModal({
             displayedStores.map(store => {
               const key = store.id || store.customerId || store.name;
               const isChecked = checkedStoreIds.has(key);
-              
+
               // Status kunjungan bulan ini sebelum rekap ini
               const storeMonthVisits = getStoreVisitsForMonth(store, visits, currentMonthKey);
               const monthCount = storeMonthVisits.length;
@@ -307,17 +302,15 @@ function VisitRecapModal({
                 <div
                   key={key}
                   onClick={() => handleToggleStore(key)}
-                  className={`pt-2 first:pt-0 flex items-center justify-between gap-3 p-2.5 rounded-2xl cursor-pointer transition-colors ${
-                    isChecked ? 'bg-orange-50/70 border border-orange-200/80 shadow-2xs' : 'hover:bg-zinc-50'
-                  }`}
+                  className={`pt-2 first:pt-0 flex items-center justify-between gap-3 p-2.5 rounded-2xl cursor-pointer transition-colors ${isChecked ? 'bg-orange-50/70 border border-orange-200/80 shadow-2xs' : 'hover:bg-zinc-50'
+                    }`}
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
                     {/* Custom Checkbox */}
-                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border transition-all ${
-                      isChecked 
-                        ? 'bg-[#EA580C] border-[#EA580C] text-white' 
+                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border transition-all ${isChecked
+                        ? 'bg-[#EA580C] border-[#EA580C] text-white'
                         : 'border-zinc-300 bg-white'
-                    }`}>
+                      }`}>
                       {isChecked && (
                         <svg className="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -350,14 +343,13 @@ function VisitRecapModal({
 
                   {/* Badge Status Kunjungan Bulan Ini */}
                   <div className="text-right shrink-0">
-                    <span className={`text-[10.5px] font-bold px-2 py-0.5 rounded-md border ${
-                      monthCount >= 2
+                    <span className={`text-[10.5px] font-bold px-2 py-0.5 rounded-md border ${monthCount >= 2
                         ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                         : monthCount === 1
                           ? 'bg-amber-50 text-amber-700 border-amber-200'
                           : 'bg-red-50 text-red-600 border-red-200'
-                    }`}>
-                      {monthCount >= 2 ? 'Target 2x Selesai' : `${monthCount}/2 Bln Ini`}
+                      }`}>
+                      {monthCount >= 2 ? `${monthCount}x Dikunjungi` : `${monthCount}/2 Bln Ini`}
                     </span>
                   </div>
                 </div>

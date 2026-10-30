@@ -27,7 +27,7 @@ import StoreModal from './components/stores/StoreModal';
 import RouteSheet from './components/stores/RouteSheet';
 import OrderModal from './components/draft/OrderModal';
 import VisitRecapModal from './components/stores/VisitRecapModal';
-import SadixScheduleModal from './components/stores/SadixScheduleModal';
+import WeeklyScheduleModal from './components/stores/WeeklyScheduleModal';
 import { getTodayIso } from './utils/date';
 import { isStoreMatch } from './utils/visitUtils';
 
@@ -276,10 +276,10 @@ function App() {
     localStorage.setItem('daytona_visits', JSON.stringify(visits));
   }, [visits]);
 
-  // Modal Rekap Kunjungan Malam & Jadwal SPV
+  // Modal Rekap Kunjungan Malam & Jadwal Mingguan
   const [showVisitRecapModal, setShowVisitRecapModal] = useState(false);
   const [recapInitialDateIso, setRecapInitialDateIso] = useState(null);
-  const [showSadixScheduleModal, setShowSadixScheduleModal] = useState(false);
+  const [showWeeklyScheduleModal, setShowWeeklyScheduleModal] = useState(false);
 
   const openVisitRecap = (dateIso) => {
     setRecapInitialDateIso(dateIso || getTodayIso());
@@ -746,7 +746,7 @@ function App() {
             onOpenMore={() => setActiveTab('more')}
             visits={visits}
             onOpenVisitRecap={() => openVisitRecap(getTodayIso())}
-            onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
+            onOpenWeeklySchedule={() => setShowWeeklyScheduleModal(true)}
             onOpenVisitsPage={() => {
               setActiveTab('more');
               setMoreSubView('visits');
@@ -822,7 +822,7 @@ function App() {
             setVisits={setVisits}
             routesList={routesList}
             onOpenVisitRecap={openVisitRecap}
-            onOpenSadixSchedule={() => setShowSadixScheduleModal(true)}
+            onOpenWeeklySchedule={() => setShowWeeklyScheduleModal(true)}
             onToggleVisitToday={toggleVisitToday}
             subView={moreSubView}
             setSubView={setMoreSubView}
@@ -918,14 +918,17 @@ function App() {
         />
       )}
 
-      {/* Modal Perencana Jadwal Kunjungan (SPV) */}
-      {showSadixScheduleModal && (
-        <SadixScheduleModal
-          isOpen={showSadixScheduleModal}
-          onClose={() => setShowSadixScheduleModal(false)}
+      {/* Modal Perencana Jadwal Kunjungan Mingguan */}
+      {showWeeklyScheduleModal && (
+        <WeeklyScheduleModal
+          isOpen={showWeeklyScheduleModal}
+          onClose={() => setShowWeeklyScheduleModal(false)}
           stores={stores}
           visits={visits}
           routesList={routesList}
+          onApplyScheduleToDayVisits={({ dateIso, storeIds }) => {
+            saveDayVisits(dateIso, storeIds);
+          }}
         />
       )}
 

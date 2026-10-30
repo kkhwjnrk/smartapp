@@ -14,7 +14,7 @@ function MoreTab({
   setVisits,
   routesList = [],
   onOpenVisitRecap,
-  onOpenSadixSchedule,
+  onOpenWeeklySchedule,
   onToggleVisitToday,
   subView,
   setSubView
@@ -269,7 +269,7 @@ function MoreTab({
         setVisits={setVisits}
         routesList={routesList}
         onOpenVisitRecap={onOpenVisitRecap}
-        onOpenSadixSchedule={onOpenSadixSchedule}
+        onOpenWeeklySchedule={onOpenWeeklySchedule}
         onToggleVisitToday={onToggleVisitToday}
         onBack={() => setActiveSubView('menu')}
       />

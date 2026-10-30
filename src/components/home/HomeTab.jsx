@@ -30,13 +30,14 @@ function HomeTab({
   onOpenCategories,
   visits = [],
   onOpenVisitRecap,
-  onOpenSadixSchedule
+  onOpenWeeklySchedule
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedStore, setCopiedStore] = useState('');
 
   const [todayIso] = useState(getTodayIso);
   const todayVisitCount = useMemo(() => getDailyVisitCount(visits, todayIso), [visits, todayIso]);
+  const handleOpenSchedule = onOpenWeeklySchedule;
 
   // Sapaan Waktu Otomatis & Tanggal Hari Ini
   const [greeting] = useState(getGreeting);
@@ -265,10 +266,10 @@ function HomeTab({
             </button>
             <button
               type="button"
-              onClick={onOpenSadixSchedule}
+              onClick={handleOpenSchedule}
               className="py-2.5 px-3 bg-blue-50 hover:bg-blue-100 active:scale-95 text-blue-700 border border-blue-200/80 rounded-xl text-[12px] font-bold transition-all shadow-2xs flex items-center justify-center gap-1.5"
             >
-              <span>📋 Jadwal SPV</span>
+              <span>📋 Jadwal Mingguan</span>
             </button>
           </div>
         </div>

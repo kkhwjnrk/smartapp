@@ -60,9 +60,9 @@ export function getStoreVisitStatus(count = 0) {
   }
   return {
     count: count,
-    label: count === 2 ? 'Target 2x Selesai' : `${count}x Dikunjungi`,
-    shortLabel: `${count}/2 Kunjungan`,
-    badge: `${count}/2`,
+    label: `${count}x Dikunjungi`,
+    shortLabel: `${count}x Kunjungan`,
+    badge: `${count}x`,
     stage: 'completed',
     color: 'emerald',
     bgClass: 'bg-emerald-50 text-emerald-800 border-emerald-200/90',
@@ -112,7 +112,21 @@ export function getMonthlyVisitStats(stores = [], visits = [], monthKey = getCur
 }
 
 /**
- * Membuat format teks jadwal kunjungan ringkas: list nama toko dan ID customer untuk diserahkan ke SPV
+ * Daftar Hari Kerja untuk Jadwal Kunjungan Mingguan (Senin - Sabtu)
+ */
+export const WEEK_DAYS = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+
+export const WEEK_DAY_LABELS = {
+  senin: 'Senin',
+  selasa: 'Selasa',
+  rabu: 'Rabu',
+  kamis: 'Kamis',
+  jumat: 'Jumat',
+  sabtu: 'Sabtu'
+};
+
+/**
+ * Membuat format teks jadwal kunjungan per hari atau satu minggu penuh untuk diserahkan ke SPV / WhatsApp
  */
 export function generateSpvScheduleText({
   selectedStores = []
@@ -127,5 +141,22 @@ export function generateSpvScheduleText({
   }).join('\n');
 }
 
-// Alias kompatibilitas
-export const generateSadixScheduleText = generateSpvScheduleText;
+/**
+ * Format teks jadwal kunjungan mingguan lengkap (Senin s/d Sabtu)
+ */
+export function generateFullWeeklyScheduleText(weeklySchedule = {}) {
+  const blocks = [];
+  WEEK_DAYS.forEach(dayKey => {
+    const list = weeklySchedule[dayKey] || [];
+    if (list.length > 0) {
+      const header = `*${WEEK_DAY_LABELS[dayKey].toUpperCase()} (${list.length} Toko)*`;
+      const body = list.map((s, idx) => {
+        const cid = s.customerId?.trim() ? ` - ${s.customerId.trim()}` : '';
+        return `${idx + 1}. ${s.name}${cid}`;
+      }).join('\n');
+      blocks.push(`${header}\n${body}`);
+    }
+  });
+
+  return blocks.length > 0 ? `📋 *JADWAL KUNJUNGAN MINGGUAN*\n\n${blocks.join('\n\n')}` : '';
+}
