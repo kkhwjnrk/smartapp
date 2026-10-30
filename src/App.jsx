@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useMemo } from 'react';
 import initialPricelist from './data/pricelist.json';
 import initialDuraPricelist from './data/duraPricelist.json';
 import initialOsramPricelist from './data/osramPricelist.json';
