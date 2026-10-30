@@ -39,7 +39,7 @@ export const BRANDS = [
     discountTiers: ['het', '24', '27', '29'],
     storageKey: 'dura_pricelist',
     versionKey: 'dura_pricelist_version',
-    version: 'v1_dura'
+    version: 'v1_319_official_pdf'
   },
   {
     id: 'osram',

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
 import initialPricelist from './data/pricelist.json';
+import initialDuraPricelist from './data/duraPricelist.json';
 import initialOsramPricelist from './data/osramPricelist.json';
 import initialStores from './data/stores.json';
 import initialOrders from './data/orders.json';
@@ -35,6 +35,8 @@ import { isStoreMatch } from './utils/visitUtils';
 const PRICELIST_DATA_VERSION = 'v3_612_official_pdf';
 
 const STORES_DATA_VERSION = 'v2_168_stores';
+
+const DURA_DATA_VERSION = 'v1_319_official_pdf';
 
 const OSRAM_DATA_VERSION = 'v1_30_official_pdf';
 
@@ -107,36 +109,60 @@ function App() {
     localStorage.setItem('daytona_pricelist_version', PRICELIST_DATA_VERSION);
   }, [daytonaItems]);
 
-  // Storage for Dura Pricelist
+  // Storage for Dura Pricelist (Dengan auto-sync versi data resmi & pemeliharaan custom item)
   const [duraItems, setDuraItems] = useState(() => {
     const saved = localStorage.getItem('dura_pricelist');
+    const savedVersion = localStorage.getItem('dura_pricelist_version');
+
+    const normalize = (item) => {
+      const rawHet = item.het !== undefined && item.het !== null
+        ? Number(item.het)
+        : (parseFloat(String(item.price || 0).replace(/[^0-9]/g, '')) || 0);
+      return {
+        ...item,
+        brand: 'dura',
+        het: rawHet,
+        d24: item.d24 ?? Math.round(rawHet * 0.76),
+        d27: item.d27 ?? Math.round(rawHet * 0.73),
+        d29: item.d29 ?? Math.round(rawHet * 0.71),
+        price: item.price || (rawHet > 0 ? rawHet.toLocaleString('id-ID') : '0'),
+        category: ensureValidCategory(item)
+      };
+    };
+
+    if (saved && savedVersion === DURA_DATA_VERSION) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map(normalize).sort(comparePartNumbers);
+        }
+      } catch {}
+    }
+
+    // Jika belum ada data ATAU versi data resmi Dura diperbarui:
+    // Muat 319 item resmi Dura terbaru, sekaligus pertahankan custom item jika ada
+    let merged = initialDuraPricelist.map(normalize);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map(item => {
-            const rawHet = item.het !== undefined && item.het !== null
-              ? Number(item.het)
-              : (parseFloat(String(item.price || 0).replace(/[^0-9]/g, '')) || 0);
-            return {
-              ...item,
-              brand: 'dura',
-              het: rawHet,
-              d24: item.d24 ?? Math.round(rawHet * 0.76),
-              d27: item.d27 ?? Math.round(rawHet * 0.73),
-              d29: item.d29 ?? Math.round(rawHet * 0.71),
-              price: item.price || (rawHet > 0 ? rawHet.toLocaleString('id-ID') : '0'),
-              category: ensureValidCategory(item)
-            };
-          }).sort(comparePartNumbers);
+          const officialPns = new Set(initialDuraPricelist.map(x => String(x.pn)));
+          const userCustomItems = parsed.filter(x => !officialPns.has(String(x.pn)));
+          if (userCustomItems.length > 0) {
+            merged = [...merged, ...userCustomItems.map(normalize)];
+          }
         }
       } catch {}
     }
-    return [];
+
+    localStorage.setItem('dura_pricelist_version', DURA_DATA_VERSION);
+    localStorage.setItem('dura_pricelist', JSON.stringify(merged));
+    return merged.sort(comparePartNumbers);
   });
 
   useEffect(() => {
     localStorage.setItem('dura_pricelist', JSON.stringify(duraItems));
+    localStorage.setItem('dura_pricelist_version', DURA_DATA_VERSION);
   }, [duraItems]);
 
   // Storage for Osram Pricelist (Dengan auto-sync versi data resmi)

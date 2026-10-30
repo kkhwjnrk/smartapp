@@ -29,7 +29,14 @@ export const CATEGORIES = [
   'Bushing Pulley',
   'Injector',
   'Klep',
-  'Mesin',
+  // Kategori Produk Dura
+  'Shock Absorber',
+  'Oil Seal',
+  'Gasket',
+  'Fuel System',
+  'Kelistrikan & Sensor',
+  'Chemical',
+  'Damper & Footstep',
   // Kategori Pencahayaan Osram
   'Halogen Standard',
   'Genuine',
@@ -53,6 +60,29 @@ export const categorizeItem = (item) => {
   if (d.includes('auxiliary') || d.includes('w10w') || d.includes('wy10w') || d.includes('92910')) return 'Auxiliary';
   if (d.includes('hs1') || d.includes('64185')) return 'HS1 Series';
   if (d.includes('halogen') || d.includes('ba20d') || d.includes('p15d')) return 'Halogen Standard';
+
+  // Kategori Produk Dura
+  if (d.includes('shock absorber') || d.includes('as shock') || d.includes('seal shock') || d.includes('front fork') || d.includes('seal oil front fork') || d.includes('seal oil fr fork')) {
+    return 'Shock Absorber';
+  }
+  if (d.includes('oil seal')) {
+    return 'Oil Seal';
+  }
+  if (d.includes('carburetor cleaner') || d.includes('chain lube') || d.includes('tyre sealant') || d.includes('brake fluid')) {
+    return 'Chemical';
+  }
+  if (d.includes('gasket')) {
+    return 'Gasket';
+  }
+  if (d.includes('damper set wheel') || d.includes('rubber step') || d.includes('rubber engine mounting') || d.includes('rear step')) {
+    return 'Damper & Footstep';
+  }
+  if (d.includes('tps sensor') || d.includes('ckp sensor') || d.includes('speed sensor') || d.includes('rectifier') || d.includes('temperatur sensor') || d.includes('ic fuel pump')) {
+    return 'Kelistrikan & Sensor';
+  }
+  if (d.includes('fuel pump') || d.includes('fuel filter')) {
+    return 'Fuel System';
+  }
 
   // 1. Busi
   if (d.includes('spark plug') || d.includes('splug') || d.includes('busi')) {
