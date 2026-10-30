@@ -98,7 +98,13 @@ function DraftTab({
   };
 
   // Filter orders berdasarkan periode bulan terpilih dan tab Aktif / Arsip
-  const { activeOrders, archivedOrders, currentDisplayedOrders, carryOverCount } = useMemo(() => {
+  const { 
+    activeOrders, 
+    archivedOrders, 
+    currentDisplayedOrders, 
+    carryOverCount,
+    brandCounts = { all: 0, daytona: 0, osram: 0 }
+  } = useMemo(() => {
     // 1. Order Aktif
     const active = orders.filter(order => {
       if (order.status !== 'pending') return false;

@@ -84,7 +84,17 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
       discountPercentage: 24,
       daytonaGroupNet: 0,
       osramNet: 0,
-      formattedText: 'Rp 0 (24%)'
+      osramDiscountPercentage: 35,
+      daytonaQty: 0,
+      osramQty: 0,
+      daytonaItemCount: 0,
+      osramItemCount: 0,
+      daytonaGroupFormatted: 'Rp 0',
+      osramFormatted: 'Rp 0',
+      hasDaytonaGroup: false,
+      hasOsram: false,
+      isMixed: false,
+      formattedText: 'Rp 0'
     };
   }
 

@@ -21,14 +21,15 @@ function OrderCard({
 }) {
   const [copiedPn, setCopiedPn] = useState(null);
   const [copiedStoreHeader, setCopiedStoreHeader] = useState(false);
-  const isCompleted = order.status === 'completed';
-  const formattedDate = formatFullIndonesianDate(order.date || order.createdAt);
+  const isCompleted = order?.status === 'completed';
+  const formattedDate = formatFullIndonesianDate(order?.date || order?.createdAt);
   const formattedStoreText = formatStoreCustomerHeader(order, stores);
-  const orderSummary = calculateOrderSummary(order.items, catalogItems);
+  const orderItemsList = Array.isArray(order?.items) ? order.items : [];
+  const orderSummary = calculateOrderSummary(orderItemsList, catalogItems);
 
   const groupedItems = useMemo(() => {
-    return groupOrderItemsByBrand(order.items || [], catalogItems);
-  }, [order.items, catalogItems]);
+    return groupOrderItemsByBrand(order?.items || [], catalogItems);
+  }, [order, catalogItems]);
 
   const handleCopySinglePn = (pn, e) => {
     e.stopPropagation();
@@ -39,7 +40,7 @@ function OrderCard({
   };
 
   // Preview maksimal 2 item ringkas agar kartu tetap rapi
-  const previewItems = order.items.slice(0, 2);
+  const previewItems = orderItemsList.slice(0, 2);
 
   return (
     <div 
@@ -135,7 +136,7 @@ function OrderCard({
             <div className="flex items-center gap-2 mt-1.5 text-[12px] text-zinc-400 font-medium flex-wrap">
               <span className="text-zinc-600">{formattedDate}</span>
               <span>·</span>
-              <span className="font-semibold text-zinc-700">{order.items.length} item</span>
+              <span className="font-semibold text-zinc-700">{orderItemsList.length} item</span>
               {isCompleted && (
                 <>
                   <span>·</span>
@@ -416,7 +417,7 @@ function OrderCard({
             onOpenDetail(order);
           }}
           className="flex-1 py-2 px-3.5 text-left bg-zinc-50 hover:bg-zinc-100 rounded-xl border border-zinc-200/80 hover:border-zinc-300 transition-all flex items-center justify-between group active:scale-[0.99]"
-          title={`Buka rincian pesanan (${order.items.length} item)`}
+          title={`Buka rincian pesanan (${orderItemsList.length} item)`}
         >
           <div className="min-w-0 flex-1">
             <span className="font-bold text-zinc-900 text-[13.5px] tracking-tight block">

@@ -41,15 +41,15 @@ function OrderDetailModal({
     enabled: isOpen && !!order
   });
 
+  const orderItemsList = Array.isArray(order?.items) ? order.items : [];
+
   const grouped = useMemo(() => {
-    if (!order?.items) return null;
-    return groupOrderItemsByBrand(order.items, catalogItems);
-  }, [order, catalogItems]);
+    return groupOrderItemsByBrand(order?.items || [], catalogItems);
+  }, [order?.items, catalogItems]);
 
   const orderSummary = useMemo(() => {
-    if (!order?.items) return null;
-    return calculateOrderSummary(order.items, catalogItems);
-  }, [order, catalogItems]);
+    return calculateOrderSummary(order?.items || [], catalogItems);
+  }, [order?.items, catalogItems]);
 
   if (!isOpen || !order || !grouped || !orderSummary) return null;
 
@@ -297,7 +297,7 @@ function OrderDetailModal({
           <div className="flex items-center gap-2 mt-2 text-[13px] text-zinc-500 font-medium flex-wrap">
             <span className="text-zinc-700 font-semibold">{formattedDate}</span>
             <span>·</span>
-            <span className="font-semibold text-zinc-800">{order.items.length} item ({grouped.totalDaytonaQty + grouped.totalOsramQty} pcs)</span>
+            <span className="font-semibold text-zinc-800">{orderItemsList.length} item ({grouped.totalDaytonaQty + grouped.totalOsramQty} pcs)</span>
             <span>·</span>
             {isCompleted ? (
               <span className="text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full text-[11px] font-bold inline-flex items-center gap-1">
@@ -412,7 +412,7 @@ function OrderDetailModal({
                 <div className="flex items-center gap-2">
                   <span className={`w-2.5 h-2.5 rounded-full ${grouped.hasOsram ? 'bg-amber-500' : 'bg-[#EA580C]'}`}></span>
                   <h2 className="text-[14px] font-bold text-zinc-800">
-                    {grouped.hasOsram ? 'Pesanan Osram' : 'Pesanan Daytona & Dura'} ({order.items.length} item)
+                    {grouped.hasOsram ? 'Pesanan Osram' : 'Pesanan Daytona & Dura'} ({orderItemsList.length} item)
                   </h2>
                 </div>
                 <button
@@ -438,7 +438,7 @@ function OrderDetailModal({
 
               {/* List Kartu Item */}
               <div className="divide-y divide-zinc-100 bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-xs">
-                {order.items.map((item, index) => renderItemRow(item, index + 1))}
+                {orderItemsList.map((item, index) => renderItemRow(item, index + 1))}
               </div>
             </div>
           )}
