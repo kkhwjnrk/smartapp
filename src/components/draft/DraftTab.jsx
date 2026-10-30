@@ -25,7 +25,7 @@ function DraftTab({
   currentMonthKey: propCurrentMonthKey
 }) {
   const [orderSubTab, setOrderSubTab] = useState('active'); // 'active' | 'archive'
-  const [selectedBrandFilter, setSelectedBrandFilter] = useState('all'); // 'all' | 'daytona' | 'osram'
+  const [selectedBrandFilter, setSelectedBrandFilter] = useState('daytona'); // 'daytona' | 'osram'
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState('');
   const toastTimeoutRef = useRef(null);
@@ -155,17 +155,13 @@ function DraftTab({
       if (grouped.hasOsram) osramOrdersCount++;
     });
 
-    // Filter berdasarkan Brand (Daytona / Osram / Semua)
+    // Filter berdasarkan Brand (2 Tab: Daytona atau Osram)
     const brandFiltered = listToFilter.filter(order => {
-      if (selectedBrandFilter === 'daytona') {
-        const grouped = groupOrderItemsByBrand(order.items || [], catalogItems);
-        return grouped.hasDaytonaGroup;
-      }
+      const grouped = groupOrderItemsByBrand(order.items || [], catalogItems);
       if (selectedBrandFilter === 'osram') {
-        const grouped = groupOrderItemsByBrand(order.items || [], catalogItems);
         return grouped.hasOsram;
       }
-      return true;
+      return grouped.hasDaytonaGroup;
     });
 
     // 3. Pencarian Teks
@@ -291,38 +287,20 @@ function DraftTab({
         </button>
       </div>
 
-      {/* Brand Filter Pills: Pembeda Order Daytona vs Osram */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-0.5 no-scrollbar">
-        <button
-          type="button"
-          onClick={() => setSelectedBrandFilter('all')}
-          className={`px-3 py-1.5 rounded-xl text-[12px] font-bold transition-all flex items-center gap-1.5 shrink-0 ${
-            selectedBrandFilter === 'all'
-              ? 'bg-zinc-900 text-white shadow-xs'
-              : 'bg-white border border-zinc-200/90 text-zinc-600 hover:text-zinc-900 hover:border-zinc-300'
-          }`}
-        >
-          <span>Semua Brand</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            selectedBrandFilter === 'all' ? 'bg-white/20 text-white' : 'bg-zinc-100 text-zinc-500'
-          }`}>
-            {brandCounts.all}
-          </span>
-        </button>
-
+      {/* Brand Tabs: Cukup 2 Tab (Daytona & Osram) */}
+      <div className="flex bg-zinc-100 p-1 rounded-2xl shadow-2xs">
         <button
           type="button"
           onClick={() => setSelectedBrandFilter('daytona')}
-          className={`px-3 py-1.5 rounded-xl text-[12px] font-bold transition-all flex items-center gap-1.5 shrink-0 ${
+          className={`flex-1 py-2 rounded-xl text-[12.5px] font-bold transition-all flex items-center justify-center gap-1.5 ${
             selectedBrandFilter === 'daytona'
               ? 'bg-[#EA580C] text-white shadow-xs'
-              : 'bg-white border border-zinc-200/90 text-zinc-700 hover:text-orange-700 hover:border-orange-300'
+              : 'text-zinc-600 hover:text-zinc-900'
           }`}
         >
-          <span className="w-2 h-2 rounded-full bg-[#EA580C] shrink-0" style={{ display: selectedBrandFilter === 'daytona' ? 'none' : 'inline-block' }}></span>
           <span>Daytona</span>
           <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            selectedBrandFilter === 'daytona' ? 'bg-white/20 text-white' : 'bg-orange-50 text-orange-700'
+            selectedBrandFilter === 'daytona' ? 'bg-white/20 text-white' : 'bg-orange-100 text-[#EA580C]'
           }`}>
             {brandCounts.daytona}
           </span>
@@ -331,16 +309,15 @@ function DraftTab({
         <button
           type="button"
           onClick={() => setSelectedBrandFilter('osram')}
-          className={`px-3 py-1.5 rounded-xl text-[12px] font-bold transition-all flex items-center gap-1.5 shrink-0 ${
+          className={`flex-1 py-2 rounded-xl text-[12.5px] font-bold transition-all flex items-center justify-center gap-1.5 ${
             selectedBrandFilter === 'osram'
               ? 'bg-amber-600 text-white shadow-xs'
-              : 'bg-white border border-zinc-200/90 text-zinc-700 hover:text-amber-800 hover:border-amber-300'
+              : 'text-zinc-600 hover:text-zinc-900'
           }`}
         >
-          <span className="w-2 h-2 rounded-full bg-amber-600 shrink-0" style={{ display: selectedBrandFilter === 'osram' ? 'none' : 'inline-block' }}></span>
           <span>Osram</span>
           <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            selectedBrandFilter === 'osram' ? 'bg-white/20 text-white' : 'bg-amber-50 text-amber-800'
+            selectedBrandFilter === 'osram' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-800'
           }`}>
             {brandCounts.osram}
           </span>
@@ -351,18 +328,15 @@ function DraftTab({
       <div className="flex items-center justify-between text-[12px] text-zinc-500 px-1">
         <span>
           Menampilkan <strong>{currentDisplayedOrders.length} toko</strong>
-          {selectedBrandFilter !== 'all' ? ` (${selectedBrandFilter === 'daytona' ? 'Order Daytona' : 'Order Osram'})` : ''} 
+          {` (${selectedBrandFilter === 'osram' ? 'Order Osram' : 'Order Daytona'})`} 
           {' '}&bull; {orderSubTab === 'active' ? 'Perlu Diproses' : 'Riwayat Arsip'} ({formatMonthKeyDisplay(selectedMonthKey)})
         </span>
-        {(searchQuery || selectedBrandFilter !== 'all') && (
+        {searchQuery && (
           <button
-            onClick={() => {
-              setSearchQuery('');
-              setSelectedBrandFilter('all');
-            }}
+            onClick={() => setSearchQuery('')}
             className="text-zinc-600 hover:text-zinc-900 underline font-medium text-[11.5px]"
           >
-            Reset filter
+            Hapus pencarian
           </button>
         )}
       </div>

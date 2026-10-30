@@ -293,11 +293,13 @@ function OrderDetailModal({
             {order.storeName}
           </h1>
 
-          {/* Meta Bar: Tanggal Lengkap & Status */}
+          {/* Meta Bar: Tanggal Lengkap, Total Item & Total Pcs & Status */}
           <div className="flex items-center gap-2 mt-2 text-[13px] text-zinc-500 font-medium flex-wrap">
             <span className="text-zinc-700 font-semibold">{formattedDate}</span>
             <span>·</span>
-            <span className="font-semibold text-zinc-800">{orderItemsList.length} item ({grouped.totalDaytonaQty + grouped.totalOsramQty} pcs)</span>
+            <span className="font-semibold text-zinc-800">{orderItemsList.length} item</span>
+            <span>·</span>
+            <span className="font-semibold text-zinc-800">{grouped.totalDaytonaQty + grouped.totalOsramQty} pcs</span>
             <span>·</span>
             {isCompleted ? (
               <span className="text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full text-[11px] font-bold inline-flex items-center gap-1">
@@ -311,28 +313,6 @@ function OrderDetailModal({
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                 Order Aktif
               </span>
-            )}
-          </div>
-
-          {/* Breakdown Ringkas Daytona vs Osram */}
-          <div className="mt-3 flex items-center gap-2 flex-wrap text-[12px]">
-            {grouped.hasDaytonaGroup && (
-              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-orange-50/90 border border-orange-200 rounded-xl">
-                <span className="w-2 h-2 rounded-full bg-[#EA580C]"></span>
-                <span className="font-bold text-orange-950">Daytona:</span>
-                <span className="font-semibold text-orange-800">
-                  {grouped.daytonaGroupItems.length} part ({grouped.totalDaytonaQty} pcs) · {orderSummary.daytonaGroupFormatted}
-                </span>
-              </div>
-            )}
-            {grouped.hasOsram && (
-              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-amber-50/90 border border-amber-200 rounded-xl">
-                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                <span className="font-bold text-amber-950">Osram:</span>
-                <span className="font-semibold text-amber-800">
-                  {grouped.osramItems.length} part ({grouped.totalOsramQty} pcs) · {orderSummary.osramFormatted}
-                </span>
-              </div>
             )}
           </div>
         </div>

@@ -25,6 +25,7 @@ function OrderCard({
   const formattedDate = formatFullIndonesianDate(order?.date || order?.createdAt);
   const formattedStoreText = formatStoreCustomerHeader(order, stores);
   const orderItemsList = Array.isArray(order?.items) ? order.items : [];
+  const totalQty = orderItemsList.reduce((acc, it) => acc + (Number(it.qty) || 0), 0);
   const orderSummary = calculateOrderSummary(orderItemsList, catalogItems);
 
   const groupedItems = useMemo(() => {
@@ -132,11 +133,13 @@ function OrderCard({
               {order.storeName}
             </h3>
             
-            {/* Meta: Tanggal Lengkap & Jumlah Item (tanpa total pcs) */}
+            {/* Meta: Tanggal Lengkap & Jumlah Item & Total Pcs */}
             <div className="flex items-center gap-2 mt-1.5 text-[12px] text-zinc-400 font-medium flex-wrap">
               <span className="text-zinc-600">{formattedDate}</span>
               <span>·</span>
               <span className="font-semibold text-zinc-700">{orderItemsList.length} item</span>
+              <span>·</span>
+              <span className="font-semibold text-zinc-700">{totalQty} pcs</span>
               {isCompleted && (
                 <>
                   <span>·</span>
@@ -147,22 +150,6 @@ function OrderCard({
                     Sudah Selesai
                   </span>
                 </>
-              )}
-            </div>
-
-            {/* Brand Badges untuk Pembeda Daytona vs Osram */}
-            <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-              {groupedItems.hasDaytonaGroup && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-orange-50 text-[#EA580C] border border-orange-200/80">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#EA580C]"></span>
-                  <span>Daytona ({groupedItems.daytonaGroupItems.length} part · {groupedItems.totalDaytonaQty} pcs)</span>
-                </span>
-              )}
-              {groupedItems.hasOsram && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200/80">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
-                  <span>Osram ({groupedItems.osramItems.length} part · {groupedItems.totalOsramQty} pcs)</span>
-                </span>
               )}
             </div>
           </div>
