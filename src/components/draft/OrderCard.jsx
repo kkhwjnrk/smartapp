@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { formatFullIndonesianDate } from '../../utils/date';
-import { formatStoreCustomerHeader, calculateOrderSummary } from '../../utils/formatters';
+import { 
+  formatStoreCustomerHeader, 
+  calculateOrderSummary, 
+  groupOrderItemsByBrand 
+} from '../../utils/formatters';
 
 function OrderCard({ 
   order, 
@@ -21,6 +25,10 @@ function OrderCard({
   const formattedDate = formatFullIndonesianDate(order.date || order.createdAt);
   const formattedStoreText = formatStoreCustomerHeader(order, stores);
   const orderSummary = calculateOrderSummary(order.items, catalogItems);
+
+  const groupedItems = useMemo(() => {
+    return groupOrderItemsByBrand(order.items || [], catalogItems);
+  }, [order.items, catalogItems]);
 
   const handleCopySinglePn = (pn, e) => {
     e.stopPropagation();
@@ -140,6 +148,22 @@ function OrderCard({
                 </>
               )}
             </div>
+
+            {/* Brand Badges untuk Pembeda Daytona vs Osram */}
+            <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+              {groupedItems.hasDaytonaGroup && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-orange-50 text-[#EA580C] border border-orange-200/80">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#EA580C]"></span>
+                  <span>Daytona ({groupedItems.daytonaGroupItems.length} part · {groupedItems.totalDaytonaQty} pcs)</span>
+                </span>
+              )}
+              {groupedItems.hasOsram && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200/80">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                  <span>Osram ({groupedItems.osramItems.length} part · {groupedItems.totalOsramQty} pcs)</span>
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -193,81 +217,194 @@ function OrderCard({
         </div>
       </div>
 
-      {/* Body: Cuplikan Item Ringkas (Maksimal 2 item) */}
-      <div className="py-2.5 space-y-1">
-        {previewItems.map((item, idx) => (
-          <div 
-            key={idx}
-            className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
-          >
-            <div className="flex items-baseline gap-2 min-w-0 truncate">
-              <span className="text-zinc-400 text-[14px] select-none font-bold">-</span>
-              
-              {/* Part Number dengan warna brand */}
-              <span className={`font-mono font-bold text-[15px] tracking-tight shrink-0 ${
-                item.brand === 'osram'
-                  ? 'text-amber-800'
-                  : item.brand === 'dura'
-                  ? 'text-sky-700'
-                  : 'text-[#EA580C]'
-              }`}>
-                {item.pn}
-              </span>
-
-              {item.brand && item.brand !== 'daytona' && (
-                <span className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase shrink-0 ${
-                  item.brand === 'osram'
-                    ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                    : 'bg-sky-100 text-sky-700 border border-sky-200'
-                }`}>
-                  {item.brand}
+      {/* Body: Cuplikan Item Ringkas dengan Pembeda Daytona vs Osram */}
+      <div className="py-2.5 space-y-2">
+        {groupedItems.isMixed ? (
+          <>
+            {/* Bagian Daytona & Dura */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-[11px] font-bold text-orange-800 bg-orange-50/80 px-2 py-0.5 rounded-md border border-orange-200/70">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#EA580C]"></span>
+                  <span>DAYTONA & DURA</span>
                 </span>
-              )}
-              
-              <span className="text-zinc-400 text-[13px] font-semibold">:</span>
-              
-              {/* Qty */}
-              <span className="font-bold text-zinc-900 text-[14px] shrink-0">
-                {item.qty} <span className="text-[11px] font-medium text-zinc-500">PCS</span>
-              </span>
-
-              {/* Deskripsi Barang */}
-              {item.description && (
-                <span className="text-zinc-400 text-[12.5px] truncate font-normal ml-1">
-                  ({item.description})
+                <span className="text-[10.5px] font-semibold text-orange-700">
+                  {groupedItems.daytonaGroupItems.length} part · {groupedItems.totalDaytonaQty} pcs
                 </span>
+              </div>
+              {groupedItems.daytonaGroupItems.slice(0, 2).map((item, idx) => (
+                <div 
+                  key={`d-${idx}`}
+                  className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
+                >
+                  <div className="flex items-baseline gap-2 min-w-0 truncate">
+                    <span className="text-zinc-400 text-[13px] select-none font-bold">-</span>
+                    <span className="font-mono font-bold text-[#EA580C] text-[14px] tracking-tight shrink-0">
+                      {item.pn}
+                    </span>
+                    {item.brand === 'dura' && (
+                      <span className="text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase shrink-0 bg-sky-100 text-sky-700 border border-sky-200">
+                        Dura
+                      </span>
+                    )}
+                    <span className="text-zinc-400 text-[12.5px] font-semibold">:</span>
+                    <span className="font-bold text-zinc-900 text-[13.5px] shrink-0">
+                      {item.qty} <span className="text-[10.5px] font-medium text-zinc-500">PCS</span>
+                    </span>
+                    {item.description && (
+                      <span className="text-zinc-400 text-[12px] truncate font-normal ml-1">
+                        ({item.description})
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => handleCopySinglePn(item.pn, e)}
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${
+                      copiedPn === item.pn
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
+                    }`}
+                    title="Salin PN ke clipboard"
+                  >
+                    {copiedPn === item.pn ? 'Tersalin' : 'Salin PN'}
+                  </button>
+                </div>
+              ))}
+              {groupedItems.daytonaGroupItems.length > 2 && (
+                <div className="text-[11px] text-zinc-400 px-2 italic">
+                  +{groupedItems.daytonaGroupItems.length - 2} part Daytona lainnya...
+                </div>
               )}
             </div>
 
-            {/* Tombol 1-Tap Salin PN */}
-            <button
-              type="button"
-              onClick={(e) => handleCopySinglePn(item.pn, e)}
-              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${
-                copiedPn === item.pn
-                  ? 'bg-emerald-100 text-emerald-800'
-                  : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
-              }`}
-              title="Salin PN ke clipboard"
-            >
-              {copiedPn === item.pn ? (
-                <>
-                  <svg className="w-3 h-3 text-emerald-600 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Tersalin</span>
-                </>
-              ) : (
-                <>
-                  <svg className="w-3 h-3 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                  </svg>
-                  <span>Salin PN</span>
-                </>
+            {/* Bagian Osram */}
+            <div className="space-y-1 pt-1 border-t border-zinc-100">
+              <div className="flex items-center justify-between text-[11px] font-bold text-amber-900 bg-amber-50/80 px-2 py-0.5 rounded-md border border-amber-200/70">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                  <span>OSRAM</span>
+                </span>
+                <span className="text-[10.5px] font-semibold text-amber-800">
+                  {groupedItems.osramItems.length} part · {groupedItems.totalOsramQty} pcs
+                </span>
+              </div>
+              {groupedItems.osramItems.slice(0, 2).map((item, idx) => (
+                <div 
+                  key={`o-${idx}`}
+                  className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
+                >
+                  <div className="flex items-baseline gap-2 min-w-0 truncate">
+                    <span className="text-zinc-400 text-[13px] select-none font-bold">-</span>
+                    <span className="font-mono font-bold text-amber-800 text-[14px] tracking-tight shrink-0">
+                      {item.pn}
+                    </span>
+                    <span className="text-zinc-400 text-[12.5px] font-semibold">:</span>
+                    <span className="font-bold text-zinc-900 text-[13.5px] shrink-0">
+                      {item.qty} <span className="text-[10.5px] font-medium text-zinc-500">PCS</span>
+                    </span>
+                    {item.description && (
+                      <span className="text-zinc-400 text-[12px] truncate font-normal ml-1">
+                        ({item.description})
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => handleCopySinglePn(item.pn, e)}
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${
+                      copiedPn === item.pn
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
+                    }`}
+                    title="Salin PN ke clipboard"
+                  >
+                    {copiedPn === item.pn ? 'Tersalin' : 'Salin PN'}
+                  </button>
+                </div>
+              ))}
+              {groupedItems.osramItems.length > 2 && (
+                <div className="text-[11px] text-zinc-400 px-2 italic">
+                  +{groupedItems.osramItems.length - 2} part Osram lainnya...
+                </div>
               )}
-            </button>
-          </div>
-        ))}
+            </div>
+          </>
+        ) : (
+          previewItems.map((item, idx) => (
+            <div 
+              key={idx}
+              className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
+            >
+              <div className="flex items-baseline gap-2 min-w-0 truncate">
+                <span className="text-zinc-400 text-[14px] select-none font-bold">-</span>
+                
+                {/* Part Number dengan warna brand */}
+                <span className={`font-mono font-bold text-[15px] tracking-tight shrink-0 ${
+                  item.brand === 'osram'
+                    ? 'text-amber-800'
+                    : item.brand === 'dura'
+                    ? 'text-sky-700'
+                    : 'text-[#EA580C]'
+                }`}>
+                  {item.pn}
+                </span>
+
+                {item.brand && item.brand !== 'daytona' && (
+                  <span className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase shrink-0 ${
+                    item.brand === 'osram'
+                      ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                      : 'bg-sky-100 text-sky-700 border border-sky-200'
+                  }`}>
+                    {item.brand}
+                  </span>
+                )}
+                
+                <span className="text-zinc-400 text-[13px] font-semibold">:</span>
+                
+                {/* Qty */}
+                <span className="font-bold text-zinc-900 text-[14px] shrink-0">
+                  {item.qty} <span className="text-[11px] font-medium text-zinc-500">PCS</span>
+                </span>
+
+                {/* Deskripsi Barang */}
+                {item.description && (
+                  <span className="text-zinc-400 text-[12.5px] truncate font-normal ml-1">
+                    ({item.description})
+                  </span>
+                )}
+              </div>
+
+              {/* Tombol 1-Tap Salin PN */}
+              <button
+                type="button"
+                onClick={(e) => handleCopySinglePn(item.pn, e)}
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${
+                  copiedPn === item.pn
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
+                }`}
+                title="Salin PN ke clipboard"
+              >
+                {copiedPn === item.pn ? (
+                  <>
+                    <svg className="w-3 h-3 text-emerald-600 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Tersalin</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-3 h-3 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                    </svg>
+                    <span>Salin PN</span>
+                  </>
+                )}
+              </button>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Footer Kartu: Tombol Total Nominal dengan Diskon Pintar & Aksi Buka Rincian */}
@@ -281,10 +418,17 @@ function OrderCard({
           className="flex-1 py-2 px-3.5 text-left bg-zinc-50 hover:bg-zinc-100 rounded-xl border border-zinc-200/80 hover:border-zinc-300 transition-all flex items-center justify-between group active:scale-[0.99]"
           title={`Buka rincian pesanan (${order.items.length} item)`}
         >
-          <span className="font-bold text-zinc-900 text-[13.5px] tracking-tight">
-            {orderSummary.formattedText}
-          </span>
-          <svg className="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 group-hover:translate-x-0.5 transition-all shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="min-w-0 flex-1">
+            <span className="font-bold text-zinc-900 text-[13.5px] tracking-tight block">
+              {orderSummary.formattedText}
+            </span>
+            {orderSummary.isMixed && (
+              <span className="text-[11px] text-zinc-500 font-medium block truncate mt-0.5">
+                Daytona: {orderSummary.daytonaGroupFormatted} · Osram: {orderSummary.osramFormatted}
+              </span>
+            )}
+          </div>
+          <svg className="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 group-hover:translate-x-0.5 transition-all shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>

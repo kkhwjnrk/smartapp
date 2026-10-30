@@ -338,6 +338,9 @@ function HomeTab({
               const formattedStore = formatStoreCustomerHeader(order, stores);
               const isCopied = copiedStore === formattedStore;
 
+              const hasOsram = (order.items || []).some(i => (i.brand || '').toLowerCase() === 'osram');
+              const hasDaytonaGroup = (order.items || []).some(i => (i.brand || '').toLowerCase() !== 'osram');
+
               return (
                 <div 
                   key={order.id}
@@ -354,6 +357,17 @@ function HomeTab({
                       <h4 className="font-bold text-zinc-900 text-[12.5px] sm:text-[13px] truncate">
                         {order.storeName}
                       </h4>
+                      {/* Badge Brand Pembeda */}
+                      {hasDaytonaGroup && (
+                        <span className="px-1.5 py-0.2 bg-orange-100 text-orange-800 text-[9.5px] font-bold rounded">
+                          Daytona
+                        </span>
+                      )}
+                      {hasOsram && (
+                        <span className="px-1.5 py-0.2 bg-amber-100 text-amber-800 text-[9.5px] font-bold rounded">
+                          Osram
+                        </span>
+                      )}
                     </div>
                     <p className="text-[11px] sm:text-[11.5px] text-zinc-500 mt-0.5">
                       {orderItemsCount} Part · {orderQty} Pcs Barang

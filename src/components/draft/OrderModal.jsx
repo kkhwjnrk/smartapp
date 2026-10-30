@@ -268,11 +268,114 @@ function OrderModal({
 
   const totalQty = orderItems.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 0), 0);
   const orderSummary = useMemo(() => calculateOrderSummary(orderItems, catalogItems), [orderItems, catalogItems]);
+
+  const groupedOrderItems = useMemo(() => {
+    const daytonaGroup = [];
+    const osram = [];
+
+    orderItems.forEach((item, index) => {
+      const itemWithIndex = { ...item, originalIndex: index };
+      const b = (item.brand || '').toLowerCase();
+      if (b === 'osram') {
+        osram.push(itemWithIndex);
+      } else {
+        daytonaGroup.push(itemWithIndex);
+      }
+    });
+
+    return {
+      daytonaGroup,
+      osram,
+      hasDaytonaGroup: daytonaGroup.length > 0,
+      hasOsram: osram.length > 0,
+      isMixed: daytonaGroup.length > 0 && osram.length > 0,
+      totalDaytonaQty: daytonaGroup.reduce((s, i) => s + (Number(i.qty) || 0), 0),
+      totalOsramQty: osram.reduce((s, i) => s + (Number(i.qty) || 0), 0)
+    };
+  }, [orderItems]);
+
   const isStoreSelected = Boolean(storeName.trim());
   const hasPartSelected = Boolean(selectedCatalogItem || searchQuery.trim());
   const parsedItemQty = parseInt(itemQty, 10);
   const isQtyValid = Boolean(itemQty.trim() && !isNaN(parsedItemQty) && parsedItemQty > 0);
   const canAddItem = Boolean(isStoreSelected && hasPartSelected && isQtyValid);
+
+  // Helper render baris item
+  const renderItemRow = (item, displayIdx) => (
+    <div
+      key={`${item.pn}-${item.originalIndex ?? displayIdx}`}
+      className="p-3 bg-zinc-50/80 hover:bg-zinc-100/70 border border-zinc-200 rounded-2xl flex items-center justify-between gap-3 transition-colors"
+    >
+      {/* Info Part Lengkap */}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[12.5px] font-bold text-zinc-400 select-none">
+            {displayIdx}.
+          </span>
+          <span className={`font-mono font-bold text-[15px] ${
+            item.brand === 'osram'
+              ? 'text-amber-800'
+              : item.brand === 'dura'
+              ? 'text-sky-700'
+              : 'text-[#EA580C]'
+          }`}>
+            {item.pn}
+          </span>
+          {item.brand && (
+            <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${
+              item.brand === 'dura'
+                ? 'bg-sky-100 text-sky-700 border border-sky-200'
+                : item.brand === 'osram'
+                ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                : 'bg-orange-100 text-[#EA580C] border border-orange-200'
+            }`}>
+              {item.brand}
+            </span>
+          )}
+        </div>
+        {item.description && (
+          <p className="text-[12.5px] text-zinc-700 font-medium mt-0.5 leading-snug break-words whitespace-normal">
+            {item.description}
+          </p>
+        )}
+      </div>
+
+      {/* Input Qty Langsung (Numeric Keyboard Saja) & Tombol Hapus */}
+      <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center bg-white border border-zinc-300 rounded-xl px-2 py-1 shadow-2xs focus-within:border-zinc-500 focus-within:ring-1 focus-within:ring-zinc-500">
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={item.qty}
+            onKeyDown={handleNumericKeyDown}
+            onChange={(e) => handleDirectQtyChange(item.originalIndex ?? displayIdx - 1, e.target.value)}
+            onBlur={(e) => {
+              const val = parseInt(e.target.value, 10);
+              if (!val || val < 1) {
+                handleDirectQtyChange(item.originalIndex ?? displayIdx - 1, 1);
+              }
+            }}
+            className="w-14 text-center font-bold text-zinc-900 text-[14px] focus:outline-none"
+          />
+          <span className="text-[11px] font-bold text-zinc-400 select-none pr-1">
+            PCS
+          </span>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => handleRemoveItem(item.originalIndex ?? displayIdx - 1)}
+          className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors ml-0.5"
+          title="Hapus item dari daftar"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
 
   const {
     containerRef,
@@ -755,7 +858,7 @@ function OrderModal({
             </div>
           </div>
 
-          {/* SECTION DAFTAR ITEM PESANAN (Urut dari Pertama Diinput, Qty Numeric Langsung) */}
+          {/* SECTION DAFTAR ITEM PESANAN (Dikelompokkan Berdasarkan Brand Daytona & Dura vs Osram) */}
           <div className="bg-white p-4 rounded-3xl border border-zinc-200/90 shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[13px] font-bold text-zinc-900">
@@ -770,83 +873,66 @@ function OrderModal({
               <div className="p-8 text-center bg-zinc-50 rounded-2xl border border-dashed border-zinc-200 text-zinc-400 text-[13px]">
                 Belum ada item ditambahkan ke order ini.
               </div>
-            ) : (
-              <div className="space-y-2">
-                {orderItems.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3 bg-zinc-50/80 hover:bg-zinc-100/70 border border-zinc-200 rounded-2xl flex items-center justify-between gap-3 transition-colors"
-                  >
-                    {/* Info Part Lengkap */}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-[12.5px] font-bold text-zinc-400 select-none">
-                          {idx + 1}.
-                        </span>
-                        <span className={`font-mono font-bold text-[15px] ${
-                          item.brand === 'osram'
-                            ? 'text-amber-800'
-                            : item.brand === 'dura'
-                            ? 'text-sky-700'
-                            : 'text-[#EA580C]'
-                        }`}>
-                          {item.pn}
-                        </span>
-                        {item.brand && (
-                          <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${
-                            item.brand === 'dura'
-                              ? 'bg-sky-100 text-sky-700 border border-sky-200'
-                              : item.brand === 'osram'
-                              ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                              : 'bg-orange-100 text-[#EA580C] border border-orange-200'
-                          }`}>
-                            {item.brand}
-                          </span>
-                        )}
-                      </div>
-                      {item.description && (
-                        <p className="text-[12.5px] text-zinc-700 font-medium mt-0.5 leading-snug break-words whitespace-normal">
-                          {item.description}
-                        </p>
-                      )}
+            ) : groupedOrderItems.isMixed ? (
+              /* PESANAN CAMPURAN (DAYTONA & DURA + OSRAM) */
+              <div className="space-y-4">
+                {/* SUB-SECTION DAYTONA & DURA */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between px-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
+                      <span className="text-[13px] font-bold text-zinc-900">
+                        Daytona & Dura ({groupedOrderItems.daytonaGroup.length} item · {groupedOrderItems.totalDaytonaQty} pcs)
+                      </span>
                     </div>
-
-                    {/* Input Qty Langsung (Numeric Keyboard Saja, Tanpa tombol - dan +) & Tombol Hapus */}
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <div className="flex items-center bg-white border border-zinc-300 rounded-xl px-2 py-1 shadow-2xs focus-within:border-zinc-500 focus-within:ring-1 focus-within:ring-zinc-500">
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          pattern="[0-9]*"
-                          value={item.qty}
-                          onKeyDown={handleNumericKeyDown}
-                          onChange={(e) => handleDirectQtyChange(idx, e.target.value)}
-                          onBlur={(e) => {
-                            const val = parseInt(e.target.value, 10);
-                            if (!val || val < 1) {
-                              handleDirectQtyChange(idx, 1);
-                            }
-                          }}
-                          className="w-14 text-center font-bold text-zinc-900 text-[14px] focus:outline-none"
-                        />
-                        <span className="text-[11px] font-bold text-zinc-400 select-none pr-1">
-                          PCS
-                        </span>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveItem(idx)}
-                        className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors ml-0.5"
-                        title="Hapus item dari daftar"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                    </div>
+                    <span className="text-[11.5px] font-bold text-orange-950 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-lg">
+                      {orderSummary.daytonaGroupFormatted}
+                    </span>
                   </div>
-                ))}
+                  <div className="space-y-2">
+                    {groupedOrderItems.daytonaGroup.map((item, idx) => renderItemRow(item, idx + 1))}
+                  </div>
+                </div>
+
+                {/* SUB-SECTION OSRAM */}
+                <div className="space-y-2 pt-2 border-t border-zinc-100">
+                  <div className="flex items-center justify-between px-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                      <span className="text-[13px] font-bold text-zinc-900">
+                        Osram ({groupedOrderItems.osram.length} item · {groupedOrderItems.totalOsramQty} pcs)
+                      </span>
+                    </div>
+                    <span className="text-[11.5px] font-bold text-amber-950 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg">
+                      {orderSummary.osramFormatted}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {groupedOrderItems.osram.map((item, idx) => renderItemRow(item, idx + 1))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* PESANAN SATU BRAND SAJA */
+              <div className="space-y-2">
+                <div className="flex items-center justify-between px-1 py-0.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className={`w-2.5 h-2.5 rounded-full ${groupedOrderItems.hasOsram ? 'bg-amber-500' : 'bg-[#EA580C]'}`}></span>
+                    <span className="text-[12.5px] font-bold text-zinc-800">
+                      {groupedOrderItems.hasOsram ? 'Pesanan Osram' : 'Pesanan Daytona & Dura'}
+                    </span>
+                  </div>
+                  <span className={`text-[11.5px] font-bold px-2 py-0.5 rounded-lg border ${
+                    groupedOrderItems.hasOsram 
+                      ? 'text-amber-950 bg-amber-50 border-amber-200' 
+                      : 'text-orange-950 bg-orange-50 border-orange-200'
+                  }`}>
+                    {orderSummary.formattedText}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {orderItems.map((item, idx) => renderItemRow({ ...item, originalIndex: idx }, idx + 1))}
+                </div>
               </div>
             )}
           </div>
@@ -858,9 +944,16 @@ function OrderModal({
       <div className="bg-white border-t border-zinc-200 px-4 py-3 shrink-0 shadow-lg pb-safe">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
           <div className="min-w-0 pr-2">
-            <span className="font-bold text-zinc-900 text-[15px] tracking-tight block">
+            <span className="font-bold text-zinc-900 text-[14.5px] tracking-tight block truncate">
               {orderSummary.formattedText}
             </span>
+            {groupedOrderItems.isMixed && (
+              <div className="flex items-center gap-1.5 text-[11px] text-zinc-500 font-medium mt-0.5 flex-wrap">
+                <span className="text-orange-700 font-semibold">{orderSummary.daytonaGroupFormatted}</span>
+                <span>·</span>
+                <span className="text-amber-800 font-semibold">{orderSummary.osramFormatted}</span>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <button

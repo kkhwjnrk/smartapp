@@ -231,8 +231,22 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
   }
 
   const totalNet = daytonaGroupNet + osramNet;
-  const hasDaytonaGroup = resolvedItems.some(i => i.isDaytonaGroup);
+  const daytonaGroupItemList = resolvedItems.filter(i => i.isDaytonaGroup);
+  const hasDaytonaGroup = daytonaGroupItemList.length > 0;
   const hasOsram = osramItemList.length > 0;
+  const isMixed = hasDaytonaGroup && hasOsram;
+
+  const daytonaQty = daytonaGroupItemList.reduce((sum, i) => sum + i.qty, 0);
+  const osramQty = osramItemList.reduce((sum, i) => sum + i.qty, 0);
+  const daytonaItemCount = daytonaGroupItemList.length;
+  const osramItemCount = osramItemList.length;
+
+  const daytonaGroupFormatted = hasDaytonaGroup
+    ? `Rp ${Math.round(daytonaGroupNet).toLocaleString('id-ID')} (${discountPercentage}%)`
+    : 'Rp 0';
+  const osramFormatted = hasOsram
+    ? `Rp ${Math.round(osramNet).toLocaleString('id-ID')} (${osramDiscountPercentage}%)`
+    : 'Rp 0';
 
   let formattedText = `Rp ${Math.round(totalNet).toLocaleString('id-ID')}`;
   if (hasDaytonaGroup && !hasOsram) {
@@ -251,8 +265,146 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
     daytonaGroupNet,
     osramNet,
     osramDiscountPercentage,
+    daytonaQty,
+    osramQty,
+    daytonaItemCount,
+    osramItemCount,
+    daytonaGroupFormatted,
+    osramFormatted,
+    hasDaytonaGroup,
+    hasOsram,
+    isMixed,
     formattedText
   };
+};
+
+/**
+ * Deteksi brand suatu part (daytona, dura, atau osram).
+ */
+export const getItemBrand = (item, catalogMap = null) => {
+  if (!item) return 'daytona';
+  const rawBrand = item.brand ? String(item.brand).toLowerCase().trim() : '';
+  if (rawBrand === 'osram' || rawBrand === 'dura' || rawBrand === 'daytona') {
+    return rawBrand;
+  }
+
+  if (catalogMap) {
+    const pnKey = String(item.pn || '').trim().toLowerCase();
+    const catItem = catalogMap.get ? catalogMap.get(pnKey) : catalogMap[pnKey];
+    if (catItem && catItem.brand) {
+      return String(catItem.brand).toLowerCase().trim();
+    }
+  }
+
+  return 'daytona';
+};
+
+/**
+ * Kelompokkan item pesanan berdasarkan Brand (Daytona, Dura, Osram).
+ * Dura tetap satu skema diskon dengan Daytona, namun dapat diidentifikasi tersendiri.
+ */
+export const groupOrderItemsByBrand = (items = [], catalogItems = []) => {
+  const catalogMap = new Map();
+  if (Array.isArray(catalogItems) && catalogItems.length > 0) {
+    catalogItems.forEach(c => {
+      if (c && c.pn) catalogMap.set(String(c.pn).trim().toLowerCase(), c);
+    });
+  }
+
+  const daytonaItems = [];
+  const duraItems = [];
+  const osramItems = [];
+
+  (items || []).forEach(item => {
+    const brand = getItemBrand(item, catalogMap);
+    if (brand === 'osram') {
+      osramItems.push({ ...item, brand: 'osram' });
+    } else if (brand === 'dura') {
+      duraItems.push({ ...item, brand: 'dura' });
+    } else {
+      daytonaItems.push({ ...item, brand: 'daytona' });
+    }
+  });
+
+  const daytonaGroupItems = [...daytonaItems, ...duraItems];
+
+  return {
+    daytonaItems,
+    duraItems,
+    daytonaGroupItems,
+    osramItems,
+    hasDaytona: daytonaItems.length > 0,
+    hasDura: duraItems.length > 0,
+    hasDaytonaGroup: daytonaGroupItems.length > 0,
+    hasOsram: osramItems.length > 0,
+    isMixed: daytonaGroupItems.length > 0 && osramItems.length > 0,
+    totalDaytonaQty: daytonaGroupItems.reduce((acc, i) => acc + (Number(i.qty) || 0), 0),
+    totalOsramQty: osramItems.reduce((acc, i) => acc + (Number(i.qty) || 0), 0)
+  };
+};
+
+/**
+ * Format teks catatan order siap kirim ke WhatsApp / admin, dipisahkan per Brand secara rapi.
+ * @param {Object} order - Objek order
+ * @param {Array} stores - Daftar toko untuk header customer
+ * @param {string} brandFilter - 'all' | 'daytona' | 'osram'
+ * @param {Array} catalogItems - Daftar item katalog
+ */
+export const formatOrderNotesText = (order, stores = [], brandFilter = 'all', catalogItems = []) => {
+  if (!order) return '';
+  const header = formatStoreCustomerHeader(order, stores);
+  const grouped = groupOrderItemsByBrand(order.items || [], catalogItems);
+
+  // Jika minta hanya Daytona
+  if (brandFilter === 'daytona') {
+    if (grouped.daytonaGroupItems.length === 0) return '';
+    return [
+      `${header} (DAYTONA)`,
+      ...grouped.daytonaGroupItems.map(i => `- ${i.pn}: ${i.qty}`)
+    ].join('\n');
+  }
+
+  // Jika minta hanya Osram
+  if (brandFilter === 'osram') {
+    if (grouped.osramItems.length === 0) return '';
+    return [
+      `${header} (OSRAM)`,
+      ...grouped.osramItems.map(i => `- ${i.pn}: ${i.qty}`)
+    ].join('\n');
+  }
+
+  // Jika pesanan memuat Daytona DAN Osram (Campuran) -> Pisahkan dengan subheader jelas
+  if (grouped.hasDaytonaGroup && grouped.hasOsram) {
+    const blocks = [header];
+
+    // Blok Daytona & Dura
+    blocks.push('\n*DAYTONA:*');
+    grouped.daytonaGroupItems.forEach(i => {
+      blocks.push(`- ${i.pn}: ${i.qty}`);
+    });
+
+    // Blok Osram
+    blocks.push('\n*OSRAM:*');
+    grouped.osramItems.forEach(i => {
+      blocks.push(`- ${i.pn}: ${i.qty}`);
+    });
+
+    return blocks.join('\n');
+  }
+
+  // Jika hanya Osram
+  if (!grouped.hasDaytonaGroup && grouped.hasOsram) {
+    return [
+      `${header} (OSRAM)`,
+      ...(order.items || []).map(i => `- ${i.pn}: ${i.qty}`)
+    ].join('\n');
+  }
+
+  // Default: Hanya Daytona & Dura
+  return [
+    header,
+    ...(order.items || []).map(i => `- ${i.pn}: ${i.qty}`)
+  ].join('\n');
 };
 
 /**
