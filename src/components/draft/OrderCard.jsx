@@ -1,19 +1,19 @@
 import React, { useState, useMemo } from 'react';
 import { formatFullIndonesianDate } from '../../utils/date';
-import { 
-  formatStoreCustomerHeader, 
-  calculateOrderSummary, 
-  groupOrderItemsByBrand 
+import {
+  formatStoreCustomerHeader,
+  calculateOrderSummary,
+  groupOrderItemsByBrand
 } from '../../utils/formatters';
 
-function OrderCard({ 
-  order, 
+function OrderCard({
+  order,
   stores = [],
   catalogItems = [],
-  onRequestToggleStatus, 
+  onRequestToggleStatus,
   onOpenDetail,
-  onEditOrder, 
-  onDeleteOrder, 
+  onEditOrder,
+  onDeleteOrder,
   onCopyPN,
   onCopyFormatText,
   onCopyStoreHeader,
@@ -44,114 +44,87 @@ function OrderCard({
   const previewItems = orderItemsList.slice(0, 2);
 
   return (
-    <div 
+    <div
       onClick={() => onOpenDetail(order)}
-      className={`bg-white rounded-3xl p-5 border transition-all duration-200 shadow-xs cursor-pointer ${
-        isCompleted 
-          ? 'border-zinc-200/60 bg-zinc-50/50' 
-          : 'border-zinc-200 hover:border-zinc-300 hover:shadow-md'
-      }`}
+      className={`bg-white rounded-3xl p-5 border transition-all duration-200 shadow-xs cursor-pointer ${isCompleted
+        ? 'border-zinc-200/60 bg-zinc-50/50'
+        : 'border-zinc-200 hover:border-zinc-300 hover:shadow-md'
+        }`}
     >
-      
-      {/* Header Baris: Checkbox Lingkaran & Info Toko */}
+
+      {/* Header Baris: Info Toko & Aksi Cepat */}
       <div className="flex items-start justify-between gap-3 pb-3 border-b border-zinc-100">
-        <div className="flex items-start gap-3 flex-1 min-w-0">
-          
-          {/* Checkbox Lingkaran Khas Apple Notes (dengan konfirmasi) */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onRequestToggleStatus(order);
-            }}
-            className={`w-6 h-6 rounded-full flex items-center justify-center transition-all mt-0.5 shrink-0 select-none ${
-              isCompleted
-                ? 'bg-amber-500 text-white shadow-xs hover:bg-amber-600'
-                : 'border-2 border-zinc-400/80 hover:border-amber-500 hover:bg-amber-50/50 active:scale-95'
-            }`}
-            title={isCompleted ? "Klik untuk mengembalikan ke Aktif" : "Klik untuk menandai Selesai"}
-          >
-            {isCompleted && (
-              <svg className="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
+        {/* Info Toko */}
+        <div className="flex-1 min-w-0">
+          {/* Baris Badge: Rute, Tombol Salin [ID Customer] [Nama Toko], & Lanjutan Bulan Lalu */}
+          <div className="flex items-center gap-1.5 flex-wrap mb-1">
+            {order.routeCode && (
+              <span className="inline-flex items-center px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-md text-[10.5px] font-bold tracking-wider">
+                {order.routeCode}
+              </span>
             )}
-          </button>
 
-          {/* Info Toko */}
-          <div className="flex-1 min-w-0">
-            {/* Baris Badge: Rute, Tombol Salin [ID Customer] [Nama Toko], & Lanjutan Bulan Lalu */}
-            <div className="flex items-center gap-1.5 flex-wrap mb-1">
-              {order.routeCode && (
-                <span className="inline-flex items-center px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-md text-[10.5px] font-bold tracking-wider">
-                  {order.routeCode}
-                </span>
-              )}
-
-              {/* Tombol Ikon Copy Rapi di sebelah badge rute */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (onCopyStoreHeader) {
-                    onCopyStoreHeader(formattedStoreText);
-                  } else {
-                    navigator.clipboard.writeText(formattedStoreText);
-                  }
-                  setCopiedStoreHeader(true);
-                  setTimeout(() => setCopiedStoreHeader(false), 1500);
-                }}
-                className={`p-1 rounded-md transition-all active:scale-90 shrink-0 ${
-                  copiedStoreHeader
-                    ? 'text-emerald-600 bg-emerald-50'
-                    : 'text-zinc-400 hover:text-orange-600 hover:bg-orange-50'
+            {/* Tombol Ikon Copy Rapi di sebelah badge rute */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onCopyStoreHeader) {
+                  onCopyStoreHeader(formattedStoreText);
+                } else {
+                  navigator.clipboard.writeText(formattedStoreText);
+                }
+                setCopiedStoreHeader(true);
+                setTimeout(() => setCopiedStoreHeader(false), 1500);
+              }}
+              className={`p-1 rounded-md transition-all active:scale-90 shrink-0 ${copiedStoreHeader
+                ? 'text-emerald-600 bg-emerald-50'
+                : 'text-zinc-400 hover:text-orange-600 hover:bg-orange-50'
                 }`}
-                title={`Salin ID & Nama Toko: "${formattedStoreText}"`}
-              >
-                {copiedStoreHeader ? (
-                  <svg className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              title={`Salin ID & Nama Toko: "${formattedStoreText}"`}
+            >
+              {copiedStoreHeader ? (
+                <svg className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                </svg>
+              )}
+            </button>
+
+            {carryOverMonthText && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/80 rounded-md text-[10.5px] font-semibold">
+                <span>↳ Lanjutan {carryOverMonthText}</span>
+              </span>
+            )}
+          </div>
+
+          {/* Nama Toko */}
+          <h3 className={`text-[17px] font-bold tracking-tight leading-snug break-words ${isCompleted ? 'text-zinc-500 line-through decoration-zinc-300' : 'text-zinc-900'
+            }`}>
+            {order.storeName}
+          </h3>
+
+          {/* Meta: Tanggal Lengkap & Jumlah Item & Total Pcs */}
+          <div className="flex items-center gap-2 mt-1.5 text-[12px] text-zinc-400 font-medium flex-wrap">
+            <span className="text-zinc-600">{formattedDate}</span>
+            <span>·</span>
+            <span className="font-semibold text-zinc-700">{orderItemsList.length} item</span>
+            <span>·</span>
+            <span className="font-semibold text-zinc-700">{totalQty} pcs</span>
+            {isCompleted && (
+              <>
+                <span>·</span>
+                <span className="text-emerald-600 font-semibold flex items-center gap-1">
+                  <svg className="w-3 h-3 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                ) : (
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                  </svg>
-                )}
-              </button>
-
-              {carryOverMonthText && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/80 rounded-md text-[10.5px] font-semibold">
-                  <span>↳ Lanjutan {carryOverMonthText}</span>
+                  Sudah Selesai
                 </span>
-              )}
-            </div>
-
-            {/* Nama Toko */}
-            <h3 className={`text-[17px] font-bold tracking-tight leading-snug break-words ${
-              isCompleted ? 'text-zinc-500 line-through decoration-zinc-300' : 'text-zinc-900'
-            }`}>
-              {order.storeName}
-            </h3>
-            
-            {/* Meta: Tanggal Lengkap & Jumlah Item & Total Pcs */}
-            <div className="flex items-center gap-2 mt-1.5 text-[12px] text-zinc-400 font-medium flex-wrap">
-              <span className="text-zinc-600">{formattedDate}</span>
-              <span>·</span>
-              <span className="font-semibold text-zinc-700">{orderItemsList.length} item</span>
-              <span>·</span>
-              <span className="font-semibold text-zinc-700">{totalQty} pcs</span>
-              {isCompleted && (
-                <>
-                  <span>·</span>
-                  <span className="text-emerald-600 font-semibold flex items-center gap-1">
-                    <svg className="w-3 h-3 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Sudah Selesai
-                  </span>
-                </>
-              )}
-            </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -221,7 +194,7 @@ function OrderCard({
                 </span>
               </div>
               {groupedItems.daytonaGroupItems.slice(0, 2).map((item, idx) => (
-                <div 
+                <div
                   key={`d-${idx}`}
                   className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
                 >
@@ -248,11 +221,10 @@ function OrderCard({
                   <button
                     type="button"
                     onClick={(e) => handleCopySinglePn(item.pn, e)}
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${
-                      copiedPn === item.pn
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
-                    }`}
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${copiedPn === item.pn
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
+                      }`}
                     title="Salin PN ke clipboard"
                   >
                     {copiedPn === item.pn ? 'Tersalin' : 'Salin PN'}
@@ -278,7 +250,7 @@ function OrderCard({
                 </span>
               </div>
               {groupedItems.osramItems.slice(0, 2).map((item, idx) => (
-                <div 
+                <div
                   key={`o-${idx}`}
                   className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
                 >
@@ -300,11 +272,10 @@ function OrderCard({
                   <button
                     type="button"
                     onClick={(e) => handleCopySinglePn(item.pn, e)}
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${
-                      copiedPn === item.pn
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
-                    }`}
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${copiedPn === item.pn
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
+                      }`}
                     title="Salin PN ke clipboard"
                   >
                     {copiedPn === item.pn ? 'Tersalin' : 'Salin PN'}
@@ -320,36 +291,34 @@ function OrderCard({
           </>
         ) : (
           previewItems.map((item, idx) => (
-            <div 
+            <div
               key={idx}
               className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
             >
               <div className="flex items-baseline gap-2 min-w-0 truncate">
                 <span className="text-zinc-400 text-[14px] select-none font-bold">-</span>
-                
+
                 {/* Part Number dengan warna brand */}
-                <span className={`font-mono font-bold text-[15px] tracking-tight shrink-0 ${
-                  item.brand === 'osram'
-                    ? 'text-amber-800'
-                    : item.brand === 'dura'
+                <span className={`font-mono font-bold text-[15px] tracking-tight shrink-0 ${item.brand === 'osram'
+                  ? 'text-amber-800'
+                  : item.brand === 'dura'
                     ? 'text-sky-700'
                     : 'text-[#EA580C]'
-                }`}>
+                  }`}>
                   {item.pn}
                 </span>
 
                 {item.brand && item.brand !== 'daytona' && (
-                  <span className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase shrink-0 ${
-                    item.brand === 'osram'
-                      ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                      : 'bg-sky-100 text-sky-700 border border-sky-200'
-                  }`}>
+                  <span className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase shrink-0 ${item.brand === 'osram'
+                    ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                    : 'bg-sky-100 text-sky-700 border border-sky-200'
+                    }`}>
                     {item.brand}
                   </span>
                 )}
-                
+
                 <span className="text-zinc-400 text-[13px] font-semibold">:</span>
-                
+
                 {/* Qty */}
                 <span className="font-bold text-zinc-900 text-[14px] shrink-0">
                   {item.qty} <span className="text-[11px] font-medium text-zinc-500">PCS</span>
@@ -367,11 +336,10 @@ function OrderCard({
               <button
                 type="button"
                 onClick={(e) => handleCopySinglePn(item.pn, e)}
-                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${
-                  copiedPn === item.pn
-                    ? 'bg-emerald-100 text-emerald-800'
-                    : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
-                }`}
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${copiedPn === item.pn
+                  ? 'bg-emerald-100 text-emerald-800'
+                  : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
+                  }`}
                 title="Salin PN ke clipboard"
               >
                 {copiedPn === item.pn ? (
@@ -428,11 +396,10 @@ function OrderCard({
             e.stopPropagation();
             onRequestToggleStatus(order);
           }}
-          className={`px-3 py-2 rounded-xl text-[12px] font-semibold transition-all shrink-0 active:scale-95 ${
-            isCompleted
-              ? 'text-zinc-600 bg-zinc-100 hover:bg-zinc-200'
-              : 'text-amber-700 bg-amber-50 hover:bg-amber-100'
-          }`}
+          className={`px-3 py-2 rounded-xl text-[12px] font-semibold transition-all shrink-0 active:scale-95 ${isCompleted
+            ? 'text-zinc-600 bg-zinc-100 hover:bg-zinc-200'
+            : 'text-amber-700 bg-amber-50 hover:bg-amber-100'
+            }`}
         >
           {isCompleted ? 'Kembalikan' : 'Selesaikan'}
         </button>
