@@ -1,4 +1,4 @@
-// Daftar 29 Kategori Utama + Lainnya
+// Daftar Kategori Produk Daytona, Dura & Osram
 export const CATEGORIES = [
   'Semua',
   'Busi',
@@ -30,12 +30,29 @@ export const CATEGORIES = [
   'Injector',
   'Klep',
   'Mesin',
+  // Kategori Pencahayaan Osram
+  'Halogen Standard',
+  'Genuine',
+  'LED',
+  'HS1 Series',
+  'All Season Super',
+  'Auxiliary',
+  'Cool Blue',
   'Lainnya'
 ];
 
 // Helper otomatisasi kategorisasi jika ada data lama/baru tanpa kategori
 export const categorizeItem = (item) => {
   const d = ((item.description || '') + ' ' + (item.pn || '')).toLowerCase();
+
+  // Kategori Osram Lighting
+  if (d.includes('all season') || d.includes('als')) return 'All Season Super';
+  if (d.includes('cool blue') || (d.includes('cb') && (d.includes('m5') || d.includes('hs1')))) return 'Cool Blue';
+  if (d.includes('led') || d.includes('cbi racer')) return 'LED';
+  if (d.includes('genuine') || d.includes('7335') || d.includes('7337')) return 'Genuine';
+  if (d.includes('auxiliary') || d.includes('w10w') || d.includes('wy10w') || d.includes('92910')) return 'Auxiliary';
+  if (d.includes('hs1') || d.includes('64185')) return 'HS1 Series';
+  if (d.includes('halogen') || d.includes('ba20d') || d.includes('p15d')) return 'Halogen Standard';
 
   // 1. Busi
   if (d.includes('spark plug') || d.includes('splug') || d.includes('busi')) {

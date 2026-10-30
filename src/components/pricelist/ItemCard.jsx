@@ -14,6 +14,7 @@ function ItemCard({
 
     const hetFormatted = item.het ? `Rp ${item.het.toLocaleString('id-ID')}` : `Rp ${item.price}`;
 
+    // Diskon Daytona / Dura
     if (selectedDiscountTier === '24') {
       const net = item.d24 ? `Rp ${item.d24.toLocaleString('id-ID')}` : `Rp ${calculateDiscount(item.price, 24)}`;
       return { main: net, het: hetFormatted, discBadge: '24%' };
@@ -27,11 +28,31 @@ function ItemCard({
       return { main: net, het: hetFormatted, discBadge: '29%' };
     }
 
+    // Diskon Osram
+    if (selectedDiscountTier === '35') {
+      const net = item.d35 ? `Rp ${item.d35.toLocaleString('id-ID')}` : `Rp ${calculateDiscount(item.price, 35)}`;
+      return { main: net, het: hetFormatted, discBadge: '35%' };
+    }
+    if (selectedDiscountTier === '37') {
+      const net = item.d37 ? `Rp ${item.d37.toLocaleString('id-ID')}` : `Rp ${calculateDiscount(item.price, 37)}`;
+      return { main: net, het: hetFormatted, discBadge: '37%' };
+    }
+    if (selectedDiscountTier === '40') {
+      const net = item.d40 ? `Rp ${item.d40.toLocaleString('id-ID')}` : `Rp ${calculateDiscount(item.price, 40)}`;
+      return { main: net, het: hetFormatted, discBadge: '40%' };
+    }
+    if (selectedDiscountTier === '41.5') {
+      const net = item.d41_5 ? `Rp ${item.d41_5.toLocaleString('id-ID')}` : `Rp ${calculateDiscount(item.price, 41.5)}`;
+      return { main: net, het: hetFormatted, discBadge: '41.5%' };
+    }
+
     // Default: HET
     return { main: hetFormatted, het: null, discBadge: null };
   };
 
   const priceInfo = getDisplayPrice();
+  const isOsram = item.brand === 'osram';
+  const isDura = item.brand === 'dura';
 
   return (
     <div
@@ -44,11 +65,27 @@ function ItemCard({
       <div className="flex justify-between items-start gap-3">
         <div className="flex-1 min-w-0">
 
-          {/* PN Berwarna Oranye Daytona khas racing, tegas & jelas */}
-          <div className="mb-1.5">
-            <span className="inline-block text-[14px] font-bold text-[#EA580C] font-mono tracking-tight bg-orange-50/90 px-2.5 py-0.5 rounded-lg border border-orange-200/70 shadow-[0_1px_2px_rgba(234,88,12,0.06)]">
+          {/* Badge Part Number dengan warna sesuai brand */}
+          <div className="mb-1.5 flex items-center gap-1.5 flex-wrap">
+            <span className={`inline-block text-[14px] font-bold font-mono tracking-tight px-2.5 py-0.5 rounded-lg border ${
+              isOsram
+                ? 'text-amber-800 bg-amber-50 border-amber-200/80 shadow-[0_1px_2px_rgba(217,119,6,0.06)]'
+                : isDura
+                ? 'text-sky-700 bg-sky-50 border-sky-200/80 shadow-[0_1px_2px_rgba(2,132,199,0.06)]'
+                : 'text-[#EA580C] bg-orange-50/90 border-orange-200/70 shadow-[0_1px_2px_rgba(234,88,12,0.06)]'
+            }`}>
               PN: {item.pn}
             </span>
+            {item.volt && (
+              <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-600 border border-zinc-200">
+                {item.volt}
+              </span>
+            )}
+            {item.type && (
+              <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-600 border border-zinc-200">
+                {item.type}
+              </span>
+            )}
           </div>
 
           {/* Nama / Deskripsi Barang */}
@@ -82,7 +119,7 @@ function ItemCard({
       {/* Bagian Bawah Card: Isi per Dus/Karton & Harga */}
       <div className="pt-2.5 border-t border-zinc-100 flex justify-between items-center">
         <div className="text-[13px] text-zinc-500 font-medium flex items-center gap-1.5">
-          <span className="text-zinc-400">Isi/Dus:</span>
+          <span className="text-zinc-400">Kemasan:</span>
           <span className="font-semibold text-zinc-700">{item.qty || 1} PCS</span>
         </div>
 
@@ -91,10 +128,22 @@ function ItemCard({
           {priceInfo.discBadge ? (
             <div className="flex flex-col items-end">
               <div className="flex items-center gap-1.5">
-                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-orange-100 text-[#EA580C] border border-orange-200/50">
+                <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded border ${
+                  isOsram
+                    ? 'bg-amber-100 text-amber-800 border-amber-200/60'
+                    : isDura
+                    ? 'bg-sky-100 text-sky-800 border-sky-200/60'
+                    : 'bg-orange-100 text-[#EA580C] border-orange-200/50'
+                }`}>
                   {priceInfo.discBadge}
                 </span>
-                <span className="text-[15.5px] font-bold text-[#EA580C]">
+                <span className={`text-[15.5px] font-bold ${
+                  isOsram
+                    ? 'text-amber-700'
+                    : isDura
+                    ? 'text-sky-700'
+                    : 'text-[#EA580C]'
+                }`}>
                   {priceInfo.main}
                 </span>
               </div>

@@ -203,10 +203,26 @@ function OrderCard({
             <div className="flex items-baseline gap-2 min-w-0 truncate">
               <span className="text-zinc-400 text-[14px] select-none font-bold">-</span>
               
-              {/* Part Number Oranye Daytona */}
-              <span className="font-mono font-bold text-[#EA580C] text-[15px] tracking-tight shrink-0">
+              {/* Part Number dengan warna brand */}
+              <span className={`font-mono font-bold text-[15px] tracking-tight shrink-0 ${
+                item.brand === 'osram'
+                  ? 'text-amber-800'
+                  : item.brand === 'dura'
+                  ? 'text-sky-700'
+                  : 'text-[#EA580C]'
+              }`}>
                 {item.pn}
               </span>
+
+              {item.brand && item.brand !== 'daytona' && (
+                <span className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase shrink-0 ${
+                  item.brand === 'osram'
+                    ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                    : 'bg-sky-100 text-sky-700 border border-sky-200'
+                }`}>
+                  {item.brand}
+                </span>
+              )}
               
               <span className="text-zinc-400 text-[13px] font-semibold">:</span>
               

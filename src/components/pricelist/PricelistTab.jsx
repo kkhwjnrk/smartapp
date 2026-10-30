@@ -166,53 +166,29 @@ function PricelistTab({
           )}
         </div>
 
-        {/* Row 3: Quick Discount Tier Toggle Buttons (Jika brand mendukung tier diskon grosir) */}
+        {/* Row 3: Quick Discount Tier Toggle Buttons (Dinamis sesuai skema diskon brand aktif) */}
         {showDiscountTiers && (
-          <div className="bg-zinc-100 p-1 rounded-2xl flex items-center gap-1 border border-zinc-200/70 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]">
-            <button
-              type="button"
-              onClick={() => setSelectedDiscountTier('het')}
-              className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
-                selectedDiscountTier === 'het'
-                  ? 'bg-white text-zinc-900 shadow-sm'
-                  : 'text-zinc-500 hover:text-zinc-800'
-              }`}
-            >
-              HET
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedDiscountTier('24')}
-              className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
-                selectedDiscountTier === '24'
-                  ? 'bg-[#EA580C] text-white shadow-sm'
-                  : 'text-zinc-500 hover:text-zinc-800'
-              }`}
-            >
-              Disc 24%
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedDiscountTier('27')}
-              className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
-                selectedDiscountTier === '27'
-                  ? 'bg-[#EA580C] text-white shadow-sm'
-                  : 'text-zinc-500 hover:text-zinc-800'
-              }`}
-            >
-              Disc 27%
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedDiscountTier('29')}
-              className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 ${
-                selectedDiscountTier === '29'
-                  ? 'bg-[#EA580C] text-white shadow-sm'
-                  : 'text-zinc-500 hover:text-zinc-800'
-              }`}
-            >
-              Disc 29%
-            </button>
+          <div className="bg-zinc-100 p-1 rounded-2xl flex items-center gap-1 border border-zinc-200/70 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] overflow-x-auto">
+            {activeBrand.discountTiers.map(tier => {
+              const isSelected = selectedDiscountTier === tier;
+              const label = tier === 'het' ? 'HET' : `Disc ${tier}%`;
+              return (
+                <button
+                  key={tier}
+                  type="button"
+                  onClick={() => setSelectedDiscountTier(tier)}
+                  className={`flex-1 py-1.5 px-2 rounded-xl text-[12px] font-bold transition-all active:scale-95 whitespace-nowrap ${
+                    isSelected
+                      ? tier === 'het'
+                        ? 'bg-white text-zinc-900 shadow-sm'
+                        : activeBrand.theme.activeTab
+                      : 'text-zinc-500 hover:text-zinc-800'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
           </div>
         )}
 

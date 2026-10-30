@@ -177,27 +177,70 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
     });
   }
 
-  // 4. Hitung Total Net Osram (dihitung mandiri / belum bergabung diskon Daytona)
-  let osramNet = 0;
-  resolvedItems.filter(i => !i.isDaytonaGroup).forEach(({ catalogItem, qty, het }) => {
-    let itemPrice = 0;
-    if (catalogItem && typeof catalogItem.net === 'number') {
-      itemPrice = catalogItem.net;
+  // 4. Hitung Total Net Osram dengan Skema Diskon Bertingkat Resmi:
+  // < 1jt diskon 35%
+  // 1 jt - 3 jt diskon 37%
+  // 3 jt - 10 jt diskon 40%
+  // > 10 jt diskon 41.5%
+  const osramItemList = resolvedItems.filter(i => !i.isDaytonaGroup);
+  let totalNet35Osram = 0;
+  osramItemList.forEach(({ catalogItem, qty, het }) => {
+    let price35 = 0;
+    if (catalogItem && catalogItem.d35) {
+      price35 = catalogItem.d35;
     } else {
-      itemPrice = het;
+      price35 = Math.round(het * (1 - 0.35));
     }
-    osramNet += itemPrice * qty;
+    totalNet35Osram += price35 * qty;
   });
+
+  // Tentukan persentase diskon Osram berdasarkan nominal akumulasi:
+  let osramDiscountPercentage = 35;
+  if (totalNet35Osram > 10000000) {
+    osramDiscountPercentage = 41.5;
+  } else if (totalNet35Osram >= 3000000) {
+    osramDiscountPercentage = 40;
+  } else if (totalNet35Osram >= 1000000) {
+    osramDiscountPercentage = 37;
+  } else {
+    osramDiscountPercentage = 35;
+  }
+
+  // Hitung total net akhir Osram sesuai tier yang didapat
+  let osramNet = 0;
+  if (osramDiscountPercentage === 35) {
+    osramNet = totalNet35Osram;
+  } else {
+    osramItemList.forEach(({ catalogItem, qty, het }) => {
+      let itemPrice = 0;
+      if (catalogItem) {
+        if (osramDiscountPercentage === 37 && catalogItem.d37) {
+          itemPrice = catalogItem.d37;
+        } else if (osramDiscountPercentage === 40 && catalogItem.d40) {
+          itemPrice = catalogItem.d40;
+        } else if (osramDiscountPercentage === 41.5 && catalogItem.d41_5) {
+          itemPrice = catalogItem.d41_5;
+        } else {
+          itemPrice = Math.round(het * (1 - osramDiscountPercentage / 100));
+        }
+      } else {
+        itemPrice = Math.round(het * (1 - osramDiscountPercentage / 100));
+      }
+      osramNet += itemPrice * qty;
+    });
+  }
 
   const totalNet = daytonaGroupNet + osramNet;
   const hasDaytonaGroup = resolvedItems.some(i => i.isDaytonaGroup);
-  const hasOsram = resolvedItems.some(i => !i.isDaytonaGroup);
+  const hasOsram = osramItemList.length > 0;
 
   let formattedText = `Rp ${Math.round(totalNet).toLocaleString('id-ID')}`;
   if (hasDaytonaGroup && !hasOsram) {
     formattedText = `Rp ${Math.round(totalNet).toLocaleString('id-ID')} (${discountPercentage}%)`;
+  } else if (!hasDaytonaGroup && hasOsram) {
+    formattedText = `Rp ${Math.round(totalNet).toLocaleString('id-ID')} (${osramDiscountPercentage}%)`;
   } else if (hasDaytonaGroup && hasOsram) {
-    formattedText = `Rp ${Math.round(totalNet).toLocaleString('id-ID')} (${discountPercentage}%*)`;
+    formattedText = `Rp ${Math.round(totalNet).toLocaleString('id-ID')} (Daytona ${discountPercentage}% · Osram ${osramDiscountPercentage}%)`;
   }
 
   return {
@@ -207,6 +250,7 @@ export const calculateOrderSummary = (orderItems = [], catalogItems = []) => {
     discountPercentage,
     daytonaGroupNet,
     osramNet,
+    osramDiscountPercentage,
     formattedText
   };
 };

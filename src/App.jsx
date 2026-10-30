@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import initialPricelist from './data/pricelist.json';
+import initialOsramPricelist from './data/osramPricelist.json';
 import initialStores from './data/stores.json';
 import initialOrders from './data/orders.json';
 import { ensureValidCategory } from './constants/categories';
@@ -34,6 +35,8 @@ import { isStoreMatch } from './utils/visitUtils';
 const PRICELIST_DATA_VERSION = 'v3_612_official_pdf';
 
 const STORES_DATA_VERSION = 'v2_168_stores';
+
+const OSRAM_DATA_VERSION = 'v1_30_official_pdf';
 
 function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -136,10 +139,12 @@ function App() {
     localStorage.setItem('dura_pricelist', JSON.stringify(duraItems));
   }, [duraItems]);
 
-  // Storage for Osram Pricelist
+  // Storage for Osram Pricelist (Dengan auto-sync versi data resmi)
   const [osramItems, setOsramItems] = useState(() => {
+    const savedVersion = localStorage.getItem('osram_pricelist_version');
     const saved = localStorage.getItem('osram_pricelist');
-    if (saved) {
+
+    if (savedVersion === OSRAM_DATA_VERSION && saved) {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -158,7 +163,21 @@ function App() {
         }
       } catch {}
     }
-    return [];
+
+    // Default: Muat data resmi Osram (30 item)
+    try {
+      const defaultData = initialOsramPricelist.map(item => ({
+        ...item,
+        brand: 'osram',
+        category: ensureValidCategory(item)
+      })).sort(comparePartNumbers);
+
+      localStorage.setItem('osram_pricelist_version', OSRAM_DATA_VERSION);
+      localStorage.setItem('osram_pricelist', JSON.stringify(defaultData));
+      return defaultData;
+    } catch {
+      return [];
+    }
   });
 
   useEffect(() => {

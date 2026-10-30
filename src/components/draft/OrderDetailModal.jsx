@@ -250,8 +250,14 @@ function OrderDetailModal({
                   
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline gap-2 flex-wrap">
-                      {/* Part Number Daytona Orange */}
-                      <span className="font-mono font-bold text-[#EA580C] text-[16px] tracking-tight">
+                      {/* Part Number dengan warna brand */}
+                      <span className={`font-mono font-bold text-[16px] tracking-tight ${
+                        item.brand === 'osram'
+                          ? 'text-amber-800'
+                          : item.brand === 'dura'
+                          ? 'text-sky-700'
+                          : 'text-[#EA580C]'
+                      }`}>
                         {item.pn}
                       </span>
 

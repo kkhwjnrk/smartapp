@@ -783,7 +783,13 @@ function OrderModal({
                         <span className="text-[12.5px] font-bold text-zinc-400 select-none">
                           {idx + 1}.
                         </span>
-                        <span className="font-mono font-bold text-[#EA580C] text-[15px]">
+                        <span className={`font-mono font-bold text-[15px] ${
+                          item.brand === 'osram'
+                            ? 'text-amber-800'
+                            : item.brand === 'dura'
+                            ? 'text-sky-700'
+                            : 'text-[#EA580C]'
+                        }`}>
                           {item.pn}
                         </span>
                         {item.brand && (

@@ -83,10 +83,21 @@ function DiscountSheet({ item, onClose }) {
         {/* Header Rincian Barang: PN di Kiri, Kategori di Pojok Kanan Atas */}
         <div className="flex justify-between items-start mb-5">
           <div className="flex-1 pr-3">
-            <div className="mb-1.5">
-              <span className="inline-block text-[14px] font-bold text-[#EA580C] font-mono tracking-tight bg-orange-50/90 px-2.5 py-0.5 rounded-lg border border-orange-200/70">
+            <div className="mb-1.5 flex items-center gap-2">
+              <span className={`inline-block text-[14px] font-bold font-mono tracking-tight px-2.5 py-0.5 rounded-lg border ${
+                item.brand === 'osram'
+                  ? 'text-amber-800 bg-amber-50 border-amber-200/80 shadow-[0_1px_2px_rgba(217,119,6,0.06)]'
+                  : item.brand === 'dura'
+                  ? 'text-sky-700 bg-sky-50 border-sky-200/80 shadow-[0_1px_2px_rgba(2,132,199,0.06)]'
+                  : 'text-[#EA580C] bg-orange-50/90 border-orange-200/70 shadow-[0_1px_2px_rgba(234,88,12,0.06)]'
+              }`}>
                 PN: {item.pn}
               </span>
+              {item.brand === 'osram' && (
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-amber-100/70 text-amber-900 border border-amber-200">
+                  OSRAM
+                </span>
+              )}
             </div>
             <div className="text-[17px] font-bold text-zinc-900 leading-snug">{item.description}</div>
           </div>
@@ -106,33 +117,90 @@ function DiscountSheet({ item, onClose }) {
             </span>
           </div>
           <div className="text-right">
-            <span className="block text-[12px] font-medium text-zinc-500">Isi per Dus</span>
+            <span className="block text-[12px] font-medium text-zinc-500">Isi per Kemasan</span>
             <span className="text-[15px] font-semibold text-zinc-800">{item.qty || 1} PCS</span>
           </div>
         </div>
 
         {/* Skema Diskon Grosir */}
         <div className="space-y-1 pb-2">
-          <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2 ml-1">Skema Diskon Grosir</h4>
+          <div className="flex items-center justify-between mb-2 ml-1">
+            <h4 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
+              {item.brand === 'osram' ? 'Skema Diskon Osram' : 'Skema Diskon Grosir'}
+            </h4>
+            <span className="text-[11px] text-zinc-400 font-medium">Berdasarkan total order</span>
+          </div>
 
-          <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
-            <span className="text-[15px] font-medium text-zinc-700">Diskon 24%</span>
-            <span className="text-[16px] font-semibold text-zinc-900">
-              Rp {item.d24 ? item.d24.toLocaleString('id-ID') : calculateDiscount(item.price, 24)}
-            </span>
-          </div>
-          <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
-            <span className="text-[15px] font-medium text-zinc-700">Diskon 27%</span>
-            <span className="text-[16px] font-semibold text-zinc-900">
-              Rp {item.d27 ? item.d27.toLocaleString('id-ID') : calculateDiscount(item.price, 27)}
-            </span>
-          </div>
-          <div className="flex justify-between items-center py-2.5 px-1">
-            <span className="text-[15px] font-medium text-zinc-700">Diskon 29%</span>
-            <span className="text-[16px] font-semibold text-zinc-900">
-              Rp {item.d29 ? item.d29.toLocaleString('id-ID') : calculateDiscount(item.price, 29)}
-            </span>
-          </div>
+          {item.brand === 'osram' ? (
+            <>
+              <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-medium text-zinc-800">Diskon 35%</span>
+                  <span className="text-[11px] text-zinc-400">&lt; Rp 1.000.000</span>
+                </div>
+                <span className="text-[16px] font-bold text-amber-700">
+                  Rp {item.d35 ? item.d35.toLocaleString('id-ID') : calculateDiscount(item.price, 35)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-medium text-zinc-800">Diskon 37%</span>
+                  <span className="text-[11px] text-zinc-400">Rp 1.000.000 – Rp 3.000.000</span>
+                </div>
+                <span className="text-[16px] font-bold text-amber-700">
+                  Rp {item.d37 ? item.d37.toLocaleString('id-ID') : calculateDiscount(item.price, 37)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-medium text-zinc-800">Diskon 40%</span>
+                  <span className="text-[11px] text-zinc-400">Rp 3.000.000 – Rp 10.000.000</span>
+                </div>
+                <span className="text-[16px] font-bold text-amber-700">
+                  Rp {item.d40 ? item.d40.toLocaleString('id-ID') : calculateDiscount(item.price, 40)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2.5 px-1">
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-medium text-zinc-800">Diskon 41.5%</span>
+                  <span className="text-[11px] text-zinc-400">&gt; Rp 10.000.000</span>
+                </div>
+                <span className="text-[16px] font-bold text-amber-700">
+                  Rp {item.d41_5 ? item.d41_5.toLocaleString('id-ID') : calculateDiscount(item.price, 41.5)}
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-medium text-zinc-800">Diskon 24%</span>
+                  <span className="text-[11px] text-zinc-400">&le; Rp 3.000.000</span>
+                </div>
+                <span className="text-[16px] font-semibold text-zinc-900">
+                  Rp {item.d24 ? item.d24.toLocaleString('id-ID') : calculateDiscount(item.price, 24)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2.5 px-1 border-b border-zinc-100">
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-medium text-zinc-800">Diskon 27%</span>
+                  <span className="text-[11px] text-zinc-400">&gt; Rp 3.000.000 – &lt; Rp 10.000.000</span>
+                </div>
+                <span className="text-[16px] font-semibold text-zinc-900">
+                  Rp {item.d27 ? item.d27.toLocaleString('id-ID') : calculateDiscount(item.price, 27)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2.5 px-1">
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-medium text-zinc-800">Diskon 29%</span>
+                  <span className="text-[11px] text-zinc-400">&ge; Rp 10.000.000</span>
+                </div>
+                <span className="text-[16px] font-semibold text-zinc-900">
+                  Rp {item.d29 ? item.d29.toLocaleString('id-ID') : calculateDiscount(item.price, 29)}
+                </span>
+              </div>
+            </>
+          )}
         </div>
 
       </div>

@@ -56,11 +56,11 @@ export const BRANDS = [
       ringFocus: 'focus:ring-amber-400 focus:border-amber-400'
     },
     discountGroup: 'osram',
-    discountLabel: 'Skema Diskon Khusus Osram',
-    discountTiers: ['het'],
+    discountLabel: 'Skema Diskon: 35% · 37% · 40% · 41.5%',
+    discountTiers: ['het', '35', '37', '40', '41.5'],
     storageKey: 'osram_pricelist',
     versionKey: 'osram_pricelist_version',
-    version: 'v1_osram'
+    version: 'v1_30_official_pdf'
   }
 ];
 
