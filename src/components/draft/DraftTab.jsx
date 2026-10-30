@@ -44,12 +44,6 @@ function DraftTab({
   const isViewingCurrentMonth = selectedMonthKey === currentMonthKey;
   const isViewingAllMonths = selectedMonthKey === 'all';
 
-  // Dapatkan order yang sedang dibuka di modal detail secara reaktif dari list orders
-  const selectedDetailOrder = useMemo(() => {
-    if (!selectedDetailOrderId) return null;
-    return orders.find(o => o.id === selectedDetailOrderId) || null;
-  }, [selectedDetailOrderId, orders]);
-
   // Trigger floating toast
   const showToast = (msg) => {
     if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
@@ -65,8 +59,9 @@ function DraftTab({
   };
 
   // Salin seluruh format catatan toko dengan pemisah brand yang rapi (mirip Notes HP)
-  const handleCopyFormatText = (order) => {
-    const text = formatOrderNotesText(order, stores, 'all', catalogItems);
+  const handleCopyFormatText = (order, specificBrand = null) => {
+    const brandType = specificBrand || (selectedBrandFilter === 'osram' ? 'osram' : 'daytona_group');
+    const text = formatOrderNotesText(order, stores, brandType, catalogItems);
     navigator.clipboard.writeText(text);
     showToast(`Format catatan ${order.storeName} tersalin!`);
   };
@@ -155,13 +150,32 @@ function DraftTab({
       if (grouped.hasOsram) osramOrdersCount++;
     });
 
-    // Filter berdasarkan Brand (2 Tab: Daytona atau Osram)
-    const brandFiltered = listToFilter.filter(order => {
+    // Filter dan pisahkan order murni berdasarkan Brand (2 Tab: Daytona atau Osram)
+    // sehingga kartu order di masing-masing tab tidak tercampur dan tampil sempurna
+    const brandFiltered = [];
+    listToFilter.forEach(order => {
       const grouped = groupOrderItemsByBrand(order.items || [], catalogItems);
       if (selectedBrandFilter === 'osram') {
-        return grouped.hasOsram;
+        if (grouped.hasOsram) {
+          brandFiltered.push({
+            ...order,
+            brand: 'osram',
+            displayBrand: 'osram',
+            items: grouped.osramItems,
+            rawOrderId: order.id
+          });
+        }
+      } else {
+        if (grouped.hasDaytonaGroup) {
+          brandFiltered.push({
+            ...order,
+            brand: 'daytona',
+            displayBrand: 'daytona',
+            items: grouped.daytonaGroupItems,
+            rawOrderId: order.id
+          });
+        }
       }
-      return grouped.hasDaytonaGroup;
     });
 
     // 3. Pencarian Teks
@@ -188,6 +202,12 @@ function DraftTab({
       }
     };
   }, [orders, orderSubTab, selectedBrandFilter, searchQuery, selectedMonthKey, isViewingCurrentMonth, isViewingAllMonths, currentMonthKey, catalogItems]);
+
+  // Dapatkan order yang sedang dibuka di modal detail secara reaktif dari list orders yang sedang aktif ditampilkan
+  const selectedDetailOrder = useMemo(() => {
+    if (!selectedDetailOrderId) return null;
+    return currentDisplayedOrders.find(o => o.id === selectedDetailOrderId) || orders.find(o => o.id === selectedDetailOrderId) || null;
+  }, [selectedDetailOrderId, currentDisplayedOrders, orders]);
 
   return (
     <div className="space-y-3.5 pb-12 animate-in fade-in duration-300">

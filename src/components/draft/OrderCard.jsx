@@ -178,24 +178,24 @@ function OrderCard({
         </div>
       </div>
 
-      {/* Body: Cuplikan Item Ringkas dengan Pembeda Daytona vs Osram */}
+      {/* Body: Cuplikan Item Ringkas (Pemisah Daytona & Dura yang Jelas) */}
       <div className="py-2.5 space-y-2">
-        {groupedItems.isMixed ? (
+        {groupedItems.hasBothDaytonaAndDura ? (
           <>
-            {/* Bagian Daytona & Dura */}
+            {/* Bagian Daytona */}
             <div className="space-y-1">
-              <div className="flex items-center justify-between text-[11px] font-bold text-orange-800 bg-orange-50/80 px-2 py-0.5 rounded-md border border-orange-200/70">
+              <div className="flex items-center justify-between text-[11px] font-bold text-orange-800 bg-orange-50/90 px-2 py-0.5 rounded-md border border-orange-200/70">
                 <span className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#EA580C]"></span>
-                  <span>DAYTONA & DURA</span>
+                  <span>DAYTONA</span>
                 </span>
                 <span className="text-[10.5px] font-semibold text-orange-700">
-                  {groupedItems.daytonaGroupItems.length} part · {groupedItems.totalDaytonaQty} pcs
+                  {groupedItems.daytonaItems.length} part · {groupedItems.daytonaOnlyQty} pcs
                 </span>
               </div>
-              {groupedItems.daytonaGroupItems.slice(0, 2).map((item, idx) => (
+              {groupedItems.daytonaItems.slice(0, 2).map((item, idx) => (
                 <div
-                  key={`d-${idx}`}
+                  key={`daytona-${idx}`}
                   className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
                 >
                   <div className="flex items-baseline gap-2 min-w-0 truncate">
@@ -203,11 +203,6 @@ function OrderCard({
                     <span className="font-mono font-bold text-[#EA580C] text-[14px] tracking-tight shrink-0">
                       {item.pn}
                     </span>
-                    {item.brand === 'dura' && (
-                      <span className="text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase shrink-0 bg-sky-100 text-sky-700 border border-sky-200">
-                        Dura
-                      </span>
-                    )}
                     <span className="text-zinc-400 text-[12.5px] font-semibold">:</span>
                     <span className="font-bold text-zinc-900 text-[13.5px] shrink-0">
                       {item.qty} <span className="text-[10.5px] font-medium text-zinc-500">PCS</span>
@@ -231,33 +226,36 @@ function OrderCard({
                   </button>
                 </div>
               ))}
-              {groupedItems.daytonaGroupItems.length > 2 && (
+              {groupedItems.daytonaItems.length > 2 && (
                 <div className="text-[11px] text-zinc-400 px-2 italic">
-                  +{groupedItems.daytonaGroupItems.length - 2} part Daytona lainnya...
+                  +{groupedItems.daytonaItems.length - 2} part Daytona lainnya...
                 </div>
               )}
             </div>
 
-            {/* Bagian Osram */}
+            {/* Bagian Dura */}
             <div className="space-y-1 pt-1 border-t border-zinc-100">
-              <div className="flex items-center justify-between text-[11px] font-bold text-amber-900 bg-amber-50/80 px-2 py-0.5 rounded-md border border-amber-200/70">
+              <div className="flex items-center justify-between text-[11px] font-bold text-sky-800 bg-sky-50/90 px-2 py-0.5 rounded-md border border-sky-200/70">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
-                  <span>OSRAM</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-sky-600"></span>
+                  <span>DURA</span>
                 </span>
-                <span className="text-[10.5px] font-semibold text-amber-800">
-                  {groupedItems.osramItems.length} part · {groupedItems.totalOsramQty} pcs
+                <span className="text-[10.5px] font-semibold text-sky-700">
+                  {groupedItems.duraItems.length} part · {groupedItems.duraQty} pcs
                 </span>
               </div>
-              {groupedItems.osramItems.slice(0, 2).map((item, idx) => (
+              {groupedItems.duraItems.slice(0, 2).map((item, idx) => (
                 <div
-                  key={`o-${idx}`}
+                  key={`dura-${idx}`}
                   className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
                 >
                   <div className="flex items-baseline gap-2 min-w-0 truncate">
                     <span className="text-zinc-400 text-[13px] select-none font-bold">-</span>
-                    <span className="font-mono font-bold text-amber-800 text-[14px] tracking-tight shrink-0">
+                    <span className="font-mono font-bold text-sky-700 text-[14px] tracking-tight shrink-0">
                       {item.pn}
+                    </span>
+                    <span className="text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase shrink-0 bg-sky-100 text-sky-700 border border-sky-200">
+                      Dura
                     </span>
                     <span className="text-zinc-400 text-[12.5px] font-semibold">:</span>
                     <span className="font-bold text-zinc-900 text-[13.5px] shrink-0">
@@ -282,9 +280,9 @@ function OrderCard({
                   </button>
                 </div>
               ))}
-              {groupedItems.osramItems.length > 2 && (
+              {groupedItems.duraItems.length > 2 && (
                 <div className="text-[11px] text-zinc-400 px-2 italic">
-                  +{groupedItems.osramItems.length - 2} part Osram lainnya...
+                  +{groupedItems.duraItems.length - 2} part Dura lainnya...
                 </div>
               )}
             </div>
@@ -375,12 +373,22 @@ function OrderCard({
           title={`Buka rincian pesanan (${orderItemsList.length} item)`}
         >
           <div className="min-w-0 flex-1">
-            <span className="font-bold text-zinc-900 text-[13.5px] tracking-tight block">
-              {orderSummary.formattedText}
-            </span>
-            {orderSummary.isMixed && (
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-zinc-900 text-[14px] tracking-tight block">
+                {order.brand === 'osram' ? orderSummary.osramFormatted : (orderSummary.daytonaGroupFormatted || orderSummary.formattedText)}
+              </span>
+              <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded border ${
+                order.brand === 'osram'
+                  ? 'bg-amber-100 text-amber-800 border-amber-200/70'
+                  : 'bg-orange-100 text-[#EA580C] border-orange-200/70'
+              }`}>
+                {order.brand === 'osram' ? `Diskon ${orderSummary.osramDiscountPercentage}%` : `Diskon ${orderSummary.discountPercentage}%`}
+              </span>
+            </div>
+
+            {groupedItems.hasBothDaytonaAndDura && (
               <span className="text-[11px] text-zinc-500 font-medium block truncate mt-0.5">
-                Daytona: {orderSummary.daytonaGroupFormatted} · Osram: {orderSummary.osramFormatted}
+                Daytona ({groupedItems.daytonaOnlyQty} pcs) · Dura ({groupedItems.duraQty} pcs) · 1 Nota
               </span>
             )}
           </div>

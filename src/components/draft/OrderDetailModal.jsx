@@ -322,103 +322,187 @@ function OrderDetailModal({
       <div className="flex-1 overflow-y-auto px-4 py-4 touch-pan-y">
         <div className="max-w-2xl mx-auto space-y-4 pb-24">
           
-          {/* JIKA ORDER CAMPURAN (DAYTONA & OSRAM) -> PISAHKAN SECTION TERPISAH */}
-          {grouped.isMixed ? (
+          {/* KASUS 1: ORDER MEMUAT DAYTONA DAN DURA (1 NOTA GABUNGAN NAMUN RINCIAN TERPISAH) */}
+          {grouped.hasBothDaytonaAndDura ? (
             <>
-              {/* SECTION 1: DAYTONA & DURA */}
+              {/* SECTION 1: PESANAN DAYTONA */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between px-1">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
                     <h2 className="text-[14px] font-bold text-zinc-900">
-                      Pesanan Daytona & Dura ({grouped.daytonaGroupItems.length} item · {grouped.totalDaytonaQty} pcs)
+                      Pesanan Daytona ({grouped.daytonaItems.length} item · {grouped.daytonaOnlyQty} pcs)
                     </h2>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleCopyNotes('daytona')}
-                    className="text-[12px] font-semibold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 px-2.5 py-1 rounded-lg border border-orange-200 transition-colors"
+                    className="text-[12px] font-semibold text-orange-700 hover:text-orange-800 bg-orange-50 hover:bg-orange-100 px-2.5 py-1 rounded-lg border border-orange-200 transition-colors flex items-center gap-1 active:scale-95"
                   >
-                    {copiedType === 'daytona' ? '✓ Tersalin' : 'Salin Daytona'}
+                    <span>{copiedType === 'daytona' ? '✓ Tersalin' : '📋 Salin Daytona'}</span>
                   </button>
                 </div>
 
-                {/* Subtotal Daytona */}
-                <div className="px-3 py-1.5 bg-orange-50/50 border border-orange-100 rounded-xl flex items-center justify-between text-[12px]">
-                  <span className="text-orange-900 font-medium">Subtotal Net Daytona (Diskon Gabungan):</span>
-                  <span className="font-bold text-orange-950">{orderSummary.daytonaGroupFormatted}</span>
-                </div>
-
-                {/* List Kartu Item Daytona & Dura */}
+                {/* List Kartu Item Daytona */}
                 <div className="divide-y divide-zinc-100 bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-xs">
-                  {grouped.daytonaGroupItems.map((item, index) => renderItemRow(item, index + 1))}
+                  {grouped.daytonaItems.map((item, index) => renderItemRow(item, index + 1))}
                 </div>
               </div>
 
-              {/* SECTION 2: OSRAM */}
+              {/* SECTION 2: PESANAN DURA */}
               <div className="space-y-2 pt-2">
                 <div className="flex items-center justify-between px-1">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-sky-600"></span>
                     <h2 className="text-[14px] font-bold text-zinc-900">
-                      Pesanan Osram ({grouped.osramItems.length} item · {grouped.totalOsramQty} pcs)
+                      Pesanan Dura ({grouped.duraItems.length} item · {grouped.duraQty} pcs)
                     </h2>
                   </div>
                   <button
                     type="button"
-                    onClick={() => handleCopyNotes('osram')}
-                    className="text-[12px] font-semibold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-200 transition-colors"
+                    onClick={() => handleCopyNotes('dura')}
+                    className="text-[12px] font-semibold text-sky-700 hover:text-sky-800 bg-sky-50 hover:bg-sky-100 px-2.5 py-1 rounded-lg border border-sky-200 transition-colors flex items-center gap-1 active:scale-95"
                   >
-                    {copiedType === 'osram' ? '✓ Tersalin' : 'Salin Osram'}
+                    <span>{copiedType === 'dura' ? '✓ Tersalin' : '📋 Salin Dura'}</span>
                   </button>
                 </div>
 
-                {/* Subtotal Osram */}
-                <div className="px-3 py-1.5 bg-amber-50/50 border border-amber-100 rounded-xl flex items-center justify-between text-[12px]">
-                  <span className="text-amber-900 font-medium">Subtotal Net Osram (Diskon Skema):</span>
-                  <span className="font-bold text-amber-950">{orderSummary.osramFormatted}</span>
-                </div>
-
-                {/* List Kartu Item Osram */}
+                {/* List Kartu Item Dura */}
                 <div className="divide-y divide-zinc-100 bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-xs">
-                  {grouped.osramItems.map((item, index) => renderItemRow(item, index + 1))}
+                  {grouped.duraItems.map((item, index) => renderItemRow(item, index + 1))}
+                </div>
+              </div>
+
+              {/* Subtotal & Skema Diskon Gabungan Daytona & Dura (1 Nota) */}
+              <div className="p-3.5 bg-orange-50/70 border border-orange-200/80 rounded-2xl space-y-1.5 shadow-2xs">
+                <div className="flex items-center justify-between text-[13px]">
+                  <span className="text-orange-900 font-semibold">
+                    Total Net Gabungan (Daytona & Dura 1 Nota):
+                  </span>
+                  <span className="font-bold text-orange-950 text-[15px]">
+                    {orderSummary.daytonaGroupFormatted}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-[11.5px] text-orange-800/80 pt-1 border-t border-orange-200/60">
+                  <span>Skema Diskon Akumulasi Gabungan:</span>
+                  <span className="font-bold px-2 py-0.5 rounded bg-orange-100/90 text-[#EA580C] border border-orange-200">
+                    Diskon {orderSummary.discountPercentage}%
+                  </span>
                 </div>
               </div>
             </>
-          ) : (
-            /* JIKA HANYA 1 BRAND (DAYTONA SAJA ATAU OSRAM SAJA) */
+          ) : grouped.hasOsram && !grouped.hasDaytonaGroup ? (
+            /* KASUS 2: HANYA ORDER OSRAM */
             <div className="space-y-2">
               <div className="flex items-center justify-between px-1">
                 <div className="flex items-center gap-2">
-                  <span className={`w-2.5 h-2.5 rounded-full ${grouped.hasOsram ? 'bg-amber-500' : 'bg-[#EA580C]'}`}></span>
-                  <h2 className="text-[14px] font-bold text-zinc-800">
-                    {grouped.hasOsram ? 'Pesanan Osram' : 'Pesanan Daytona & Dura'} ({orderItemsList.length} item)
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                  <h2 className="text-[14px] font-bold text-zinc-900">
+                    Pesanan Osram ({grouped.osramItems.length} item · {grouped.totalOsramQty} pcs)
                   </h2>
                 </div>
                 <button
                   type="button"
-                  onClick={() => handleCopyNotes(grouped.hasOsram ? 'osram' : 'daytona')}
-                  className={`text-[12px] font-semibold px-2.5 py-1 rounded-lg border transition-colors ${
-                    grouped.hasOsram 
-                      ? 'text-amber-700 hover:text-amber-800 bg-amber-50 border-amber-200' 
-                      : 'text-orange-600 hover:text-orange-700 bg-orange-50 border-orange-200'
-                  }`}
+                  onClick={() => handleCopyNotes('osram')}
+                  className="text-[12px] font-semibold text-amber-800 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-200 transition-colors flex items-center gap-1 active:scale-95"
                 >
-                  {copiedType ? '✓ Tersalin' : (grouped.hasOsram ? 'Salin Osram' : 'Salin Daytona')}
+                  <span>{copiedType === 'osram' ? '✓ Tersalin' : '📋 Salin Osram'}</span>
                 </button>
               </div>
 
-              {/* Subtotal Satu Brand */}
-              <div className={`px-3 py-1.5 rounded-xl border flex items-center justify-between text-[12px] ${
-                grouped.hasOsram ? 'bg-amber-50/60 border-amber-200 text-amber-950' : 'bg-orange-50/60 border-orange-200 text-orange-950'
-              }`}>
-                <span className="font-medium">Subtotal Net ({grouped.hasOsram ? 'Diskon Osram' : 'Diskon Daytona'}):</span>
-                <span className="font-bold">{orderSummary.formattedText}</span>
+              {/* Subtotal Osram */}
+              <div className="p-3.5 bg-amber-50/70 border border-amber-200/80 rounded-2xl space-y-1.5 shadow-2xs">
+                <div className="flex items-center justify-between text-[13px]">
+                  <span className="text-amber-900 font-semibold">Total Net Osram:</span>
+                  <span className="font-bold text-amber-950 text-[15px]">{orderSummary.osramFormatted}</span>
+                </div>
+                <div className="flex items-center justify-between text-[11.5px] text-amber-800/80 pt-1 border-t border-amber-200/60">
+                  <span>Skema Diskon Osram:</span>
+                  <span className="font-bold px-2 py-0.5 rounded bg-amber-100/90 text-amber-900 border border-amber-200">
+                    Diskon {orderSummary.osramDiscountPercentage}%
+                  </span>
+                </div>
               </div>
 
-              {/* List Kartu Item */}
+              {/* List Kartu Item Osram */}
               <div className="divide-y divide-zinc-100 bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-xs">
-                {orderItemsList.map((item, index) => renderItemRow(item, index + 1))}
+                {grouped.osramItems.map((item, index) => renderItemRow(item, index + 1))}
+              </div>
+            </div>
+          ) : grouped.hasDura && !grouped.hasDaytona ? (
+            /* KASUS 3: HANYA DURA */
+            <div className="space-y-2">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-sky-600"></span>
+                  <h2 className="text-[14px] font-bold text-zinc-900">
+                    Pesanan Dura ({grouped.duraItems.length} item · {grouped.duraQty} pcs)
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleCopyNotes('dura')}
+                  className="text-[12px] font-semibold text-sky-700 hover:text-sky-800 bg-sky-50 hover:bg-sky-100 px-2.5 py-1 rounded-lg border border-sky-200 transition-colors flex items-center gap-1 active:scale-95"
+                >
+                  <span>{copiedType === 'dura' ? '✓ Tersalin' : '📋 Salin Dura'}</span>
+                </button>
+              </div>
+
+              {/* Subtotal Dura */}
+              <div className="p-3.5 bg-sky-50/70 border border-sky-200/80 rounded-2xl space-y-1.5 shadow-2xs">
+                <div className="flex items-center justify-between text-[13px]">
+                  <span className="text-sky-900 font-semibold">Total Net Dura (Grup Daytona):</span>
+                  <span className="font-bold text-sky-950 text-[15px]">{orderSummary.daytonaGroupFormatted}</span>
+                </div>
+                <div className="flex items-center justify-between text-[11.5px] text-sky-800/80 pt-1 border-t border-sky-200/60">
+                  <span>Skema Diskon:</span>
+                  <span className="font-bold px-2 py-0.5 rounded bg-sky-100/90 text-sky-800 border border-sky-200">
+                    Diskon {orderSummary.discountPercentage}%
+                  </span>
+                </div>
+              </div>
+
+              {/* List Kartu Item Dura */}
+              <div className="divide-y divide-zinc-100 bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-xs">
+                {grouped.duraItems.map((item, index) => renderItemRow(item, index + 1))}
+              </div>
+            </div>
+          ) : (
+            /* KASUS 4: HANYA DAYTONA (ATAU FALLBACK CAMPURAN LAMA) */
+            <div className="space-y-2">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
+                  <h2 className="text-[14px] font-bold text-zinc-900">
+                    Pesanan Daytona ({grouped.daytonaItems.length} item · {grouped.daytonaOnlyQty} pcs)
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleCopyNotes('daytona')}
+                  className="text-[12px] font-semibold text-orange-700 hover:text-orange-800 bg-orange-50 hover:bg-orange-100 px-2.5 py-1 rounded-lg border border-orange-200 transition-colors flex items-center gap-1 active:scale-95"
+                >
+                  <span>{copiedType === 'daytona' ? '✓ Tersalin' : '📋 Salin Daytona'}</span>
+                </button>
+              </div>
+
+              {/* Subtotal Daytona */}
+              <div className="p-3.5 bg-orange-50/70 border border-orange-200/80 rounded-2xl space-y-1.5 shadow-2xs">
+                <div className="flex items-center justify-between text-[13px]">
+                  <span className="text-orange-900 font-semibold">Total Net Daytona:</span>
+                  <span className="font-bold text-orange-950 text-[15px]">{orderSummary.daytonaGroupFormatted}</span>
+                </div>
+                <div className="flex items-center justify-between text-[11.5px] text-orange-800/80 pt-1 border-t border-orange-200/60">
+                  <span>Skema Diskon:</span>
+                  <span className="font-bold px-2 py-0.5 rounded bg-orange-100/90 text-[#EA580C] border border-orange-200">
+                    Diskon {orderSummary.discountPercentage}%
+                  </span>
+                </div>
+              </div>
+
+              {/* List Kartu Item Daytona */}
+              <div className="divide-y divide-zinc-100 bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-xs">
+                {grouped.daytonaItems.map((item, index) => renderItemRow(item, index + 1))}
               </div>
             </div>
           )}
@@ -430,36 +514,36 @@ function OrderDetailModal({
       <div className="bg-white border-t border-zinc-200 px-4 py-3 shrink-0 shadow-lg pb-safe">
         <div className="max-w-2xl mx-auto space-y-2">
           
-          {/* Tombol Salin Terpisah jika mixed order */}
-          {grouped.isMixed ? (
+          {/* Tombol Salin Khusus per Brand jika order memuat Daytona DAN Dura */}
+          {grouped.hasBothDaytonaAndDura && (
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => handleCopyNotes('daytona')}
-                className="py-2.5 px-3 bg-orange-50 hover:bg-orange-100 text-orange-800 border border-orange-200 rounded-xl text-[12.5px] font-bold transition-all flex items-center justify-center gap-1.5"
+                className="py-2.5 px-3 bg-orange-50 hover:bg-orange-100 text-orange-800 border border-orange-200 rounded-xl text-[12.5px] font-bold transition-all flex items-center justify-center gap-1.5 active:scale-98"
               >
                 <span>{copiedType === 'daytona' ? '✓ Daytona Tersalin' : '📋 Salin Daytona'}</span>
               </button>
               <button
                 type="button"
-                onClick={() => handleCopyNotes('osram')}
-                className="py-2.5 px-3 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl text-[12.5px] font-bold transition-all flex items-center justify-center gap-1.5"
+                onClick={() => handleCopyNotes('dura')}
+                className="py-2.5 px-3 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 rounded-xl text-[12.5px] font-bold transition-all flex items-center justify-center gap-1.5 active:scale-98"
               >
-                <span>{copiedType === 'osram' ? '✓ Osram Tersalin' : '📋 Salin Osram'}</span>
+                <span>{copiedType === 'dura' ? '✓ Dura Tersalin' : '📋 Salin Dura'}</span>
               </button>
             </div>
-          ) : null}
+          )}
 
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => handleCopyNotes('all')}
-              className="flex-1 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-xl text-[13.5px] font-semibold transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-xl text-[13.5px] font-semibold transition-colors flex items-center justify-center gap-1.5 active:scale-98"
             >
               <svg className="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
               </svg>
-              <span>{copiedType === 'all' ? 'Format Tersalin!' : 'Salin Semua Catatan'}</span>
+              <span>{copiedType === 'all' ? 'Format Tersalin!' : (grouped.hasBothDaytonaAndDura ? 'Salin Semua (Daytona & Dura)' : 'Salin Semua Catatan')}</span>
             </button>
 
             {isCompleted ? (

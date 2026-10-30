@@ -6,7 +6,7 @@ import initialStores from './data/stores.json';
 import initialOrders from './data/orders.json';
 import { ensureValidCategory } from './constants/categories';
 import { getCurrentMonthKey, getOrderMonthKey } from './utils/date';
-import { comparePartNumbers } from './utils/formatters';
+import { comparePartNumbers, groupOrderItemsByBrand } from './utils/formatters';
 import { getBrandName } from './constants/brands';
 
 // Layout Components
@@ -288,17 +288,47 @@ function App() {
     setSelectedSubCategory('Semua');
   };
 
-  // Orders State (Disimpan per toko, terpisah Aktif & Arsip)
+  // Orders State (Disimpan per toko, terpisah Aktif & Arsip, serta nota terpisah Daytona vs Osram)
   const [orders, setOrders] = useState(() => {
     const saved = localStorage.getItem('daytona_orders');
+    let raw = initialOrders;
     if (saved) {
       try {
-        return JSON.parse(saved);
-      } catch {
-        return initialOrders;
-      }
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          raw = parsed;
+        }
+      } catch {}
     }
-    return initialOrders;
+
+    // Auto-split: jika ada order lama yang masih memiliki Daytona/Dura dan Osram dalam 1 nota,
+    // pecah menjadi 2 nota terpisah (Daytona & Osram) agar masuk ke tab brand masing-masing
+    const allCatalog = [...initialPricelist, ...initialDuraPricelist, ...initialOsramPricelist];
+    const splitList = [];
+    raw.forEach(o => {
+      const grouped = groupOrderItemsByBrand(o.items || [], allCatalog);
+      if (grouped.hasDaytonaGroup && grouped.hasOsram) {
+        splitList.push({
+          ...o,
+          id: `${o.id}_daytona`,
+          brand: 'daytona',
+          items: grouped.daytonaGroupItems
+        });
+        splitList.push({
+          ...o,
+          id: `${o.id}_osram`,
+          brand: 'osram',
+          items: grouped.osramItems
+        });
+      } else {
+        splitList.push({
+          ...o,
+          brand: grouped.hasOsram ? 'osram' : 'daytona'
+        });
+      }
+    });
+
+    return splitList;
   });
 
   useEffect(() => {
@@ -391,11 +421,46 @@ function App() {
   };
 
   const saveOrder = (orderData) => {
-    // 1. Simpan atau perbarui catatan order
-    if (modalOrder && modalOrder.id) {
-      setOrders(prev => prev.map(o => o.id === modalOrder.id ? orderData : o));
+    // 1. Simpan catatan order: jika pesanan memuat Daytona/Dura dan juga Osram,
+    // pecah secara otomatis menjadi 2 nota terpisah (Daytona & Osram) sesuai tab brandnya masing-masing
+    const grouped = groupOrderItemsByBrand(orderData.items || [], allCatalogItems);
+
+    if (grouped.hasDaytonaGroup && grouped.hasOsram) {
+      const baseId = modalOrder?.id ? String(modalOrder.id).replace(/_(daytona|osram)$/, '') : `order_${Date.now()}`;
+
+      const daytonaOrder = {
+        ...orderData,
+        id: `${baseId}_daytona`,
+        brand: 'daytona',
+        items: grouped.daytonaGroupItems
+      };
+
+      const osramOrder = {
+        ...orderData,
+        id: `${baseId}_osram`,
+        brand: 'osram',
+        items: grouped.osramItems
+      };
+
+      setOrders(prev => {
+        const withoutOld = modalOrder 
+          ? prev.filter(o => o.id !== modalOrder.id && o.id !== `${baseId}_daytona` && o.id !== `${baseId}_osram`) 
+          : prev;
+        return [daytonaOrder, osramOrder, ...withoutOld];
+      });
     } else {
-      setOrders(prev => [orderData, ...prev]);
+      const targetBrand = grouped.hasOsram ? 'osram' : 'daytona';
+      const orderToSave = {
+        ...orderData,
+        brand: targetBrand,
+        items: orderData.items || []
+      };
+
+      if (modalOrder && modalOrder.id) {
+        setOrders(prev => prev.map(o => o.id === modalOrder.id ? orderToSave : o));
+      } else {
+        setOrders(prev => [orderToSave, ...prev]);
+      }
     }
 
     // 2. Otomatis sinkronkan rute ke data toko master jika rute diinput
