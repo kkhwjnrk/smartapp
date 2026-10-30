@@ -377,18 +377,11 @@ function OrderCard({
               <span className="font-bold text-zinc-900 text-[14px] tracking-tight block">
                 {order.brand === 'osram' ? orderSummary.osramFormatted : (orderSummary.daytonaGroupFormatted || orderSummary.formattedText)}
               </span>
-              <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded border ${
-                order.brand === 'osram'
-                  ? 'bg-amber-100 text-amber-800 border-amber-200/70'
-                  : 'bg-orange-100 text-[#EA580C] border-orange-200/70'
-              }`}>
-                {order.brand === 'osram' ? `Diskon ${orderSummary.osramDiscountPercentage}%` : `Diskon ${orderSummary.discountPercentage}%`}
-              </span>
             </div>
 
             {groupedItems.hasBothDaytonaAndDura && (
               <span className="text-[11px] text-zinc-500 font-medium block truncate mt-0.5">
-                Daytona ({groupedItems.daytonaOnlyQty} pcs) · Dura ({groupedItems.duraQty} pcs) · 1 Nota
+                Daytona ({groupedItems.daytonaOnlyQty} pcs) · Dura ({groupedItems.duraQty} pcs)
               </span>
             )}
           </div>
