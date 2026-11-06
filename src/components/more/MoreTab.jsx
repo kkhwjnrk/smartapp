@@ -17,7 +17,9 @@ function MoreTab({
   onOpenWeeklySchedule,
   onToggleVisitToday,
   subView,
-  setSubView
+  setSubView,
+  selectedMonthKey,
+  currentMonthKey: propCurrentMonthKey
 }) {
   const [internalSubView, setInternalSubView] = useState('menu');
   const activeSubView = subView || internalSubView;
@@ -33,7 +35,7 @@ function MoreTab({
 
   // Statistik Ringkas Kunjungan untuk Kartu Navigasi Menu
   const todayIso = useMemo(() => getTodayIso(), []);
-  const currentMonthKey = useMemo(() => getCurrentMonthKey(), []);
+  const currentMonthKey = useMemo(() => propCurrentMonthKey || getCurrentMonthKey(), [propCurrentMonthKey]);
   const todayVisitCount = useMemo(() => getDailyVisitCount(visits, todayIso), [visits, todayIso]);
   const monthlyStats = useMemo(() => getMonthlyVisitStats(stores, visits, currentMonthKey), [stores, visits, currentMonthKey]);
 
@@ -372,6 +374,8 @@ function MoreTab({
       <OrderTargetProgressCard
         orders={orders}
         catalogItems={items}
+        selectedMonthKey={selectedMonthKey}
+        currentMonthKey={currentMonthKey}
       />
 
       {/* SECTION 1: INFORMASI SISTEM & KATALOG */}

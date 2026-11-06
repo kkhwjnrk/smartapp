@@ -937,6 +937,8 @@ function App() {
             onToggleVisitToday={toggleVisitToday}
             subView={moreSubView}
             setSubView={setMoreSubView}
+            selectedMonthKey={selectedMonthKey}
+            currentMonthKey={currentMonthKey}
           />
         )}
       </main>

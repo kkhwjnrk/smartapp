@@ -10,7 +10,8 @@ import {
 } from '../../utils/date';
 import { 
   groupOrderItemsByBrand, 
-  formatOrderNotesText 
+  formatOrderNotesText,
+  calculateOrderSummary
 } from '../../utils/formatters';
 
 function DraftTab({
@@ -209,6 +210,57 @@ function DraftTab({
     return currentDisplayedOrders.find(o => o.id === selectedDetailOrderId) || orders.find(o => o.id === selectedDetailOrderId) || null;
   }, [selectedDetailOrderId, currentDisplayedOrders, orders]);
 
+  // Target Nominal per Brand dari LocalStorage (Terpisah Daytona vs Osram)
+  const brandTargetNominal = useMemo(() => {
+    try {
+      if (selectedBrandFilter === 'osram') {
+        const saved = localStorage.getItem('osram_order_target_nominal');
+        const parsed = parseInt(saved, 10);
+        return (!isNaN(parsed) && parsed > 0) ? parsed : 25000000;
+      } else {
+        const saved = localStorage.getItem('daytona_order_target_nominal');
+        const parsed = parseInt(saved, 10);
+        return (!isNaN(parsed) && parsed > 0) ? parsed : 50000000;
+      }
+    } catch {}
+    return selectedBrandFilter === 'osram' ? 25000000 : 50000000;
+  }, [selectedBrandFilter]);
+
+  // Total Capaian Net dari Order Arsip (Selesai) di Periode Ini untuk Brand Terpilih
+  const archiveBrandStats = useMemo(() => {
+    if (orderSubTab !== 'archive') return { totalNet: 0, percent: 0, count: 0 };
+    let sumNet = 0;
+    let count = 0;
+
+    archivedOrders.forEach(order => {
+      const orderBrand = (order.brand || '').toLowerCase();
+      const resolvedItems = (order.items || []).map(it => {
+        if (!it.brand && orderBrand) return { ...it, brand: orderBrand };
+        return it;
+      });
+      const summary = calculateOrderSummary(resolvedItems, catalogItems);
+
+      if (selectedBrandFilter === 'osram') {
+        if (summary.hasOsram || summary.osramNet > 0) {
+          sumNet += summary.osramNet || 0;
+          count++;
+        }
+      } else {
+        if (summary.hasDaytonaGroup || summary.daytonaGroupNet > 0) {
+          sumNet += summary.daytonaGroupNet || 0;
+          count++;
+        }
+      }
+    });
+
+    const percent = brandTargetNominal > 0 ? Math.round((sumNet / brandTargetNominal) * 100) : 0;
+    return {
+      totalNet: sumNet,
+      percent,
+      count
+    };
+  }, [orderSubTab, archivedOrders, selectedBrandFilter, catalogItems, brandTargetNominal]);
+
   return (
     <div className="space-y-3.5 pb-12 animate-in fade-in duration-300">
 
@@ -360,6 +412,37 @@ function DraftTab({
           </button>
         )}
       </div>
+
+      {/* Target Progress Bar Kompak Khusus di Tab Arsip (Draft Selesai) */}
+      {orderSubTab === 'archive' && (
+        <div className="bg-white p-3 rounded-2xl border border-zinc-200/80 shadow-2xs space-y-1.5 animate-in fade-in duration-200">
+          <div className="flex items-center justify-between text-[12px] flex-wrap gap-1">
+            <span className="font-bold text-zinc-700 flex items-center gap-1.5">
+              <span className={`w-2 h-2 rounded-full ${selectedBrandFilter === 'osram' ? 'bg-amber-500' : 'bg-[#EA580C]'}`} />
+              <span>Target {selectedBrandFilter === 'osram' ? 'Osram' : 'Daytona'}:</span>
+            </span>
+            <span className="font-black text-zinc-900">
+              Rp {Math.round(archiveBrandStats.totalNet).toLocaleString('id-ID')}
+              <span className="text-zinc-400 font-bold text-[11px] ml-1">
+                / Rp {brandTargetNominal.toLocaleString('id-ID')} ({archiveBrandStats.percent}%)
+              </span>
+            </span>
+          </div>
+
+          <div className="w-full h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-500 ${
+                archiveBrandStats.percent >= 100
+                  ? 'bg-emerald-500'
+                  : selectedBrandFilter === 'osram'
+                    ? 'bg-amber-500'
+                    : 'bg-[#EA580C]'
+              }`}
+              style={{ width: `${Math.min(100, archiveBrandStats.percent)}%` }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Daftar Order Cards */}
       {currentDisplayedOrders.length > 0 ? (
