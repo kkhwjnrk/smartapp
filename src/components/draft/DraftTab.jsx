@@ -10,9 +10,13 @@ import {
 } from '../../utils/date';
 import { 
   groupOrderItemsByBrand, 
-  formatOrderNotesText,
-  calculateOrderSummary
+  formatOrderNotesText 
 } from '../../utils/formatters';
+import {
+  getStoredBrandTarget,
+  calculateCompletedBrandStats,
+  computeTargetProgress
+} from '../../utils/targetUtils';
 
 function DraftTab({
   orders = [],
@@ -212,54 +216,23 @@ function DraftTab({
 
   // Target Nominal per Brand dari LocalStorage (Terpisah Daytona vs Osram)
   const brandTargetNominal = useMemo(() => {
-    try {
-      if (selectedBrandFilter === 'osram') {
-        const saved = localStorage.getItem('osram_order_target_nominal');
-        const parsed = parseInt(saved, 10);
-        return (!isNaN(parsed) && parsed > 0) ? parsed : 25000000;
-      } else {
-        const saved = localStorage.getItem('daytona_order_target_nominal');
-        const parsed = parseInt(saved, 10);
-        return (!isNaN(parsed) && parsed > 0) ? parsed : 50000000;
-      }
-    } catch {}
-    return selectedBrandFilter === 'osram' ? 25000000 : 50000000;
+    return getStoredBrandTarget(selectedBrandFilter);
   }, [selectedBrandFilter]);
 
   // Total Capaian Net dari Order Arsip (Selesai) di Periode Ini untuk Brand Terpilih
   const archiveBrandStats = useMemo(() => {
     if (orderSubTab !== 'archive') return { totalNet: 0, percent: 0, count: 0 };
-    let sumNet = 0;
-    let count = 0;
+    const stats = calculateCompletedBrandStats(archivedOrders, catalogItems, selectedMonthKey);
+    const net = selectedBrandFilter === 'osram' ? stats.osramNet : stats.daytonaNet;
+    const count = selectedBrandFilter === 'osram' ? stats.osramOrdersCount : stats.daytonaOrdersCount;
+    const progress = computeTargetProgress(net, brandTargetNominal);
 
-    archivedOrders.forEach(order => {
-      const orderBrand = (order.brand || '').toLowerCase();
-      const resolvedItems = (order.items || []).map(it => {
-        if (!it.brand && orderBrand) return { ...it, brand: orderBrand };
-        return it;
-      });
-      const summary = calculateOrderSummary(resolvedItems, catalogItems);
-
-      if (selectedBrandFilter === 'osram') {
-        if (summary.hasOsram || summary.osramNet > 0) {
-          sumNet += summary.osramNet || 0;
-          count++;
-        }
-      } else {
-        if (summary.hasDaytonaGroup || summary.daytonaGroupNet > 0) {
-          sumNet += summary.daytonaGroupNet || 0;
-          count++;
-        }
-      }
-    });
-
-    const percent = brandTargetNominal > 0 ? Math.round((sumNet / brandTargetNominal) * 100) : 0;
     return {
-      totalNet: sumNet,
-      percent,
+      totalNet: net,
+      percent: progress.percent,
       count
     };
-  }, [orderSubTab, archivedOrders, selectedBrandFilter, catalogItems, brandTargetNominal]);
+  }, [orderSubTab, archivedOrders, selectedBrandFilter, catalogItems, selectedMonthKey, brandTargetNominal]);
 
   return (
     <div className="space-y-3.5 pb-12 animate-in fade-in duration-300">

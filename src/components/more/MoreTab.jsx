@@ -106,7 +106,6 @@ function MoreTab({
         type: 'success',
         message: `✓ Berhasil mengunduh file cadangan: ${typeLabel}`
       });
-      setShowExportMenu(false);
     } catch (err) {
       setImportStatus({
         type: 'error',

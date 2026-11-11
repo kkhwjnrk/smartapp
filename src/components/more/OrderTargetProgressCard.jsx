@@ -1,25 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { getCurrentMonthKey, getOrderMonthKey, formatMonthKeyDisplay } from '../../utils/date';
-import { calculateOrderSummary } from '../../utils/formatters';
-
-const DEFAULT_DAYTONA_TARGET = 50000000; // Rp 50.000.000
-const DEFAULT_OSRAM_TARGET = 25000000;   // Rp 25.000.000
-
-const DAYTONA_PRESETS = [
-  { label: '25 Jt', value: 25000000 },
-  { label: '50 Jt', value: 50000000 },
-  { label: '75 Jt', value: 75000000 },
-  { label: '100 Jt', value: 100000000 },
-  { label: '150 Jt', value: 150000000 }
-];
-
-const OSRAM_PRESETS = [
-  { label: '10 Jt', value: 10000000 },
-  { label: '20 Jt', value: 20000000 },
-  { label: '30 Jt', value: 30000000 },
-  { label: '50 Jt', value: 50000000 },
-  { label: '75 Jt', value: 75000000 }
-];
+import { getCurrentMonthKey, formatMonthKeyDisplay } from '../../utils/date';
+import {
+  getStoredBrandTarget,
+  saveStoredBrandTarget,
+  calculateCompletedBrandStats,
+  computeTargetProgress,
+  DAYTONA_PRESETS,
+  OSRAM_PRESETS
+} from '../../utils/targetUtils';
 
 function OrderTargetProgressCard({
   orders = [],
@@ -27,7 +15,6 @@ function OrderTargetProgressCard({
   selectedMonthKey,
   currentMonthKey: propCurrentMonthKey
 }) {
-  // Tentukan bulan target: gunakan selectedMonthKey jika ada dan bukan 'all', atau fallback ke bulan berjalan
   const activeMonthKey = useMemo(() => {
     if (selectedMonthKey && selectedMonthKey !== 'all') {
       return selectedMonthKey;
@@ -53,109 +40,30 @@ function OrderTargetProgressCard({
     } catch {}
   };
 
-  // State Target Nominal Daytona (Disimpan di LocalStorage)
-  const [daytonaTarget, setDaytonaTarget] = useState(() => {
-    try {
-      const saved = localStorage.getItem('daytona_order_target_nominal');
-      if (saved) {
-        const parsed = parseInt(saved, 10);
-        if (!isNaN(parsed) && parsed > 0) return parsed;
-      }
-    } catch {}
-    return DEFAULT_DAYTONA_TARGET;
-  });
-
-  // State Target Nominal Osram (Disimpan di LocalStorage)
-  const [osramTarget, setOsramTarget] = useState(() => {
-    try {
-      const saved = localStorage.getItem('osram_order_target_nominal');
-      if (saved) {
-        const parsed = parseInt(saved, 10);
-        if (!isNaN(parsed) && parsed > 0) return parsed;
-      }
-    } catch {}
-    return DEFAULT_OSRAM_TARGET;
-  });
+  // State Target Nominal (Disimpan di LocalStorage)
+  const [daytonaTarget, setDaytonaTarget] = useState(() => getStoredBrandTarget('daytona'));
+  const [osramTarget, setOsramTarget] = useState(() => getStoredBrandTarget('osram'));
 
   // State Modal Ubah Target
   const [isEditingTarget, setIsEditingTarget] = useState(false);
   const [editingBrand, setEditingBrand] = useState('daytona'); // 'daytona' | 'osram'
   const [inputTargetValue, setInputTargetValue] = useState('');
 
-  // 1. Filter Order Bulan Ini yang SUDAH SELESAI (status === 'completed')
-  const completedMonthOrders = useMemo(() => {
-    return orders.filter(order => {
-      // HANYA draft order yang sudah diselesaikan yang dihitung ke target
-      if (order.status !== 'completed') return false;
-      const orderMonth = getOrderMonthKey(order);
-      return orderMonth === activeMonthKey;
-    });
-  }, [orders, activeMonthKey]);
+  // Kalkulasi Akumulasi Capaian Terpisah HANYA dari draft order yang berstatus 'completed'
+  const brandStats = useMemo(() => {
+    return calculateCompletedBrandStats(orders, catalogItems, activeMonthKey);
+  }, [orders, catalogItems, activeMonthKey]);
 
-  // 2. Kalkulasi Akumulasi Capaian Terpisah: Daytona (+ Dura) vs Osram
-  const {
-    daytonaNet,
-    osramNet,
-    daytonaOrdersCount,
-    osramOrdersCount,
-    daytonaPcs,
-    osramPcs
-  } = useMemo(() => {
-    let dNet = 0;
-    let oNet = 0;
-    let dOrders = 0;
-    let oOrders = 0;
-    let dPcs = 0;
-    let oPcs = 0;
+  // Metrik Progres Daytona
+  const daytonaProgress = useMemo(() => {
+    return computeTargetProgress(brandStats.daytonaNet, daytonaTarget);
+  }, [brandStats.daytonaNet, daytonaTarget]);
 
-    completedMonthOrders.forEach(order => {
-      const orderBrand = (order.brand || '').toLowerCase();
-      // Pastikan fallback brand pada item jika belum tercatat
-      const resolvedItems = (order.items || []).map(it => {
-        if (!it.brand && orderBrand) {
-          return { ...it, brand: orderBrand };
-        }
-        return it;
-      });
+  // Metrik Progres Osram
+  const osramProgress = useMemo(() => {
+    return computeTargetProgress(brandStats.osramNet, osramTarget);
+  }, [brandStats.osramNet, osramTarget]);
 
-      const summary = calculateOrderSummary(resolvedItems, catalogItems);
-
-      if (summary.hasDaytonaGroup || summary.daytonaGroupNet > 0) {
-        dNet += summary.daytonaGroupNet || 0;
-        dOrders += 1;
-        dPcs += summary.daytonaQty || 0;
-      }
-
-      if (summary.hasOsram || summary.osramNet > 0) {
-        oNet += summary.osramNet || 0;
-        oOrders += 1;
-        oPcs += summary.osramQty || 0;
-      }
-    });
-
-    return {
-      daytonaNet: dNet,
-      osramNet: oNet,
-      daytonaOrdersCount: dOrders,
-      osramOrdersCount: oOrders,
-      daytonaPcs: dPcs,
-      osramPcs: oPcs
-    };
-  }, [completedMonthOrders, catalogItems]);
-
-  // Kalkulasi Persentase dan Sisa Target Daytona
-  const daytonaPercent = daytonaTarget > 0 ? Math.round((daytonaNet / daytonaTarget) * 100) : 0;
-  const daytonaCappedPercent = Math.min(100, Math.max(0, daytonaPercent));
-  const daytonaRemaining = daytonaTarget - daytonaNet;
-  const isDaytonaAchieved = daytonaNet >= daytonaTarget;
-
-  // Kalkulasi Persentase dan Sisa Target Osram
-  const osramPercent = osramTarget > 0 ? Math.round((osramNet / osramTarget) * 100) : 0;
-  const osramCappedPercent = Math.min(100, Math.max(0, osramPercent));
-  const osramRemaining = osramTarget - osramNet;
-  const isOsramAchieved = osramNet >= osramTarget;
-
-  // Buka Modal Edit Target untuk Brand Tertentu
   const handleOpenEditModal = (brandKey) => {
     setEditingBrand(brandKey);
     const currentValue = brandKey === 'daytona' ? daytonaTarget : osramTarget;
@@ -163,50 +71,38 @@ function OrderTargetProgressCard({
     setIsEditingTarget(true);
   };
 
-  // Simpan Target Baru ke State dan LocalStorage
   const handleSaveTarget = () => {
-    const cleanNum = parseInt(String(inputTargetValue).replace(/\D/g, ''), 10);
-    if (!isNaN(cleanNum) && cleanNum > 0) {
+    const savedNum = saveStoredBrandTarget(editingBrand, inputTargetValue);
+    if (savedNum) {
       if (editingBrand === 'daytona') {
-        setDaytonaTarget(cleanNum);
-        try {
-          localStorage.setItem('daytona_order_target_nominal', String(cleanNum));
-        } catch {}
+        setDaytonaTarget(savedNum);
       } else {
-        setOsramTarget(cleanNum);
-        try {
-          localStorage.setItem('osram_order_target_nominal', String(cleanNum));
-        } catch {}
+        setOsramTarget(savedNum);
       }
     }
     setIsEditingTarget(false);
   };
 
-  // Helper render kartu Daytona
   const renderDaytonaCard = () => (
-    <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-orange-200/90 shadow-2xs space-y-3 relative overflow-hidden">
-      {/* Aksen Latar Belakang Halus */}
-      <div className="absolute -top-12 -right-12 w-28 h-28 bg-orange-500/10 rounded-full blur-2xl pointer-events-none" />
-
-      {/* Baris 1: Judul Brand & Capaian */}
-      <div className="flex items-center justify-between gap-2 relative">
-        <div className="flex items-center gap-1.5 min-w-0 flex-wrap">
+    <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-orange-200/80 shadow-2xs space-y-3 relative overflow-hidden">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 min-w-0">
           <span className="w-2.5 h-2.5 rounded-full bg-[#EA580C] shrink-0" />
-          <h4 className="text-[13px] sm:text-[13.5px] font-bold text-zinc-900 tracking-tight">
+          <h4 className="text-[13.5px] font-bold text-zinc-900 tracking-tight">
             Target Daytona
           </h4>
-          <span className="text-[9.5px] font-bold text-[#EA580C] bg-orange-50 border border-orange-200/80 px-1.5 py-0.2 rounded-md shrink-0">
+          <span className="text-[10px] font-bold text-[#EA580C] bg-orange-50 px-1.5 py-0.2 rounded">
             Daytona & Dura
           </span>
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
-          <span className={`px-2 py-0.5 rounded-full text-[11px] font-black border ${
-            isDaytonaAchieved
+          <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold border ${
+            daytonaProgress.isAchieved
               ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
               : 'bg-orange-50 text-orange-700 border border-orange-200'
           }`}>
-            {isDaytonaAchieved ? `✓ ${daytonaPercent}%` : `${daytonaPercent}%`}
+            {daytonaProgress.isAchieved ? `✓ ${daytonaProgress.percent}%` : `${daytonaProgress.percent}%`}
           </span>
           <button
             type="button"
@@ -221,69 +117,61 @@ function OrderTargetProgressCard({
         </div>
       </div>
 
-      {/* Baris 2: Nominal Capaian & Target */}
-      <div className="flex items-baseline justify-between gap-2 relative">
-        <span className="text-[20px] sm:text-[22px] font-black text-zinc-900 tracking-tight leading-none">
-          Rp {Math.round(daytonaNet).toLocaleString('id-ID')}
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="text-[20px] sm:text-[22px] font-bold text-zinc-900 tracking-tight leading-none">
+          Rp {Math.round(brandStats.daytonaNet).toLocaleString('id-ID')}
         </span>
-        <span className="text-[11.5px] font-bold text-zinc-400 shrink-0">
+        <span className="text-[11.5px] font-semibold text-zinc-400 shrink-0">
           Target: Rp {daytonaTarget.toLocaleString('id-ID')}
         </span>
       </div>
 
-      {/* Baris 3: Progress Bar */}
-      <div className="w-full h-2.5 bg-zinc-100 rounded-full overflow-hidden p-0.5 border border-zinc-200/60 relative">
+      <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all duration-700 ease-out ${
-            isDaytonaAchieved
-              ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-xs'
-              : 'bg-gradient-to-r from-amber-500 via-orange-500 to-[#EA580C] shadow-xs'
+          className={`h-full rounded-full transition-all duration-500 ${
+            daytonaProgress.isAchieved
+              ? 'bg-emerald-500'
+              : 'bg-[#EA580C]'
           }`}
-          style={{ width: `${daytonaCappedPercent}%` }}
+          style={{ width: `${daytonaProgress.cappedPercent}%` }}
         />
       </div>
 
-      {/* Baris 4: Keterangan Sisa & Status Order */}
-      <div className="flex items-center justify-between text-[11px] pt-0.5 text-zinc-500 relative flex-wrap gap-1">
-        <span className={isDaytonaAchieved ? 'text-emerald-700 font-bold' : 'text-zinc-600 font-medium'}>
-          {isDaytonaAchieved ? (
-            <>🎉 Target tercapai! (+Rp {Math.abs(daytonaRemaining).toLocaleString('id-ID')})</>
+      <div className="flex items-center justify-between text-[11px] pt-0.5 text-zinc-500 flex-wrap gap-1">
+        <span className={daytonaProgress.isAchieved ? 'text-emerald-700 font-bold' : 'text-zinc-600 font-medium'}>
+          {daytonaProgress.isAchieved ? (
+            <>🎉 Tercapai! (+Rp {daytonaProgress.surplus.toLocaleString('id-ID')})</>
           ) : (
-            <>Kurang <b className="text-zinc-800">Rp {daytonaRemaining.toLocaleString('id-ID')}</b> lagi</>
+            <>Kurang <b className="text-zinc-800 font-bold">Rp {daytonaProgress.remaining.toLocaleString('id-ID')}</b> lagi</>
           )}
         </span>
         <span className="text-zinc-400 font-medium text-[10.5px]">
-          {daytonaOrdersCount} order selesai ({daytonaPcs} pcs)
+          {brandStats.daytonaOrdersCount} order selesai ({brandStats.daytonaPcs} pcs)
         </span>
       </div>
     </div>
   );
 
-  // Helper render kartu Osram
   const renderOsramCard = () => (
-    <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-amber-200/90 shadow-2xs space-y-3 relative overflow-hidden">
-      {/* Aksen Latar Belakang Halus */}
-      <div className="absolute -top-12 -right-12 w-28 h-28 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
-
-      {/* Baris 1: Judul Brand & Capaian */}
-      <div className="flex items-center justify-between gap-2 relative">
-        <div className="flex items-center gap-1.5 min-w-0 flex-wrap">
+    <div className="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-amber-200/80 shadow-2xs space-y-3 relative overflow-hidden">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 min-w-0">
           <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
-          <h4 className="text-[13px] sm:text-[13.5px] font-bold text-zinc-900 tracking-tight">
+          <h4 className="text-[13.5px] font-bold text-zinc-900 tracking-tight">
             Target Osram
           </h4>
-          <span className="text-[9.5px] font-bold text-amber-800 bg-amber-50 border border-amber-200/80 px-1.5 py-0.2 rounded-md shrink-0">
+          <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded">
             Osram
           </span>
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
-          <span className={`px-2 py-0.5 rounded-full text-[11px] font-black border ${
-            isOsramAchieved
+          <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold border ${
+            osramProgress.isAchieved
               ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
               : 'bg-amber-50 text-amber-800 border border-amber-200'
           }`}>
-            {isOsramAchieved ? `✓ ${osramPercent}%` : `${osramPercent}%`}
+            {osramProgress.isAchieved ? `✓ ${osramProgress.percent}%` : `${osramProgress.percent}%`}
           </span>
           <button
             type="button"
@@ -298,39 +186,36 @@ function OrderTargetProgressCard({
         </div>
       </div>
 
-      {/* Baris 2: Nominal Capaian & Target */}
-      <div className="flex items-baseline justify-between gap-2 relative">
-        <span className="text-[20px] sm:text-[22px] font-black text-zinc-900 tracking-tight leading-none">
-          Rp {Math.round(osramNet).toLocaleString('id-ID')}
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="text-[20px] sm:text-[22px] font-bold text-zinc-900 tracking-tight leading-none">
+          Rp {Math.round(brandStats.osramNet).toLocaleString('id-ID')}
         </span>
-        <span className="text-[11.5px] font-bold text-zinc-400 shrink-0">
+        <span className="text-[11.5px] font-semibold text-zinc-400 shrink-0">
           Target: Rp {osramTarget.toLocaleString('id-ID')}
         </span>
       </div>
 
-      {/* Baris 3: Progress Bar */}
-      <div className="w-full h-2.5 bg-zinc-100 rounded-full overflow-hidden p-0.5 border border-zinc-200/60 relative">
+      <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all duration-700 ease-out ${
-            isOsramAchieved
-              ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-xs'
-              : 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 shadow-xs'
+          className={`h-full rounded-full transition-all duration-500 ${
+            osramProgress.isAchieved
+              ? 'bg-emerald-500'
+              : 'bg-amber-500'
           }`}
-          style={{ width: `${osramCappedPercent}%` }}
+          style={{ width: `${osramProgress.cappedPercent}%` }}
         />
       </div>
 
-      {/* Baris 4: Keterangan Sisa & Status Order */}
-      <div className="flex items-center justify-between text-[11px] pt-0.5 text-zinc-500 relative flex-wrap gap-1">
-        <span className={isOsramAchieved ? 'text-emerald-700 font-bold' : 'text-zinc-600 font-medium'}>
-          {isOsramAchieved ? (
-            <>🎉 Target tercapai! (+Rp {Math.abs(osramRemaining).toLocaleString('id-ID')})</>
+      <div className="flex items-center justify-between text-[11px] pt-0.5 text-zinc-500 flex-wrap gap-1">
+        <span className={osramProgress.isAchieved ? 'text-emerald-700 font-bold' : 'text-zinc-600 font-medium'}>
+          {osramProgress.isAchieved ? (
+            <>🎉 Tercapai! (+Rp {osramProgress.surplus.toLocaleString('id-ID')})</>
           ) : (
-            <>Kurang <b className="text-zinc-800">Rp {osramRemaining.toLocaleString('id-ID')}</b> lagi</>
+            <>Kurang <b className="text-zinc-800 font-bold">Rp {osramProgress.remaining.toLocaleString('id-ID')}</b> lagi</>
           )}
         </span>
         <span className="text-zinc-400 font-medium text-[10.5px]">
-          {osramOrdersCount} order selesai ({osramPcs} pcs)
+          {brandStats.osramOrdersCount} order selesai ({brandStats.osramPcs} pcs)
         </span>
       </div>
     </div>
@@ -341,10 +226,10 @@ function OrderTargetProgressCard({
       {/* Header Bagian Target & Filter Tab Brand */}
       <div className="flex items-center justify-between gap-2 px-1">
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="text-[12.5px] sm:text-[13px] font-bold text-zinc-900 truncate">
-            Target Nominal Penjualan
+          <span className="text-[12.5px] sm:text-[13px] font-bold text-zinc-800 truncate">
+            Target Penjualan Bulanan
           </span>
-          <span className="text-[10px] font-semibold text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded-full shrink-0">
+          <span className="text-[10px] font-bold text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded-full shrink-0">
             {activeMonthLabel}
           </span>
         </div>
@@ -356,7 +241,7 @@ function OrderTargetProgressCard({
             onClick={() => handleBrandViewChange('both')}
             className={`px-2.5 py-1 rounded-lg transition-all ${
               activeBrandView === 'both'
-                ? 'bg-white text-zinc-900 shadow-2xs font-black'
+                ? 'bg-white text-zinc-900 shadow-2xs font-bold'
                 : 'text-zinc-500 hover:text-zinc-800'
             }`}
           >
@@ -367,7 +252,7 @@ function OrderTargetProgressCard({
             onClick={() => handleBrandViewChange('daytona')}
             className={`px-2.5 py-1 rounded-lg transition-all ${
               activeBrandView === 'daytona'
-                ? 'bg-[#EA580C] text-white shadow-2xs font-black'
+                ? 'bg-[#EA580C] text-white shadow-2xs font-bold'
                 : 'text-zinc-500 hover:text-zinc-800'
             }`}
           >
@@ -378,7 +263,7 @@ function OrderTargetProgressCard({
             onClick={() => handleBrandViewChange('osram')}
             className={`px-2.5 py-1 rounded-lg transition-all ${
               activeBrandView === 'osram'
-                ? 'bg-amber-600 text-white shadow-2xs font-black'
+                ? 'bg-amber-600 text-white shadow-2xs font-bold'
                 : 'text-zinc-500 hover:text-zinc-800'
             }`}
           >
@@ -387,12 +272,10 @@ function OrderTargetProgressCard({
         </div>
       </div>
 
-      {/* Keterangan: Dihitung dari draft order yang sudah diselesaikan */}
       <div className="px-1 text-[11px] text-zinc-400 font-medium">
         * Dihitung hanya dari draft order yang berstatus selesai
       </div>
 
-      {/* Render Kartu Target Sesuai Pilihan */}
       {activeBrandView === 'both' && (
         <div className="space-y-3">
           {renderDaytonaCard()}
@@ -401,7 +284,6 @@ function OrderTargetProgressCard({
       )}
 
       {activeBrandView === 'daytona' && renderDaytonaCard()}
-
       {activeBrandView === 'osram' && renderOsramCard()}
 
       {/* MODAL DIALOG UBAH TARGET NOMINAL PER BRAND */}

@@ -39,7 +39,6 @@ function HomeTab({
   const todayVisitCount = useMemo(() => getDailyVisitCount(visits, todayIso), [visits, todayIso]);
   const handleOpenSchedule = onOpenWeeklySchedule;
 
-  // Sapaan Waktu Otomatis & Tanggal Hari Ini
   const [greeting] = useState(getGreeting);
   const [todayText] = useState(getTodayFormattedText);
 
@@ -54,7 +53,6 @@ function HomeTab({
 
   const pendingOrdersCount = pendingOrders.length;
 
-  // Total Quantity Barang Dipesan pada Order Pending
   const totalPendingQty = useMemo(() => {
     return pendingOrders.reduce((sum, o) => {
       const itemsQty = o.items ? o.items.reduce((acc, it) => acc + (Number(it.qty) || 0), 0) : 0;
@@ -62,13 +60,11 @@ function HomeTab({
     }, 0);
   }, [pendingOrders]);
 
-  // Handler Submit Pencarian Cepat (Omnibar)
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const q = searchQuery.trim();
     if (!q) return;
 
-    // Cek apakah query kemungkinan mencari Toko (nama, customerId, rute)
     const isStoreMatch = stores.some(s => 
       (s.name && s.name.toLowerCase().includes(q.toLowerCase())) ||
       (s.customerId && s.customerId.toLowerCase().includes(q.toLowerCase())) ||
@@ -82,7 +78,6 @@ function HomeTab({
     }
   };
 
-  // Kategori Populer Cepat
   const popularCategories = [
     { name: 'Busi', icon: '⚡' },
     { name: 'Kampas Rem', icon: '🛑' },
@@ -93,23 +88,23 @@ function HomeTab({
   ];
 
   return (
-    <div className="space-y-3.5 sm:space-y-4 animate-in fade-in duration-300 pb-6">
+    <div className="space-y-4 animate-in fade-in duration-300 pb-8">
       
-      {/* 1. HERO GREETING & DATE BANNER */}
-      <div className="flex items-center justify-between pt-0.5">
+      {/* 1. GREETING & TANGGAL */}
+      <div className="flex items-center justify-between pt-1">
         <div>
           <div className="flex items-center gap-1.5">
-            <span className="text-[13.5px] sm:text-[14px] text-zinc-500 font-medium">{greeting},</span>
-            <span className="text-[13.5px] sm:text-[14px] font-bold text-zinc-900">Sales 👋</span>
+            <span className="text-[14px] text-zinc-500 font-medium">{greeting},</span>
+            <span className="text-[14px] font-bold text-zinc-900">Sales 👋</span>
           </div>
-          <p className="text-[11.5px] sm:text-[12px] text-zinc-500 mt-0.5">
+          <p className="text-[12px] text-zinc-500 mt-0.5">
             {pendingOrdersCount > 0 
               ? `${pendingOrdersCount} toko menunggu diproses` 
               : 'Semua order telah rapi tercatat'}
           </p>
         </div>
-        <div className="bg-zinc-100/90 border border-zinc-200/80 px-2.5 py-1 rounded-xl text-right shrink-0">
-          <span className="text-[10.5px] sm:text-[11px] font-semibold text-zinc-600 block">
+        <div className="bg-white border border-zinc-200/80 px-2.5 py-1 rounded-xl text-right shadow-2xs shrink-0">
+          <span className="text-[11px] font-semibold text-zinc-700 block">
             {todayText}
           </span>
         </div>
@@ -131,9 +126,9 @@ function HomeTab({
             placeholder="Cari toko, rute, atau part number..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-20 py-2.5 bg-white border border-zinc-200/90 rounded-2xl text-[12.5px] sm:text-[13px] font-medium placeholder:text-zinc-400 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 shadow-2xs transition-all"
+            className="w-full pl-10 pr-20 py-2.5 bg-white border border-zinc-200/90 rounded-2xl text-[13px] font-medium placeholder:text-zinc-400 focus:outline-none focus:border-zinc-400 shadow-2xs transition-all"
           />
-          {searchQuery ? (
+          {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
@@ -141,56 +136,52 @@ function HomeTab({
             >
               ✕
             </button>
-          ) : null}
+          )}
           <button
             type="submit"
-            className="absolute right-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-[11px] sm:text-[11.5px] font-semibold rounded-xl transition-colors shadow-2xs"
+            className="absolute right-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-[11.5px] font-bold rounded-xl transition-colors shadow-2xs"
           >
             Cari
           </button>
         </div>
       </form>
 
-      {/* 3. DUA KARTU METRIK ESENSIAL: ORDER AKTIF & KUNJUNGAN HARI INI */}
+      {/* 3. DUA KARTU METRIK ESENSIAL */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         
         {/* KARTU 1: PESANAN BERJALAN (DRAFT) */}
-        <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white shadow-2xs relative overflow-hidden flex flex-col justify-between">
-          {/* Subtle Ambient Decorative Circles */}
-          <div className="absolute -top-10 -right-10 w-32 h-32 bg-orange-500/20 rounded-full blur-2xl pointer-events-none"></div>
-
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-zinc-200/80 shadow-2xs flex flex-col justify-between space-y-3">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] sm:text-[11.5px] font-bold text-zinc-400 tracking-wider uppercase">
+              <span className="text-[11px] font-bold text-zinc-400 tracking-wider uppercase">
                 Pesanan Berjalan
               </span>
-              <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10.5px] font-semibold ${
+              <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10.5px] font-bold ${
                 pendingOrdersCount > 0 
-                  ? 'bg-orange-500/25 text-orange-300 border border-orange-500/35' 
-                  : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  ? 'bg-orange-50 text-orange-700 border border-orange-200/70' 
+                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200/70'
               }`}>
-                <span className={`w-1.5 h-1.5 rounded-full ${pendingOrdersCount > 0 ? 'bg-orange-400 animate-pulse' : 'bg-emerald-400'}`}></span>
-                {pendingOrdersCount > 0 ? `${pendingOrdersCount} Toko Pending` : 'Semua Beres'}
+                <span className={`w-1.5 h-1.5 rounded-full ${pendingOrdersCount > 0 ? 'bg-orange-500 animate-pulse' : 'bg-emerald-500'}`} />
+                {pendingOrdersCount > 0 ? `${pendingOrdersCount} Pending` : 'Beres'}
               </span>
             </div>
 
-            <div className="mt-2.5 flex items-baseline gap-2">
-              <span className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-3xl font-black tracking-tight text-zinc-900">
                 {pendingOrdersCount}
               </span>
-              <span className="text-[12px] sm:text-[12.5px] text-zinc-300 font-medium">
-                Toko · {totalPendingQty} Pcs Barang
+              <span className="text-[12.5px] text-zinc-500 font-medium">
+                Toko • {totalPendingQty} Pcs Barang
               </span>
             </div>
-            <p className="text-[11.5px] text-zinc-400 mt-1">
+            <p className="text-[11.5px] text-zinc-500 mt-1">
               {pendingOrdersCount > 0 
-                ? 'Segera selesaikan sebelum jadwal kirim' 
-                : 'Belum ada antrean, siap untuk order baru'}
+                ? 'Selesaikan sebelum jadwal kirim' 
+                : 'Belum ada antrean pesanan'}
             </p>
           </div>
 
-          {/* Action Row */}
-          <div className="grid grid-cols-2 gap-2 mt-3.5 pt-3 border-t border-zinc-700/60">
+          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-zinc-100">
             <button
               type="button"
               onClick={onOpenAddOrder}
@@ -204,7 +195,7 @@ function HomeTab({
             <button
               type="button"
               onClick={onOpenDraft}
-              className="py-2.5 px-3 bg-zinc-800 hover:bg-zinc-700 active:scale-95 text-zinc-200 hover:text-white rounded-xl text-[12px] font-semibold transition-all flex items-center justify-center gap-1 border border-zinc-700/80"
+              className="py-2.5 px-3 bg-zinc-100 hover:bg-zinc-200 active:scale-95 text-zinc-800 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-1"
             >
               <span>Buka Draft</span>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -215,32 +206,31 @@ function HomeTab({
         </div>
 
         {/* KARTU 2: KUNJUNGAN HARI INI */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-zinc-200/90 shadow-2xs flex flex-col justify-between">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-zinc-200/80 shadow-2xs flex flex-col justify-between space-y-3">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] sm:text-[11.5px] font-bold text-zinc-400 tracking-wider uppercase">
+              <span className="text-[11px] font-bold text-zinc-400 tracking-wider uppercase">
                 Kunjungan Hari Ini
               </span>
               <span className={`text-[10.5px] font-bold px-2 py-0.5 rounded-full border ${
                 todayVisitCount >= 12
                   ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                  : 'bg-orange-50 text-orange-800 border-orange-200'
+                  : 'bg-orange-50 text-orange-800 border border-orange-200'
               }`}>
                 {todayVisitCount >= 12 ? '✓ Target Tercapai' : `Target: 12 Toko`}
               </span>
             </div>
 
-            <div className="mt-2.5 flex items-baseline gap-2">
-              <span className="text-3xl sm:text-4xl font-black tracking-tight text-zinc-900">
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-3xl font-black tracking-tight text-zinc-900">
                 {todayVisitCount}
               </span>
-              <span className="text-[12px] sm:text-[12.5px] text-zinc-500 font-medium">
+              <span className="text-[12.5px] text-zinc-500 font-medium">
                 / 12 Toko ({todayVisitCount >= 12 ? '100%' : `${Math.round((todayVisitCount / 12) * 100)}%`})
               </span>
             </div>
 
-            {/* Progress Bar Harian */}
-            <div className="w-full bg-zinc-100 rounded-full h-2 mt-2 overflow-hidden border border-zinc-200/60">
+            <div className="w-full bg-zinc-100 rounded-full h-2 mt-2 overflow-hidden">
               <div 
                 className={`h-full rounded-full transition-all duration-500 ${
                   todayVisitCount >= 12 ? 'bg-emerald-500' : 'bg-[#EA580C]'
@@ -250,13 +240,12 @@ function HomeTab({
             </div>
             <p className="text-[11.5px] text-zinc-500 mt-1.5">
               {todayVisitCount >= 12 
-                ? 'Luar biasa! Target minimal 12 kunjungan telah terpenuhi.' 
-                : `Tersisa ${Math.max(0, 12 - todayVisitCount)} toko lagi untuk mencapai target harian.`}
+                ? 'Target minimal 12 kunjungan telah terpenuhi.' 
+                : `Tersisa ${Math.max(0, 12 - todayVisitCount)} toko lagi untuk mencapai target.`}
             </p>
           </div>
 
-          {/* Quick Actions: Rekap Hari Ini & Jadwal SPV */}
-          <div className="grid grid-cols-2 gap-2 mt-3.5 pt-3 border-t border-zinc-100">
+          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-zinc-100">
             <button
               type="button"
               onClick={onOpenVisitRecap}
@@ -267,7 +256,7 @@ function HomeTab({
             <button
               type="button"
               onClick={handleOpenSchedule}
-              className="py-2.5 px-3 bg-blue-50 hover:bg-blue-100 active:scale-95 text-blue-700 border border-blue-200/80 rounded-xl text-[12px] font-bold transition-all shadow-2xs flex items-center justify-center gap-1.5"
+              className="py-2.5 px-3 bg-zinc-100 hover:bg-zinc-200 active:scale-95 text-zinc-800 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-1.5"
             >
               <span>📋 Jadwal Mingguan</span>
             </button>
@@ -279,14 +268,14 @@ function HomeTab({
       {/* 4. SHORTCUT KATEGORI PART CEPAT */}
       <div className="bg-white rounded-2xl sm:rounded-3xl p-4 border border-zinc-200/80 shadow-2xs">
         <div className="flex items-center justify-between mb-2.5">
-          <span className="text-[12px] sm:text-[12.5px] font-bold text-zinc-800">
+          <span className="text-[12.5px] font-bold text-zinc-800">
             Kategori Part Cepat
           </span>
           {onOpenCategories && (
             <button 
               type="button"
               onClick={onOpenCategories}
-              className="text-[11.5px] font-semibold text-[#EA580C] hover:text-orange-700 transition-colors"
+              className="text-[11.5px] font-bold text-[#EA580C] hover:text-orange-700 transition-colors"
             >
               Semua Kategori →
             </button>
@@ -299,12 +288,12 @@ function HomeTab({
               key={cat.name}
               type="button"
               onClick={() => onOpenPricelist && onOpenPricelist(cat.name)}
-              className="p-2.5 bg-zinc-50 hover:bg-orange-50/70 border border-zinc-200/60 hover:border-orange-200 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center gap-1 transition-all text-center group active:scale-95"
+              className="p-2.5 bg-zinc-50 hover:bg-orange-50/70 border border-zinc-200/60 hover:border-orange-200 rounded-xl flex flex-col items-center justify-center gap-1 transition-all text-center group active:scale-95"
             >
               <span className="text-base group-hover:scale-110 transition-transform">
                 {cat.icon}
               </span>
-              <span className="text-[11px] sm:text-[11.5px] font-semibold text-zinc-700 group-hover:text-orange-700 leading-tight truncate w-full">
+              <span className="text-[11.5px] font-semibold text-zinc-700 group-hover:text-orange-700 leading-tight truncate w-full">
                 {cat.name}
               </span>
             </button>
@@ -312,20 +301,20 @@ function HomeTab({
         </div>
       </div>
 
-      {/* 5. PREVIEW ORDER BERJALAN (Hanya muncul jika ada order pending) */}
+      {/* 5. PREVIEW ORDER BERJALAN */}
       {pendingOrdersCount > 0 && (
         <div className="bg-white rounded-2xl sm:rounded-3xl p-4 border border-zinc-200/80 shadow-2xs space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-              <span className="text-[12px] sm:text-[12.5px] font-bold text-zinc-900">
+              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+              <span className="text-[12.5px] font-bold text-zinc-900">
                 Toko Perlu Diproses ({pendingOrdersCount})
               </span>
             </div>
             <button 
               type="button"
               onClick={onOpenDraft}
-              className="text-[11.5px] font-semibold text-zinc-500 hover:text-zinc-800"
+              className="text-[11.5px] font-bold text-zinc-500 hover:text-zinc-800"
             >
               Lihat Semua →
             </button>
@@ -345,19 +334,18 @@ function HomeTab({
                 <div 
                   key={order.id}
                   onClick={() => onOpenEditOrder ? onOpenEditOrder(order) : onOpenDraft()}
-                  className="p-3 bg-zinc-50 hover:bg-zinc-100/80 border border-zinc-200/70 rounded-xl sm:rounded-2xl flex items-center justify-between gap-2.5 transition-all cursor-pointer group active:scale-[0.99]"
+                  className="p-3 bg-zinc-50 hover:bg-zinc-100/80 border border-zinc-200/60 rounded-xl flex items-center justify-between gap-2.5 transition-all cursor-pointer group active:scale-[0.99]"
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       {order.routeCode && (
-                        <span className="px-1.5 py-0.5 bg-orange-100 text-orange-800 text-[10px] font-bold rounded">
+                        <span className="px-1.5 py-0.2 bg-zinc-200/70 text-zinc-700 text-[10px] font-mono font-bold rounded">
                           {order.routeCode}
                         </span>
                       )}
-                      <h4 className="font-bold text-zinc-900 text-[12.5px] sm:text-[13px] truncate">
+                      <h4 className="font-bold text-zinc-900 text-[13px] truncate">
                         {order.storeName}
                       </h4>
-                      {/* Badge Brand Pembeda */}
                       {hasDaytonaGroup && (
                         <span className="px-1.5 py-0.2 bg-orange-100 text-orange-800 text-[9.5px] font-bold rounded">
                           Daytona
@@ -369,8 +357,8 @@ function HomeTab({
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] sm:text-[11.5px] text-zinc-500 mt-0.5">
-                      {orderItemsCount} Part · {orderQty} Pcs Barang
+                    <p className="text-[11.5px] text-zinc-500 mt-0.5">
+                      {orderItemsCount} Part • {orderQty} Pcs Barang
                     </p>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
@@ -382,10 +370,10 @@ function HomeTab({
                         setCopiedStore(formattedStore);
                         setTimeout(() => setCopiedStore(''), 1500);
                       }}
-                      className={`p-1.5 rounded-xl border transition-all active:scale-90 shrink-0 ${
+                      className={`p-1.5 rounded-lg border transition-all active:scale-90 shrink-0 ${
                         isCopied 
                           ? 'bg-emerald-50 text-emerald-600 border-emerald-200' 
-                          : 'bg-orange-50 hover:bg-orange-100 text-orange-600 border-orange-200/80'
+                          : 'bg-white hover:bg-zinc-100 text-zinc-500 border-zinc-200'
                       }`}
                       title={`Salin ID & Toko: "${formattedStore}"`}
                     >
@@ -407,7 +395,7 @@ function HomeTab({
                         if (onOpenEditOrder) onOpenEditOrder(order);
                         else onOpenDraft();
                       }}
-                      className="px-2.5 py-1 bg-white border border-zinc-300 hover:border-zinc-400 group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900 text-zinc-700 rounded-xl text-[11px] font-bold transition-all shadow-2xs"
+                      className="px-2.5 py-1 bg-white border border-zinc-200 hover:bg-zinc-900 hover:text-white text-zinc-700 rounded-lg text-[11px] font-bold transition-all shadow-2xs"
                     >
                       Buka
                     </button>

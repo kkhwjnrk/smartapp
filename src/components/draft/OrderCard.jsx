@@ -14,12 +14,10 @@ function OrderCard({
   onOpenDetail,
   onEditOrder,
   onDeleteOrder,
-  onCopyPN,
   onCopyFormatText,
   onCopyStoreHeader,
   carryOverMonthText
 }) {
-  const [copiedPn, setCopiedPn] = useState(null);
   const [copiedStoreHeader, setCopiedStoreHeader] = useState(false);
   const isCompleted = order?.status === 'completed';
   const formattedDate = formatFullIndonesianDate(order?.date || order?.createdAt);
@@ -32,56 +30,57 @@ function OrderCard({
     return groupOrderItemsByBrand(order?.items || [], catalogItems);
   }, [order, catalogItems]);
 
-  const handleCopySinglePn = (pn, e) => {
+  const handleCopyStore = (e) => {
     e.stopPropagation();
-    navigator.clipboard.writeText(pn);
-    setCopiedPn(pn);
-    if (onCopyPN) onCopyPN(pn);
-    setTimeout(() => setCopiedPn(null), 1500);
+    if (onCopyStoreHeader) {
+      onCopyStoreHeader(formattedStoreText);
+    } else {
+      navigator.clipboard.writeText(formattedStoreText);
+    }
+    setCopiedStoreHeader(true);
+    setTimeout(() => setCopiedStoreHeader(false), 1500);
   };
 
-  // Preview maksimal 2 item ringkas agar kartu tetap rapi
-  const previewItems = orderItemsList.slice(0, 2);
+  const isOsram = order.brand === 'osram';
+  const netDisplay = isOsram
+    ? orderSummary.osramFormatted
+    : (orderSummary.daytonaGroupFormatted || orderSummary.formattedText);
 
   return (
     <div
       onClick={() => onOpenDetail(order)}
-      className={`bg-white rounded-3xl p-5 border transition-all duration-200 shadow-xs cursor-pointer ${isCompleted
-        ? 'border-zinc-200/60 bg-zinc-50/50'
-        : 'border-zinc-200 hover:border-zinc-300 hover:shadow-md'
-        }`}
+      className={`group bg-white rounded-2xl p-4 sm:p-4.5 border transition-all duration-200 shadow-2xs hover:shadow-sm cursor-pointer ${
+        isCompleted
+          ? 'border-zinc-200/70 bg-zinc-50/50'
+          : 'border-zinc-200/90 hover:border-zinc-300'
+      }`}
     >
-
-      {/* Header Baris: Info Toko & Aksi Cepat */}
-      <div className="flex items-start justify-between gap-3 pb-3 border-b border-zinc-100">
-        {/* Info Toko */}
-        <div className="flex-1 min-w-0">
-          {/* Baris Badge: Rute, Tombol Salin [ID Customer] [Nama Toko], & Lanjutan Bulan Lalu */}
+      {/* 1. HEADER KARTU: IDENTITAS TOKO & AKSI CEPAT */}
+      <div className="flex items-start justify-between gap-2.5 pb-2.5 border-b border-zinc-100">
+        <div className="min-w-0 flex-1">
+          {/* Badge Rute, ID & Lanjutan */}
           <div className="flex items-center gap-1.5 flex-wrap mb-1">
             {order.routeCode && (
-              <span className="inline-flex items-center px-2 py-0.5 bg-orange-50 text-orange-700 border border-orange-200/80 rounded-md text-[10.5px] font-bold tracking-wider">
+              <span className="px-2 py-0.5 bg-zinc-100 text-zinc-700 font-mono font-bold text-[10.5px] rounded-md tracking-tight">
                 {order.routeCode}
               </span>
             )}
 
-            {/* Tombol Ikon Copy Rapi di sebelah badge rute */}
+            {order.customerId && (
+              <span className="px-2 py-0.5 bg-zinc-900 text-white font-mono font-bold text-[10.5px] rounded-md">
+                {order.customerId}
+              </span>
+            )}
+
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onCopyStoreHeader) {
-                  onCopyStoreHeader(formattedStoreText);
-                } else {
-                  navigator.clipboard.writeText(formattedStoreText);
-                }
-                setCopiedStoreHeader(true);
-                setTimeout(() => setCopiedStoreHeader(false), 1500);
-              }}
-              className={`p-1 rounded-md transition-all active:scale-90 shrink-0 ${copiedStoreHeader
-                ? 'text-emerald-600 bg-emerald-50'
-                : 'text-zinc-400 hover:text-orange-600 hover:bg-orange-50'
-                }`}
-              title={`Salin ID & Nama Toko: "${formattedStoreText}"`}
+              onClick={handleCopyStore}
+              className={`p-1 rounded-md transition-all active:scale-90 ${
+                copiedStoreHeader
+                  ? 'text-emerald-600 bg-emerald-50'
+                  : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'
+              }`}
+              title={`Salin Nama Toko: "${formattedStoreText}"`}
             >
               {copiedStoreHeader ? (
                 <svg className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,80 +94,65 @@ function OrderCard({
             </button>
 
             {carryOverMonthText && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/80 rounded-md text-[10.5px] font-semibold">
-                <span>↳ Lanjutan {carryOverMonthText}</span>
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.2 bg-amber-50 text-amber-800 border border-amber-200/80 rounded text-[10px] font-semibold">
+                ↳ {carryOverMonthText}
               </span>
             )}
           </div>
 
           {/* Nama Toko */}
-          <h3 className={`text-[17px] font-bold tracking-tight leading-snug break-words ${isCompleted ? 'text-zinc-500 line-through decoration-zinc-300' : 'text-zinc-900'
-            }`}>
+          <h3 className={`text-[15.5px] sm:text-[16px] font-bold tracking-tight leading-snug break-words ${
+            isCompleted ? 'text-zinc-400 line-through' : 'text-zinc-900 group-hover:text-zinc-950'
+          }`}>
             {order.storeName}
           </h3>
 
-          {/* Meta: Tanggal Lengkap & Jumlah Item & Total Pcs */}
-          <div className="flex items-center gap-2 mt-1.5 text-[12px] text-zinc-400 font-medium flex-wrap">
-            <span className="text-zinc-600">{formattedDate}</span>
-            <span>·</span>
+          {/* Info Tanggal & Total */}
+          <p className="text-[11.5px] text-zinc-500 mt-1 flex items-center gap-1.5 flex-wrap">
+            <span>{formattedDate}</span>
+            <span>•</span>
             <span className="font-semibold text-zinc-700">{orderItemsList.length} item</span>
-            <span>·</span>
+            <span>•</span>
             <span className="font-semibold text-zinc-700">{totalQty} pcs</span>
             {isCompleted && (
-              <>
-                <span>·</span>
-                <span className="text-emerald-600 font-semibold flex items-center gap-1">
-                  <svg className="w-3 h-3 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Sudah Selesai
-                </span>
-              </>
+              <span className="inline-flex items-center gap-1 text-emerald-600 font-bold ml-1 text-[11px]">
+                <svg className="w-3 h-3 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                Selesai
+              </span>
             )}
-          </div>
+          </p>
         </div>
 
-
         {/* Action Buttons Top-Right */}
-        <div className="flex items-center gap-1 shrink-0">
-          {/* Tombol Salin Format Teks Notes */}
+        <div className="flex items-center gap-0.5 shrink-0" onClick={(e) => e.stopPropagation()}>
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onCopyFormatText(order);
-            }}
-            className="p-1.5 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded-lg transition-colors"
-            title="Salin format teks catatan"
+            onClick={() => onCopyFormatText(order)}
+            className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors active:scale-95"
+            title="Salin Catatan Order"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
             </svg>
           </button>
 
-          {/* Tombol Edit Order */}
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEditOrder(order);
-            }}
-            className="p-1.5 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded-lg transition-colors"
-            title="Edit Order Toko"
+            onClick={() => onEditOrder(order)}
+            className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors active:scale-95"
+            title="Edit Order"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
             </svg>
           </button>
 
-          {/* Tombol Hapus Order */}
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDeleteOrder(order.id);
-            }}
-            className="p-1.5 text-zinc-300 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            onClick={() => onDeleteOrder(order.id)}
+            className="p-1.5 text-zinc-300 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors active:scale-95"
             title="Hapus Order"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,234 +162,96 @@ function OrderCard({
         </div>
       </div>
 
-      {/* Body: Cuplikan Item Ringkas (Pemisah Daytona & Dura yang Jelas) */}
-      <div className="py-2.5 space-y-2">
+      {/* 2. CUPLIKAN ITEM RINGKAS (BERSIH & MUDAH DIBACA) */}
+      <div className="py-2.5 space-y-1.5">
         {groupedItems.hasBothDaytonaAndDura ? (
           <>
-            {/* Bagian Daytona */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between text-[11px] font-bold text-orange-800 bg-orange-50/90 px-2 py-0.5 rounded-md border border-orange-200/70">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#EA580C]"></span>
-                  <span>DAYTONA</span>
+            {/* Header Mini Daytona */}
+            <div className="flex items-center justify-between text-[11px] font-bold text-orange-800 bg-orange-50/70 px-2 py-0.5 rounded-md">
+              <span>DAYTONA ({groupedItems.daytonaOnlyQty} pcs)</span>
+              <span className="text-[10px] text-orange-600 font-medium">{groupedItems.daytonaItems.length} item</span>
+            </div>
+            {groupedItems.daytonaItems.slice(0, 2).map((item, idx) => (
+              <div key={`daytona-${idx}`} className="flex items-center justify-between text-[12.5px] px-1 py-0.5 text-zinc-700">
+                <span className="font-mono font-bold text-[#EA580C] truncate mr-2">
+                  {item.pn}
+                  {item.description && <span className="font-sans font-normal text-zinc-400 text-[11.5px] ml-1.5">({item.description})</span>}
                 </span>
-                <span className="text-[10.5px] font-semibold text-orange-700">
-                  {groupedItems.daytonaItems.length} part · {groupedItems.daytonaOnlyQty} pcs
+                <span className="font-bold text-zinc-900 shrink-0 text-[12px] bg-zinc-100 px-1.5 py-0.2 rounded">
+                  {item.qty} pcs
                 </span>
               </div>
-              {groupedItems.daytonaItems.slice(0, 2).map((item, idx) => (
-                <div
-                  key={`daytona-${idx}`}
-                  className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
-                >
-                  <div className="flex items-baseline gap-2 min-w-0 truncate">
-                    <span className="text-zinc-400 text-[13px] select-none font-bold">-</span>
-                    <span className="font-mono font-bold text-[#EA580C] text-[14px] tracking-tight shrink-0">
-                      {item.pn}
-                    </span>
-                    <span className="text-zinc-400 text-[12.5px] font-semibold">:</span>
-                    <span className="font-bold text-zinc-900 text-[13.5px] shrink-0">
-                      {item.qty} <span className="text-[10.5px] font-medium text-zinc-500">PCS</span>
-                    </span>
-                    {item.description && (
-                      <span className="text-zinc-400 text-[12px] truncate font-normal ml-1">
-                        ({item.description})
-                      </span>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={(e) => handleCopySinglePn(item.pn, e)}
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${copiedPn === item.pn
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
-                      }`}
-                    title="Salin PN ke clipboard"
-                  >
-                    {copiedPn === item.pn ? 'Tersalin' : 'Salin PN'}
-                  </button>
-                </div>
-              ))}
-              {groupedItems.daytonaItems.length > 2 && (
-                <div className="text-[11px] text-zinc-400 px-2 italic">
-                  +{groupedItems.daytonaItems.length - 2} part Daytona lainnya...
-                </div>
-              )}
-            </div>
+            ))}
 
-            {/* Bagian Dura */}
-            <div className="space-y-1 pt-1 border-t border-zinc-100">
-              <div className="flex items-center justify-between text-[11px] font-bold text-sky-800 bg-sky-50/90 px-2 py-0.5 rounded-md border border-sky-200/70">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-sky-600"></span>
-                  <span>DURA</span>
+            {/* Header Mini Dura */}
+            <div className="flex items-center justify-between text-[11px] font-bold text-sky-800 bg-sky-50/70 px-2 py-0.5 rounded-md mt-1.5">
+              <span>DURA ({groupedItems.duraQty} pcs)</span>
+              <span className="text-[10px] text-sky-600 font-medium">{groupedItems.duraItems.length} item</span>
+            </div>
+            {groupedItems.duraItems.slice(0, 2).map((item, idx) => (
+              <div key={`dura-${idx}`} className="flex items-center justify-between text-[12.5px] px-1 py-0.5 text-zinc-700">
+                <span className="font-mono font-bold text-sky-700 truncate mr-2">
+                  {item.pn}
+                  {item.description && <span className="font-sans font-normal text-zinc-400 text-[11.5px] ml-1.5">({item.description})</span>}
                 </span>
-                <span className="text-[10.5px] font-semibold text-sky-700">
-                  {groupedItems.duraItems.length} part · {groupedItems.duraQty} pcs
+                <span className="font-bold text-zinc-900 shrink-0 text-[12px] bg-zinc-100 px-1.5 py-0.2 rounded">
+                  {item.qty} pcs
                 </span>
               </div>
-              {groupedItems.duraItems.slice(0, 2).map((item, idx) => (
-                <div
-                  key={`dura-${idx}`}
-                  className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
-                >
-                  <div className="flex items-baseline gap-2 min-w-0 truncate">
-                    <span className="text-zinc-400 text-[13px] select-none font-bold">-</span>
-                    <span className="font-mono font-bold text-sky-700 text-[14px] tracking-tight shrink-0">
-                      {item.pn}
-                    </span>
-                    <span className="text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase shrink-0 bg-sky-100 text-sky-700 border border-sky-200">
-                      Dura
-                    </span>
-                    <span className="text-zinc-400 text-[12.5px] font-semibold">:</span>
-                    <span className="font-bold text-zinc-900 text-[13.5px] shrink-0">
-                      {item.qty} <span className="text-[10.5px] font-medium text-zinc-500">PCS</span>
-                    </span>
-                    {item.description && (
-                      <span className="text-zinc-400 text-[12px] truncate font-normal ml-1">
-                        ({item.description})
-                      </span>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={(e) => handleCopySinglePn(item.pn, e)}
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${copiedPn === item.pn
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
-                      }`}
-                    title="Salin PN ke clipboard"
-                  >
-                    {copiedPn === item.pn ? 'Tersalin' : 'Salin PN'}
-                  </button>
-                </div>
-              ))}
-              {groupedItems.duraItems.length > 2 && (
-                <div className="text-[11px] text-zinc-400 px-2 italic">
-                  +{groupedItems.duraItems.length - 2} part Dura lainnya...
-                </div>
-              )}
-            </div>
+            ))}
           </>
         ) : (
-          previewItems.map((item, idx) => (
-            <div
-              key={idx}
-              className="flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-zinc-100/70 transition-colors"
-            >
-              <div className="flex items-baseline gap-2 min-w-0 truncate">
-                <span className="text-zinc-400 text-[14px] select-none font-bold">-</span>
-
-                {/* Part Number dengan warna brand */}
-                <span className={`font-mono font-bold text-[15px] tracking-tight shrink-0 ${item.brand === 'osram'
-                  ? 'text-amber-800'
-                  : item.brand === 'dura'
-                    ? 'text-sky-700'
-                    : 'text-[#EA580C]'
-                  }`}>
-                  {item.pn}
-                </span>
-
-                {item.brand && item.brand !== 'daytona' && (
-                  <span className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase shrink-0 ${item.brand === 'osram'
-                    ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                    : 'bg-sky-100 text-sky-700 border border-sky-200'
-                    }`}>
-                    {item.brand}
-                  </span>
-                )}
-
-                <span className="text-zinc-400 text-[13px] font-semibold">:</span>
-
-                {/* Qty */}
-                <span className="font-bold text-zinc-900 text-[14px] shrink-0">
-                  {item.qty} <span className="text-[11px] font-medium text-zinc-500">PCS</span>
-                </span>
-
-                {/* Deskripsi Barang */}
-                {item.description && (
-                  <span className="text-zinc-400 text-[12.5px] truncate font-normal ml-1">
-                    ({item.description})
-                  </span>
-                )}
-              </div>
-
-              {/* Tombol 1-Tap Salin PN */}
-              <button
-                type="button"
-                onClick={(e) => handleCopySinglePn(item.pn, e)}
-                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium transition-all ml-2 shrink-0 ${copiedPn === item.pn
-                  ? 'bg-emerald-100 text-emerald-800'
-                  : 'bg-zinc-100/80 hover:bg-zinc-200 text-zinc-600 active:scale-95'
-                  }`}
-                title="Salin PN ke clipboard"
-              >
-                {copiedPn === item.pn ? (
-                  <>
-                    <svg className="w-3 h-3 text-emerald-600 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Tersalin</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-3 h-3 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                    </svg>
-                    <span>Salin PN</span>
-                  </>
-                )}
-              </button>
+          orderItemsList.slice(0, 3).map((item, idx) => (
+            <div key={idx} className="flex items-center justify-between text-[12.5px] px-1 py-0.5 text-zinc-700">
+              <span className={`font-mono font-bold truncate mr-2 ${
+                item.brand === 'osram' ? 'text-amber-800' : item.brand === 'dura' ? 'text-sky-700' : 'text-[#EA580C]'
+              }`}>
+                {item.pn}
+                {item.description && <span className="font-sans font-normal text-zinc-400 text-[11.5px] ml-1.5">({item.description})</span>}
+              </span>
+              <span className="font-bold text-zinc-900 shrink-0 text-[12px] bg-zinc-100 px-1.5 py-0.2 rounded">
+                {item.qty} pcs
+              </span>
             </div>
           ))
         )}
+
+        {orderItemsList.length > 3 && !groupedItems.hasBothDaytonaAndDura && (
+          <p className="text-[11px] text-zinc-400 italic px-1 pt-0.5">
+            +{orderItemsList.length - 3} item lainnya...
+          </p>
+        )}
       </div>
 
-      {/* Footer Kartu: Tombol Total Nominal dengan Diskon Pintar & Aksi Buka Rincian */}
-      <div className="pt-2.5 border-t border-zinc-100 flex items-center justify-between gap-2">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpenDetail(order);
-          }}
-          className="flex-1 py-2 px-3.5 text-left bg-zinc-50 hover:bg-zinc-100 rounded-xl border border-zinc-200/80 hover:border-zinc-300 transition-all flex items-center justify-between group active:scale-[0.99]"
-          title={`Buka rincian pesanan (${orderItemsList.length} item)`}
-        >
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-zinc-900 text-[14px] tracking-tight block">
-                {order.brand === 'osram' ? orderSummary.osramFormatted : (orderSummary.daytonaGroupFormatted || orderSummary.formattedText)}
-              </span>
-            </div>
-
-            {groupedItems.hasBothDaytonaAndDura && (
-              <span className="text-[11px] text-zinc-500 font-medium block truncate mt-0.5">
-                Daytona ({groupedItems.daytonaOnlyQty} pcs) · Dura ({groupedItems.duraQty} pcs)
-              </span>
-            )}
+      {/* 3. FOOTER KARTU: TOTAL NET & TOMBOL STATUS */}
+      <div className="pt-2.5 border-t border-zinc-100 flex items-center justify-between gap-2.5">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+              Total Net
+            </span>
           </div>
-          <svg className="w-4 h-4 text-zinc-400 group-hover:text-zinc-700 group-hover:translate-x-0.5 transition-all shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+          <span className="font-bold text-zinc-900 text-[14.5px] tracking-tight block">
+            {netDisplay}
+          </span>
+        </div>
 
-        {/* Tombol Cepat Selesai / Kembalikan */}
+        {/* Tombol Status */}
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             onRequestToggleStatus(order);
           }}
-          className={`px-3 py-2 rounded-xl text-[12px] font-semibold transition-all shrink-0 active:scale-95 ${isCompleted
-            ? 'text-zinc-600 bg-zinc-100 hover:bg-zinc-200'
-            : 'text-amber-700 bg-amber-50 hover:bg-amber-100'
-            }`}
+          className={`px-3 py-1.5 rounded-xl text-[12px] font-bold transition-all shrink-0 active:scale-95 ${
+            isCompleted
+              ? 'text-zinc-600 bg-zinc-100 hover:bg-zinc-200'
+              : 'text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200/60'
+          }`}
         >
           {isCompleted ? 'Kembalikan' : 'Selesaikan'}
         </button>
       </div>
-
     </div>
   );
 }
