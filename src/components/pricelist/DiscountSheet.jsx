@@ -104,7 +104,6 @@ function DiscountSheet({ item, onClose }) {
             </div>
             {item.motorCode && (
               <div className="mt-1 flex items-center gap-1.5 flex-wrap">
-                <span className="text-[11px] font-medium text-zinc-400">Kode Motor:</span>
                 <span className="font-mono font-semibold text-[11.5px] px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700 border border-zinc-200/80">
                   {item.motorCode}
                 </span>
@@ -134,9 +133,7 @@ function DiscountSheet({ item, onClose }) {
           </div>
           <div className="text-right">
             <span className="block text-[12px] font-medium text-zinc-500">Isi per Kemasan</span>
-            <span className="text-[15px] font-semibold text-zinc-800">
-              {item.qty || 1} PCS{item.qtyCtn ? <span className="text-[12px] font-normal text-zinc-400 ml-1">({item.qtyCtn}/dus)</span> : ''}
-            </span>
+            <span className="text-[15px] font-semibold text-zinc-800">{item.qtyCtn || item.qty || 1} PCS</span>
           </div>
         </div>
 

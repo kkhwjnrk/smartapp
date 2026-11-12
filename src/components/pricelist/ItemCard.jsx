@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { calculateDiscount } from '../../utils/formatters';
 
-// Parser peruntukan motor menjadi grup brand dan pill model motor
+// Parser peruntukan motor menjadi grup brand dan teks daftar model
 function parseCompatibility(compText) {
   if (!compText || typeof compText !== 'string') return [];
 
@@ -12,12 +12,10 @@ function parseCompatibility(compText) {
     if (seg.includes(':')) {
       const colonIdx = seg.indexOf(':');
       const brand = seg.slice(0, colonIdx).trim();
-      const rest = seg.slice(colonIdx + 1).trim();
-      // Pisahkan masing-masing motor berdasarkan koma ','
-      const models = rest.split(',').map(m => m.trim()).filter(Boolean);
-      return { brand, models, raw: '' };
+      const modelsText = seg.slice(colonIdx + 1).trim();
+      return { brand, modelsText, raw: '' };
     }
-    return { brand: '', models: [], raw: seg };
+    return { brand: '', modelsText: '', raw: seg };
   });
 }
 
@@ -182,10 +180,9 @@ function ItemCard({
           {productTitle}
         </h3>
 
-        {/* Kode Motor (menggantikan posisi badge spek lama) */}
+        {/* Kode Motor langsung badge saja tanpa label */}
         {item.motorCode && (
           <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
-            <span className="text-[11px] font-medium text-zinc-400">Kode Motor:</span>
             <span className="font-mono font-semibold text-[11.5px] px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700 border border-zinc-200/80">
               {item.motorCode}
             </span>
@@ -193,42 +190,29 @@ function ItemCard({
         )}
       </div>
 
-      {/* ROW 3: Peruntukan Motor Terstruktur (Full Width, Tanpa Klik, Brand Grouped) */}
+      {/* ROW 3: Peruntukan Motor Terstruktur (Badge Hanya pada Brand, Teks Biasa untuk Model) */}
       {compatibilityGroups.length > 0 && (
         <div className="w-full bg-zinc-50/80 rounded-xl p-2.5 border border-zinc-200/70 space-y-2">
           {compatibilityGroups.map((group, gIdx) => (
-            <div key={gIdx} className="flex flex-wrap items-center gap-1.5">
-              {group.brand && (
-                <span className={`shrink-0 text-[10px] font-extrabold px-1.5 py-0.5 rounded-md border uppercase tracking-wider ${getBrandBadgeStyle(group.brand)}`}>
+            <div key={gIdx} className="flex items-start gap-2 text-[12.5px] leading-relaxed">
+              {group.brand ? (
+                <span className={`shrink-0 text-[10.5px] font-extrabold px-1.5 py-0.5 rounded-md border uppercase tracking-wider ${getBrandBadgeStyle(group.brand)}`}>
                   {group.brand}
                 </span>
-              )}
-              {group.models.map((model, mIdx) => (
-                <span 
-                  key={mIdx}
-                  className="text-[11.5px] px-2 py-0.5 rounded-md bg-white text-zinc-700 border border-zinc-200/90 font-medium shadow-2xs leading-normal"
-                >
-                  {model}
-                </span>
-              ))}
-              {group.raw && (
-                <span className="text-[11.5px] px-2 py-0.5 rounded-md bg-white text-zinc-600 border border-zinc-200/90 font-medium leading-normal">
-                  {group.raw}
-                </span>
-              )}
+              ) : null}
+              <span className="text-zinc-700 font-normal flex-1">
+                {group.modelsText || group.raw}
+              </span>
             </div>
           ))}
         </div>
       )}
 
-      {/* ROW 4: Footer (Kemasan di Kiri, Kolom Harga di Kanan) */}
+      {/* ROW 4: Footer (Kemasan di Kiri Menggunakan qtyCtn, Kolom Harga di Kanan) */}
       <div className="pt-2.5 border-t border-zinc-100 flex justify-between items-center w-full">
         <div className="text-[12.5px] text-zinc-500 font-medium flex items-center gap-1.5">
           <span className="text-zinc-400">Kemasan:</span>
-          <span className="font-semibold text-zinc-700">{item.qty || 1} PCS</span>
-          {item.qtyCtn && (
-            <span className="text-zinc-400 text-[11.5px] font-normal">({item.qtyCtn}/ctn)</span>
-          )}
+          <span className="font-semibold text-zinc-700">{item.qtyCtn || item.qty || 1} PCS</span>
         </div>
 
         {/* Kolom Harga Aktif / Diskon */}

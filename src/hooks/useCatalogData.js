@@ -5,7 +5,7 @@ import initialOsramPricelist from '../data/osramPricelist.json';
 import { ensureValidCategory } from '../constants/categories';
 import { comparePartNumbers } from '../utils/formatters';
 
-const PRICELIST_DATA_VERSION = 'v6_612_structured_cards';
+const PRICELIST_DATA_VERSION = 'v7_612_qtyctn_clean_layout';
 const DURA_DATA_VERSION = 'v1_319_official_pdf';
 const OSRAM_DATA_VERSION = 'v1_30_official_pdf';
 
@@ -232,7 +232,7 @@ export default function useCatalogData() {
       d24: Math.round(rawNumeric * 0.76),
       d27: Math.round(rawNumeric * 0.73),
       d29: Math.round(rawNumeric * 0.71),
-      qty: String(formData.qty || '1'),
+      qtyCtn: Number(formData.qtyCtn || formData.qty || 1),
       category: formData.category || 'Busi',
       subCategory: formData.subCategory || modalItem?.subCategory || ''
     };
