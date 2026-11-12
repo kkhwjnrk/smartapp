@@ -1,7 +1,7 @@
 [
   {
     "pn": "2725",
-    "description": "Handgrip Daytona - Road Race Grip, Blue Grey",
+    "description": "Daytona Road Race Grip, Blue Grey 110mm - With 2pcs of end cap, black color.",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -13,7 +13,7 @@
   },
   {
     "pn": "2726",
-    "description": "Handgrip Daytona - Motorcross Grip, Blue Grey",
+    "description": "Daytona Motorcross Grip, Blue Grey",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -25,7 +25,7 @@
   },
   {
     "pn": "2736",
-    "description": "Handgrip Daytona - Road Race Grip, Red Grey",
+    "description": "Daytona Road Race Grip, Red Grey 110mm - With 2pcs of end cap, black color.",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -37,7 +37,7 @@
   },
   {
     "pn": "2738",
-    "description": "Handgrip Daytona - Road Race Grip, Black Grey",
+    "description": "Daytona Road Race Grip, Black Grey 110mm - With 2pcs of end cap, black color.",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -49,7 +49,7 @@
   },
   {
     "pn": "2741",
-    "description": "Handgrip Daytona - Motorcross Grip, Red Grey",
+    "description": "Daytona Motorcross Grip, Red Grey",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -61,7 +61,7 @@
   },
   {
     "pn": "2742",
-    "description": "Handgrip Daytona - Motorcross Grip, Green Grey",
+    "description": "Daytona Motorcross Grip, Green Grey",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -73,7 +73,7 @@
   },
   {
     "pn": "2743",
-    "description": "Handgrip Daytona - Motorcross Grip, Black Grey",
+    "description": "Daytona Motorcross Grip, Black Grey",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -85,7 +85,7 @@
   },
   {
     "pn": "3386",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - SupraX125(Fr), Ninja150(Fr), Fu(Fr)",
+    "description": "Premium Brake Pad, RD0612, SF5312, Sup/X125(Fr),Kharisma(Fr),Tiger(Fr),MegaPro(Fr),CS1(Fr),Spin(Fr), Sho125(Fr),Tornado(Fr),Smash(Fr),Skywave(Fr), SatF150(Fr),KazeR(Fr), Nin150/250(Fr)(Rr), NinR150/KRR(Fr)(Rr), Ninja 250R (Fr) (Rr)",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -97,7 +97,7 @@
   },
   {
     "pn": "3388",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - Mio Sporty(Fr), Mio J(Fr), Nmax (Rr)",
+    "description": "Premium Brake Pad, RD0612, SF5312, Mio Sporty(Fr), Mio J(Fr)",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -109,7 +109,7 @@
   },
   {
     "pn": "3389",
-    "description": "Busi Tapered Ignimax - Karisma, Blade, Blade125 - DYT_CPR6EA-9",
+    "description": "Ignimax Tapered Spark Plug, CPR6EA-9 Karisma, SupraX125,Blade,CS1,Scoopy,Revo,Kirana,Thunder",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -121,7 +121,7 @@
   },
   {
     "pn": "3390",
-    "description": "Busi Tapered Ignimax - Vario150/125, Beat fi, Nmax - DYT_CPR9EA-9",
+    "description": "Ignimax Tapered Spark Plug, CPR9EA-9AllNewVar125/150 NewMegaPro,Beat,Scoopy,Spacy,Verza,CB/CBR150R/250R,MX135,Nmax",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -133,7 +133,7 @@
   },
   {
     "pn": "3391",
-    "description": "Busi Tapered Ignimax - Mio, Mio J - DYT_CR6HSA",
+    "description": "Ignimax Tapered Spark Plug, CR6HSA Mio,MioJ,XRide,MioM3,JupZ,Sho,Sho125,Arashi,Titan,Smash,Spin,Skywave,Kaze,Blitz",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -145,7 +145,7 @@
   },
   {
     "pn": "3392",
-    "description": "Busi Tapered Ignimax - MX135, MX-150, Vixion - DYT_CR8E",
+    "description": "Ignimax Tapered Spark Plug, CR8E MX-150,Vix,SatFU150,CS1,Nin250,NVL,R15,R25",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -157,7 +157,7 @@
   },
   {
     "pn": "3393",
-    "description": "Busi Double Iridium Racing - SupraX125, Blade - DYT_CPR7EA-9",
+    "description": "DYT SPLUG DOUBLE IRIDIUM CPR6EA-9 Karisma,SupraX125,Blade,CS1,Scoopy,Revo,Kirana,Thunder",
     "het": 104895,
     "d24": 79720,
     "d27": 76573,
@@ -169,7 +169,7 @@
   },
   {
     "pn": "3394",
-    "description": "Busi Double Iridium Racing - Vario125, Vario150 - DYT_CPR9EA-9",
+    "description": "DYT SPLUG DOUBLE IRIDIUM CPR9EA-9 NewMegaPro, Beat, Scoopy, Spacy, Verza, CB/CBR150R/250R, MX135, Nmax, Vario125, Vario 150",
     "het": 104895,
     "d24": 79720,
     "d27": 76573,
@@ -181,7 +181,7 @@
   },
   {
     "pn": "3395",
-    "description": "Busi Double Iridium Racing - MX135, MX-150, Vixion - DYT_CR9E",
+    "description": "DYT SPLUG DOUBLE IRIDIUM CR9E MX-150,Vixion, Satria FU150, CS1, Ninja250, NVL,R15,R25",
     "het": 104895,
     "d24": 79720,
     "d27": 76573,
@@ -193,7 +193,7 @@
   },
   {
     "pn": "3398",
-    "description": "Busi Double Iridium Racing - Jupiter Z, Vega - DYT_CR7HSA",
+    "description": "DYT SPLUG DOUBLE IRIDIUM CR6HSA Mio,MioJ,XRide,MioM3,JupZ,Sho,Sho125, Arashi,Titan,Smash,Spin,Skywave,Kaze,Blitz",
     "het": 104895,
     "d24": 79720,
     "d27": 76573,
@@ -205,7 +205,7 @@
   },
   {
     "pn": "3459",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - Mio M3(Fr), N-Max (Fr)",
+    "description": "Premium Brake Pad, RD0612, SF5312, Mio M3(Fr), N-Max (Fr), MX-King (Fr)",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -217,7 +217,7 @@
   },
   {
     "pn": "3498",
-    "description": "Filter Udara Superstock - Vario, Vario Techno - 117210-KVB-700",
+    "description": "DYT AIR FILTER VARIO-VAR TECH",
     "het": 54279,
     "d24": 41252,
     "d27": 39624,
@@ -229,7 +229,7 @@
   },
   {
     "pn": "3499",
-    "description": "Filter Udara Superstock - Beat, Scoopy - 117210-KVY-960",
+    "description": "DYT AIR FILTER BEAT-SCOOPY",
     "het": 48840,
     "d24": 37118,
     "d27": 35653,
@@ -241,7 +241,7 @@
   },
   {
     "pn": "3500",
-    "description": "Filter Udara Superstock - New Beat Fi, New Scoopy Fi, New Vario Fi - 17210-K16-900",
+    "description": "DYT AIR FILTER BEAT FI-SCO FI-VAR FI",
     "het": 48840,
     "d24": 37118,
     "d27": 35653,
@@ -253,7 +253,7 @@
   },
   {
     "pn": "3501",
-    "description": "Filter Udara Superstock - Vario 125, Vario 150, PCX 150 - 17210-KZR-600",
+    "description": "DYT AIR FILTER VAR125-VAR150 ESP",
     "het": 65046,
     "d24": 49435,
     "d27": 47484,
@@ -265,7 +265,7 @@
   },
   {
     "pn": "3502",
-    "description": "Filter Udara Superstock - Mio, Mio Sporty - 5TL-E4450-00",
+    "description": "DYT AIR FILTER MIO",
     "het": 46731,
     "d24": 35516,
     "d27": 34114,
@@ -277,7 +277,7 @@
   },
   {
     "pn": "3504",
-    "description": "Filter Udara Superstock - Mio J, Mio GT, Mio Fino fi, X-ride, Soul GT - 54P-WE445-00",
+    "description": "DYT AIR FILTER MIO J-XRIDE-SOUL GT",
     "het": 49839,
     "d24": 37878,
     "d27": 36382,
@@ -289,7 +289,7 @@
   },
   {
     "pn": "3506",
-    "description": "Filter Udara Superstock - Vixion NVL / NVA - 1PA-E4450-00",
+    "description": "DYT AIR FILTER V-IXION >2013 NVL/NVA",
     "het": 54279,
     "d24": 41252,
     "d27": 39624,
@@ -301,7 +301,7 @@
   },
   {
     "pn": "3508",
-    "description": "Filter Oli Mesin (Oil Filter) - Vixion, Jupiter MX, Scorpio Z, Jupiter Z Fi",
+    "description": "Ultra Nano Oil Filter Vixion, Jup MX,Scorpio Z,Jup Z,Jup Fi",
     "het": 28971,
     "d24": 22018,
     "d27": 21149,
@@ -313,7 +313,7 @@
   },
   {
     "pn": "3509",
-    "description": "Filter Oli Mesin (Oil Filter) - Smash, Shogun, Satria F150, Thunder, Spin, Skywave, Skydrive",
+    "description": "Ultra Nano Oil Filter Smash,Shogun,SatFU150,Thunder,Spin,Skywave,Skydrive",
     "het": 25752,
     "d24": 19572,
     "d27": 18799,
@@ -325,7 +325,7 @@
   },
   {
     "pn": "3533",
-    "description": "Busi Tapered Ignimax - Tiger, Scorpio - DYT_D8EA",
+    "description": "Ignimax Tapered Spark Plug, D8EA GlPro,GLMax,MegaPro,TigerSeries,ScorpioSeries,Thunder250",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -337,7 +337,7 @@
   },
   {
     "pn": "3561",
-    "description": "Busi Tapered Ignimax - Vario 125 Techno, SupraX125 - DYT_CPR7EA-9",
+    "description": "Ignimax Tapered Spark Plug, CPR7EA9 Blade 110. Blade 125, Vario 125i,PCX 150, PCX 125, SupraX1245FI, Vario Techno",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -349,7 +349,7 @@
   },
   {
     "pn": "3562",
-    "description": "Busi Tapered Ignimax - Ninja 150R/150RR, Satria 120 - DYT_BP8ES",
+    "description": "Ignimax Tapered Spark Plug, BP8ES Satria R,Ninja R",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -361,7 +361,7 @@
   },
   {
     "pn": "3563",
-    "description": "Busi Tapered Ignimax - RX-King, F1, F1ZR - DYT_BP8HS",
+    "description": "Ignimax Tapered Spark Plug, BP8HS RX King",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -373,7 +373,7 @@
   },
   {
     "pn": "3830",
-    "description": "Busi Double Iridium Racing - Ninja 150, Satria 120 - DYT_BP8ES",
+    "description": "DYT SPLUG DOUBLE IRIDIUM BP8ES Satria R,Ninja R",
     "het": 104895,
     "d24": 79720,
     "d27": 76573,
@@ -385,7 +385,7 @@
   },
   {
     "pn": "3831",
-    "description": "Busi Double Iridium Racing - RX-King, F1ZR - DYT_BP8HS",
+    "description": "DYT SPLUG DOUBLE IRIDIUM BP8HS RX-King, F1ZR",
     "het": 104895,
     "d24": 79720,
     "d27": 76573,
@@ -397,7 +397,7 @@
   },
   {
     "pn": "3852",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - R25(Rr), Xmax (Rr)",
+    "description": "Premium Brake Pad, RD0612, SF5312, R25(Rr), Xmax (Rr), MT25 (Rr)",
     "het": 154956,
     "d24": 117767,
     "d27": 113118,
@@ -409,7 +409,7 @@
   },
   {
     "pn": "3854",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - R25(Fr), Xmax (Fr)",
+    "description": "Premium Brake Pad, RD0612, SF5312, R25(Fr) Xmax (Fr), MT25 (Fr)",
     "het": 154956,
     "d24": 117767,
     "d27": 113118,
@@ -421,7 +421,7 @@
   },
   {
     "pn": "3945",
-    "description": "Filter Udara Superstock - Mio M3, All New Soul GT - 2PH-E4450-00",
+    "description": "DYT AIR FILTER MIO M3-NEW SOUL GT 2PH-E4450-00",
     "het": 45621,
     "d24": 34672,
     "d27": 33303,
@@ -433,7 +433,7 @@
   },
   {
     "pn": "3947",
-    "description": "Filter Udara Superstock - All New CBR150R, All New CB150R - 17211-K15-900",
+    "description": "DYT AIR FILTER ALL NEW CBR150R ALL NEW CB150R 17211-K15-9",
     "het": 52170,
     "d24": 39649,
     "d27": 38084,
@@ -445,7 +445,7 @@
   },
   {
     "pn": "3948",
-    "description": "Filter Udara Superstock - Supra X125 FI, New Revo FI, Blade125 FI - 17210-K03-N30",
+    "description": "DYT AIR FILTER SUPRAX125 PGMFI NEW REVO FI NEW BLADE125 FI",
     "het": 46287,
     "d24": 35178,
     "d27": 33790,
@@ -457,7 +457,7 @@
   },
   {
     "pn": "3949",
-    "description": "Filter Udara Superstock - Nmax - 2DP-E4451-00",
+    "description": "DYT AIR FILTER N-MAX 2DP-E4451-00",
     "het": 56943,
     "d24": 43277,
     "d27": 41568,
@@ -469,7 +469,7 @@
   },
   {
     "pn": "3998",
-    "description": "Vanbelt Ultradrive Only - Mio Sporty, Mio Soul, Fino - DYT_5TL-WE76J-00",
+    "description": "Ultra Drive Belt only (without Roller) Mio Sporty,Soul,Fino",
     "het": 101898,
     "d24": 77442,
     "d27": 74386,
@@ -481,7 +481,7 @@
   },
   {
     "pn": "3999",
-    "description": "Vanbelt Ultradrive Only - Mio J, Fino Fi, Mio GT, X-Ride - DYT_54P/2BJ/1KP",
+    "description": "Ultra Drive Belt only (without Roller) Mio J,Fino Fi Mio GT,Xride",
     "het": 102897,
     "d24": 78202,
     "d27": 75115,
@@ -493,7 +493,7 @@
   },
   {
     "pn": "4000",
-    "description": "Vanbelt Ultradrive Only - Beat, Scoopy, Spacy - DYT_23100-KVY-900",
+    "description": "Ultra Drive Belt only (without Roller) Beat,Scoopy,Spacy",
     "het": 128982,
     "d24": 98026,
     "d27": 94157,
@@ -505,7 +505,7 @@
   },
   {
     "pn": "4001",
-    "description": "Vanbelt Ultradrive Only - Beat Fi, Scoopy Fi, Spacy Fi - DYT_23100-KZL-900",
+    "description": "Ultra Drive Belt only (without Roller) Beat Fi,Scoopy Fi,Spacy Fi",
     "het": 134976,
     "d24": 102582,
     "d27": 98532,
@@ -517,7 +517,7 @@
   },
   {
     "pn": "4002",
-    "description": "Vanbelt Ultradrive Only - Vario 110 - DYT_23100-KVB-900",
+    "description": "Ultra Drive Belt only (without Roller) Vario 110",
     "het": 144966,
     "d24": 110174,
     "d27": 105825,
@@ -529,7 +529,7 @@
   },
   {
     "pn": "4003",
-    "description": "Vanbelt Ultradrive Only - Vario125 CBS Fi - DYT_23100-KZR-900",
+    "description": "Ultra Drive Belt only (without Roller) Vario125 CBS Fi",
     "het": 154956,
     "d24": 117767,
     "d27": 113118,
@@ -541,7 +541,7 @@
   },
   {
     "pn": "4004",
-    "description": "Vanbelt Ultradrive Only - Beat ESP / POP & Scoopy ESP - DYT_23100-K44-V01",
+    "description": "Ultra Drive Belt only (without Roller) Beat ESP,POP, Scoopy ESP",
     "het": 138972,
     "d24": 105619,
     "d27": 101450,
@@ -553,7 +553,7 @@
   },
   {
     "pn": "4006",
-    "description": "Vanbelt Ultradrive Only - N-Max - DYT_2DP-E7641-00",
+    "description": "Ultra Drive Belt only (without Roller) N Max",
     "het": 184926,
     "d24": 140544,
     "d27": 134996,
@@ -565,7 +565,7 @@
   },
   {
     "pn": "4007",
-    "description": "Vanbelt Ultradrive Only - Mio M3 & All New Soul GT - DYT_2PH-E7641-00",
+    "description": "Ultra Drive Belt only (without Roller) Mio M3, All New Soul GT",
     "het": 134976,
     "d24": 102582,
     "d27": 98532,
@@ -577,7 +577,7 @@
   },
   {
     "pn": "4065",
-    "description": "Kampas Rem Depan (Discpad) Superstock - SupraX125(Fr), Ninja150(Fr), Fu(Fr)",
+    "description": "Superstock Brake Pad, 06455-KW6-843/43082-0122 Sup/X125(Fr), Kharisma(Fr), Tiger(Fr), MegaPro(Fr), CS1(Fr), Spin(Fr), Sho125(Fr), Tornado(Fr), Smash(Fr), Skywave(Fr), SatF150(Fr), KazeR(Fr), Nin150/250(Fr)(Rr), NinR150/KRR(Fr)(Rr), Ninja 250R (Fr)(Rr)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -589,7 +589,7 @@
   },
   {
     "pn": "4066",
-    "description": "Kampas Rem Depan (Discpad) Superstock - Beat Fi (Fr), Vario125CBS (Fr)",
+    "description": "Superstock Brake Pad, 06455-KVB-T01..Beat Fi / Vario125CBS (Fr)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -601,7 +601,7 @@
   },
   {
     "pn": "4067",
-    "description": "Kampas Rem Depan (Discpad) Superstock - Verza (Fr), CB150R(Fr)",
+    "description": "Superstock Brake Pad, 06455-KPP-N01..Verza (Fr), CB150R (Fr)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -613,7 +613,7 @@
   },
   {
     "pn": "4068",
-    "description": "Kampas Rem Depan (Discpad) Superstock - Mio Sporty(Fr), Mio J(Fr), Nmax (Rr)",
+    "description": "Superstock Brake Pad, 3C1-W0045-10..Mio Soul, Sporty, SoulGT, GT, J(Fr), XeonRC(Fr), JupZ1(Fr), MX135(Fr), Vixion(Fr), Byson(Fr), N-Max(Rr), R15(Fr), NVL(Fr)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -625,7 +625,7 @@
   },
   {
     "pn": "4069",
-    "description": "Kampas Rem Depan (Discpad) Superstock - Mio M3(Fr), X-Ride(Fr), Mio Z(Fr), Nmax(Fr), MX150(Fr), Mio GT 125 New(Fr), NewVixion(Fr), Lexi(Fr), Aerox(Fr), Jupiter Z1(Fr)",
+    "description": "Superstock Brake Pad, 2BM-F5805-00 Mio M3 (Fr), X-Ride (Fr), Mio Z (Fr), Nmax (Fr), MX150(Fr) ,Mio GT 125 New(Fr), NewVixion(Fr), Lexi (Fr), Aerox (Fr), Jupiter Z1 (Fr)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -637,7 +637,7 @@
   },
   {
     "pn": "4070",
-    "description": "Kampas Rem Depan (Discpad) Superstock - New Vixion(Rr), R15(Rr)",
+    "description": "Superstock Brake Pad, 1PA-F5806-00..New Vixion 2017-2020 (Rr), R15 (Rr)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -649,7 +649,7 @@
   },
   {
     "pn": "4071",
-    "description": "Kampas Rem Depan (Discpad) Superstock - New Blade / Blade 125(Fr)",
+    "description": "Superstock Brake Pad, 06455-KWB-601..New Blade. Blade 125 (Fr)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -661,7 +661,7 @@
   },
   {
     "pn": "4072",
-    "description": "Kampas Rem Depan (Discpad) Superstock - PCX150 (Fr)",
+    "description": "Superstock Brake Pad, 06455-KRE-K01..PCX 150 (Fr), ADV150 (Fr) CBS",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -673,7 +673,7 @@
   },
   {
     "pn": "4073",
-    "description": "Kampas Rem Depan (Discpad) Superstock - PCX150 (Rr)",
+    "description": "Superstock Brake Pad, 06435-K97-N01..PCX 150 (Rr), ADV150 (Rr) CBS",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -685,7 +685,7 @@
   },
   {
     "pn": "4075",
-    "description": "Kampas Rem Depan (Discpad) Superstock - Jupiter Z (Fr), RX-KING (Fr)",
+    "description": "Superstock Brake Pad, 5BP/4US-W0045-01..Jupiter Z (Fr), RX King",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -697,7 +697,7 @@
   },
   {
     "pn": "4119",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - PCX150 (Fr)",
+    "description": "Premium Brake Pad, RD0612, SF5312, PCX 150 (Fr), ADV150 (Fr) CBS, OEM Ref: 06455-KRE-K01",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -709,7 +709,7 @@
   },
   {
     "pn": "4120",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - PCX150 (Rr)",
+    "description": "Premium Brake Pad, RD0612, SF5312, PCX 150 (Rr), ADV150 (Rr) CBS OEM Ref: 06435-K97-N01",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -721,7 +721,7 @@
   },
   {
     "pn": "4299",
-    "description": "Bearing Roda (Wheel Bearing) - 6201-2RS - SatFU150, Supra, Revo, Beat, Spacy, Vario, KLX150",
+    "description": "Ultra Drive Wheel Bearing 6201-2RS SatFU150,Supra,Revo,Beat,Spacy,Vario,KLX150",
     "het": 21978,
     "d24": 16703,
     "d27": 16044,
@@ -733,7 +733,7 @@
   },
   {
     "pn": "4300",
-    "description": "Bearing Roda (Wheel Bearing) - 6202-2RS - Ninja150R/RR, KLX150, Ninja250Carb, RXK, Scorpio, Thunder",
+    "description": "Ultra Drive Wheel Bearing 6202-2RS Ninja150R/RR,KLX150,Ninja250Carb,RXK,Scorpio,Thunder",
     "het": 21978,
     "d24": 16703,
     "d27": 16044,
@@ -745,7 +745,7 @@
   },
   {
     "pn": "4301",
-    "description": "Bearing Roda (Wheel Bearing) - 6203-2RS - TigerRevo, Ninja250Carb, Thunder, SatFU150, Supra, Revo",
+    "description": "Ultra Drive Wheel Bearing 6203-2RS * TigerRevo,Ninja250Carb,Thunder,SatFU150,Supra,Revo",
     "het": 24420,
     "d24": 18559,
     "d27": 17827,
@@ -757,7 +757,7 @@
   },
   {
     "pn": "4302",
-    "description": "Bearing Roda (Wheel Bearing) - 6300-2RS - JupiterZ, Mio, MioSoul, Xeon, Vega, Smash, Shogun",
+    "description": "Ultra Drive Wheel Bearing 6300-2RS JupiterZ,Mio,MioSoul,Xeon,Vega,Smash,Shogun",
     "het": 21978,
     "d24": 16703,
     "d27": 16044,
@@ -769,7 +769,7 @@
   },
   {
     "pn": "4303",
-    "description": "Bearing Roda (Wheel Bearing) - 6301-2RS - NewCB150, SatFU150, JupMX, MegaPro, Thunder, Tiger, Supra",
+    "description": "Ultra Drive Wheel Bearing 6301-2RS NewCB150,SatFU150,JupMX,MegaPro,Thunder,Tiger,Supra",
     "het": 21978,
     "d24": 16703,
     "d27": 16044,
@@ -781,7 +781,7 @@
   },
   {
     "pn": "4304",
-    "description": "Bearing Roda (Wheel Bearing) - 6302-2RS - MegaPro, Thunder, CB150R, Verza",
+    "description": "Ultra Drive Wheel Bearing 6302-2RS MegaPro,Thunder,CB150R,Verza",
     "het": 24420,
     "d24": 18559,
     "d27": 17827,
@@ -793,7 +793,7 @@
   },
   {
     "pn": "4452",
-    "description": "Vanbelt + Roller Set Ultradrive - Mio Sporty, Mio Soul, Fino - DYT_5TL-E7641-01",
+    "description": "Ultra Drive Belt and PA46D WeightRoller Set Mio Sporty,Soul,Fino",
     "het": 179931,
     "d24": 136748,
     "d27": 131350,
@@ -805,7 +805,7 @@
   },
   {
     "pn": "4453",
-    "description": "Vanbelt + Roller Set Ultradrive - Mio J, Fino Fi, Mio GT, X-Ride - DYT_54P/2BJ/1KP-E7641",
+    "description": "Ultra Drive Belt and PA46D WeightRoller Set Mio J,Fino Fi Mio GT,Xride",
     "het": 159951,
     "d24": 121563,
     "d27": 116764,
@@ -817,7 +817,7 @@
   },
   {
     "pn": "4454",
-    "description": "Vanbelt + Roller Set Ultradrive - Beat, Scoopy, Spacy - DYT_23100-KVY-901",
+    "description": "Ultra Drive Belt and PA46D WeightRoller Set Beat,Scoopy,Spacy",
     "het": 157953,
     "d24": 120044,
     "d27": 115306,
@@ -829,7 +829,7 @@
   },
   {
     "pn": "4455",
-    "description": "Vanbelt + Roller Set Ultradrive - Beat Fi, Scoopy Fi, Spacy Fi - DYT_23100-KZL-900",
+    "description": "Ultra Drive Belt and PA46D WeightRoller Set Beat Fi,Scoopy Fi,Spacy Fi",
     "het": 169941,
     "d24": 129155,
     "d27": 124057,
@@ -841,7 +841,7 @@
   },
   {
     "pn": "4456",
-    "description": "Vanbelt + Roller Set Ultradrive - Vario 110 - DYT_23100-KVB-900",
+    "description": "Ultra Drive Belt and PA46D WeightRoller Set Vario 110",
     "het": 191919,
     "d24": 145858,
     "d27": 140101,
@@ -853,7 +853,7 @@
   },
   {
     "pn": "4457",
-    "description": "Vanbelt + Roller Set Ultradrive - Vario CBS125 Fi - DYT_23100-KZR-601",
+    "description": "Ultra Drive Belt and PA46D WeightRoller Set Vario Fi 125 CBS",
     "het": 210900,
     "d24": 160284,
     "d27": 153957,
@@ -865,7 +865,7 @@
   },
   {
     "pn": "4458",
-    "description": "Vanbelt + Roller Set Ultradrive - Beat ESP - DYT_23100-K44-V01",
+    "description": "Ultra Drive Belt and PA46D WeightRoller Set Beat ESP",
     "het": 186924,
     "d24": 142062,
     "d27": 136455,
@@ -877,7 +877,7 @@
   },
   {
     "pn": "4460",
-    "description": "Vanbelt + Roller Set Ultradrive - N-Max 2015-2021 - DYT_2DP-E7641-00",
+    "description": "Ultra Drive Belt and PA46D WeightRoller Set N Max",
     "het": 229992,
     "d24": 174794,
     "d27": 167894,
@@ -889,7 +889,7 @@
   },
   {
     "pn": "4461",
-    "description": "Vanbelt + Roller Set Ultradrive - Mio M3 - DYT_2PH-E7641-00",
+    "description": "Ultra Drive Belt and PA46D WeightRoller Set Mio M3",
     "het": 179931,
     "d24": 136748,
     "d27": 131350,
@@ -901,7 +901,7 @@
   },
   {
     "pn": "4530",
-    "description": "Roller CVT 8 Gram (8gr) - Beat, Scoopy Carburetor",
+    "description": "Weight Roller 3 pcs, Weight: 8 Gr, Size: OD16 x 13, Beat & Scoopy carburator",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -913,7 +913,7 @@
   },
   {
     "pn": "4531",
-    "description": "Roller CVT 9 Gram (9gr) - Beat, Scoopy Carburetor",
+    "description": "Weight Roller 3 pcs, Weight: 9 Gr, Size: OD. 16 x 13, Beat & Scoopy carburator",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -925,7 +925,7 @@
   },
   {
     "pn": "4532",
-    "description": "Roller CVT 10 Gram (10gr) - Beat, Scoopy Carburetor",
+    "description": "Weight Roller 3 pcs, Weight: 10 Gr, Size: OD.16 x 13, Beat & Scoopy carburator",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -937,7 +937,7 @@
   },
   {
     "pn": "4533",
-    "description": "Roller CVT 10 Gram (10gr) - Beat Fi, Scoopy Fi / ESP",
+    "description": "Weight Roller 3 pcs, Weight: 10 Gr, Size: OD.18 x 14, Vario 110 / New Vario ESP, Beat FI, Scoopy FI",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -949,7 +949,7 @@
   },
   {
     "pn": "4534",
-    "description": "Roller CVT 11 Gram (11gr) - Beat Fi, Scoopy Fi / ESP",
+    "description": "Weight Roller 3 pcs, Weight: 11 Gr, Size: OD.18 x 14, Vario 110 / New Vario ESP, Beat FI, Scoopy FI",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -961,7 +961,7 @@
   },
   {
     "pn": "4535",
-    "description": "Roller CVT 13 Gram (13gr) - Beat Fi, Scoopy Fi / ESP",
+    "description": "Weight Roller 3 pcs, Weight: 13 Gr, Size: OD.18 x 14, Vario 110 / New Vario ESP, Beat FI, Scoopy FI",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -973,7 +973,7 @@
   },
   {
     "pn": "4536",
-    "description": "Roller CVT 12 Gram (12gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3 pcs, Weight: 12 Gr, Size: OD.20 x 15, Vario 125 PGMFI, Vario 150, PCX125, PCX150",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -985,7 +985,7 @@
   },
   {
     "pn": "4537",
-    "description": "Roller CVT 13 Gram (13gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3 pcs, Weight: 13 Gr, Size: OD.20 x 15, Vario 125 PGMFI, Vario 150, PCX125, PCX150",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -997,7 +997,7 @@
   },
   {
     "pn": "4538",
-    "description": "Roller CVT 15 Gram (15gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3 pcs, Weight: 15 Gr, Size: OD.20 x 15, Vario 125 PGMFI, Vario 150, PCX125, PCX150",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1009,7 +1009,7 @@
   },
   {
     "pn": "4540",
-    "description": "Roller CVT 8 Gram (8gr) - Mio, Fino, Mio J, Mio GT, X-Ride",
+    "description": "Weight Roller 3 pcs, Weight: 8 Gr, Size: OD.15 x 12, Mio, Fino, Soul, mio J, Fino i, Mio Gt, x Ride",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1021,7 +1021,7 @@
   },
   {
     "pn": "4541",
-    "description": "Roller CVT 9.5 Gram (9.5gr) - Mio, Fino, Mio J, Mio GT, X-Ride",
+    "description": "Weight Roller 3 pcs, Weight: 9.5 Gr, Size: OD.15 x 12, Mio, Fino, Soul, mio J, Fino i, Mio Gt, x...",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1033,7 +1033,7 @@
   },
   {
     "pn": "4542",
-    "description": "Roller CVT 10.5 Gram (10.5gr) - Mio, Fino, Mio J, Mio GT, X-Ride",
+    "description": "Weight Roller 3 pcs, Weight: 10.5 Gr, Size: OD.15 x 12, Mio, Fino, Soul, mio J, Fino i, Mio Gt,",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1045,7 +1045,7 @@
   },
   {
     "pn": "4543",
-    "description": "Roller CVT 7 Gram (7gr) - Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT, Nmax",
+    "description": "Weight Roller 3 pcs, Weight: 7 Gr, Size: OD.20 x 12, Xeon, GT125, Xeon Rc, Mio M3, All New Soul ...",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1057,7 +1057,7 @@
   },
   {
     "pn": "4544",
-    "description": "Roller CVT 8 Gram (8gr) - Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT, Nmax",
+    "description": "Weight Roller 3 pcs, Weight: 8 Gr, Size: OD.20 x 12, Xeon, GT125, Xeon Rc, Mio M3, All New Soul ...",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1069,7 +1069,7 @@
   },
   {
     "pn": "4545",
-    "description": "Roller CVT 9 Gram (9gr) - Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT, Nmax",
+    "description": "Weight Roller 3 pcs, Weight: 9 Gr, Size: OD.20 x 12, Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1081,7 +1081,7 @@
   },
   {
     "pn": "4546",
-    "description": "Roller CVT 10 Gram (10gr) - Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT, Nmax",
+    "description": "Weight Roller 3 pcs, Weight: 10 Gr, Size: OD.20 x 12, Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1093,7 +1093,7 @@
   },
   {
     "pn": "4547",
-    "description": "Roller CVT 11 Gram (11gr) - Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT, Nmax",
+    "description": "Weight Roller 3 pcs, Weight: 11 Gr, Size: OD.20 x 12, Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1105,7 +1105,7 @@
   },
   {
     "pn": "4548",
-    "description": "Roller CVT 7 Gram (7gr) - Beat, Scoopy Carburetor",
+    "description": "Weight Roller 3 Pcs, Weight: 7 Gr, Size OD. 16 x 13, Beat & Scoopy carburator",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1117,7 +1117,7 @@
   },
   {
     "pn": "4549",
-    "description": "Roller CVT 7 Gram (7gr) - Mio, Fino, Mio J, Mio GT, X-Ride",
+    "description": "Weight Roller 3 pcs, Weight: 7 Gr, Size: OD.15 x 12, Mio, Fino, Soul, mio J, Fino i, Mio Gt, x Ride",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1129,7 +1129,7 @@
   },
   {
     "pn": "4550",
-    "description": "Roller CVT 9 Gram (9gr) - Mio, Fino, Mio J, Mio GT, X-Ride",
+    "description": "Weight Roller 3 pcs, Weight: 9 gr, Size: OD.15 x 12, Mio, Fino, Soul, mio J, Fino i, Mio Gt, x Ride",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1141,7 +1141,7 @@
   },
   {
     "pn": "4551",
-    "description": "Roller CVT 7 Gram (7gr) - Beat Fi, Scoopy Fi / ESP",
+    "description": "Weight Roller 3 pcs, Weight: 7 gr, Size: OD.18 x 14, Vario 110 / New Vario ESP, Beat FI, Scoopy FI",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1153,7 +1153,7 @@
   },
   {
     "pn": "4552",
-    "description": "Roller CVT 8 Gram (8gr) - Beat Fi, Scoopy Fi / ESP",
+    "description": "Weight Roller 3 pcs, Weight: 8 Gr, Size: OD.18 x 14, Vario 110 / New Vario ESP, Beat FI, Scoopy Fi",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1165,7 +1165,7 @@
   },
   {
     "pn": "4553",
-    "description": "Roller CVT 9 Gram (9gr) - Beat Fi, Scoopy Fi / ESP",
+    "description": "Weight Roller 3 pcs, Weight: 9 Gr, Size: OD.18 x 14, Vario 110 / New Vario ESP, Beat FI, Scoopy FI",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1177,7 +1177,7 @@
   },
   {
     "pn": "4554",
-    "description": "Roller CVT 12 Gram (12gr) - Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT, Nmax",
+    "description": "Weight Roller 3 pcs, Weight: 12 Gr, Size: OD.20 x 12, Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1189,7 +1189,7 @@
   },
   {
     "pn": "4555",
-    "description": "Roller CVT 13 Gram (13gr) - Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT, Nmax",
+    "description": "Weight Roller 3 pcs, Weight: 13 Gr, Size: OD.20 x 12, Xeon, GT125, Xeon Rc, Mio M3, All New Soul GT",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1201,7 +1201,7 @@
   },
   {
     "pn": "4556",
-    "description": "Roller CVT 5 Gram (5gr) - Beat, Scoopy Carburetor",
+    "description": "Weight Roller 3Pcs, Weight: 5 gr , Dia. 16x13, Honda Beat & Scoopy carburator",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1213,7 +1213,7 @@
   },
   {
     "pn": "4557",
-    "description": "Roller CVT 6 Gram (6gr) - Beat, Scoopy Carburetor",
+    "description": "Weight Roller 3 pcs, Weight: 6 gr, Dia.16x13, Honda Beat & Scoopy Carb.",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1225,7 +1225,7 @@
   },
   {
     "pn": "4558",
-    "description": "Roller CVT 5 Gram (5gr) - Mio, Fino, Mio J, Mio GT, X-Ride",
+    "description": "Weight Roller 3 Pcs, Weight: 5 gr, Dia.15x12, Yamaha Mio, Fino, Mio J, Mio GT, X-Ride",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1237,7 +1237,7 @@
   },
   {
     "pn": "4559",
-    "description": "Roller CVT 6 Gram (6gr) - Mio, Fino, Mio J, Mio GT, X-Ride",
+    "description": "Weight Roller 3 pcs, Weight: 6 gr, Dia15x12, Yamaha Mio, Fino, Mio J, Mio GT, X-Ride",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1249,7 +1249,7 @@
   },
   {
     "pn": "4560",
-    "description": "Roller CVT 5 Gram (5gr) - Beat Fi, Scoopy Fi / ESP",
+    "description": "Weight Roller 3 pcs, Weight 5 gr, Dia18x14 , Honda Vario 110/ New Vario ESP, Beat FI, Scoopy FI",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1261,7 +1261,7 @@
   },
   {
     "pn": "4561",
-    "description": "Roller CVT 6 Gram (6gr) - Beat Fi, Scoopy Fi / ESP",
+    "description": "Weight Roller 3 pcs, Weight: 6 gr, Dia. 18x14 , Honda Vario 110 / New Vario ESP, Beat FI, Scoopy FI",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1273,7 +1273,7 @@
   },
   {
     "pn": "4600",
-    "description": "Kampas Kopling Kevlar Friction Disc - Revo, Supra Fit, Supra, Kirana, Legenda, Astrea",
+    "description": "Ultra Drive Kevlar Friction Disc, Supra Fit, Legenda, Astrea, Revo",
     "het": 69708,
     "d24": 52978,
     "d27": 50887,
@@ -1285,7 +1285,7 @@
   },
   {
     "pn": "4601",
-    "description": "Kampas Kopling Kevlar Friction Disc - Tiger",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange Tiger 22201-166-000(4), 22201-MJ8-001(1)",
     "het": 112776,
     "d24": 85710,
     "d27": 82326,
@@ -1297,7 +1297,7 @@
   },
   {
     "pn": "4602",
-    "description": "Kampas Kopling Kevlar Friction Disc - CB150R, CBR150 K45, Verza, GL Series",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange CB150R (2012~2015) 22201-KGH-601(5)",
     "het": 112776,
     "d24": 85710,
     "d27": 82326,
@@ -1309,7 +1309,7 @@
   },
   {
     "pn": "4603",
-    "description": "Kampas Kopling Kevlar Friction Disc - All New CB150/CBR150R, Sonic, GTR150",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange All New CB/CBR150R & SONIC ('16) 22201-K56-N01(5)",
     "het": 112776,
     "d24": 85710,
     "d27": 82326,
@@ -1321,7 +1321,7 @@
   },
   {
     "pn": "4604",
-    "description": "Kampas Kopling Kevlar Friction Disc - New Blade 125 Fi / Supra125Fi Helm in",
+    "description": "Ultra Drive Kevlar Friction Disc, 4pcs, Orange New Blade 125 Fi /Supra125Fi Helm 22201-KYZ-901",
     "het": 95571,
     "d24": 72634,
     "d27": 69767,
@@ -1333,7 +1333,7 @@
   },
   {
     "pn": "4605",
-    "description": "Kampas Kopling Kevlar Friction Disc - Revo 110 / New Blade",
+    "description": "Ultra Drive Kevlar Friction Disc, 3pcs, Orange Revo 110 / New Blade 22201-KWW-741, 22204-KWW-741",
     "het": 69708,
     "d24": 52978,
     "d27": 50887,
@@ -1345,7 +1345,7 @@
   },
   {
     "pn": "4606",
-    "description": "Kampas Kopling Kevlar Friction Disc - Karisma / SupraX125",
+    "description": "Ultra Drive Kevlar Friction Disc, 4pcs, Orange Karisma/ SupraX125 22201-KPH-901(4)",
     "het": 135753,
     "d24": 103172,
     "d27": 99100,
@@ -1357,7 +1357,7 @@
   },
   {
     "pn": "4607",
-    "description": "Kampas Kopling Kevlar Friction Disc - SCORPIO",
+    "description": "Ultra Drive Kevlar Friction Disc, 6pcs, Orange 5BP / 537 SCORPIO 5BP-E6321-00 (5) 5BP-E6331-00",
     "het": 270840,
     "d24": 205838,
     "d27": 197713,
@@ -1369,7 +1369,7 @@
   },
   {
     "pn": "4608",
-    "description": "Kampas Kopling Kevlar Friction Disc - RX-King",
+    "description": "Ultra Drive Kevlar Friction Disc, 6pcs, Orange RX-KING 3KA-E6321-00(6)",
     "het": 195360,
     "d24": 148474,
     "d27": 142613,
@@ -1381,7 +1381,7 @@
   },
   {
     "pn": "4613",
-    "description": "Kampas Kopling Kevlar Friction Disc - F1ZR",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange 4WH F1ZR 3YR-16321-00(5)",
     "het": 146520,
     "d24": 111355,
     "d27": 106960,
@@ -1393,7 +1393,7 @@
   },
   {
     "pn": "4614",
-    "description": "Kampas Kopling Kevlar Friction Disc - Jupiter Z 110 '05~08, Vega R '04~05",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange Jupiter Z 110 '05~08 Vega R '04~05 5TN-WE63A-10(5)",
     "het": 135753,
     "d24": 103172,
     "d27": 99100,
@@ -1405,7 +1405,7 @@
   },
   {
     "pn": "4616",
-    "description": "Kampas Kopling Kevlar Friction Disc - Jupiter Z '10~12, Vega ZR, Jupiter Z1 '12~14",
+    "description": "Ultra Drive Kevlar Friction Disc, 2pcs, Orange Jupiter Z '10~12 /Vega ZR Jupiter Z1 '12~14 5D9-E6331",
     "het": 81585,
     "d24": 62005,
     "d27": 59557,
@@ -1417,7 +1417,7 @@
   },
   {
     "pn": "4617",
-    "description": "Kampas Kopling Kevlar Friction Disc - Jupiter MX135 ‘07~’08",
+    "description": "Ultra Drive Kevlar Friction Disc, 4pcs, Orange Jupiter MX135 2007~2008 1S7-E6321-00(3), 1S7-E6331",
     "het": 108447,
     "d24": 82420,
     "d27": 79166,
@@ -1429,7 +1429,7 @@
   },
   {
     "pn": "4618",
-    "description": "Kampas Kopling Kevlar Friction Disc - Jupiter MX135 '11~13, New Vixion ‘13-14 NVL",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange Jupiter MX135 '11~13 50C-E6321-00(5)",
     "het": 139527,
     "d24": 106041,
     "d27": 101855,
@@ -1441,7 +1441,7 @@
   },
   {
     "pn": "4619",
-    "description": "Kampas Kopling Kevlar Friction Disc - Jupiter MX 150, New Vixion Advance NVA",
+    "description": "Ultra Drive Kevlar Friction Disc, 4pcs, Orange Jupiter MX 150 2PV-E6321-00(3), 2UP-E6331-00(1)",
     "het": 108447,
     "d24": 82420,
     "d27": 79166,
@@ -1453,7 +1453,7 @@
   },
   {
     "pn": "4620",
-    "description": "Kampas Kopling Kevlar Friction Disc - Satria FU 150",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange Satria FU 150 21440B25G00N(5)",
     "het": 112776,
     "d24": 85710,
     "d27": 82326,
@@ -1465,7 +1465,7 @@
   },
   {
     "pn": "4621",
-    "description": "Kampas Kopling Kevlar Friction Disc - Ninja 250 R/FI",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange Ninja 250 R/FI 13088-0558(5)",
     "het": 300699,
     "d24": 228531,
     "d27": 219510,
@@ -1477,7 +1477,7 @@
   },
   {
     "pn": "4622",
-    "description": "Kampas Kopling Kevlar Friction Disc - Ninja RR Mono",
+    "description": "Ultra Drive Kevlar Friction Disc, 7pcs, Orange Ninja RR Mono 13088-0562(2), 13088-0561(5)",
     "het": 268398,
     "d24": 203982,
     "d27": 195931,
@@ -1489,7 +1489,7 @@
   },
   {
     "pn": "4623",
-    "description": "Kampas Kopling Kevlar Friction Disc - KLX150",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange KLX150 13088-0040(3), 13088-0041(1), 13088-107",
     "het": 108447,
     "d24": 82420,
     "d27": 79166,
@@ -1501,7 +1501,7 @@
   },
   {
     "pn": "4624",
-    "description": "Kampas Kopling Kevlar Friction Disc - Kawasaki NINJA 150",
+    "description": "Ultra Drive Kevlar Friction Disc, 6pcs, Orange Kawasaki NINJA 150 13088-1098(5), 13088-1085(1)",
     "het": 246975,
     "d24": 187701,
     "d27": 180292,
@@ -1513,7 +1513,7 @@
   },
   {
     "pn": "4625",
-    "description": "Kampas Kopling Kevlar Friction Disc - New Mega Pro, Mega Pro Fi, CRF150",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange New MegaPro, MegaPro FI, CRF150, 22201-MR8-000(2), 22201-...",
     "het": 108447,
     "d24": 82420,
     "d27": 79166,
@@ -1525,7 +1525,7 @@
   },
   {
     "pn": "4626",
-    "description": "Kampas Kopling Kevlar Friction Disc - Vixion (old) FZ150 ‘07-11",
+    "description": "Ultra Drive Kevlar Friction Disc, 5pcs, Orange, Vixion FZ150 2007-2011 3C1-E6321-00(3), 3C1-E63...",
     "het": 193251,
     "d24": 146871,
     "d27": 141073,
@@ -1537,7 +1537,7 @@
   },
   {
     "pn": "4627",
-    "description": "Kampas Kopling Kevlar Friction Disc - All New VXN150R, All New R15 VVA",
+    "description": "Ultra Drive Kevlar Friction Disc, 3pcs, Orange, VXN150 2017, VIXION-R-VXN155 2017, YZFR155 2017 ...",
     "het": 119103,
     "d24": 90518,
     "d27": 86945,
@@ -1549,7 +1549,7 @@
   },
   {
     "pn": "4630",
-    "description": "Kampas Ganda Kevlar Matic - Beat/Beat Fi/Mio/Fino/Nex - DYT_22535-KVY/KZL/5TL-E6620/21501-09J00",
+    "description": "New Hi-Carbon&Kevlar Ultra drive Kevlar Clutch Shoe, Beat/Beat Fi/Mio/Fino/Scoopy Fi/Nex/Address 22535-KVY/KZL/5TL-E6620-01/14D-...",
     "het": 162948,
     "d24": 123840,
     "d27": 118952,
@@ -1561,7 +1561,7 @@
   },
   {
     "pn": "4631",
-    "description": "Kampas Ganda Kevlar Matic - Vario110/Vario160/PCX160/Mio M3/New Soul GT12/Freego - DYT_22535-KVB/K1N-V00 2SX/2PH/B5D-E6620",
+    "description": "New Hi-Carbon&Kevlar Ultra drive Kevlar Clutch Shoe, Vario 110/Mio M3/ New Soul GT125, 22535-KVB-900, 2SX/2PH-E6620-0...",
     "het": 222000,
     "d24": 168720,
     "d27": 162060,
@@ -1573,7 +1573,7 @@
   },
   {
     "pn": "4632",
-    "description": "Kampas Ganda Kevlar Matic - PCX150/Vario CBS 125/All New Vario125/Vario150 - DYT_22535-KWN/K35-901",
+    "description": "New Hi-Carbon&Kevlar Ultra drive Kevlar Clutch Shoe, Vario CBS 125/All New Vario125/ Vario 150, 22535-KWN/K35-901, 3p...",
     "het": 222000,
     "d24": 168720,
     "d27": 162060,
@@ -1585,7 +1585,7 @@
   },
   {
     "pn": "4633",
-    "description": "Kampas Ganda Kevlar Matic - All New Beat ESP - DYT_22535-K44-V00",
+    "description": "New Hi-Carbon&Kevlar Ultra drive Kevlar Clutch Shoe, All New Beat ESP, 22535-K44-V00, 3pcs/set",
     "het": 157953,
     "d24": 120044,
     "d27": 115306,
@@ -1597,7 +1597,7 @@
   },
   {
     "pn": "4634",
-    "description": "Kampas Ganda Kevlar Matic - N-Max - DYT_2DP-E6620-00",
+    "description": "New Hi-Carbon&Kevlar Ultra drive Kevlar Clutch Shoe, N-Max, 2DP-E6620-00, 3pcs/set",
     "het": 225996,
     "d24": 171757,
     "d27": 164977,
@@ -1609,7 +1609,7 @@
   },
   {
     "pn": "4635",
-    "description": "Kampas Ganda Kevlar Matic - Aerox 155/Lexi 2018~2020 - DYT_B65-E6620-00/B65-WE662",
+    "description": "New Hi-Carbon&Kevlar Ultra drive Kevlar Clutch Shoe, Aerox 155, B65-E6620-00, 3pcs/set",
     "het": 222000,
     "d24": 168720,
     "d27": 162060,
@@ -1621,7 +1621,7 @@
   },
   {
     "pn": "4636",
-    "description": "Kampas Ganda Kevlar Matic - Soul GT 115/Mio J/Fino Fi/X-ride - DYT_54P-E6620-10",
+    "description": "New Hi-Carbon&Kevlar Ultra drive Kevlar Clutch Shoe, Soul GT 115 / Mio J / Fino Fi / X-ride, 54P-E6620-10, 3pcs/set",
     "het": 199911,
     "d24": 151932,
     "d27": 145935,
@@ -1633,7 +1633,7 @@
   },
   {
     "pn": "4637",
-    "description": "Kampas Ganda Kevlar Matic - New Beat Eco 2016~2020 CBS/ISS, Scoopy 2016-Up - DYT_22535-K16-A40",
+    "description": "New Hi-Carbon&Kevlar Ultra Drive Kevlar Clutch Shoe Set, 22535 K16 A40 Beat ESP '16--'19, Beat Street ESP '16 19",
     "het": 215451,
     "d24": 163743,
     "d27": 157279,
@@ -1645,7 +1645,7 @@
   },
   {
     "pn": "4800",
-    "description": "Per CVT 1.000 RPM (Putih / White) - Beat, Beat Fi, Beat Esp, Beat Pop, Genio, Scoopy - K44 KZL",
+    "description": "CVT Spring, White +10%/1,000 rpm..Beat, Beat Fi, Vario, Scoopy",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -1657,7 +1657,7 @@
   },
   {
     "pn": "4801",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - Beat, Beat Fi, Beat Esp, Beat Pop, Genio, Scoopy - K44 KZL",
+    "description": "CVT Spring, Orange +20%/1,500 rpm..Beat, Beat Fi, Vario, Scoopy",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -1669,7 +1669,7 @@
   },
   {
     "pn": "4802",
-    "description": "Per CVT 2.000 RPM (Emas / Gold) - Beat, Beat Fi, Beat Esp, Beat Pop, Genio, Scoopy - K44 KZL",
+    "description": "CVT Spring, Gold +35%/2,000 rpm..Beat, Beat Fi, Vario, Scoopy",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -1681,7 +1681,7 @@
   },
   {
     "pn": "4803",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - Mio 03~12 / Fino - 5TL",
+    "description": "CVT Spring, Orange +20%/1,500 rpm..Mio, Fino",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -1693,7 +1693,7 @@
   },
   {
     "pn": "4804",
-    "description": "Per CVT 2.000 RPM (Emas / Gold) - Mio 03~12 / Fino - 5TL",
+    "description": "CVT Spring, Gold +35%/2,000 rpm..Mio, Fino",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -1705,7 +1705,7 @@
   },
   {
     "pn": "4805",
-    "description": "Per CVT 1.000 RPM (Putih / White) - Aerox155, Nmax155 - B65",
+    "description": "CVT Spring, White +10%/1,000 rpm..Aerox 155, New Nmax155",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -1717,7 +1717,7 @@
   },
   {
     "pn": "4806",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - Aerox155, Nmax155 - B65",
+    "description": "CVT Spring, Orange +20%/1,500 rpm'..Aerox 155, New Nmax155",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -1729,7 +1729,7 @@
   },
   {
     "pn": "4807",
-    "description": "Per CVT 1.000 RPM (Putih / White) - N-MAX ‘15~19 - 2DP",
+    "description": "CVT Spring, White +10%/1,000 rpm..Yamaha N-Max",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -1741,7 +1741,7 @@
   },
   {
     "pn": "4808",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - N-MAX ‘15~19 - 2DP",
+    "description": "CVT Spring, Orange +20%/1,500 rpm..Yamaha N-Max",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -1753,7 +1753,7 @@
   },
   {
     "pn": "4809",
-    "description": "Per CVT 1.000 RPM (Putih / White) - PCX150, PCX160, Vario125, ADV160 - K35",
+    "description": "CVT Spring, White +10%/1,000 rpm..PCX150 2018~up, Vario 125 LED",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -1765,7 +1765,7 @@
   },
   {
     "pn": "4810",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - PCX150, PCX160, Vario125, ADV160 - K35",
+    "description": "CVT Spring, Orange +20%/1,500 rpm..PCX150 2018~up, Vario 125 LED",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -1777,7 +1777,7 @@
   },
   {
     "pn": "4811",
-    "description": "Per CVT 1.000 RPM (Putih / White) - Mio J ‘12~14 / MIO GT - 54P",
+    "description": "CVT Spring, White +10%/1,000 rpm..Mio-J, Mio GT, Soul GT",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -1789,7 +1789,7 @@
   },
   {
     "pn": "4812",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - Mio J ‘12~14 / MIO GT - 54P",
+    "description": "CVT Spring, Orange +20%/1,500 rpm..Mio-J, Mio GT, Soul GT",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -1801,7 +1801,7 @@
   },
   {
     "pn": "4831",
-    "description": "Filter Udara Superstock - R15, Xabre, Vixion (20P) - 20P-E4450-00",
+    "description": "DYT AIR FILTER R15 (2015), XABRE (2016-UP) 20P-E4450-00",
     "het": 70485,
     "d24": 53569,
     "d27": 51454,
@@ -1813,7 +1813,7 @@
   },
   {
     "pn": "4832",
-    "description": "Filter Udara Superstock - Aerox155 - B65-E4451-00",
+    "description": "DYT AIR FILTER AEROX (2017-up), LEXI (2018-UP) B65-E4451-00",
     "het": 54279,
     "d24": 41252,
     "d27": 39624,
@@ -1825,7 +1825,7 @@
   },
   {
     "pn": "4838",
-    "description": "Mangkok Kampas Ganda 7 Star Standar - B65, Aerox(’17-22), New N-Max(’20-22), Lexi(’18-20)",
+    "description": "7 Star Hi-Torque Ctlutch Housing N-Max(New), Aerox, Lexi",
     "het": 296925,
     "d24": 225663,
     "d27": 216755,
@@ -1837,7 +1837,7 @@
   },
   {
     "pn": "4839",
-    "description": "Mangkok Kampas Ganda 7 Star Standar - 2DP, N-Max (Up to 2019)",
+    "description": "7 Star Hi-Torque Ctlutch Housing N-Max(Old)",
     "het": 296925,
     "d24": 225663,
     "d27": 216755,
@@ -1849,7 +1849,7 @@
   },
   {
     "pn": "4840",
-    "description": "Mangkok Kampas Ganda 7 Star Standar - 2PH, Mio M3, Mio Z, Gear125, Fazzio, Freego, Fino Grande",
+    "description": "7 Star Hi-Torque Ctlutch Housing, 2PH, 2SX, M3, Mio Z, Fazzio, Gear125, Freego, Fino Grande",
     "het": 296925,
     "d24": 225663,
     "d27": 216755,
@@ -1861,7 +1861,7 @@
   },
   {
     "pn": "4841",
-    "description": "Mangkok Kampas Ganda 7 Star Standar - K1N,KWN,KVB, PCX160(’21-22), PCX150(’17-21), Vario110(’06-14), Vario125(’12-22), Vario150(’15-22), Spacy Fi(’13-18)",
+    "description": "7 Star Hi-Torque Ctlutch Housing PCX150/160, Vario150/125/110",
     "het": 296925,
     "d24": 225663,
     "d27": 216755,
@@ -1873,7 +1873,7 @@
   },
   {
     "pn": "4865",
-    "description": "Kampas Kopling Kevlar Friction Disc - FR80",
+    "description": "Ultra Drive Kevlar Friction Disc FR80, 5pcs, 21441-35300-000 (5) Orange Untuk rubahan FIZR & Jupiter Z Racing",
     "het": 146298,
     "d24": 111186,
     "d27": 106798,
@@ -1885,7 +1885,7 @@
   },
   {
     "pn": "4866",
-    "description": "Handgrip Daytona - Slash Grips 120mm 7/8\", Gray/Black",
+    "description": "Slash Grips DAYTONA 120mm 7/8\", Gray/Black..Open-End, Dual Compound",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -1897,7 +1897,7 @@
   },
   {
     "pn": "4867",
-    "description": "Handgrip Daytona - Slash Grips 120mm 7/8\", Red/Black",
+    "description": "Slash Grips DAYTONA 120mm 7/8\", Red/Black..Open-End, Dual Compound",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -1909,7 +1909,7 @@
   },
   {
     "pn": "4869",
-    "description": "Handgrip Daytona - Slash Grips 120mm 7/8\", Blue/Black",
+    "description": "Slash Grips DAYTONA 120mm 7/8\", Blue/Black..Open-End, Dual Compound",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -1921,7 +1921,7 @@
   },
   {
     "pn": "4870",
-    "description": "Handgrip Daytona - Supercross Grip 120mm 7/8\", Gray/Black - Closed-End, Dual Compound",
+    "description": "Supercross Grips DAYTONA 120mm 7/8\", Gray/Black..Closed-End, Dual Compound",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -1933,7 +1933,7 @@
   },
   {
     "pn": "4871",
-    "description": "Handgrip Daytona - Supercross Grip 120mm 7/8\", Red/Black - Closed-End, Dual Compound",
+    "description": "Supercross Grips DAYTONA 120mm 7/8\", Red/Black..Closed-End, Dual Compound",
     "het": 75924,
     "d24": 57702,
     "d27": 55425,
@@ -1945,7 +1945,7 @@
   },
   {
     "pn": "4898",
-    "description": "Vanbelt Ultradrive Only - New Nmax, Aerox, Lexi - DYT_B65-E7641-00",
+    "description": "Ultra Drive Belt only (without Roller) Aerox, Lexi",
     "het": 184926,
     "d24": 140544,
     "d27": 134996,
@@ -1957,7 +1957,7 @@
   },
   {
     "pn": "4899",
-    "description": "Roller CVT 9 Gram (9gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3 pcs, Weight 9 gr, Size OD.20x15, Vario 125 PGMFi, Vario 150, PCX125, Skywave, Skydrive & Spin",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1969,7 +1969,7 @@
   },
   {
     "pn": "4900",
-    "description": "Roller CVT 10 Gram (10gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3 pcs, Weight 10 gr, Size OD.20x15, Vario 125 PGMFi, Vario 150, PCX125, Skywave, Skydrive & Spin",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -1981,7 +1981,7 @@
   },
   {
     "pn": "4903",
-    "description": "Kampas Rem Depan (Discpad) Superstock - Vario 150 2018, Vario 125, Genio (Fr)",
+    "description": "Superstock Brake Pad, 06455-K59-A71, Vario 150 (Fr) (2018-Sekarang) Genio (2019 - Sekarang), Vario 125 eSP K60R (2018 - Sekarang)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -1993,7 +1993,7 @@
   },
   {
     "pn": "4908",
-    "description": "Vanbelt + Roller Set Ultradrive - Aerox, New Nmax, Lexi - DYT_B65-E7641-00",
+    "description": "Ultra Drive Belt and PA46D WeightRoller Set Aerox",
     "het": 229992,
     "d24": 174794,
     "d27": 167894,
@@ -2005,7 +2005,7 @@
   },
   {
     "pn": "4913",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - Nmax155 (2020-Up), Aerox155 (up to 2020) - 4RT/1P6/4RT/2TD/2TD",
+    "description": "Stem Bearing (Komstir) New Nmax155 (2020-Up), Aerox155 (up to 2020)",
     "het": 130980,
     "d24": 99545,
     "d27": 95615,
@@ -2017,7 +2017,7 @@
   },
   {
     "pn": "4914",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - N-Max 150(2015-2019) Xeon (2010-2015) - 54P/5TL/54P/5BP/5BP",
+    "description": "Stem Bearing (Komstir) N-Max 150 Lama ('15-'19) XEON 125(2010-2015)",
     "het": 130980,
     "d24": 99545,
     "d27": 95615,
@@ -2029,7 +2029,7 @@
   },
   {
     "pn": "4915",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - Vixion (2007-2011), Vixion NVA & NVL (2013-2016) R15(2014-2016), VXN150 &155 (2017-2020) R15 V3 (2017-2020) - 1PA/5TL/4FP/5BP",
+    "description": "Stem Bearing (Komstir) Vixion (2007-2011) Vixion NVA & NVL (2013-2016) R15(2014-2016) VXN150 &155 (2017-2020) R15 V3 (2017-2020)",
     "het": 130980,
     "d24": 99545,
     "d27": 95615,
@@ -2041,7 +2041,7 @@
   },
   {
     "pn": "4916",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - Aerox 155(2021 up), Mio Fino, Mio GT, Mio M3, Mio S, Mio Z, Mio, Mio Soul, Mio Sporty, Jupiter Z - 54P/5TL/28D/18G",
+    "description": "Stem Bearing (Komstir) Mio J & Soul GT Aerox 155('21 up), Mio Fino Grande,Fino, Mio GT, Mio M3, Mio S, Mio Z Mio, Mio Soul, Mio Sporty, Jupiter Z",
     "het": 101898,
     "d24": 77442,
     "d27": 74386,
@@ -2053,7 +2053,7 @@
   },
   {
     "pn": "4919",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - Supra, Supra X125, Revo 110, Blade Carb, Blade125, Beat Fi, Scoopy Fi, Beat ESP, Vario125, Vario150 - 22F/5TL/156/18G",
+    "description": "Stem Bearing (Komstir) Supra, Supra X125, Revo 110, Blade Carb, Blade125,CS1, Beat Carb, Beat Fi, Scoopy Fi, Beat ESP,Beat POP, Vario, Vario125, Vario 150",
     "het": 99900,
     "d24": 75924,
     "d27": 72927,
@@ -2065,7 +2065,7 @@
   },
   {
     "pn": "4920",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - Mega Pro, Verza, CB150R, All New CB150R, CBR150R, All New CBR150R 2016 - GN5",
+    "description": "Stem Bearing (Komstir) Mega Pro, Verza, CB150R, All New CB150R, CBR150R, All New CBR150R 2016",
     "het": 101898,
     "d24": 77442,
     "d27": 74386,
@@ -2077,7 +2077,7 @@
   },
   {
     "pn": "4921",
-    "description": "Gas Spontan Racing Throttle Kit - 2 Cable Universal Matic - 1800mm",
+    "description": "Throttle Kit 2 Cable (Gas Spontan) Cable 1.800mm Universal Matic",
     "het": 259962,
     "d24": 197571,
     "d27": 189772,
@@ -2089,7 +2089,7 @@
   },
   {
     "pn": "4922",
-    "description": "Gas Spontan Racing Throttle Kit - 2 Cable Universal Sport/Bebek, Underbone - 900mm",
+    "description": "Throttle Kit 2 Cable (Gas Spontan) Cable 900mm Universal Sport/Bebek",
     "het": 259962,
     "d24": 197571,
     "d27": 189772,
@@ -2101,7 +2101,7 @@
   },
   {
     "pn": "4928",
-    "description": "Piringan Cakram Superstock - Nmax ‘15~19, New Nmax ’19~22, Aerox155 ‘16~22, Lexi ’18~22 Front, 230mm",
+    "description": "Wave Disc Rotor Nmax, All New Nmax, Aerox155, Lexi Front",
     "het": 211899,
     "d24": 161043,
     "d27": 154686,
@@ -2113,7 +2113,7 @@
   },
   {
     "pn": "4929",
-    "description": "Piringan Cakram Superstock - Nmax ‘15~19, New Nmax ’19~22 Rear, 230mm",
+    "description": "Wave Disc Rotor Nmax, All New Nmax, Rear",
     "het": 211899,
     "d24": 161043,
     "d27": 154686,
@@ -2125,7 +2125,7 @@
   },
   {
     "pn": "4930",
-    "description": "Piringan Cakram Superstock - PCX150 ‘17~22 Front, 220mm",
+    "description": "Wave Disc Rotor, PCX150, Front",
     "het": 211899,
     "d24": 161043,
     "d27": 154686,
@@ -2137,7 +2137,7 @@
   },
   {
     "pn": "4931",
-    "description": "Piringan Cakram Superstock - PCX160 ‘21-22 Front, 220mm",
+    "description": "Wave Disc Rotor, PCX160, Front",
     "het": 211899,
     "d24": 161043,
     "d27": 154686,
@@ -2149,7 +2149,7 @@
   },
   {
     "pn": "4932",
-    "description": "Piringan Cakram Superstock - PCX150 ‘17~22, PCX160 ‘21-22 Rear, 220mm",
+    "description": "Wave Disc Rotor, PCX150, PCX160 Rear",
     "het": 211899,
     "d24": 161043,
     "d27": 154686,
@@ -2161,7 +2161,7 @@
   },
   {
     "pn": "4934",
-    "description": "Pulley Set HI-Speed & Face Drive EVO (13.8°) - Hi Speed Pulley Kit (with Roller) - Nmax '15-21, Aerox '17-22, Lexi '18-20",
+    "description": "Hi Speed Pulley Kit, With Roller 6pcs Nmax 2015-2021, Aerox 2017-2021",
     "het": 555000,
     "d24": 421800,
     "d27": 405150,
@@ -2173,7 +2173,7 @@
   },
   {
     "pn": "4943",
-    "description": "Per CVT 1.000 RPM (Putih / White) - Mio M3, Mio S, Mio Z - 2SX",
+    "description": "CVT SPRING, WHITE +10%/1,000RPM 5.22N, 4.5X58X91, 2SX, GEAR 2021, MioM3 2015-21, MioS 2018-19, MioZ 2016-18",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -2185,7 +2185,7 @@
   },
   {
     "pn": "4944",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - Mio M3, Mio S, Mio Z - 2SX",
+    "description": "CVT SPRING, ORANGE +20%/1,500RPM 5.8N, 4.5X58X91, 2SX, GEAR 2021, MioM3 2015-21, MioS 2018-19, MioZ 2016-18",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -2197,7 +2197,7 @@
   },
   {
     "pn": "4953",
-    "description": "Per Sentrik 1.000 RPM (Silver) - Mio, Fino('12-13), XMax('16-23), Beat Karbu/FI, Scoopy, Genio, Beat ESP - 5TL-E6626-00, 22401-KVY-900, 22401-GCC-900",
+    "description": "Per Sentrik / Clutch Shoe Spring 1,000RPM, Mio, Fino('12-13) Beat Carb/Beat FI/Spacy Fi/NewScoopy eSP(K16) /Genio / Beat K1A / Beat ESP / POP ESP /Beat eSP(K81) / Scoopy eSP(K93)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -2209,7 +2209,7 @@
   },
   {
     "pn": "4954",
-    "description": "Per Sentrik 1.500 RPM (Oranye / Orange) - Mio, Fino('12-13), XMax('16-23), Beat Karbu/FI, Scoopy, Genio, Beat ESP - 5TL-E6626-00, 22401-KVY-900, 22401-GCC-900",
+    "description": "Per Sentrik / Clutch Shoe Spring 1,500RPM, Mio, Fino('12-13) Beat Carb/Beat FI/Spacy Fi/NewScoopy eSP(K16) /Genio / Beat K1A / Beat ESP / POP ESP /Beat eSP(K81) / Scoopy eSP(K93)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -2221,7 +2221,7 @@
   },
   {
     "pn": "4955",
-    "description": "Per Sentrik 1.000 RPM (Silver) - Aerox('17-21), New N-Max('20up), PCX160 (2021), Vario160, Fazzio - B65-E6626-00, 22401-KGG-910",
+    "description": "Per Sentrik / Clutch Shoe Spring 1,000RPM Aerox('17-21), New N-Max('20up) PCX160 (2021)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -2233,7 +2233,7 @@
   },
   {
     "pn": "4956",
-    "description": "Per Sentrik 1.500 RPM (Oranye / Orange) - Aerox('17-21), New N-Max('20up), PCX160 (2021), Vario160, Fazzio - B65-E6626-00, 22401-KGG-910",
+    "description": "Per Sentrik / Clutch Shoe Spring 1,500RPM Aerox('17-21), New N-Max('20up) PCX160 (2021)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -2245,7 +2245,7 @@
   },
   {
     "pn": "4957",
-    "description": "Per Sentrik 1.000 RPM (Silver) - PCX/Vario150/Vario125ESP/Vario110, N-Max upto 2019, Vario Techno 125, Vespa 125/150 - 22401-KVB-900, 2DP-E6626-00, 22401-KWN-000, 2PH-E6626-00",
+    "description": "Per Sentrik / Clutch Shoe Spring 1,000RPM PCX/Vario150/Vario125ESP/Vario110/Vario110eSP N-Max upto 2019 Vario Techno 125FI CBS/STD('13-15) Vario 125 All New Vario ESP125/Vario 125 Fi Techno Fino Grande 125('17-20)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -2257,7 +2257,7 @@
   },
   {
     "pn": "4958",
-    "description": "Per Sentrik 1.500 RPM (Oranye / Orange) - PCX/Vario150/Vario125ESP/Vario110, N-Max upto 2019, Vario Techno 125, Vespa 125/150 - 22401-KVB-900, 2DP-E6626-00, 22401-KWN-000, 2PH-E6626-00",
+    "description": "Per Sentrik / Clutch Shoe Spring 1,500RPM PCX/Vario150/Vario125ESP/Vario110/Vario110eSP N-Max upto 2019 Vario Techno 125FI CBS/STD('13-15) Vario 125 All New Vario ESP125/Vario 125 Fi Techno Fino Grande 125('17-20)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -2269,7 +2269,7 @@
   },
   {
     "pn": "4968",
-    "description": "Roller CVT 8 Gram (8gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3 pcs, Weight 8 gr, Size OD.20x15, Vario 125 PGMFi, Vario 150, PCX125, Skywave, Skydrive & Spin",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -2281,7 +2281,7 @@
   },
   {
     "pn": "4969",
-    "description": "Roller CVT 11 Gram (11gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3 pcs, Weight 11 gr, Size OD.20x15, Vario 125 PGMFi, Vario 150, PCX125, Skywave, Skydrive & Spin",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -2293,7 +2293,7 @@
   },
   {
     "pn": "4970",
-    "description": "Roller CVT 8 Gram (8gr) - Vespa, Piaggio",
+    "description": "New PA46D Weight Roller 3 pcs, 19(OD)x17(W), 8 Gr, Vespa, Piaggio",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -2305,7 +2305,7 @@
   },
   {
     "pn": "4971",
-    "description": "Roller CVT 9 Gram (9gr) - Vespa, Piaggio",
+    "description": "New PA46D Weight Roller 3 pcs, 19(OD)x17(W), 9 Gr, Vespa, Piaggio",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -2317,7 +2317,7 @@
   },
   {
     "pn": "4972",
-    "description": "Roller CVT 10 Gram (10gr) - Vespa, Piaggio",
+    "description": "New PA46D Weight Roller 3 pcs, 19(OD)x17(W), 10 Gr, Vespa, Piaggio",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -2329,7 +2329,7 @@
   },
   {
     "pn": "4973",
-    "description": "Roller CVT 11 Gram (11gr) - Vespa, Piaggio",
+    "description": "New PA46D Weight Roller 3 pcs, 19(OD)x17(W), 11 Gr, Vespa, Piaggio",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -2341,7 +2341,7 @@
   },
   {
     "pn": "4974",
-    "description": "Roller CVT 12 Gram (12gr) - Vespa, Piaggio",
+    "description": "New PA46D Weight Roller 3 pcs, 19(OD)x17(W), 12 Gr, Vespa, Piaggio",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -2353,7 +2353,7 @@
   },
   {
     "pn": "4978",
-    "description": "Mangkok Kampas Ganda 7 Star Standar - K25,K16,K0J,K81, Beat Fi(‘12-14), BeatPOP/Sporty(’14-20), BeatStreet(’20-22), Scoopy Fi(’13-17), ScoopyESP(‘17-22), Genio(’19-22), Vario110ESP",
+    "description": "7 Star Hi-Torque Ctlutch Housing K25, K16, K81, Beat Fi, Scoopy Fi, Vario110ESP, NewScoopy ESP (K16), Beat ESP (K81), POP ESP (K81), Scoopy ESP (K93)",
     "het": 260961,
     "d24": 198330,
     "d27": 190502,
@@ -2365,7 +2365,7 @@
   },
   {
     "pn": "4982",
-    "description": "Busi Tapered Ignimax - Grass Cutting 2 Stroke Machine - DYT_BPM6A",
+    "description": "Ignimax Tapered Spark Plug, BPM6A for Grass Cutting Machines",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -2377,7 +2377,7 @@
   },
   {
     "pn": "4988",
-    "description": "Per CVT 1.000 RPM (Putih / White) - Vespa 150cc 3V, iGet 150 Primavera, GTS ’19 - B013 304",
+    "description": "CVT SPRING, WHITE +10%/1,000rpm 7.71N, 4.7x58x108.1, 6.1EC, Piaggio Vespa 150cc #B013304 (Besar) LX/3V/PRIMAVERA/SPRINT/GTS",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -2389,7 +2389,7 @@
   },
   {
     "pn": "4989",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - Vespa 150cc 3V, iGet 150 Primavera, GTS ’19 - B013 304",
+    "description": "CVT SPRING, ORANGE +20%/1,500rpm 7.18N, 4.7x58x112.9, 6.4EC, Piaggio Vespa 150cc #B013304 (Besar) LX/3V/PRIMAVERA/SPRINT/GTS",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -2401,7 +2401,7 @@
   },
   {
     "pn": "4990",
-    "description": "Per Kopling Racing Manual Clutch - KCJ TIGER",
+    "description": "Racing Clutch Spring Set (4) SWOSC-V 2.5x18x39L 291.3N..KCJ TIGER",
     "het": 120990,
     "d24": 91952,
     "d27": 88323,
@@ -2413,7 +2413,7 @@
   },
   {
     "pn": "4991",
-    "description": "Per Kopling Racing Manual Clutch - K56, Sonic 2015up, New CBR150 '15-21, New CB150 '18-21, Supra150 GTR",
+    "description": "Racing Clutch Spring Set (4) SWOSC-V 2.9x20.6x25.5L 457.3N..K56, Sonic 2015up, New CBR150 '15-21, New CB150 '18-21, Supra150 GTR",
     "het": 120990,
     "d24": 91952,
     "d27": 88323,
@@ -2425,7 +2425,7 @@
   },
   {
     "pn": "4992",
-    "description": "Per Kopling Racing Manual Clutch - KRM, CRF150L '18up, Verza '13-18, New Mega Pro FI '12-20",
+    "description": "Racing Clutch Spring Set (4) SWOSC-V 2.8x19.5x40L 345.3N KRM, CRF150L '18up, Verza'13-18, New Mega Pro FI '12-20",
     "het": 120990,
     "d24": 91952,
     "d27": 88323,
@@ -2437,7 +2437,7 @@
   },
   {
     "pn": "4993",
-    "description": "Per Kopling Racing Manual Clutch - 1S7, Jupiter MX '09-14, Vixion NVL '12-14",
+    "description": "Racing Clutch Spring Set (4) SWOSC-V 2.4x18x40L 217.8N..1S7, Jupiter MX '09-14, Vixion NVL '12-14",
     "het": 120990,
     "d24": 91952,
     "d27": 88323,
@@ -2449,7 +2449,7 @@
   },
   {
     "pn": "4994",
-    "description": "Per Kopling Racing Manual Clutch - 905, RX-King '02-08",
+    "description": "Racing Clutch Spring Set (4) SWOSC-V 2.3x15.8x34.6L 261.7N..905, RX-King '02-08",
     "het": 120990,
     "d24": 91952,
     "d27": 88323,
@@ -2461,7 +2461,7 @@
   },
   {
     "pn": "4995",
-    "description": "Per Kopling Racing Manual Clutch - 2ND, Jupiter MX150 '15-21",
+    "description": "Racing Clutch Spring Set (4) SWOSC-V 2.8x19.8x40.5L 343.3N..2ND, Jupiter MX150 '15-21",
     "het": 120990,
     "d24": 91952,
     "d27": 88323,
@@ -2473,7 +2473,7 @@
   },
   {
     "pn": "4996",
-    "description": "Per Kopling Racing Manual Clutch - BK6, VXN150/VXN155R '18-21, YZF155 R15 '17-21",
+    "description": "Racing Clutch Spring Set (3) SWOSC-V 2.8x20x42L 463.8N..BK6, VXN150/VXN155R '18-21, YZF155 R15 '17-21",
     "het": 120990,
     "d24": 91952,
     "d27": 88323,
@@ -2485,7 +2485,7 @@
   },
   {
     "pn": "4997",
-    "description": "Per Kopling Racing Manual Clutch - 094, Satria FU",
+    "description": "Racing Clutch Spring Set (5) SWOSC-V 2.4x15.7x31L 291.3N..094, Satria FU",
     "het": 120990,
     "d24": 91952,
     "d27": 88323,
@@ -2497,7 +2497,7 @@
   },
   {
     "pn": "5014",
-    "description": "Slider Pulley (Slide Piece 3 Pcs) - GCC, K81, K83Beat, Scoopy, Beat Fi, Beat ESP, Vario 110",
+    "description": "Slider Pulley, Beat, Scoopy, Beat Fi, Beat ESP, Vario 110 GCC, K81, K83",
     "het": 33300,
     "d24": 25308,
     "d27": 24309,
@@ -2509,7 +2509,7 @@
   },
   {
     "pn": "5015",
-    "description": "Slider Pulley (Slide Piece 3 Pcs) - K0J, Beat/Genio('19-22)",
+    "description": "Slider Pulley, K0J, Beat/Genio('19-22)",
     "het": 33300,
     "d24": 25308,
     "d27": 24309,
@@ -2521,7 +2521,7 @@
   },
   {
     "pn": "5016",
-    "description": "Slider Pulley (Slide Piece 3 Pcs) - KWN, K1N, PCX150/160, ADV, Vario125/150",
+    "description": "Slider Pulley, KWN, K1N, PCX150/160, ADV, Vario125/150",
     "het": 33300,
     "d24": 25308,
     "d27": 24309,
@@ -2533,7 +2533,7 @@
   },
   {
     "pn": "5017",
-    "description": "Slider Pulley (Slide Piece 3 Pcs) - B65, 2DP, 5TL, Mio J, M3, Gear, Nmax, Aerox, Lexi",
+    "description": "Slider Pulley, Mio J, M3, Gear, Nmax, Aerox",
     "het": 33300,
     "d24": 25308,
     "d27": 24309,
@@ -2545,7 +2545,7 @@
   },
   {
     "pn": "5018",
-    "description": "Mangkok Kampas Ganda 7 Star Standar - K0J, New Beat, Genio",
+    "description": "7 Star Hi-Torque Ctlutch Housing, K0J New Beat K1A 20-22, Genio 19-22",
     "het": 260961,
     "d24": 198330,
     "d27": 190502,
@@ -2557,7 +2557,7 @@
   },
   {
     "pn": "5019",
-    "description": "Rumah Pulley Superstock - B65 Aerox 155, Lexi, Nmax",
+    "description": "Superstock Pulley, Hi-Copper ADC12,..w/20% Cu Bushing, B65- E7620-00, Nmax '20-22, Aerox '17-22, Lexi '18-20",
     "het": 209901,
     "d24": 159525,
     "d27": 153228,
@@ -2569,7 +2569,7 @@
   },
   {
     "pn": "5020",
-    "description": "Rumah Pulley Superstock - K44 Beat Fi, ESP",
+    "description": "Superstock Pulley, Hi-Copper ADC12, K44 Beat ESP, Scoopy ESP, Beat Pop 2014-2019",
     "het": 178932,
     "d24": 135988,
     "d27": 130620,
@@ -2581,7 +2581,7 @@
   },
   {
     "pn": "5021",
-    "description": "Rumah Pulley Superstock - K0J All New Beat, Genio",
+    "description": "Superstock Pulley, Hi-Copper ADC12, All New Beat 2020, Genio, All New Scoopy 2021",
     "het": 178932,
     "d24": 135988,
     "d27": 130620,
@@ -2593,7 +2593,7 @@
   },
   {
     "pn": "5022",
-    "description": "Rumah Pulley Superstock - K97 PCX, Vario, ADV",
+    "description": "Superstock Pulley, K97 PCX160, PCX150, Vario 125 & Vario 150 (2015-2023), Vario 160, ADV150, ADV160",
     "het": 209901,
     "d24": 159525,
     "d27": 153228,
@@ -2605,7 +2605,7 @@
   },
   {
     "pn": "5024",
-    "description": "Piringan Cakram Superstock - Beat, Beat Fi, Beat ESP, Scoopy, Genio, K1A Front, 190mm",
+    "description": "Wave Disc Rotor, Beat, Beat Fi, Beat ESP, Scoopy, Genio, K1A",
     "het": 179931,
     "d24": 136748,
     "d27": 131350,
@@ -2617,7 +2617,7 @@
   },
   {
     "pn": "5025",
-    "description": "Piringan Cakram Superstock - Mio M3, Mio Z, Fino, Soul, Gear, Mio J Front, 190mm",
+    "description": "Wave Disc Rotor, Mio M3, Mio, Fino, Soul, Gear, Mio J, X-Ride 125",
     "het": 179931,
     "d24": 136748,
     "d27": 131350,
@@ -2629,7 +2629,7 @@
   },
   {
     "pn": "5026",
-    "description": "Piringan Cakram Superstock - Vario 150 LED Lubang 5 (K59) 2018-2022 Front, 190mm",
+    "description": "Wave Disc Rotor, Vario 150 LED Lubang 5 (k59) 2018-2022",
     "het": 189921,
     "d24": 144340,
     "d27": 138642,
@@ -2641,7 +2641,7 @@
   },
   {
     "pn": "5028",
-    "description": "Filter Udara Superstock - PCX150, ADV150 - 17210-K97-600",
+    "description": "DYT AIR FILTER PCX150, ADV150",
     "het": 80586,
     "d24": 61245,
     "d27": 58828,
@@ -2653,7 +2653,7 @@
   },
   {
     "pn": "5029",
-    "description": "Filter Udara Superstock - Genio, All New Beat, New Scoopy - 17210-K0J-600",
+    "description": "DYT AIR FILTER K0J, New Beat, Genio, Scoopy",
     "het": 56943,
     "d24": 43277,
     "d27": 41568,
@@ -2665,7 +2665,7 @@
   },
   {
     "pn": "5031",
-    "description": "Kampas Rem Depan (Discpad) Superstock - CB150R(Rr), CRF150(Rr)",
+    "description": "Superstock Brake Pad, 06435-KSP-B01..Mega Pro New (Rr) ('10-'14), CRF150L (Rr) K84 ('17-'22)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -2677,7 +2677,7 @@
   },
   {
     "pn": "5032",
-    "description": "Kampas Rem Depan (Discpad) Superstock - R15 V3(Rr), Vixion R 155(Rr)",
+    "description": "Superstock Brake Pad, B97-25806-00..R15 V3 (Rr) ('17-'20), Vixion R (Rr) ('18-'22)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -2689,7 +2689,7 @@
   },
   {
     "pn": "5033",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - Brembo 4P Caliper",
+    "description": "Premium Brake Pad \"Lapinus Fiber\", Brembo 4P,07BB19SC..DUCATI:SUPER SPORT /MONSTER 900-907-916 SERIES (F)",
     "het": 154956,
     "d24": 117767,
     "d27": 113118,
@@ -2701,7 +2701,7 @@
   },
   {
     "pn": "5034",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - Brembo 2P Caliper",
+    "description": "Premium Brake Pad \"Lapinus Fiber\", Brembo 2P,07BB20SP..PIAGGIO X9 (F/R), RSV 1000®",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -2713,7 +2713,7 @@
   },
   {
     "pn": "5040",
-    "description": "Vanbelt + Roller Set Ultradrive - Vario 150 Double Cog - DYT_23100-K36-J01",
+    "description": "Ultra Drive Belt and WeightRoller Set Vario ESP 150 DOUBLE COG",
     "het": 240204,
     "d24": 182555,
     "d27": 175349,
@@ -2725,7 +2725,7 @@
   },
   {
     "pn": "5041",
-    "description": "Vanbelt + Roller Set Ultradrive - Beat K1A, Genio, Scoopy New - DYT_23100-K0J-N01",
+    "description": "Ultra Drive Belt and WeightRoller Set Genio, All New Beat, New Scoopy K1A",
     "het": 179931,
     "d24": 136748,
     "d27": 131350,
@@ -2737,7 +2737,7 @@
   },
   {
     "pn": "5042",
-    "description": "Vanbelt Ultradrive Only - Vario 150 ESP - DYT_23100-K36-J01",
+    "description": "Ultra Drive Belt only (without Roller) Vario ESP 150 DOUBLE COG",
     "het": 174936,
     "d24": 132951,
     "d27": 127703,
@@ -2749,7 +2749,7 @@
   },
   {
     "pn": "5043",
-    "description": "Vanbelt Ultradrive Only - Beat K1A, Genio, Scoopy - DYT_23100-K0J-N01",
+    "description": "Ultra Drive Belt only (without Roller) Genio, All New Beat, New Scoopy K1A",
     "het": 131979,
     "d24": 100304,
     "d27": 96345,
@@ -2761,7 +2761,7 @@
   },
   {
     "pn": "5044",
-    "description": "Vanbelt Ultradrive Only - Vespa 150 - DYT_237930",
+    "description": "Ultra Drive Belt only (without Roller) Vespa 150",
     "het": 234987,
     "d24": 178590,
     "d27": 171541,
@@ -2773,7 +2773,7 @@
   },
   {
     "pn": "5045",
-    "description": "Vanbelt Ultradrive Only - Vespa LX125, S125 3V, iget - DYT_D16447",
+    "description": "Ultra Drive Belt only (without Roller) Vespa LX125, S125 3V, iget",
     "het": 234987,
     "d24": 178590,
     "d27": 171541,
@@ -2785,7 +2785,7 @@
   },
   {
     "pn": "5046",
-    "description": "Busi Double Iridium Racing - Vario160, PCX160, Xmax - DYT_LMAR8A-9",
+    "description": "DYT SPLUG DOUBLE IRIDIUM LMAR8A-9 PCX160, Vario160, XMAX, ZX25RR, CBR250RR",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -2797,7 +2797,7 @@
   },
   {
     "pn": "5047",
-    "description": "Busi Tapered Ignimax - C90, S90Z - DYT_D6HS",
+    "description": "Ignimax Tapered Spark Plug, D6HS Honda C90, S90z",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -2809,7 +2809,7 @@
   },
   {
     "pn": "5049",
-    "description": "Bearing Roda (Wheel Bearing) - 6004-2RS (bearing gir belakang) - F1zr, jup-z, jup-mx, vega, vixion, byson, r15",
+    "description": "Ultra Drive Bearing 6004-2RS (bearing gir belakang) F1zr, jup-z, jup-mx, vega,vixion, byson, r15",
     "het": 21978,
     "d24": 16703,
     "d27": 16044,
@@ -2821,7 +2821,7 @@
   },
   {
     "pn": "5050",
-    "description": "Bearing Roda (Wheel Bearing) - 6303-2RS - Tiger, RX King, Ninja 250",
+    "description": "Ultra Drive Wheel Bearing 6303-2RS Tiger, RX King, Ninja 250",
     "het": 26973,
     "d24": 20499,
     "d27": 19690,
@@ -2833,7 +2833,7 @@
   },
   {
     "pn": "5051",
-    "description": "Busi Double Iridium Racing - Tiger, Scorpio - DYT_D8EA",
+    "description": "DYT SPLUG DOUBLE IRIDIUM D8EA GlPro,GLMax,MegaPro,TigerSeries,ScorpioSeries,Thunder250",
     "het": 104895,
     "d24": 79720,
     "d27": 76573,
@@ -2845,7 +2845,7 @@
   },
   {
     "pn": "5052",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - CRF150 - KTR",
+    "description": "Steering Stem Bearing Set, With Grease (Komstir) CRF",
     "het": 174936,
     "d24": 132951,
     "d27": 127703,
@@ -2857,7 +2857,7 @@
   },
   {
     "pn": "5053",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - KLX150, Dirt Tracker - 91015-425-831",
+    "description": "Steering Stem Bearing Set, with Grease (Komstir) KLX",
     "het": 201909,
     "d24": 153451,
     "d27": 147394,
@@ -2869,7 +2869,7 @@
   },
   {
     "pn": "5057",
-    "description": "Handgrip Daytona - Superstock Grip SS-1, Black, Diamond",
+    "description": "Daytona Superstock Grip SS-1, Black, With 2pcs of end cap, Black Color, 120mm",
     "het": 49950,
     "d24": 37962,
     "d27": 36464,
@@ -2881,7 +2881,7 @@
   },
   {
     "pn": "5058",
-    "description": "Kampas Ganda Kevlar Matic - X-Max - DYT_B74-E6620-00",
+    "description": "New Hi-Carbon&Kevlar Ultra Drive Kevlar Clutch Shoe, 5 pcs/set XMAX 250 B74-E6620-00",
     "het": 472971,
     "d24": 359458,
     "d27": 345269,
@@ -2893,7 +2893,7 @@
   },
   {
     "pn": "5059",
-    "description": "Kampas Rem Belakang (Tromol / Brake Shoe) Superstock - Beat,Beat Fi, Scoopy, Vario 125, Vario 150, PCX150 CBU",
+    "description": "Brake Shoe Non Asbes \"Daytona\" Include Spring, 06430-KWN-900,K44,KZL,KVB...Beat,Beat Fi, Scoopy, Vario 125, Vario 150, PCX150 (CBU",
     "het": 53946,
     "d24": 40999,
     "d27": 39381,
@@ -2905,7 +2905,7 @@
   },
   {
     "pn": "5060",
-    "description": "Kampas Rem Belakang (Tromol / Brake Shoe) Superstock - Karisma, Supra X125, Blade FI, Revo FI",
+    "description": "Brake Shoe Non Asbes \"Daytona\" Include Spring, 43125-KPH-903,..Karisma, Supra X 125, Blade FI, Revo FI",
     "het": 43956,
     "d24": 33407,
     "d27": 32088,
@@ -2917,7 +2917,7 @@
   },
   {
     "pn": "5061",
-    "description": "Kampas Rem Belakang (Tromol / Brake Shoe) Superstock - Mio, Soul GT115/125, X-Ride, Fazzio, Fino, M3, Xeon",
+    "description": "Brake Shoe Non Asbes \"Daytona\" Include Spring, 5MX-F530K-00, 1LB..Mio, Soul GT 115/125, X-Ride 115/125, Fazzio, Fino 115/125, Mio J, Mio Z,S,M3, Gear, Xeon 125FC, Vixion Lama",
     "het": 56943,
     "d24": 43277,
     "d27": 41568,
@@ -2929,7 +2929,7 @@
   },
   {
     "pn": "5062",
-    "description": "Kampas Rem Belakang (Tromol / Brake Shoe) Superstock - Aerox, Old Vixion, FreeGo, Jupiter MX 135, Lexi, RX-King",
+    "description": "Brake Shoe Non Asbes \"Daytona\" Include Spring, 5BP-F530K-00, 1S7,5D9..AEROX, Old Vixion '07-11', FreeGo, Jupiter MX 135, Jupiter Z1, Vega RR 115, RX King",
     "het": 58941,
     "d24": 44795,
     "d27": 43027,
@@ -2941,7 +2941,7 @@
   },
   {
     "pn": "5092",
-    "description": "Aki Kering MF Motor Giga Charge ZTZ5S-BS (3.5Ah / 12V) - Garansi 3 Bulan",
+    "description": "Giga Charge MF Battery X..ZTZ5S-BS COS, 3.5Ah,12Volt 115 x 72 x 86, 3months Warranty BRAND: GIGA CHARGE",
     "het": 199911,
     "price": "199.911",
     "qty": "1",
@@ -2953,7 +2953,7 @@
   },
   {
     "pn": "5093",
-    "description": "Aki Kering MF Motor Giga Charge ZTZ6V-BS (5Ah / 12V) - Garansi 3 Bulan",
+    "description": "Giga Charge MF Battery ZTZ6V-BS COS, 5Ah,12Volt 113 x 70 x 105, 3months Warranty BRAND: GIGA CHARGE",
     "het": 239982,
     "price": "239.982",
     "qty": "1",
@@ -2965,7 +2965,7 @@
   },
   {
     "pn": "5095",
-    "description": "Piringan Cakram Superstock - Mio, Mio Sporty, Mio Soul Karbu Front, 190mm",
+    "description": "Wave Brake Disc Rotor, FR 190x3.5T 4-Holes, Dia.190 Mio Sporty",
     "het": 179931,
     "d24": 136748,
     "d27": 131350,
@@ -2977,7 +2977,7 @@
   },
   {
     "pn": "5174",
-    "description": "Roller CVT 15 Gram (15gr) - XMAX 250",
+    "description": "Weight Roller 3 Pcs, Weight: 15 Gr, Dia. 23 x 18, XMAX 250",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -2989,7 +2989,7 @@
   },
   {
     "pn": "5175",
-    "description": "Roller CVT 16 Gram (16gr) - XMAX 250",
+    "description": "Weight Roller 3 Pcs, Weight: 16 Gr, Dia. 23 x 18, XMAX 250",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -3001,7 +3001,7 @@
   },
   {
     "pn": "5176",
-    "description": "Roller CVT 17 Gram (17gr) - XMAX 250",
+    "description": "Weight Roller 3 Pcs, Weight: 17 Gr, Dia. 23 x 18, XMAX 250",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -3013,7 +3013,7 @@
   },
   {
     "pn": "5177",
-    "description": "Piringan Cakram Floating Racing - Nmax, Aerox, 260mm",
+    "description": "Floating Wave Disc Rotor, 260mm 3-Holes, Nmax, Aerox155",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -3025,7 +3025,7 @@
   },
   {
     "pn": "5178",
-    "description": "Kampas Rem Depan (Discpad) Superstock - CRF150(Fr), PCX150 ABS(Fr), ADV160 ABS 22-23(Fr)",
+    "description": "Superstock Brake Pad, 06455-K84-902..CRF150 Fr ('17-'23), PCX150ABS Fr ('18-'23), ADV160 ABS Fr ('22-'23)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -3037,7 +3037,7 @@
   },
   {
     "pn": "5179",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 6304, Forged, C3 Hi-Speed Type",
+    "description": "Crankshaft Bearing 6304, Forged, C3 Hi-Speed Type",
     "het": 36852,
     "d24": 28008,
     "d27": 26902,
@@ -3049,7 +3049,7 @@
   },
   {
     "pn": "5180",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 6305, Forged, C3 Hi-Speed Type",
+    "description": "Crankshaft Bearing 6305, Forged C3 Hi-Speed Type",
     "het": 52614,
     "d24": 39987,
     "d27": 38408,
@@ -3061,7 +3061,7 @@
   },
   {
     "pn": "5181",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 6205, Forged, C3 Hi-Speed Type",
+    "description": "Crankshaft Bearing 6205, Forged C3 Hi-Speed Type",
     "het": 36852,
     "d24": 28008,
     "d27": 26902,
@@ -3073,7 +3073,7 @@
   },
   {
     "pn": "5182",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 6007, Forged, C3 Hi-Speed Type",
+    "description": "Crankshaft Bearing 6007, Forged C3 Hi-Speed Type",
     "het": 52614,
     "d24": 39987,
     "d27": 38408,
@@ -3085,7 +3085,7 @@
   },
   {
     "pn": "5183",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 6207, Forged, C3 Hi-Speed Type",
+    "description": "Crankshaft Bearing 6207, Forged C3 Hi-Speed Type",
     "het": 73593,
     "d24": 55931,
     "d27": 53723,
@@ -3097,7 +3097,7 @@
   },
   {
     "pn": "5184",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 6306, Forged, C3 Hi-Speed Type",
+    "description": "Crankshaft Bearing 6306, Forged C3 Hi-Speed Type",
     "het": 115773,
     "d24": 87987,
     "d27": 84514,
@@ -3109,7 +3109,7 @@
   },
   {
     "pn": "5185",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 6204, Forged, C3 Hi-Speed Type",
+    "description": "Crankshaft Bearing 6204, Forged C3 Hi-Speed Type",
     "het": 33633,
     "d24": 25561,
     "d27": 24552,
@@ -3121,7 +3121,7 @@
   },
   {
     "pn": "5186",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 63/22, Forged, C3 Hi-Speed Type",
+    "description": "Crankshaft Bearing 63/22, Forged C3 Hi-Speed Type",
     "het": 47397,
     "d24": 36022,
     "d27": 34600,
@@ -3133,7 +3133,7 @@
   },
   {
     "pn": "5189",
-    "description": "Knalpot Racing Superstock SS-1 - Yamaha NMAX 155 (2020-Up)",
+    "description": "Superstock Exhaust SS-1 Yamaha NMAX 155 20UP",
     "het": 799977,
     "price": "799.977",
     "qty": "1",
@@ -3145,7 +3145,7 @@
   },
   {
     "pn": "5200",
-    "description": "Knalpot Racing Superstock SS-1 - Honda Vario LED 125/150 ('18-'22)",
+    "description": "Superstock Exhaust SS-1, Honda Vario LED 125/150 ('18-'22)",
     "het": 799977,
     "price": "799.977",
     "qty": "1",
@@ -3157,7 +3157,7 @@
   },
   {
     "pn": "5201",
-    "description": "Knalpot Racing Superstock SS-1 - Honda PCX 150 ('18-'21)",
+    "description": "Superstock Exhaust SS-1, Honda PCX150 ('18-'21)",
     "het": 799977,
     "price": "799.977",
     "qty": "1",
@@ -3169,7 +3169,7 @@
   },
   {
     "pn": "5202",
-    "description": "Knalpot Racing Superstock SS-1 - Honda PCX 160 ('21-'22)",
+    "description": "Superstock Exhaust SS-1, Honda PCX160 ('21-'22)",
     "het": 799977,
     "price": "799.977",
     "qty": "1",
@@ -3181,7 +3181,7 @@
   },
   {
     "pn": "5203",
-    "description": "Knalpot Racing Superstock SS-1 - Yamaha NMAX 150/155 ('15-'19)",
+    "description": "Superstock Exhaust SS-1, Yamaha NMAX 150 ('15-'19)",
     "het": 799977,
     "price": "799.977",
     "qty": "1",
@@ -3193,7 +3193,7 @@
   },
   {
     "pn": "5213",
-    "description": "Handgrip Daytona - Superstock Grip SS-2, Black, Hair Line",
+    "description": "Daytona Superstock Grip SS-2, Black, With 2pcs of end cap, Black Color, 120mm",
     "het": 49950,
     "d24": 37962,
     "d27": 36464,
@@ -3205,7 +3205,7 @@
   },
   {
     "pn": "5214",
-    "description": "Roller CVT 7 Gram (7gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "New PA46D Weight Roller 3 pcs, Weight 7 gr, Size OD.20x15, ..Vario 125 PGMFi, Vario 150, PCX125, Skywave, Skydrive & Spin",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -3217,7 +3217,7 @@
   },
   {
     "pn": "5215",
-    "description": "Roller CVT 16 Gram (16gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3Pcs, Weight: 16 Gr , Dia. 20x15, Vario 125 PGMFI, Vario 150, Pcx 125, Pcx 150,..Skywave",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -3229,7 +3229,7 @@
   },
   {
     "pn": "5216",
-    "description": "Roller CVT 17 Gram (17gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3Pcs, Weight: 17 Gr , Dia. 20x15, Vario 125 PGMFI, Vario 150, Pcx 125, Pcx 150,..Skywave",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -3241,7 +3241,7 @@
   },
   {
     "pn": "5217",
-    "description": "Roller CVT 18 Gram (18gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3Pcs, Weight: 18 Gr , Dia. 20x15, Vario 125 PGMFI, Vario 150, Pcx 125, Pcx 150,..Skywave",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -3253,7 +3253,7 @@
   },
   {
     "pn": "5218",
-    "description": "Roller CVT 19 Gram (19gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3Pcs, Weight: 19 Gr , Dia. 20x15, Vario 125 PGMFI, Vario 150, Pcx 125, Pcx 150,..Skywave",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -3265,7 +3265,7 @@
   },
   {
     "pn": "5219",
-    "description": "Roller CVT 12 Gram (12gr) - Beat Fi, Scoopy Fi / ESP",
+    "description": "Weight Roller 3 pcs, Weight: 12 Gr, Size: OD.18 x 14, Vario 110 / New Vario ESP, Beat FI, Scoopy FI",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -3277,7 +3277,7 @@
   },
   {
     "pn": "5224",
-    "description": "Per CVT 1.000 RPM (Putih / White) - Mio 03~12 / Fino - 5TL",
+    "description": "CVT SPRING, WHITE +10%/1000rpm, Mio,Fino",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -3289,7 +3289,7 @@
   },
   {
     "pn": "5225",
-    "description": "Per CVT 1.000 RPM (Putih / White) - Vario150, PCX CBU - K36",
+    "description": "CVT SPRING, WHITE +10%/1000rpm, Vario150, PCX('14-'18)",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -3301,7 +3301,7 @@
   },
   {
     "pn": "5226",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - Vario150, PCX CBU - K36",
+    "description": "CVT SPRING, ORANGE +20%/1500rpm, Vario150, PCX150 ('14-'18)",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -3313,7 +3313,7 @@
   },
   {
     "pn": "5229",
-    "description": "Per CVT 2.000 RPM (Emas / Gold) - Vario150, PCX CBU - K36",
+    "description": "CVT SPRING, GOLD +30%/2000RPM.. Vario 150, PCX150",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -3325,7 +3325,7 @@
   },
   {
     "pn": "5230",
-    "description": "Per CVT 2.000 RPM (Emas / Gold) - Aerox155, Nmax155 - B65",
+    "description": "CVT SPRING, GOLD +30%/2000rpm.. AEROX 155, New NMAX 155",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -3337,7 +3337,7 @@
   },
   {
     "pn": "5231",
-    "description": "Kampas Rem Depan (Discpad) Superstock - KLX150, D-Tracker (Fr)",
+    "description": "Superstock Brake Pad, 43082-0100.. Kawasaki KLX (Fr)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -3349,7 +3349,7 @@
   },
   {
     "pn": "5232",
-    "description": "Kampas Rem Depan (Discpad) Superstock - KLX150, D-Tracker (Rr)",
+    "description": "Superstock Brake Pad, 43082-0043.. Kawasaki KLX (Rr)",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -3361,7 +3361,7 @@
   },
   {
     "pn": "5233",
-    "description": "Daystar High Pressure Cleaner 304-600, Alat cuci Steam Motor dan Mobil",
+    "description": "Daystar High Pressure Cleaner 304-600, Alat cuci Steam Motor dan Mobil - Pressure 55Bar - Power: 600Watt - Include hose 7 meters. - Thermal Protection, Auto Stop System BRAND : Daystar by Daytona",
     "het": 1149960,
     "d24": 873970,
     "d27": 839471,
@@ -3373,7 +3373,7 @@
   },
   {
     "pn": "5234",
-    "description": "Filter Udara Superstock - Vario 160, PCX160, ADV160 - 17210-K1Z-N20",
+    "description": "Air Filter Honda Vario 160 (22-), PCX160 (21-), ADV160 (22-), 17210-K1Z-N20",
     "het": 80586,
     "d24": 61245,
     "d27": 58828,
@@ -3385,7 +3385,7 @@
   },
   {
     "pn": "5235",
-    "description": "Filter Udara Superstock - Nmax 155, All New AEROX - B6H-E4451-00",
+    "description": "Air Filter Yamaha Nmax 155 (20-), All New AEROX (21-), B6H-E4451-00",
     "het": 59052,
     "d24": 44880,
     "d27": 43108,
@@ -3397,7 +3397,7 @@
   },
   {
     "pn": "5236",
-    "description": "Filter Udara Superstock - Fazzio - BEJ-E4450-00",
+    "description": "Air Filter Yamaha Fazzi (22-), BEJ-E4450-00",
     "het": 48840,
     "d24": 37118,
     "d27": 35653,
@@ -3409,7 +3409,7 @@
   },
   {
     "pn": "5238",
-    "description": "Per CVT 2.000 RPM (Emas / Gold) - PCX150, PCX160, Vario125, ADV160 - K35",
+    "description": "CVT SPRING, Gold +30%/2000rpm,.PCX150 2018~up, Vario 125 LED",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -3421,7 +3421,7 @@
   },
   {
     "pn": "5239",
-    "description": "Cangklong Busi Evo (Spark Plug Cap) - 90 degree Short (Honda)",
+    "description": "Ignimax Spark Plug Cap 90 Deg Red Color, Cop Busi",
     "het": 54945,
     "d24": 41758,
     "d27": 40110,
@@ -3433,7 +3433,7 @@
   },
   {
     "pn": "5240",
-    "description": "Handgrip Daytona - Superstock Grip SS-3, Black, Octagon",
+    "description": "Daytona Superstock Grip SS-3, Black, With 2pcs of end cap, Black Color, 120mm",
     "het": 49950,
     "d24": 37962,
     "d27": 36464,
@@ -3445,7 +3445,7 @@
   },
   {
     "pn": "5241",
-    "description": "Handgrip Daytona - Katana Grip, Black Gray",
+    "description": "Daytona Grip Katana, Black&Gray -with 2pcs of end cap, 2 Color",
     "het": 74925,
     "d24": 56943,
     "d27": 54695,
@@ -3457,7 +3457,7 @@
   },
   {
     "pn": "5242",
-    "description": "Velg Daytona Dash Wheel - Beat/Scoopy, Vario 110, Beat Fi - Black",
+    "description": "Dash wheel, Black, Honda Beat, Beat Fi/ESP, Scoopy FI/ESP, Vario 110 Fi, (Fr) MT 1.85x14 (Rr) MT 2.15x14",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -3469,7 +3469,7 @@
   },
   {
     "pn": "5243",
-    "description": "Velg Daytona Dash Wheel - Beat/Scoopy, Vario 110, Beat Fi - Silver",
+    "description": "Dash wheel, Silver, Honda Beat, Beat Fi/ESP, Scoopy FI/ESP, Vario 110 Fi, (Fr) MT 1.85x14 (Rr) MT 2.15x14",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -3481,7 +3481,7 @@
   },
   {
     "pn": "5244",
-    "description": "Velg Daytona Dash Wheel - Beat/Scoopy, Vario 110, Beat Fi - Gold",
+    "description": "Dash wheel, Gold, Honda Beat, Beat Fi/ESP, Scoopy FI/ESP, Vario 110 Fi, (Fr) MT 1.85x14 (Rr) MT 2.15x14",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -3493,7 +3493,7 @@
   },
   {
     "pn": "5245",
-    "description": "Velg Daytona Dash Wheel - Vario CBS, Vario 125/150 - Black",
+    "description": "Dash wheel, Black, Honda Vario CBS, Vario 125, 150* (Fr) MT 1.85x14 (Rr) MT 2.15x14 (*harus ganti cakram beat)",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -3505,7 +3505,7 @@
   },
   {
     "pn": "5246",
-    "description": "Velg Daytona Dash Wheel - Vario CBS, Vario 125/150 - Silver",
+    "description": "Dash wheel, Silver, Honda Vario CBS, Vario 125, 150* (Fr) MT 1.85x14 (Rr) MT 2.15x14 (*harus ganti cakram beat)",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -3517,7 +3517,7 @@
   },
   {
     "pn": "5247",
-    "description": "Velg Daytona Dash Wheel - Vario CBS, Vario 125/150 - Gold",
+    "description": "Dash wheel, Gold, Honda Vario CBS, Vario 125, 150* (Fr) MT 1.85x14 (Rr) MT 2.15x14 (*harus ganti cakram beat)",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -3529,7 +3529,7 @@
   },
   {
     "pn": "5253",
-    "description": "Knalpot Racing Superstock SS-1 - Honda Beat ESP ('20-Up), Scoopy ('20-Up), Genio ('19-Up)",
+    "description": "Superstock Exhaust, Honda Beat ESP ('20up-), Scoopy ('20-), Genio ('19)",
     "het": 799977,
     "price": "799.977",
     "qty": "1",
@@ -3541,7 +3541,7 @@
   },
   {
     "pn": "5254",
-    "description": "Mangkok Kampas Ganda 7 Star EVO Racing (Kartel) - B65, Aerox(’17-22), New N-Max(’20-22), Lexi(’18-20)",
+    "description": "Seven-Star Torque Clutch Housing EVO Racing Series w/Knurling, B65..Aerox('17-21), NewN-Max('20up), Lexi125('18-20)..QPQ Nitriding",
     "het": 363525,
     "d24": 276279,
     "d27": 265373,
@@ -3553,7 +3553,7 @@
   },
   {
     "pn": "5255",
-    "description": "Mangkok Kampas Ganda 7 Star EVO Racing (Kartel) - 2DP, N-Max (Up to 2019)",
+    "description": "Seven-Star Torque Clutch Housing EVO Racing Series w/Knurling, 2DP N-Max '15-19 QPQ Nitriding",
     "het": 363525,
     "d24": 276279,
     "d27": 265373,
@@ -3565,7 +3565,7 @@
   },
   {
     "pn": "5256",
-    "description": "Mangkok Kampas Ganda 7 Star EVO Racing (Kartel) - 2PH, Mio M3, Mio Z, Gear125, Fazzio, Freego, Fino Grande",
+    "description": "Seven-Star Torque Clutch Housing EVO Racing Series w/Knurling, 2PH, 2SX Fino Grande 125('17-20), Freego125('19-20), Mio-M3 2015-..2020, Soul GT125 ('15-18) QPQ Nitriding",
     "het": 363525,
     "d24": 276279,
     "d27": 265373,
@@ -3577,7 +3577,7 @@
   },
   {
     "pn": "5257",
-    "description": "Mangkok Kampas Ganda 7 Star EVO Racing (Kartel) - K1N,KWN,KVB, PCX160(’21-22), PCX150(’17-21), Vario110(’06-14), Vario125(’12-22), Vario150(’15-22), Spacy Fi(’13-18)",
+    "description": "Seven-Star Torque Clutch Housing EVO Racing Series w/Knurling, KWN, KVB..PCX160(21),PCX150,Vario150/125 Fi,Spacy Fi,Vario110..Carb...QPQ Nitriding",
     "het": 363525,
     "d24": 276279,
     "d27": 265373,
@@ -3589,7 +3589,7 @@
   },
   {
     "pn": "5258",
-    "description": "Mangkok Kampas Ganda 7 Star EVO Racing (Kartel) - K25,K16,K0J,K81, Beat Fi(‘12-14), BeatPOP/Sporty(’14-20), BeatStreet(’20-22), Scoopy Fi(’13-17), ScoopyESP(‘17-22), Genio(’19-22), Vario110ESP",
+    "description": "Seven-Star Torque Clutch Housing EVO Racing Series w/Knurling, 112 (ID) QPQ, (K25), Beat Fi, Scoopy Fi, Vario110 ESP, New Scoopy ESP (K16), Beat ESP (K81), Scoopy ESP (K93)",
     "het": 317682,
     "d24": 241438,
     "d27": 231908,
@@ -3601,7 +3601,7 @@
   },
   {
     "pn": "5259",
-    "description": "Mangkok Kampas Ganda 7 Star EVO Racing (Kartel) - K0J, New Beat, Genio",
+    "description": "Seven-Star Torque Clutch Housing EVO Racing Series w/Knurling 112(ID)+Ring QPQ, 22100-K0J-N01, New Beat K1A '20-22, Genio '19-22",
     "het": 317682,
     "d24": 241438,
     "d27": 231908,
@@ -3613,7 +3613,7 @@
   },
   {
     "pn": "5264",
-    "description": "Per CVT 1.000 RPM (Putih / White) - Xmax ‘16~23 - B74 - 1.000 RPM",
+    "description": "CVT SPRING, ORANGE +20%/1000RPM, XMAX",
     "het": 169941,
     "d24": 129155,
     "d27": 124057,
@@ -3625,7 +3625,7 @@
   },
   {
     "pn": "5265",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - Xmax ‘16~23 - B74 - 1.500 RPM",
+    "description": "CVT SPRING, ORANGE +20%/1500RPM, XMAX",
     "het": 169941,
     "d24": 129155,
     "d27": 124057,
@@ -3637,7 +3637,7 @@
   },
   {
     "pn": "5266",
-    "description": "Piringan Cakram Floating Racing - Jupiter Z, 298mm",
+    "description": "Floating Racing Disc Rotor Yamaha Jupiter Z FR, 298mm x 4.0t 4-Hole, W/BKT & Bolts",
     "het": 899988,
     "d24": 683991,
     "d27": 656991,
@@ -3649,7 +3649,7 @@
   },
   {
     "pn": "5267",
-    "description": "Piringan Cakram Floating Racing - Beat, Beat FI, Scoopy, 260mm",
+    "description": "Floating Racing Disc Rotor Honda Beat FR, 260mm x 4.0t 4-Hole, W/BKT & Bolts",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -3661,7 +3661,7 @@
   },
   {
     "pn": "5268",
-    "description": "Piringan Cakram Floating Racing - MX-King, 298mm",
+    "description": "Floating Racing Disc Rotor Yamaha MX-King, 298mm x 4.0t 5-Hole, W/BKT & Bolts",
     "het": 899988,
     "d24": 683991,
     "d27": 656991,
@@ -3673,7 +3673,7 @@
   },
   {
     "pn": "5286",
-    "description": "Selang Rem Braided Steel (Transparent) - 95cm, Transparent",
+    "description": "Superstock Brake Hose 95cm, Transparent Color N12 SUS Banjo 180°&45°",
     "het": 170163,
     "d24": 129324,
     "d27": 124219,
@@ -3685,7 +3685,7 @@
   },
   {
     "pn": "5287",
-    "description": "Selang Rem Braided Steel (Transparent) - 90cm, Transparent",
+    "description": "Superstock Brake Hose 90cm, Transparent Color N12 SUS Banjo 180°&45°",
     "het": 164946,
     "d24": 125359,
     "d27": 120411,
@@ -3697,7 +3697,7 @@
   },
   {
     "pn": "5288",
-    "description": "Selang Rem Braided Steel (Transparent) - 75cm, Transparent",
+    "description": "Superstock Brake Hose 75cm, Transparent Color N12 SUS Banjo 180°&45°",
     "het": 159729,
     "d24": 121394,
     "d27": 116602,
@@ -3709,7 +3709,7 @@
   },
   {
     "pn": "5289",
-    "description": "Selang Rem Braided Steel (Transparent) - 60cm, Transparent",
+    "description": "Superstock Brake Hose 60cm, Transparent Color N12 SUS Banjo 180°&45°",
     "het": 157731,
     "d24": 119876,
     "d27": 115144,
@@ -3721,7 +3721,7 @@
   },
   {
     "pn": "5290",
-    "description": "Selang Rem Braided Steel (Transparent) - 45cm, Transparent",
+    "description": "Superstock Brake Hose 45cm, Transparent Color N12 SUS Banjo 180°&45°",
     "het": 154623,
     "d24": 117513,
     "d27": 112875,
@@ -3733,7 +3733,7 @@
   },
   {
     "pn": "5291",
-    "description": "Kampas Ganda Kevlar Matic - Vespa S150IE, LX125 Carb, LX150IE, Liberty 150IE - DYT_CM1440175",
+    "description": "New Hi-Carbon&Kevlar Ultra Drive Kevlar Clutch Shoe, 3 pcs/set Piaggio Vespa S150IE, Sprint, Primavera, LX150, Liberty150IE",
     "het": 349983,
     "d24": 265987,
     "d27": 255488,
@@ -3745,7 +3745,7 @@
   },
   {
     "pn": "5297",
-    "description": "Kampas Rem Depan (Discpad) Superstock - Satria Fu Fi (Rr)",
+    "description": "Superstock Brake Pad, 69100-12830..Suzuki Fu FI '16UP Rr",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -3757,7 +3757,7 @@
   },
   {
     "pn": "5298",
-    "description": "Kampas Rem Depan (Discpad) Superstock - Satria Fu Fi, GSX150 (Fr)",
+    "description": "Superstock Brake Pad, 59100-34880-000..Suzuki Fu FI '16UP Fr, GSX '16U '16UP Fr",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -3769,7 +3769,7 @@
   },
   {
     "pn": "5299",
-    "description": "Cangklong Busi Evo (Spark Plug Cap) - 180 degree (Straight)",
+    "description": "Ignimax Spark Plug Cap 180 Deg Red Color Nmax, Aerox, Vixion, CRF150, M3, Xride, M3, R15",
     "het": 59940,
     "d24": 45554,
     "d27": 43756,
@@ -3781,7 +3781,7 @@
   },
   {
     "pn": "5300",
-    "description": "Kampas Ganda Kevlar Matic - Xeon RC - DYT_1LB-E6620-00",
+    "description": "New Hi-Carbon&Kevlar Ultra drive Kevlar Clutch Shoe, Xeon RC 1LB-E6620-00",
     "het": 221445,
     "d24": 168298,
     "d27": 161655,
@@ -3793,7 +3793,7 @@
   },
   {
     "pn": "5301",
-    "description": "Knalpot Racing Superstock SS-1 - Honda Beat ESP, Beat Street ('14-'19)",
+    "description": "Superstock Exhaust, Honda Beat ESP, Street ('14-'19)",
     "het": 799977,
     "price": "799.977",
     "qty": "1",
@@ -3805,7 +3805,7 @@
   },
   {
     "pn": "5303",
-    "description": "Per Sentrik 1.000 RPM (Silver) - XMax(’16-23) - B74-E6626-00",
+    "description": "Spring Set(5pcs), Clutch Shoe XMAX B74 1000Rpm",
     "het": 99900,
     "d24": 75924,
     "d27": 72927,
@@ -3817,7 +3817,7 @@
   },
   {
     "pn": "5305",
-    "description": "Per Sentrik 1.500 RPM (Oranye / Orange) - XMax(’16-23) - B74-E6626-00",
+    "description": "Spring Set(5pcs), Clutch Shoe XMAX B74 1500Rpm",
     "het": 99900,
     "d24": 75924,
     "d27": 72927,
@@ -3829,7 +3829,7 @@
   },
   {
     "pn": "5306",
-    "description": "Mangkok Kampas Ganda 7 Star Standar - Mio J, Fino Fi, X-ride, Soul GT 115",
+    "description": "Seven-Star Clutch Housing, 54P Mio J ('12-15), Fino FI, X-Ride",
     "het": 260961,
     "d24": 198330,
     "d27": 190502,
@@ -3841,7 +3841,7 @@
   },
   {
     "pn": "5307",
-    "description": "Mangkok Kampas Ganda 7 Star Standar - Mio, Mio Soul, Mio Sporty",
+    "description": "Seven-Star Clutch Housing, 5TL Mio ('05-11), Mio Sporty ('09-11)",
     "het": 260961,
     "d24": 198330,
     "d27": 190502,
@@ -3853,7 +3853,7 @@
   },
   {
     "pn": "5308",
-    "description": "Mangkok Kampas Ganda 7 Star EVO Racing (Kartel) - Mio J, Fino Fi, X-ride, Soul GT 115",
+    "description": "Seven-Star Clutch Housing V-2 with Knurling, 54P Mio J ('12-15), Fino FI",
     "het": 317682,
     "d24": 241438,
     "d27": 231908,
@@ -3865,7 +3865,7 @@
   },
   {
     "pn": "5309",
-    "description": "Mangkok Kampas Ganda 7 Star EVO Racing (Kartel) - Mio, Mio Soul, Mio Sporty",
+    "description": "Seven-Star Clutch Housing V-2 with Knurling, 5TL Mio ('05-11), Mio Sporty",
     "het": 317682,
     "d24": 241438,
     "d27": 231908,
@@ -3877,7 +3877,7 @@
   },
   {
     "pn": "5310",
-    "description": "Selang Rem Braided Steel (Transparent) - 110cm, Transparent",
+    "description": "Superstock Brake Hose 110cm, Transparent Color N12 SUS Banjo 180°&45°",
     "het": 180486,
     "d24": 137169,
     "d27": 131755,
@@ -3889,7 +3889,7 @@
   },
   {
     "pn": "5311",
-    "description": "Selang Rem Braided Steel (Transparent) - 130cm, Transparent",
+    "description": "Superstock Brake Hose 130cm, Transparent Color N12 SUS Banjo 180°&45°",
     "het": 185592,
     "d24": 141050,
     "d27": 135482,
@@ -3901,7 +3901,7 @@
   },
   {
     "pn": "5312",
-    "description": "Selang Rem Braided Steel (Transparent) - 210cm, Transparent",
+    "description": "Superstock Brake Hose 210cm, Transparent Color N12 SUS Banjo 180°&45°",
     "het": 257742,
     "d24": 195884,
     "d27": 188152,
@@ -3913,7 +3913,7 @@
   },
   {
     "pn": "5313",
-    "description": "Roller CVT 10 Gram (10gr) - XMAX 250",
+    "description": "Weight Roller 3 Pcs, Weight: 10 Gr, Dia. 23 x 18, XMAX 250",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -3925,7 +3925,7 @@
   },
   {
     "pn": "5314",
-    "description": "Roller CVT 12 Gram (12gr) - XMAX 250",
+    "description": "Weight Roller 3 Pcs, Weight: 12 Gr, Dia. 23 x 18, XMAX 250",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -3937,7 +3937,7 @@
   },
   {
     "pn": "5315",
-    "description": "Roller CVT 14 Gram (14gr) - XMAX 250",
+    "description": "Weight Roller 3 Pcs, Weight: 14 Gr, Dia. 23 x 18, XMAX 250",
     "het": 62937,
     "d24": 47832,
     "d27": 45944,
@@ -3949,7 +3949,7 @@
   },
   {
     "pn": "5316",
-    "description": "Bearing Tutup CVT (Cover Bearing) - CVT Cover Bearing 6002UU-2RS -10mm, Steel Bush",
+    "description": "CVT Cover Bearing 6002UU-2RS -10mm, Dual-Lip Sealing, Steel Bush",
     "het": 39960,
     "d24": 30370,
     "d27": 29171,
@@ -3961,7 +3961,7 @@
   },
   {
     "pn": "5319",
-    "description": "Busi Tapered Ignimax - Vario 110 Carburetor - DYT_CR7EH-9",
+    "description": "Ignimax Tapered Spark Plug, CR7EH-9, Vario 110 Carburetor",
     "het": 18204,
     "d24": 13835,
     "d27": 13289,
@@ -3973,7 +3973,7 @@
   },
   {
     "pn": "5320",
-    "description": "Mesin Balap Gelondongan Daytona ANIMA 190 FSM (4-Speed Square 62x62mm) - Wire Harness, CDI, Koil, Intake",
+    "description": "Motorcycle Engine, ANIMA190FSM, 4 Speed Square Engine, Bore x Stroke 62x62. Including Wire Harness, CDI, Coil, Intake manifold without rubber, carburetor not included",
     "het": 17499927,
     "price": "17.499.927",
     "qty": "1",
@@ -3985,7 +3985,7 @@
   },
   {
     "pn": "5321",
-    "description": "Mesin Balap Gelondongan Daytona ANIMA 160 FSM (4-Speed 62x52.9mm) - Wire Harness, CDI, Koil, Intake",
+    "description": "Motorcycle Engine, ANIMA160FSM, 4 Speed, Bore x Stroke, 62x52.9. Including Wire Harness, CDI, Coil, Intake manifold without rubber, carburetor not included",
     "het": 16499928,
     "price": "16.499.928",
     "qty": "1",
@@ -3997,7 +3997,7 @@
   },
   {
     "pn": "5322",
-    "description": "Mesin Balap Gelondongan Daytona ANIMA 190 SYS (4-Speed Short Stroke 66x55.5mm) - Wire Harness, CDI, Koil, Intake",
+    "description": "Motorcycle Engine, ANIMA190SYS, 4 Speed Short Stroke, Bore x Stroke, 66x55.5. Including Wire Harness, CDI, Coil, Intake manifold without rubber, carburetor not included",
     "het": 17499927,
     "price": "17.499.927",
     "qty": "1",
@@ -4009,7 +4009,7 @@
   },
   {
     "pn": "5323",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - Tiger - 92116-1065",
+    "description": "Steering Stem Bearing Set, With Grease (Komstir) GL, Tiger",
     "het": 99900,
     "d24": 75924,
     "d27": 72927,
@@ -4021,7 +4021,7 @@
   },
   {
     "pn": "5324",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - Satria Fu150 Carburetor - 51600-25G00-000",
+    "description": "Steering Stem Bearing Set, With Grease (Komstir) Satria Fu150",
     "het": 129981,
     "d24": 98786,
     "d27": 94886,
@@ -4033,7 +4033,7 @@
   },
   {
     "pn": "5325",
-    "description": "Bearing Roda (Wheel Bearing) - 60/22, 2RS, Dual-Lip Sealing",
+    "description": "Ultra Drive Wheel Bearing 60/22, 2RS, Dual-Lip Sealing",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -4045,7 +4045,7 @@
   },
   {
     "pn": "5353",
-    "description": "Velg Daytona Seven Star - Vario 125/150 - Black",
+    "description": "Seven Star Wheel Black Machining, Vario 125/150, (Fr)1.85x14, (Rr)2.15x14",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -4057,7 +4057,7 @@
   },
   {
     "pn": "5354",
-    "description": "Velg Daytona Seven Star - Beat/Scoopy, Vario 110, Beat Fi - Black",
+    "description": "Seven Star Wheel Black Machining, Beat, Scoopy, (Fr)1.85x14, (Rr) 2.15x14",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -4069,7 +4069,7 @@
   },
   {
     "pn": "5355",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 25BC06S98 - Revo AT, Vario KZR 125/150(L)",
+    "description": "Crankshaft Bearing DT-25BC06S98 Revo AT, Vario KZR 125/150 (L)",
     "het": 73593,
     "d24": 55931,
     "d27": 53723,
@@ -4081,7 +4081,7 @@
   },
   {
     "pn": "5356",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 22BC05S56 - New Beat 20UP, Genio 20UP, Scoopy 20UP",
+    "description": "Crankshaft Bearing 22BC05S56, New Beat 20UP, Genio 20UP, Scoopy 20UP",
     "het": 61050,
     "d24": 46398,
     "d27": 44567,
@@ -4093,7 +4093,7 @@
   },
   {
     "pn": "5357",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 30BC05S47S235A - New Beat 20UP, Genio 20, Scoopy 20(L)",
+    "description": "Crankshaft Bearing DT-30BC05S47S235A New Beat 20UP, Genio 20, Scoopy 20 (L)",
     "het": 63159,
     "d24": 48001,
     "d27": 46106,
@@ -4105,7 +4105,7 @@
   },
   {
     "pn": "5358",
-    "description": "Bearing Kruk As Racing (Crankshaft) - TMB205Z/56CS15-2 - Vario 110 carbu(L)",
+    "description": "Crankshaft Bearing DT-TMB205Z/56CS15-2 Vario 110 carbu (L)",
     "het": 63159,
     "d24": 48001,
     "d27": 46106,
@@ -4117,7 +4117,7 @@
   },
   {
     "pn": "5359",
-    "description": "Bearing Kruk As Racing (Crankshaft) - SC04C23 - Mio Sporty, Mio Soul(L), Fino(L)",
+    "description": "Crankshaft Bearing SC04C23, Mio Sporty, Mio Soul (L), Fino (L)",
     "het": 68487,
     "d24": 52050,
     "d27": 49996,
@@ -4129,7 +4129,7 @@
   },
   {
     "pn": "5360",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 35BC07S57 - Vario 110 carbu, 125, 150, PCX150/160 ADV",
+    "description": "Crankshaft Bearing 35BC07S57, Vario 110 carbu,125,150, PCX150/160 ADV",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -4141,7 +4141,7 @@
   },
   {
     "pn": "5361",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - CRF150 FR, PCX150/160 ABS FR, ADV150/160 FR",
+    "description": "Premium Brake Pad \"Lapinus Fiber 06455-K84-902, CRF150 FR, PCX150/160 ABS FR, ADV150/160 FR",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -4153,7 +4153,7 @@
   },
   {
     "pn": "5390",
-    "description": "Rantai Daytona Ultra Heavy Duty Chain (Gold Plating) - 415-130L, Gold Plating",
+    "description": "Ultra Heavy Duty Chain GS415HSB-130L,Gold Plating, Solid Bushing",
     "het": 234987,
     "d24": 178590,
     "d27": 171541,
@@ -4165,7 +4165,7 @@
   },
   {
     "pn": "5391",
-    "description": "Rantai Daytona Ultra Heavy Duty Chain (Gold Plating) - 415-140L, Gold Plating",
+    "description": "Ultra Heavy Duty Chain GS415HSB-140L,Gold Plating, Solid Bushing",
     "het": 249972,
     "d24": 189979,
     "d27": 182480,
@@ -4177,7 +4177,7 @@
   },
   {
     "pn": "5392",
-    "description": "Rantai Daytona Ultra Heavy Duty Chain (Gold Plating) - 428-124L, Gold Plating",
+    "description": "Ultra Heavy Duty Chain GS428HSB-124L,Gold Plating, Solid Bushing",
     "het": 229992,
     "d24": 174794,
     "d27": 167894,
@@ -4189,7 +4189,7 @@
   },
   {
     "pn": "5393",
-    "description": "Rantai Daytona Ultra Heavy Duty Chain (Gold Plating) - 428-140L, Gold Plating",
+    "description": "Ultra Heavy Duty Chain GS428HSB-140L,Gold Plating, Solid Bushing",
     "het": 249972,
     "d24": 189979,
     "d27": 182480,
@@ -4201,7 +4201,7 @@
   },
   {
     "pn": "5394",
-    "description": "Rumah Pulley Superstock - KVY/GFM, Beat Fi(Starter Kasar), Beat Carbu '08-'12",
+    "description": "Superstock Pulley, Hi-Copper ADC12, KVY/GFM, Beat Fi (Starter Kasar), Beat Carbu '08-'12",
     "het": 178932,
     "d24": 135988,
     "d27": 130620,
@@ -4213,7 +4213,7 @@
   },
   {
     "pn": "5400",
-    "description": "Rantai Daytona Ultra Heavy Duty Chain (Gold Plating) - 415-150L, Gold Plating",
+    "description": "Ultra Heavy Duty Chain GS415HSB-150L,Gold Plating, Solid Bushing",
     "het": 249972,
     "d24": 189979,
     "d27": 182480,
@@ -4225,7 +4225,7 @@
   },
   {
     "pn": "5403",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - Verza (Fr), CB150R (Fr), CBR150R",
+    "description": "Premium Brake Pad \"Lapinus Fiber\" 06455-KPP-N01..Verza (Fr), CB150R (Fr), CBR150R",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -4237,7 +4237,7 @@
   },
   {
     "pn": "5436",
-    "description": "Velg Daytona GP Wheel - Jupiter - Black",
+    "description": "GP Wheel set, Black Yamaha Jupiter, Fr Disc MT 1.6x17, Rr Drum MT 1.85x17",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -4249,7 +4249,7 @@
   },
   {
     "pn": "5437",
-    "description": "Velg Daytona GP Wheel - Jupiter - Gold",
+    "description": "GP Wheel set, Gold Yamaha Jupiter, Fr Disc MT 1.6x17, Rr Drum MT 1.85x17",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -4261,7 +4261,7 @@
   },
   {
     "pn": "5438",
-    "description": "Velg Balap GP Wheel Set (Fr Disc 1.60x17, Rr Drum 1.85x17) Hitam / Black - Honda Karisma, Supra X 125",
+    "description": "GP Wheel set, Black Honda Karisma, Fr Disc MT 1.6x17, Rr Drum MT 1.85x17",
     "het": 2099898,
     "price": "2.099.898",
     "qty": "1",
@@ -4273,7 +4273,7 @@
   },
   {
     "pn": "5439",
-    "description": "Velg Balap GP Wheel Set (Fr Disc 1.60x17, Rr Drum 1.85x17) Emas / Gold - Honda Karisma, Supra X 125",
+    "description": "GP Wheel set, Gold Honda Karisma, Fr Disc MT 1.6x17, Rr Drum MT 1.85x17",
     "het": 2099898,
     "price": "2.099.898",
     "qty": "1",
@@ -4285,7 +4285,7 @@
   },
   {
     "pn": "5440",
-    "description": "Vanbelt Ultradrive Only - Vario 160 ESP - DYT_23100-K2S-900",
+    "description": "Drive Belt Only Honda K2S, Vario 160",
     "het": 153957,
     "d24": 117007,
     "d27": 112389,
@@ -4297,7 +4297,7 @@
   },
   {
     "pn": "5441",
-    "description": "Vanbelt Ultradrive Only - PCX150, ADV150 - DYT_23100-K97-900",
+    "description": "Drive Belt Only Honda K97, PCX150, ADV150",
     "het": 154956,
     "d24": 117767,
     "d27": 113118,
@@ -4309,7 +4309,7 @@
   },
   {
     "pn": "5442",
-    "description": "Vanbelt Ultradrive Only - PCX160, ADV160 - DYT_2300-K1Z-900",
+    "description": "Drive Belt Only Honda K1Z, PCX160, ADV160",
     "het": 154956,
     "d24": 117767,
     "d27": 113118,
@@ -4321,7 +4321,7 @@
   },
   {
     "pn": "5443",
-    "description": "Vanbelt Ultradrive Only - Fazzio, Grand Filano - DYT_B3Y-E7641-00",
+    "description": "Drive Belt Only Yamaha B3Y, Grand Filano, Fazzio",
     "het": 94905,
     "d24": 72128,
     "d27": 69281,
@@ -4333,7 +4333,7 @@
   },
   {
     "pn": "5444",
-    "description": "Vanbelt Ultradrive Only - Suzuki Next FI",
+    "description": "Drive Belt Only Suzuki Next FI",
     "het": 104895,
     "d24": 79720,
     "d27": 76573,
@@ -4345,7 +4345,7 @@
   },
   {
     "pn": "5445",
-    "description": "Rantai Daytona Heavy Duty Superstock Chain (Black Color) - 428-100, Black",
+    "description": "Heavy Duty Superstock Chain 428HSBX100L, Black Color",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -4357,7 +4357,7 @@
   },
   {
     "pn": "5446",
-    "description": "Rantai Daytona Heavy Duty Superstock Chain (Black Color) - 428-110, Black",
+    "description": "Heavy Duty Superstock Chain 428HSBX110L, Black Color",
     "het": 129981,
     "d24": 98786,
     "d27": 94886,
@@ -4369,7 +4369,7 @@
   },
   {
     "pn": "5447",
-    "description": "Rantai Daytona Heavy Duty Superstock Chain (Black Color) - 428-120, Black",
+    "description": "Heavy Duty Superstock Chain 428HSBX120L, Black Color",
     "het": 139971,
     "d24": 106378,
     "d27": 102179,
@@ -4381,7 +4381,7 @@
   },
   {
     "pn": "5448",
-    "description": "Rantai Daytona Heavy Duty Superstock Chain (Black Color) - 428-130, Black",
+    "description": "Heavy Duty Superstock Chain 428HSBX130L, Black Color",
     "het": 149961,
     "d24": 113970,
     "d27": 109472,
@@ -4393,7 +4393,7 @@
   },
   {
     "pn": "5449",
-    "description": "Rantai Daytona Heavy Duty Superstock Chain (Black Color) - 428-140, Black",
+    "description": "Heavy Duty Superstock Chain 428HSBX140L, Black Color",
     "het": 159951,
     "d24": 121563,
     "d27": 116764,
@@ -4405,7 +4405,7 @@
   },
   {
     "pn": "5457",
-    "description": "Handgrip Daytona - Katana Grip, Black Red",
+    "description": "Daytona Grip Katana, Red&Black -with 2pcs of end cap, 2 Color",
     "het": 74925,
     "d24": 56943,
     "d27": 54695,
@@ -4417,7 +4417,7 @@
   },
   {
     "pn": "5492",
-    "description": "Piringan Cakram Superstock - CRF150 Front, 240mm",
+    "description": "Wave Brake Disc Rotor, FR 240x3.5T 6-Holes, Dia.240 Honda CRF150",
     "het": 224997,
     "d24": 170998,
     "d27": 164248,
@@ -4429,7 +4429,7 @@
   },
   {
     "pn": "5493",
-    "description": "Piringan Cakram Superstock - KLX150 Front, 240mm",
+    "description": "Wave Brake Disc Rotor, FR 240x3.5T 6-Holes, Dia.240 Kawasaki KLX150",
     "het": 224997,
     "d24": 170998,
     "d27": 164248,
@@ -4441,7 +4441,7 @@
   },
   {
     "pn": "5494",
-    "description": "Piringan Cakram Superstock - KLX150 Rear, 190mm",
+    "description": "Wave Brake Disc Rotor, RR 190x3.5T 6-Holes, Dia.190 Kawasaki KLX150",
     "het": 199911,
     "d24": 151932,
     "d27": 145935,
@@ -4453,7 +4453,7 @@
   },
   {
     "pn": "5495",
-    "description": "Piringan Cakram Superstock - Vixion, NVA, NVL Front, 245mm",
+    "description": "Wave Brake Disc Rotor, FR 245x4T 6-Holes, Yamaha NVA,NVL",
     "het": 224997,
     "d24": 170998,
     "d27": 164248,
@@ -4465,7 +4465,7 @@
   },
   {
     "pn": "5497",
-    "description": "Gas Spontan Racing Throttle Kit - Single Cable Sport/Bebek, Underbone - 1.100mm",
+    "description": "Racing Throttle Kit \"EVOLUTION\" One Throttle Cable.",
     "het": 209901,
     "d24": 159525,
     "d27": 153228,
@@ -4477,7 +4477,7 @@
   },
   {
     "pn": "5498",
-    "description": "Piringan Cakram SUPERPRO T-Floating Racing - Jupiter Z 300mm, Black",
+    "description": "Superpro T-Floating Disc, Tornado Holes Yamaha Jupiter Z FR, Ø300 with BRKT",
     "het": 1449993,
     "d24": 1101995,
     "d27": 1058495,
@@ -4489,7 +4489,7 @@
   },
   {
     "pn": "5499",
-    "description": "Piringan Cakram SUPERPRO T-Floating Racing - Beat, Beat Fi, Esp 260mm, Black",
+    "description": "Superpro T-Floating Disc, Tornado Holes Honda Beat FR, Ø260 with BRKT",
     "het": 1199910,
     "d24": 911932,
     "d27": 875934,
@@ -4501,7 +4501,7 @@
   },
   {
     "pn": "5534",
-    "description": "Pulley Set HI-Speed & Face Drive EVO (13.8°) - B65 Aerox 155, Lexi, Nmax",
+    "description": "HI-Speed Pulley & Face Drive EVO Degre of Slope 13,8° B65 Aerox 155, Lexi, Nmax",
     "het": 299922,
     "d24": 227941,
     "d27": 218943,
@@ -4513,7 +4513,7 @@
   },
   {
     "pn": "5538",
-    "description": "Handgrip Daytona - Road Race Grip 2, Black",
+    "description": "Daytona Road Race Grip 2, Black with 2 pcs of end cap",
     "het": 74925,
     "d24": 56943,
     "d27": 54695,
@@ -4525,7 +4525,7 @@
   },
   {
     "pn": "5539",
-    "description": "Rantai Daytona Ultra Heavy Duty Chain (Gold Plating) - 428-150L, Gold Plating",
+    "description": "Ultra Heavy Duty Chain GS428HSB-150L, Gold Plating",
     "het": 279942,
     "d24": 212756,
     "d27": 204358,
@@ -4537,7 +4537,7 @@
   },
   {
     "pn": "5540",
-    "description": "Piringan Cakram Floating Racing - Mio, Mio Sporty, 260mm",
+    "description": "Floating Racing Disc Rotor Yamaha Mio Carbu FR, 260x4.0t 4-Hole, W/BKT & Bolt",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -4549,7 +4549,7 @@
   },
   {
     "pn": "5542",
-    "description": "Pulley Set HI-Speed & Face Drive EVO (13.8°) - K97 PCX, Vario, ADV",
+    "description": "HI-Speed Pulley & Face Drive EVO Degree of Slope 13,8°, K97 PCX, Vario",
     "het": 299922,
     "d24": 227941,
     "d27": 218943,
@@ -4561,7 +4561,7 @@
   },
   {
     "pn": "5543",
-    "description": "Pulley Set HI-Speed & Face Drive EVO (13.8°) - K44 Beat Fi, ESP",
+    "description": "HI-Speed Pulley & Face Drive EVO Degree of Slope 13,8°, K44 Beat ESP",
     "het": 274947,
     "d24": 208960,
     "d27": 200711,
@@ -4573,7 +4573,7 @@
   },
   {
     "pn": "5544",
-    "description": "Pulley Set HI-Speed & Face Drive EVO (13.8°) - K0J All New Beat, Genio",
+    "description": "HI-Speed Pulley & Face Drive EVO Degree of Slope 13,8°, K0J Beat,Scoopy",
     "het": 274947,
     "d24": 208960,
     "d27": 200711,
@@ -4585,7 +4585,7 @@
   },
   {
     "pn": "5545",
-    "description": "Piringan Cakram Floating Racing - Beat, Vario 125 FR, 220mm 4-Hole",
+    "description": "Floating Wave Disc Rotor Beat, Vario 125 FR, 220mm 4-Hole, W/BKT & Bolt",
     "het": 649905,
     "d24": 493928,
     "d27": 474431,
@@ -4597,7 +4597,7 @@
   },
   {
     "pn": "5557",
-    "description": "Vanbelt Ultradrive Only - Yamaha Xmax 250, B5X",
+    "description": "Drive Belt Only, Yamaha Xmax 250, B5X",
     "het": 279942,
     "d24": 212756,
     "d27": 204358,
@@ -4609,7 +4609,7 @@
   },
   {
     "pn": "5558",
-    "description": "Selang Rem Braided Steel (Black Carbon) - 95cm, Carbon Black",
+    "description": "Superstock Brake Hose 95cm, Carbon Black, N12 SUS Banjo 180°&45° *NEW",
     "het": 170163,
     "d24": 129324,
     "d27": 124219,
@@ -4621,7 +4621,7 @@
   },
   {
     "pn": "5559",
-    "description": "Selang Rem Braided Steel (Black Carbon) - 90cm, Carbon Black",
+    "description": "Superstock Brake Hose 90cm, Carbon Black, N12 SUS Banjo 180°&45° *NEW",
     "het": 164946,
     "d24": 125359,
     "d27": 120411,
@@ -4633,7 +4633,7 @@
   },
   {
     "pn": "5560",
-    "description": "Selang Rem Braided Steel (Black Carbon) - 75cm, Carbon Black",
+    "description": "Superstock Brake Hose 75cm, Carbon Black, N12 SUS Banjo 180°&45° *NEW",
     "het": 159729,
     "d24": 121394,
     "d27": 116602,
@@ -4645,7 +4645,7 @@
   },
   {
     "pn": "5561",
-    "description": "Selang Rem Braided Steel (Black Carbon) - 60cm, Carbon Black",
+    "description": "Superstock Brake Hose 60cm, Carbon Black, N12 SUS Banjo 180°&45° *NEW",
     "het": 157731,
     "d24": 119876,
     "d27": 115144,
@@ -4657,7 +4657,7 @@
   },
   {
     "pn": "5562",
-    "description": "Selang Rem Braided Steel (Black Carbon) - 45cm, Carbon Black",
+    "description": "Superstock Brake Hose 45cm, Carbon Black, N12 SUS Banjo 180°&45° *NEW",
     "het": 154623,
     "d24": 117513,
     "d27": 112875,
@@ -4669,7 +4669,7 @@
   },
   {
     "pn": "5563",
-    "description": "Selang Rem Braided Steel (Black Carbon) - 110cm, Carbon Black",
+    "description": "Superstock Brake Hose 110cm, Carbon Black, N12 SUS Banjo 180°&45° *NEW",
     "het": 180486,
     "d24": 137169,
     "d27": 131755,
@@ -4681,7 +4681,7 @@
   },
   {
     "pn": "5564",
-    "description": "Selang Rem Braided Steel (Black Carbon) - 130cm, Carbon Black",
+    "description": "Superstock Brake Hose 130cm, Carbon Black, N12 SUS Banjo 180°&45° *NEW",
     "het": 185592,
     "d24": 141050,
     "d27": 135482,
@@ -4693,7 +4693,7 @@
   },
   {
     "pn": "5565",
-    "description": "Selang Rem Braided Steel (Black Carbon) - 210cm, Carbon Black",
+    "description": "Superstock Brake Hose 210cm, Carbon Black, N12 SUS Banjo 90°&45° *NEW",
     "het": 257742,
     "d24": 195884,
     "d27": 188152,
@@ -4705,7 +4705,7 @@
   },
   {
     "pn": "5566",
-    "description": "Filter Udara Stainless Racing - New Beat Fi, New Scoopy Fi, New Vario Fi - 17210-K16-900",
+    "description": "Racing Stainless HI-Flow Filter Color Orange, Honda Beat Scoopy ESP",
     "het": 139971,
     "d24": 106378,
     "d27": 102179,
@@ -4717,7 +4717,7 @@
   },
   {
     "pn": "5567",
-    "description": "Filter Udara Stainless Racing - Vario 125, Vario 150, PCX 150 - 17210-KZR-600",
+    "description": "Racing Stainless HI-Flow Filter Color Orange, Honda Vario 125/150",
     "het": 149961,
     "d24": 113970,
     "d27": 109472,
@@ -4729,7 +4729,7 @@
   },
   {
     "pn": "5568",
-    "description": "Filter Udara Stainless Racing - Mio M3, All New Soul GT - 2PH-E4450-00",
+    "description": "Racing Stainless HI-Flow Filter Color Orange, Yamaha Mio M3, New Soul",
     "het": 149961,
     "d24": 113970,
     "d27": 109472,
@@ -4741,7 +4741,7 @@
   },
   {
     "pn": "5569",
-    "description": "Filter Udara Stainless Racing - Nmax - 2DP-E4451-00",
+    "description": "Racing Stainless HI-Flow Filter Color Orange, Yamaha NMAX 2DP",
     "het": 169941,
     "d24": 129155,
     "d27": 124057,
@@ -4753,7 +4753,7 @@
   },
   {
     "pn": "5571",
-    "description": "Filter Udara Stainless Racing - Aerox155 - B65-E4451-00",
+    "description": "Racing Stainless HI-Flow Filter Color Orange, Yamaha Aerox 155 B65",
     "het": 149961,
     "d24": 113970,
     "d27": 109472,
@@ -4765,7 +4765,7 @@
   },
   {
     "pn": "5572",
-    "description": "Filter Udara Stainless Racing - Vario 160, PCX160, ADV160 - 17210-K1Z-N20",
+    "description": "Racing Stainless HI-Flow Filter Color Orange, Honda Vario 160, PCX160,",
     "het": 169941,
     "d24": 129155,
     "d27": 124057,
@@ -4777,7 +4777,7 @@
   },
   {
     "pn": "5574",
-    "description": "Filter Udara Stainless Racing - Genio, All New Beat, New Scoopy - 17210-K0J-600",
+    "description": "Racing Stainless HI-Flow Filter Color Orange, Honda Beat Esp, Genio",
     "het": 149961,
     "d24": 113970,
     "d27": 109472,
@@ -4789,7 +4789,7 @@
   },
   {
     "pn": "5575",
-    "description": "Filter Udara Stainless Racing - Nmax155, New AEROX - B6H-E4451-00",
+    "description": "Racing Stainless HI-Flow Filter Color Orange, Yamaha New NMAX 155, B6H",
     "het": 169941,
     "d24": 129155,
     "d27": 124057,
@@ -4801,7 +4801,7 @@
   },
   {
     "pn": "5582",
-    "description": "Velg Daytona GP Wheel - MX King (race) - Black",
+    "description": "GP Wheel set, Black Yamaha MX-King, Fr Disc MT 1.6x17,Rr Disc MT 1.6x17",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -4813,7 +4813,7 @@
   },
   {
     "pn": "5583",
-    "description": "Velg Daytona GP Wheel - MX King (race) - Gold",
+    "description": "GP Wheel set, Gold Yamaha MX-King, Fr Disc MT 1.6x17,Rr Disc MT 1.6x17",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -4825,7 +4825,7 @@
   },
   {
     "pn": "5584",
-    "description": "Velg Daytona GP Wheel - MX King (race) - Silver",
+    "description": "GP Wheel set, Silver Yamaha MX-King, Fr Disc MT 1.6x17,Rr Disc MT 1.6x17",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -4837,7 +4837,7 @@
   },
   {
     "pn": "5585",
-    "description": "Master Rem FL Radial Brake Master Cylinder - FL Radial Brake Master Cylinder Black, Right 15mm",
+    "description": "FL RADIAL BRAKE MASTER CYLINDER BLACK, RIGHT 15MM (Forged Lever)",
     "het": 674991,
     "d24": 512993,
     "d27": 492743,
@@ -4849,7 +4849,7 @@
   },
   {
     "pn": "5586",
-    "description": "Master Rem FL Radial Brake Master Cylinder - FL Radial Brake Master Cylinder Black, Right 17mm",
+    "description": "FL Radial Brake Master Cylinder Black, Right 17mm",
     "het": 674991,
     "d24": 512993,
     "d27": 492743,
@@ -4861,7 +4861,7 @@
   },
   {
     "pn": "5587",
-    "description": "Master Rem FL Radial Brake Master Cylinder - FL Radial Brake Master Cylinder Black, Left 15mm",
+    "description": "FL RADIAL BRAKE MASTER CYLINDER BLACK, LEFT 15MM (Forged Lever)",
     "het": 674991,
     "d24": 512993,
     "d27": 492743,
@@ -4873,7 +4873,7 @@
   },
   {
     "pn": "5597",
-    "description": "Selang Rem Braided Steel (Red) - 95cm, Red",
+    "description": "Superstock Brake Hose 95cm, Red N12 SUS Banjo 180°&45°",
     "het": 170163,
     "d24": 129324,
     "d27": 124219,
@@ -4885,7 +4885,7 @@
   },
   {
     "pn": "5598",
-    "description": "Selang Rem Braided Steel (Red) - 75cm, Red",
+    "description": "Superstock Brake Hose 75cm, Red N12 SUS Banjo 180°&45°",
     "het": 159729,
     "d24": 121394,
     "d27": 116602,
@@ -4897,7 +4897,7 @@
   },
   {
     "pn": "5599",
-    "description": "Selang Rem Braided Steel (Red) - 45cm, Red",
+    "description": "Superstock Brake Hose 45cm, Red N12 SUS Banjo 180°&45°",
     "het": 154623,
     "d24": 117513,
     "d27": 112875,
@@ -4909,7 +4909,7 @@
   },
   {
     "pn": "5600",
-    "description": "Selang Rem Braided Steel (Red) - 210cm, Red",
+    "description": "Superstock Brake Hose 210cm, Red N12 SUS Banjo 90°&45°",
     "het": 257742,
     "d24": 195884,
     "d27": 188152,
@@ -4921,7 +4921,7 @@
   },
   {
     "pn": "5601",
-    "description": "Selang Rem Braided Steel (Blue) - 95cm, Blue",
+    "description": "Superstock Brake Hose 95cm, Blue N12 SUS Banjo 180°&45°",
     "het": 170163,
     "d24": 129324,
     "d27": 124219,
@@ -4933,7 +4933,7 @@
   },
   {
     "pn": "5602",
-    "description": "Selang Rem Braided Steel (Blue) - 75cm, Blue",
+    "description": "Superstock Brake Hose 75cm, Blue N12 SUS Banjo 180°&45°",
     "het": 159729,
     "d24": 121394,
     "d27": 116602,
@@ -4945,7 +4945,7 @@
   },
   {
     "pn": "5603",
-    "description": "Selang Rem Braided Steel (Blue) - 45cm, Blue",
+    "description": "Superstock Brake Hose 45cm, Blue N12 SUS Banjo 180°&45°",
     "het": 154623,
     "d24": 117513,
     "d27": 112875,
@@ -4957,7 +4957,7 @@
   },
   {
     "pn": "5604",
-    "description": "Selang Rem Braided Steel (Blue) - 210cm, Blue",
+    "description": "Superstock Brake Hose 210cm, Blue N12 SUS Banjo 90°&45°",
     "het": 257742,
     "d24": 195884,
     "d27": 188152,
@@ -4969,7 +4969,7 @@
   },
   {
     "pn": "5611",
-    "description": "Master Rem CNC Radial Brake Master Cylinder - CNC Radial Brake Master Cylinder Right Size 14\", Black",
+    "description": "CNC Radial Brake Master Cylinder RH Size 14\", Tank Oil Transparent, Hose Oil Black with Cable switch etc.",
     "het": 699966,
     "d24": 531974,
     "d27": 510975,
@@ -4981,7 +4981,7 @@
   },
   {
     "pn": "5612",
-    "description": "Master Rem CNC Radial Brake Master Cylinder - CNC Radial Brake Master Cylinder Right Size 17\", Black",
+    "description": "CNC Radial Brake Master Cylinder RH Size 17\", Tank OilTransparent, Hose Oil Black with Cable switch etc.",
     "het": 699966,
     "d24": 531974,
     "d27": 510975,
@@ -4993,7 +4993,7 @@
   },
   {
     "pn": "5613",
-    "description": "Master Rem CNC Radial Brake Master Cylinder - CNC Radial Brake Master Cylinder Left Size 16\", Black",
+    "description": "CNC Radial Brake Master Cylinder LH Size 16\", Tank OilTransparent, Hose Oil Black with Cable switch etc.",
     "het": 699966,
     "d24": 531974,
     "d27": 510975,
@@ -5005,7 +5005,7 @@
   },
   {
     "pn": "5614",
-    "description": "Piringan Cakram SUPERPRO T-Floating Racing - Jupiter Z 300mm, Orange",
+    "description": "Superpro T-Floating Disc, Tornado Hole Yamaha Jupiter Z FR, Ø300 Orange With BRKT",
     "het": 1449993,
     "d24": 1101995,
     "d27": 1058495,
@@ -5017,7 +5017,7 @@
   },
   {
     "pn": "5615",
-    "description": "Piringan Cakram SUPERPRO T-Floating Racing - Beat, Beat Fi, Esp 260mm, Orange",
+    "description": "Superpro T-Floating Disc, Tornado Hole Honda Beat FR, Ø260 Orange With BRKT",
     "het": 1199910,
     "d24": 911932,
     "d27": 875934,
@@ -5029,7 +5029,7 @@
   },
   {
     "pn": "5633",
-    "description": "Rantai Daytona Heavy Duty Superstock Chain (Black Color) - 415-120, Black",
+    "description": "Heavy Duty Superstock Chain 415HSBX120L, Black Color",
     "het": 144966,
     "d24": 110174,
     "d27": 105825,
@@ -5041,7 +5041,7 @@
   },
   {
     "pn": "5634",
-    "description": "Rantai Daytona Heavy Duty Superstock Chain (Black Color) - 415-130, Black",
+    "description": "Heavy Duty Superstock Chain 415HSBX130L, Black Color",
     "het": 159951,
     "d24": 121563,
     "d27": 116764,
@@ -5053,7 +5053,7 @@
   },
   {
     "pn": "5659",
-    "description": "Velg Daytona Dash Wheel - Mio, Mio Sporty, Mio Soul - Black",
+    "description": "Dash wheel, Black, Yamaha Mio Sporty (Fr) MT1.85x14 (Rr) MT 2.15x14",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -5065,7 +5065,7 @@
   },
   {
     "pn": "5660",
-    "description": "Velg Daytona Dash Wheel - Mio, Mio Sporty, Mio Soul - Silver",
+    "description": "Dash wheel, Silver, Yamaha Mio Sporty (Fr) MT1.85x14 (Rr) MT 2.15x14",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -5077,7 +5077,7 @@
   },
   {
     "pn": "5661",
-    "description": "Velg Daytona Dash Wheel - Mio, Mio Sporty, Mio Soul - Gold",
+    "description": "Dash wheel, Gold, Yamaha Mio Sporty (Fr) MT1.85x14 (Rr) MT 2.15x14",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -5089,7 +5089,7 @@
   },
   {
     "pn": "5662",
-    "description": "Velg Daytona Seven Star - Vario 125/150 - Silver",
+    "description": "Seven Star Wheel Silver CNC, Vario 125/150, (Fr)1.85x14, (Rr)2.15x14",
     "het": 2249970,
     "d24": 1709977,
     "d27": 1642478,
@@ -5101,7 +5101,7 @@
   },
   {
     "pn": "5663",
-    "description": "Velg Daytona Seven Star - Vario 125/150 - Orange",
+    "description": "Seven Star Wheel Orange CNC, Vario 125/150, (Fr)1.85x14, (Rr)2.15x14",
     "het": 2249970,
     "d24": 1709977,
     "d27": 1642478,
@@ -5113,7 +5113,7 @@
   },
   {
     "pn": "5664",
-    "description": "Velg Daytona Seven Star - Vario 125/150 - Purple",
+    "description": "Seven Star Wheel Purple CNC, Vario 125/150, (Fr)1.85x14, (Rr)2.15x14",
     "het": 2249970,
     "d24": 1709977,
     "d27": 1642478,
@@ -5125,7 +5125,7 @@
   },
   {
     "pn": "5665",
-    "description": "Velg Daytona Seven Star - Beat/Scoopy, Vario 110, Beat Fi - Silver",
+    "description": "Seven Star Wheel Silver CNC, Beat, Scoopy, (Fr) 1.85x14, (Rr) 2.15x14",
     "het": 2249970,
     "d24": 1709977,
     "d27": 1642478,
@@ -5137,7 +5137,7 @@
   },
   {
     "pn": "5666",
-    "description": "Velg Daytona Seven Star - Beat/Scoopy, Vario 110, Beat Fi - Orange",
+    "description": "Seven Star Wheel Orange CNC, Beat, Scoopy, (Fr) 1.85x14, (Rr) 2.15x14",
     "het": 2249970,
     "d24": 1709977,
     "d27": 1642478,
@@ -5149,7 +5149,7 @@
   },
   {
     "pn": "5667",
-    "description": "Velg Daytona Seven Star - Beat/Scoopy, Vario 110, Beat Fi - Purple",
+    "description": "Seven Star Wheel Purple CNC, Beat, Scoopy, (Fr) 1.85x14, (Rr) 2.15x14",
     "het": 2249970,
     "d24": 1709977,
     "d27": 1642478,
@@ -5161,7 +5161,7 @@
   },
   {
     "pn": "5668",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 2 Piston Caliper, Black, Size Piston 2x32mm",
+    "description": "CNC 2 Piston Caliper, Black Color, Size Piston 2 x 32mm, Tanpa Braket",
     "het": 449994,
     "d24": 341995,
     "d27": 328496,
@@ -5173,7 +5173,7 @@
   },
   {
     "pn": "5669",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 2 Piston Caliper, Titan, Size Piston 2x32mm",
+    "description": "CNC 2 Piston Caliper, Titan Color, Size Piston 2 x 32mm",
     "het": 449994,
     "d24": 341995,
     "d27": 328496,
@@ -5185,7 +5185,7 @@
   },
   {
     "pn": "5670",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 4 Piston Caliper, Black, Size Piston 2x30mm",
+    "description": "CNC 4 Piston Caliper, Black Color, Size Piston 2 x 30mm, Tanpa Braket",
     "het": 649905,
     "d24": 493928,
     "d27": 474431,
@@ -5197,7 +5197,7 @@
   },
   {
     "pn": "5671",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 4 Piston Caliper, Titan, Size Piston 4x30mm",
+    "description": "CNC 4 Piston Caliper, Titan Color, Size Piston 4 x 30mm",
     "het": 649905,
     "d24": 493928,
     "d27": 474431,
@@ -5209,7 +5209,7 @@
   },
   {
     "pn": "5672",
-    "description": "Roller CVT 14 Gram (14gr) - Genio, New Beat, Vario 125/150, PCX",
+    "description": "Weight Roller 3 pcs, 14 Gr, Vario 125 PGMFI, Vario 150, PCX 125, PCX150",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -5221,7 +5221,7 @@
   },
   {
     "pn": "5673",
-    "description": "Bosh Pulley Racing (Bushing Pulley) - Honda KZL - Beat FI '12-'14, Vario 110 '14-'18",
+    "description": "Racing Pulley Bushing, Honda KZL, Beat FI '12-'14, Vario 110 '14-'18",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5233,7 +5233,7 @@
   },
   {
     "pn": "5674",
-    "description": "Bosh Pulley Racing (Bushing Pulley) - Honda K44 - Beat ESP '15-'19, Scoopy ESP '15-17",
+    "description": "Racing Pulley Bushing, Honda K44, Beat ESP '15-'19, Scoopy ESP '15-17",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5245,7 +5245,7 @@
   },
   {
     "pn": "5675",
-    "description": "Bosh Pulley Racing (Bushing Pulley) - Honda K0J - New Beat ESP 20up, Genio 20up",
+    "description": "Racing Pulley Bushing, Honda K0J, New Beat ESP 20up, Genio 20up",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5257,7 +5257,7 @@
   },
   {
     "pn": "5676",
-    "description": "Bosh Pulley Racing (Bushing Pulley) - Honda KWN - Vario 125/150 LED",
+    "description": "Racing Pulley Bushing, Honda KWN, Vario 125/150 LED",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5269,7 +5269,7 @@
   },
   {
     "pn": "5677",
-    "description": "Bosh Pulley Racing (Bushing Pulley) - Honda K97 - PCX150, ADV150",
+    "description": "Racing Pulley Bushing, Honda K97, PCX150, ADV150",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5281,7 +5281,7 @@
   },
   {
     "pn": "5678",
-    "description": "Bosh Pulley Racing (Bushing Pulley) - Honda K0R - PCX160, ADV160",
+    "description": "Racing Pulley Bushing, Honda K0R, PCX160,ADV160",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5293,7 +5293,7 @@
   },
   {
     "pn": "5679",
-    "description": "Bosh Pulley Racing (Bushing Pulley) - Yamaha 2DP - NMAX, AEROX, LEXI",
+    "description": "Racing Pulley Bushing, Yamaha 2DP, NMAX, AEROX,LEXI",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5305,7 +5305,7 @@
   },
   {
     "pn": "5680",
-    "description": "Bosh Pulley Racing (Bushing Pulley) - Yamaha 54P - Mio J, X-Ride, Mio M3, Gear",
+    "description": "Racing Pulley Bushing, Yamaha 54P, Mio J, X-Ride,Mio M3, Gear",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5317,7 +5317,7 @@
   },
   {
     "pn": "5681",
-    "description": "Bosh Pulley Racing (Bushing Pulley) - Yamaha - Mio Sporty",
+    "description": "Racing Pulley Bushing, Yamaha, Mio Sporty",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5329,7 +5329,7 @@
   },
   {
     "pn": "5682",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - Ninja 150 R/RR - P1004-0004",
+    "description": "Steering Stem Bearing Set with Grease(Komstir) Kawasaki Ninja 150RR",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5341,7 +5341,7 @@
   },
   {
     "pn": "5683",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - Satria F150 / GSX150 - 51600-23K00-000",
+    "description": "Steering Stem Bearing Set with Grease(Komstir) Suzuki FU FI, GSX",
     "het": 119991,
     "d24": 91193,
     "d27": 87593,
@@ -5353,7 +5353,7 @@
   },
   {
     "pn": "5711",
-    "description": "Per Sentrik 2.000 RPM (Emas / Gold) - Mio, Fino('12-13), XMax('16-23), Beat Karbu/FI, Scoopy, Genio, Beat ESP - 5TL-E6626-00, 22401-KVY-900, 22401-GCC-900",
+    "description": "Spring set (3pcs), Clutch Shoe, 2000RPM 5TL, KVY, GCC, Mio, Fino",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -5365,7 +5365,7 @@
   },
   {
     "pn": "5712",
-    "description": "Per Sentrik 2.000 RPM (Emas / Gold) - Aerox('17-21), New N-Max('20up), PCX160 (2021), Vario160, Fazzio - B65-E6626-00, 22401-KGG-910",
+    "description": "Spring set (3pcs), Clutch Shoe, 2000RPM B65, Aerox, New NMAX, PCX160, Vario 160, Fazzio",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -5377,7 +5377,7 @@
   },
   {
     "pn": "5713",
-    "description": "Per Sentrik 2.000 RPM (Emas / Gold) - PCX/Vario150/Vario125ESP/Vario110, N-Max upto 2019, Vario Techno 125, Vespa 125/150 - 22401-KVB-900, 2DP-E6626-00, 22401-KWN-000, 2PH-E6626-00",
+    "description": "Spring set (3pcs), Clutch Shoe, 2000RPM 2DP,KVB,KGF,KWN NMAX150, Vario 125/150, PCX150",
     "het": 40404,
     "d24": 30707,
     "d27": 29495,
@@ -5389,7 +5389,7 @@
   },
   {
     "pn": "5741",
-    "description": "Roller CVT 5.5 Gram (5.5gr) - Beat Fi, Scoopy Fi / ESP",
+    "description": "Weight Roller 3 pcs, 14 Gr, Vario 110 / New Vario ESP, Beat FI, Scoopy FI",
     "het": 45399,
     "d24": 34503,
     "d27": 33141,
@@ -5401,7 +5401,7 @@
   },
   {
     "pn": "5742",
-    "description": "Cangklong Busi Evo (Spark Plug Cap) - 90 degree Long (Yamaha)",
+    "description": "Ignimax Spark Plug Cap 90 Deg Long Red Color, Honda/Yamaha Universal",
     "het": 54945,
     "d24": 41758,
     "d27": 40110,
@@ -5413,7 +5413,7 @@
   },
   {
     "pn": "5755",
-    "description": "Kampas Ganda Bebek Primary - Honda Blade 110, Revo Absolute - KWB",
+    "description": "Carbon & Kevlar Primary Clutch, KWB, Honda Balde 110, Revo Absolute, Clucth shoe 3pcs, with Spring 3pcs",
     "het": 74925,
     "d24": 56943,
     "d27": 54695,
@@ -5425,7 +5425,7 @@
   },
   {
     "pn": "5756",
-    "description": "Kampas Ganda Bebek Primary - Honda Legenda, Revo 100, Supra Fit - KFL",
+    "description": "Carbon & Kevlar Primary Clutch, KFL, Honda Legenda, Revo 100, Supra Fit Clucth shoe 3pcs, with Spring 3pcs",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -5437,7 +5437,7 @@
   },
   {
     "pn": "5757",
-    "description": "Kampas Ganda Bebek Primary - Honda Karisma, Kirana, Supra X 125 - KPH",
+    "description": "Carbon & Kevlar Primary Clutch, KPH, Honda Karisma, Kirana, Supra X 125 Clucth shoe 3pcs, with Spring 3pcs",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -5449,7 +5449,7 @@
   },
   {
     "pn": "5758",
-    "description": "Kampas Ganda Bebek Primary - Honda Grand, Prima - GN5",
+    "description": "Carbon & Kevlar Primary Clutch, GN5, Honda Grand, Prima, Clucth shoe 3pcs, with Spring 3pcs",
     "het": 74925,
     "d24": 56943,
     "d27": 54695,
@@ -5461,7 +5461,7 @@
   },
   {
     "pn": "5759",
-    "description": "Kampas Ganda Bebek Primary - Yamaha Jupiter MX 135 - 1S7",
+    "description": "Carbon & Kevlar Primary Clutch, 1S7, Yamaha Jupiter MX 135, Clucth shoe 3pcs, with Spring 3pcs",
     "het": 87468,
     "d24": 66476,
     "d27": 63852,
@@ -5473,7 +5473,7 @@
   },
   {
     "pn": "5760",
-    "description": "Kampas Ganda Bebek Primary - Yamaha Jupiter Z - 5TN",
+    "description": "Carbon & Kevlar Primary Clutch, 5TN, Yamaha Jupiter Z, Clucth shoe 3pcs, with Spring 3pcs",
     "het": 74925,
     "d24": 56943,
     "d27": 54695,
@@ -5485,7 +5485,7 @@
   },
   {
     "pn": "5761",
-    "description": "Kampas Ganda Bebek Primary - Yamaha Vega ZR, RR - 5D9",
+    "description": "Carbon & Kevlar Primary Clutch, 5D9, Yamaha Vega ZR,RR, Clucth shoe 3pcs, with Spring 3pcs",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -5497,7 +5497,7 @@
   },
   {
     "pn": "5762",
-    "description": "Kampas Ganda Bebek Primary - Yamaha Jupiter Z1 - 1DY",
+    "description": "Carbon & Kevlar Primary Clutch, 1DY, Yamaha Jupiter Z1, Clucth shoe 3pcs, with Spring 3pcs",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -5509,7 +5509,7 @@
   },
   {
     "pn": "5872",
-    "description": "Mangkok Kampas Ganda 7 Star Standar - B74 - Yamaha XMAX250 QPQ Nitriding",
+    "description": "Seven-Star Torque Clutch Housing, B74, Yamaha XMAX250 QPQ Nitriding",
     "het": 349983,
     "d24": 265987,
     "d27": 255488,
@@ -5521,7 +5521,7 @@
   },
   {
     "pn": "5873",
-    "description": "Mangkok Kampas Ganda 7 Star EVO Racing (Kartel) - B74 - Yamaha XMAX250",
+    "description": "Seven-Star Clutch Housing V-2 Racing Series w/Knurling, B74 Yamaha XMAX250",
     "het": 399933,
     "d24": 303949,
     "d27": 291951,
@@ -5533,7 +5533,7 @@
   },
   {
     "pn": "5885",
-    "description": "Velg Daytona 3 Spoke - Beat ESP, Scoopy - Black",
+    "description": "3 Spoke GP Wheel, Black Honda Beat ESP, Scoopy (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1849926,
     "d24": 1405944,
     "d27": 1350446,
@@ -5545,7 +5545,7 @@
   },
   {
     "pn": "5886",
-    "description": "Velg Daytona 3 Spoke - Beat ESP, Scoopy - Silver",
+    "description": "3 Spoke GP Wheel, Silver Honda Beat ESP, Scoopy (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1849926,
     "d24": 1405944,
     "d27": 1350446,
@@ -5557,7 +5557,7 @@
   },
   {
     "pn": "5887",
-    "description": "Velg Daytona 3 Spoke - Beat ESP, Scoopy - Gold",
+    "description": "3 Spoke GP Wheel, Gold Honda Beat ESP, Scoopy (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1849926,
     "d24": 1405944,
     "d27": 1350446,
@@ -5569,7 +5569,7 @@
   },
   {
     "pn": "5888",
-    "description": "Velg Daytona 3 Spoke - Beat ESP, Scoopy - White",
+    "description": "3 Spoke GP Wheel, White Honda Beat ESP, Scoopy (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1849926,
     "d24": 1405944,
     "d27": 1350446,
@@ -5581,7 +5581,7 @@
   },
   {
     "pn": "5889",
-    "description": "Velg Daytona 3 Spoke - Vario 125/150 - Black",
+    "description": "3 Spoke GP Wheel, Black Honda Vario 125/150 (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1849926,
     "d24": 1405944,
     "d27": 1350446,
@@ -5593,7 +5593,7 @@
   },
   {
     "pn": "5890",
-    "description": "Velg Daytona 3 Spoke - Vario 125/150 - Silver",
+    "description": "3 Spoke GP Wheel, Silver Honda Vario 125/150 (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1849926,
     "d24": 1405944,
     "d27": 1350446,
@@ -5605,7 +5605,7 @@
   },
   {
     "pn": "5891",
-    "description": "Velg Daytona 3 Spoke - Vario 125/150 - Gold",
+    "description": "3 Spoke GP Wheel, Gold Honda Vario 125/150 (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1849926,
     "d24": 1405944,
     "d27": 1350446,
@@ -5617,7 +5617,7 @@
   },
   {
     "pn": "5892",
-    "description": "Velg Daytona 3 Spoke - Vario 125/150 - White",
+    "description": "3 Spoke GP Wheel, White Honda Vario 125/150 (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1849926,
     "d24": 1405944,
     "d27": 1350446,
@@ -5629,7 +5629,7 @@
   },
   {
     "pn": "5893",
-    "description": "Velg Daytona 3 Spoke - Mio Sporty - Black",
+    "description": "3 Spoke GP Wheel, Black Yamaha Mio Sporty (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1749915,
     "d24": 1329935,
     "d27": 1277438,
@@ -5641,7 +5641,7 @@
   },
   {
     "pn": "5894",
-    "description": "Velg Daytona 3 Spoke - Mio Sporty - Silver",
+    "description": "3 Spoke GP Wheel, Silver Yamaha Mio Sporty (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1749915,
     "d24": 1329935,
     "d27": 1277438,
@@ -5653,7 +5653,7 @@
   },
   {
     "pn": "5895",
-    "description": "Velg Daytona 3 Spoke - Mio Sporty - Gold",
+    "description": "3 Spoke GP Wheel, Gold Yamaha Mio Sporty (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1749915,
     "d24": 1329935,
     "d27": 1277438,
@@ -5665,7 +5665,7 @@
   },
   {
     "pn": "5896",
-    "description": "Velg Daytona 3 Spoke - Mio Sporty - White",
+    "description": "3 Spoke GP Wheel, White Yamaha Mio Sporty (Fr) MT1.85x14 (Rr) 2.15x14",
     "het": 1749915,
     "d24": 1329935,
     "d27": 1277438,
@@ -5677,7 +5677,7 @@
   },
   {
     "pn": "5897",
-    "description": "Piringan Cakram SUPERPRO T-Floating Racing - Xmax 300mm, Black",
+    "description": "Superpro T-Floating Disc, Tornado Hole Yamaha XMAX 250, R25 FR, Ø300 Black, BRKT",
     "het": 1499943,
     "d24": 1139957,
     "d27": 1094958,
@@ -5689,7 +5689,7 @@
   },
   {
     "pn": "5898",
-    "description": "Piringan Cakram SUPERPRO T-Floating Racing - Xmax 300mm, Orange",
+    "description": "Superpro T-Floating Disc, Tornado Hole Yamaha XMAX 250, R25 FR, Ø300 Orange BRKT",
     "het": 1499943,
     "d24": 1139957,
     "d27": 1094958,
@@ -5701,7 +5701,7 @@
   },
   {
     "pn": "5899",
-    "description": "Piringan Cakram Superstock - Xmax Rear, 245mm",
+    "description": "Wave Brake Disc Rotor, RR 245x5.0T 3-Hole, Yamaha XMAX 250",
     "het": 249972,
     "d24": 189979,
     "d27": 182480,
@@ -5713,7 +5713,7 @@
   },
   {
     "pn": "5900",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 2 Piston Caliper, Red, Size Piston 2x32mm",
+    "description": "CNC 2 Piston Caliper, Red Color, Size Piston 2 x 32mm",
     "het": 449994,
     "d24": 341995,
     "d27": 328496,
@@ -5725,7 +5725,7 @@
   },
   {
     "pn": "5901",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Black - Honda PCX 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Black Honda PCX Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5737,7 +5737,7 @@
   },
   {
     "pn": "5902",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Red - Honda PCX 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Red Honda PCX Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5749,7 +5749,7 @@
   },
   {
     "pn": "5903",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Silver - Honda PCX 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Silver Honda PCX Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5761,7 +5761,7 @@
   },
   {
     "pn": "5904",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Orange - Honda PCX 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Orange Honda PCX Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5773,7 +5773,7 @@
   },
   {
     "pn": "5905",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Black - Honda PCX STD 220mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Black Honda PCX STD Ø220",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5785,7 +5785,7 @@
   },
   {
     "pn": "5906",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Red - Honda PCX STD 220mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Red Honda PCX STD Ø220",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5797,7 +5797,7 @@
   },
   {
     "pn": "5907",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Silver - Honda PCX STD 220mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Silver Honda PCX STD Ø220",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5809,7 +5809,7 @@
   },
   {
     "pn": "5908",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Orange - Honda PCX STD 220mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Orange Honda PCX STD Ø220",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5821,7 +5821,7 @@
   },
   {
     "pn": "5909",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Black - Honda Beat, Vario 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Black Honda Beat, Vario Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5833,7 +5833,7 @@
   },
   {
     "pn": "5910",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Red - Honda Beat, Vario 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Red Honda Beat, Vario Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5845,7 +5845,7 @@
   },
   {
     "pn": "5911",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Silver - Honda Beat, Vario 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Silver Honda Beat, Vario Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5857,7 +5857,7 @@
   },
   {
     "pn": "5912",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Orange - Honda Beat, Vario 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Orange Honda Beat, Vario Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5869,7 +5869,7 @@
   },
   {
     "pn": "5913",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Black - Honda Beat, Vario STD 190mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Black Honda Beat, Vario STD Ø190",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5881,7 +5881,7 @@
   },
   {
     "pn": "5914",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Red - Honda Beat, Vario STD 190mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Red Honda Beat, Vario STD Ø190",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5893,7 +5893,7 @@
   },
   {
     "pn": "5915",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Silver - Honda Beat, Vario STD 190mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Silver Honda Beat, Vario STD Ø190",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5905,7 +5905,7 @@
   },
   {
     "pn": "5916",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Orange - Honda Beat, Vario STD 190mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Orange Honda Beat, Vario STD Ø190",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5917,7 +5917,7 @@
   },
   {
     "pn": "5917",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Black - Yamaha NMAX 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Black Yamaha NMAX Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5929,7 +5929,7 @@
   },
   {
     "pn": "5918",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Red - Yamaha NMAX 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Red Yamaha NMAX Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5941,7 +5941,7 @@
   },
   {
     "pn": "5919",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Silver - Yamaha NMAX 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Silver Yamaha NMAX Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5953,7 +5953,7 @@
   },
   {
     "pn": "5920",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Orange - Yamaha NMAX 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Orange Yamaha NMAX Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5965,7 +5965,7 @@
   },
   {
     "pn": "5921",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Blue - Yamaha NMAX 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Blue Yamaha NMAX Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5977,7 +5977,7 @@
   },
   {
     "pn": "5922",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Black - Yamaha NMAX STD 230mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Black Yamaha NMAX STD Ø230",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -5989,7 +5989,7 @@
   },
   {
     "pn": "5923",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Red - Yamaha NMAX STD 230mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Red Yamaha NMAX STD Ø230",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6001,7 +6001,7 @@
   },
   {
     "pn": "5924",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Silver - Yamaha NMAX STD 230mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Silver Yamaha NMAX STD Ø230",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6013,7 +6013,7 @@
   },
   {
     "pn": "5925",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Orange - Yamaha NMAX STD 230mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Orange Yamaha NMAX STD Ø230",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6025,7 +6025,7 @@
   },
   {
     "pn": "5926",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Black - Yamaha Mio 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Black Yamaha Mio Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6037,7 +6037,7 @@
   },
   {
     "pn": "5927",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Silver - Yamaha Mio 260mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Silver Yamaha Mio Ø260",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6049,7 +6049,7 @@
   },
   {
     "pn": "5928",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Black - Yamaha Jupiter Z 300mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Black Yamaha Jupiter Z Ø300",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6061,7 +6061,7 @@
   },
   {
     "pn": "5929",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Red - Yamaha Jupiter Z 300mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Red Yamaha Jupiter Z Ø300",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6073,7 +6073,7 @@
   },
   {
     "pn": "5930",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Silver - Yamaha Jupiter Z 300mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Silver Yamaha Jupiter Z Ø300",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6085,7 +6085,7 @@
   },
   {
     "pn": "5931",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Orange - Yamaha Jupiter Z 300mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Orange Yamaha Jupiter Z Ø300",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6097,7 +6097,7 @@
   },
   {
     "pn": "5932",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Black - Yamaha MX-king 300mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Black Yamaha MX-king Ø300",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6109,7 +6109,7 @@
   },
   {
     "pn": "5933",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Red - Yamaha MX-king 300mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Red Yamaha MX-king Ø300",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6121,7 +6121,7 @@
   },
   {
     "pn": "5934",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Orange - Yamaha MX-king 300mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Orange Yamaha MX-king Ø300",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6133,7 +6133,7 @@
   },
   {
     "pn": "5935",
-    "description": "Kaliper Rem Air Vented 2 Piston (+Bracket) - 27mm, Blue - Yamaha MX-king 300mm",
+    "description": "Daytona Air Vented Forged Caliper Ø27mm, Blue Yamaha MX-king Ø300",
     "het": 849927,
     "d24": 645945,
     "d27": 620447,
@@ -6145,7 +6145,7 @@
   },
   {
     "pn": "5936",
-    "description": "Master Rem Forged Rear Brake Pump (Master Rem Belakang) - Forged Rear Brake Pump 14mm, Black Color Universal",
+    "description": "Daytona Forged Rear Brake Pump Ø14mm, Black Color Universal",
     "het": 374958,
     "d24": 284968,
     "d27": 273719,
@@ -6157,7 +6157,7 @@
   },
   {
     "pn": "5937",
-    "description": "Master Rem Forged Rear Brake Pump (Master Rem Belakang) - Forged Rear Brake Pump 14mm, Red Color Universal",
+    "description": "Daytona Forged Rear Brake Pump Ø14mm, Red Color Universal",
     "het": 374958,
     "d24": 284968,
     "d27": 273719,
@@ -6169,7 +6169,7 @@
   },
   {
     "pn": "5938",
-    "description": "Master Rem Forged Rear Brake Pump (Master Rem Belakang) - Forged Rear Brake Pump 14mm, Blue Color Universal",
+    "description": "Daytona Forged Rear Brake Pump Ø14mm, Blue Color Universal",
     "het": 374958,
     "d24": 284968,
     "d27": 273719,
@@ -6181,7 +6181,7 @@
   },
   {
     "pn": "5939",
-    "description": "Master Rem Forged Rear Brake Pump (Master Rem Belakang) - Forged Rear Brake Pump 14mm, Silver Color Universal",
+    "description": "Daytona Forged Rear Brake Pump Ø14mm, Silver Color Universal",
     "het": 374958,
     "d24": 284968,
     "d27": 273719,
@@ -6193,7 +6193,7 @@
   },
   {
     "pn": "5940",
-    "description": "Master Rem Forged Rear Brake Pump (Master Rem Belakang) - Forged Rear Brake Pump 14mm, Orange Color Universal",
+    "description": "Daytona Forged Rear Brake Pump Ø14mm, Orange Color Universal",
     "het": 374958,
     "d24": 284968,
     "d27": 273719,
@@ -6205,7 +6205,7 @@
   },
   {
     "pn": "6021",
-    "description": "Kampas Rem Depan (Discpad) Premium Lapinus - Beat, Beat Fi, Scoopy Fi, Vario 110/125 old (Fr)",
+    "description": "Premium Brake Pad (Lapinus Fiber), KVB, Beat FI ESP, Vario 125 CBS ESP",
     "het": 84915,
     "d24": 64535,
     "d27": 61988,
@@ -6217,7 +6217,7 @@
   },
   {
     "pn": "6055",
-    "description": "Master Rem CNC Clutch / Brake Lever Set (Handle Kopling/Rem) - CNC Clutch/Brake Lever, For Wire Type, Black",
+    "description": "Daytona CNC Clutch/Brake Lever, For Wire Type, Black Color",
     "het": 474969,
     "d24": 360976,
     "d27": 346727,
@@ -6229,7 +6229,7 @@
   },
   {
     "pn": "6056",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 2 Piston Caliper, Orange, Size Piston 2x32mm",
+    "description": "CNC 2 Piston Caliper, Orange Color , Size Piston 2 x 32mm",
     "het": 449994,
     "d24": 341995,
     "d27": 328496,
@@ -6241,7 +6241,7 @@
   },
   {
     "pn": "6057",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 4 Piston Caliper, Red, Size Piston 4x30mm",
+    "description": "CNC 4 Piston Caliper, Red Color , Size Piston 4 x 30mm",
     "het": 649905,
     "d24": 493928,
     "d27": 474431,
@@ -6253,7 +6253,7 @@
   },
   {
     "pn": "6058",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 4 Piston Caliper, Orange, Size Piston 4x30mm",
+    "description": "CNC 4 Piston Caliper, Orange, Size Piston 4 x 30mm",
     "het": 649905,
     "d24": 493928,
     "d27": 474431,
@@ -6265,7 +6265,7 @@
   },
   {
     "pn": "6059",
-    "description": "Bracket Kaliper 2 Piston (2P) Disc Ø260mm FR - Honda PCX 160",
+    "description": "Daytona Bracket Caliper 2P for PCX160 FR Ø260mm",
     "het": 199911,
     "price": "199.911",
     "qty": "1",
@@ -6277,7 +6277,7 @@
   },
   {
     "pn": "6060",
-    "description": "Bracket Kaliper 2 Piston - Bracket Caliper 2P for Beat 260mm",
+    "description": "Daytona Bracket Caliper 2P for Beat Ø260mm",
     "het": 124986,
     "d24": 94989,
     "d27": 91240,
@@ -6289,7 +6289,7 @@
   },
   {
     "pn": "6061",
-    "description": "Bracket Kaliper 2 Piston - Bracket Caliper 2P for Jupiter Z 300mm",
+    "description": "Daytona Bracket Caliper 2P for Jupiter Z Ø300mm",
     "het": 249972,
     "d24": 189979,
     "d27": 182480,
@@ -6301,7 +6301,7 @@
   },
   {
     "pn": "6062",
-    "description": "Bracket Kaliper 2 Piston - Bracket Caliper 2P for Mio Sporty 260mm",
+    "description": "Daytona Bracket Caliper 2P for Mio Sporty Ø260 mm",
     "het": 124986,
     "d24": 94989,
     "d27": 91240,
@@ -6313,7 +6313,7 @@
   },
   {
     "pn": "6063",
-    "description": "Bracket Kaliper 2 Piston (2P) Disc Ø260mm FR - Yamaha NMAX, Aerox",
+    "description": "Daytona Bracket Caliper 2P for NMAX, AEROX FR Ø260mm",
     "het": 184926,
     "price": "184.926",
     "qty": "1",
@@ -6325,7 +6325,7 @@
   },
   {
     "pn": "6064",
-    "description": "Bracket Kaliper 2 Piston - Bracket Caliper 2P for MX-King 300mm",
+    "description": "Daytona Bracket Caliper 2P for MX-King Ø300mm",
     "het": 249972,
     "d24": 189979,
     "d27": 182480,
@@ -6337,7 +6337,7 @@
   },
   {
     "pn": "6065",
-    "description": "Bracket Kaliper 2 Piston - Bracket Caliper 2P for Supra GTR 300mm",
+    "description": "Daytona Bracket Caliper 2P for Supra GTR Ø300mm",
     "het": 249972,
     "d24": 189979,
     "d27": 182480,
@@ -6349,7 +6349,7 @@
   },
   {
     "pn": "6115",
-    "description": "Injector Racing - 6H 130cc - Beat, Vario 125/150/160, PCX, ADV",
+    "description": "Daytona Racing Injector , H1 6H 130cc,Beat, Vario 125/150/160, PCX, ADV",
     "het": 199911,
     "d24": 151932,
     "d27": 145935,
@@ -6361,7 +6361,7 @@
   },
   {
     "pn": "6116",
-    "description": "Injector Racing - 8H 140cc - Beat, Vario 125/150/160, PCX, ADV",
+    "description": "Daytona Racing Injector, H1 8H 140cc, Beat, Vario 125/150/160, PCX, ADV",
     "het": 199911,
     "d24": 151932,
     "d27": 145935,
@@ -6373,7 +6373,7 @@
   },
   {
     "pn": "6117",
-    "description": "Injector Racing - 8H 150cc - Beat, Vario 125/150/160, PCX, ADV",
+    "description": "Daytona Racing Injector, H1 8H 150cc, Beat, Vario 125/150/160, PCX, ADV",
     "het": 199911,
     "d24": 151932,
     "d27": 145935,
@@ -6385,7 +6385,7 @@
   },
   {
     "pn": "6118",
-    "description": "Injector Racing - 8H 160cc - Beat, Vario 125/150/160, PCX, ADV",
+    "description": "Daytona Racing Injectorg, H1 8H 160cc, Beat, Vario 125/150/160, PCX, ADV",
     "het": 209901,
     "d24": 159525,
     "d27": 153228,
@@ -6397,7 +6397,7 @@
   },
   {
     "pn": "6119",
-    "description": "Injector Racing - 10H 180cc - Beat, Vario 125/150/160, PCX, ADV",
+    "description": "Daytona Racing Injector , H1 10H 180cc, Beat, Vario 125/150/160, PCX, ADV",
     "het": 219891,
     "d24": 167117,
     "d27": 160520,
@@ -6409,7 +6409,7 @@
   },
   {
     "pn": "6120",
-    "description": "Injector Racing - 6H 130cc - Mio M3, New NMAX 155, All Aerox, Gear",
+    "description": "Daytona Racing Injector, Y1 6H 130cc, Mio M3, New NMAX 155, All Aerox, Gear",
     "het": 219891,
     "d24": 167117,
     "d27": 160520,
@@ -6421,7 +6421,7 @@
   },
   {
     "pn": "6121",
-    "description": "Injector Racing - 8H 140cc - Mio M3, New NMAX 155, All Aerox, Gear",
+    "description": "Daytona Racing Injector, Y1 8H 140cc, Mio M3, New NMAX 155, All Aerox, Gear",
     "het": 219891,
     "d24": 167117,
     "d27": 160520,
@@ -6433,7 +6433,7 @@
   },
   {
     "pn": "6122",
-    "description": "Injector Racing - 8H 160cc - Mio M3, New NMAX 155, All Aerox, Gear",
+    "description": "Daytona Racing Injector, Y1 8H 160cc, Mio M3, New NMAX 155, All Aerox, Gear",
     "het": 219891,
     "d24": 167117,
     "d27": 160520,
@@ -6445,7 +6445,7 @@
   },
   {
     "pn": "6123",
-    "description": "Injector Racing - 10H 180cc - Mio M3, New NMAX 155, All Aerox, Gear",
+    "description": "Daytona Racing Injector, Y1 10H 180cc, Mio M3, New NMAX 155, All Aerox,Gear",
     "het": 229992,
     "d24": 174794,
     "d27": 167894,
@@ -6457,7 +6457,7 @@
   },
   {
     "pn": "6124",
-    "description": "Injector Racing - 6H 130cc - Mio J, Old NMAX 150, Vixion, MX-King",
+    "description": "Daytona Racing Injector, Y2 6H 130cc, Mio J, Old NMAX 150, Vixion, MX-King",
     "het": 219891,
     "d24": 167117,
     "d27": 160520,
@@ -6469,7 +6469,7 @@
   },
   {
     "pn": "6125",
-    "description": "Injector Racing - 6H 140cc - Mio J, Old NMAX 150, Vixion, MX-King",
+    "description": "Daytona Racing Injector, Y2 6H 140cc, Mio J, Old NMAX 150, Vixion, MX-King",
     "het": 219891,
     "d24": 167117,
     "d27": 160520,
@@ -6481,7 +6481,7 @@
   },
   {
     "pn": "6126",
-    "description": "Injector Racing - 8H 160cc - Mio J, Old NMAX 150, Vixion, MX-King",
+    "description": "Daytona Racing Injector, Y2 8H 160cc, Mio J, Old NMAX 150, Vixion, MX-King",
     "het": 219891,
     "d24": 167117,
     "d27": 160520,
@@ -6493,7 +6493,7 @@
   },
   {
     "pn": "6127",
-    "description": "Injector Racing - 10H 180cc - Mio J, Old NMAX 150, Vixion, MX-King",
+    "description": "Daytona Racing Injector, Y2 10H 180cc, Mio J, Old NMAX150, Vixion, MX-King",
     "het": 229992,
     "d24": 174794,
     "d27": 167894,
@@ -6505,7 +6505,7 @@
   },
   {
     "pn": "6129",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - KVY - Beat '09-19, Scoopy '10-19, Vario 110 esp IN EX",
+    "description": "Superstock Valve set 2pcs, KVY Beat '09-19, Scoopy '10-19, Vario 110 esp IN EX",
     "het": 69930,
     "d24": 53147,
     "d27": 51049,
@@ -6517,7 +6517,7 @@
   },
   {
     "pn": "6130",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - K0J - New Beat 20up, New Scoopy 20up, Genio IN EX",
+    "description": "Superstock Valve set 2pcs, K0J New Beat 20up, New Scoopy 20up, Genio IN EX",
     "het": 69930,
     "d24": 53147,
     "d27": 51049,
@@ -6529,7 +6529,7 @@
   },
   {
     "pn": "6131",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - KVB - Vario CBS Carbu, Vario 110 IN EX",
+    "description": "Superstock Valve set 2pcs, KVB Vario CBS Carbu, Vario 110 IN EX",
     "het": 69930,
     "d24": 53147,
     "d27": 51049,
@@ -6541,7 +6541,7 @@
   },
   {
     "pn": "6132",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - KWN - Vario 125 CBS, ESP IN EX",
+    "description": "Superstock Valve set 2pcs, KWN Vario 125 CBS, ESP IN EX",
     "het": 79920,
     "d24": 60739,
     "d27": 58342,
@@ -6553,7 +6553,7 @@
   },
   {
     "pn": "6133",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - KZY - Vario ESP 150, PCX 150, ADV 150 IN EX",
+    "description": "Superstock Valve set 2pcs, KZY Vario ESP 150, PCX 150,ADV 150 IN EX",
     "het": 79920,
     "d24": 60739,
     "d27": 58342,
@@ -6565,7 +6565,7 @@
   },
   {
     "pn": "6134",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - KPH - Karisma, Supra X 125, Supra X 125 FI IN EX",
+    "description": "Superstock Valve set 2pcs, KPH Karisma, Supra X 125, Supra X 125 FI IN EX",
     "het": 69930,
     "d24": 53147,
     "d27": 51049,
@@ -6577,7 +6577,7 @@
   },
   {
     "pn": "6135",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - K56 - Sonic 150, CBR150 '16up, CB150 '16UP Spr GTR IN EX",
+    "description": "Superstock Valve set 4pcs, K56 Sonic 150, CBR150 '16up, CB150 '16UP Spr GTR IN EX",
     "het": 79920,
     "d24": 60739,
     "d27": 58342,
@@ -6589,7 +6589,7 @@
   },
   {
     "pn": "6136",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - KFM - Win, Grand, Supra 100, Supra Fit, Revo 100 IN EX",
+    "description": "Superstock Valve set 2pcs, KFM Win, Grand, Supra 100, Supra Fit, Revo 100 IN EX",
     "het": 59940,
     "d24": 45554,
     "d27": 43756,
@@ -6601,7 +6601,7 @@
   },
   {
     "pn": "6137",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - KYE - Megapro, Verza 150, CRF150L IN EX",
+    "description": "Superstock Valve set 2pcs, KYE Megapro, Verza 150, CRF150L IN EX",
     "het": 79920,
     "d24": 60739,
     "d27": 58342,
@@ -6613,7 +6613,7 @@
   },
   {
     "pn": "6138",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - KPP - CBR150 K45A, CB150 '12-'15 IN EX",
+    "description": "Superstock Valve set 4pcs, KPP CBR150 K45A, CB150 '12-'15 IN EX",
     "het": 79920,
     "d24": 60739,
     "d27": 58342,
@@ -6625,7 +6625,7 @@
   },
   {
     "pn": "6139",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - KCM - Honda GL Max, GL Pro, Tiger 2000, Tiger Revo IN EX",
+    "description": "Superstock Valve set 2pcs, KCM Honda GL Max, GL Pro, Tiger 2000, Tiger Revo IN EX",
     "het": 59940,
     "d24": 45554,
     "d27": 43756,
@@ -6637,7 +6637,7 @@
   },
   {
     "pn": "6140",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - 5MX - Mio Sporty, Fino Carbu, Mio Soul, Nouvo IN EX",
+    "description": "Superstock Valve set 2pcs, 5MX Mio Sporty, Fino Carbu, Mio Soul, Nouvo IN EX",
     "het": 69930,
     "d24": 53147,
     "d27": 51049,
@@ -6649,7 +6649,7 @@
   },
   {
     "pn": "6141",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - 2PH - Mio M3, Mio J, Mio Soul GT, Xeon RC, Gear IN EX",
+    "description": "Superstock Valve set 2set, 2PH Mio M3, Mio J, Mio Soul GT, Xeon RC, Gear IN EX",
     "het": 79920,
     "d24": 60739,
     "d27": 58342,
@@ -6661,7 +6661,7 @@
   },
   {
     "pn": "6142",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - 2DP - NMAX, Aerox, Lexi IN EX",
+    "description": "Superstock Valve set 4pcs, 2DP NMAX, Aerox, Lexi IN EX",
     "het": 69930,
     "d24": 53147,
     "d27": 51049,
@@ -6673,7 +6673,7 @@
   },
   {
     "pn": "6143",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - 5D9 - Jupiter Z 115, Vega ZR IN EX",
+    "description": "Superstock Valve set 2pcs, 5D9 Jupiter Z 115, Vega ZR IN EX",
     "het": 69930,
     "d24": 53147,
     "d27": 51049,
@@ -6685,7 +6685,7 @@
   },
   {
     "pn": "6144",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - 5TP - Jupiter Z 110, Vega R old, Vega R new IN EX",
+    "description": "Superstock Valve set 2pcs, 5TP Jupiter Z 110, Vega R old, Vega R new IN EX",
     "het": 69930,
     "d24": 53147,
     "d27": 51049,
@@ -6697,7 +6697,7 @@
   },
   {
     "pn": "6145",
-    "description": "Payung Klep Superstock Hi-Carbon (IN & EX) - 1S7 - MX King, Vixion Old, NVL, NVA, R15 IN EX",
+    "description": "Superstock Valve set 4pcs, 1S7 MX King, Vixion Old, NVL, NVA, R15 IN EX",
     "het": 79920,
     "d24": 60739,
     "d27": 58342,
@@ -6709,7 +6709,7 @@
   },
   {
     "pn": "6146",
-    "description": "Stang Seher Superstock Connecting Rod Set - Beat, Scoopy, Spacy, Beat FI, Beat ESP, Beat Street - KVY",
+    "description": "Superstock Connecting Rod set, KVY Beat, Scoopy, Spacy, Beat Fi, Beat ESP, Beat Street, Scoopy Fi",
     "het": 174936,
     "price": "174.936",
     "qty": "1",
@@ -6721,7 +6721,7 @@
   },
   {
     "pn": "6148",
-    "description": "Stang Seher Superstock Connecting Rod Set - Genio, New Beat ESP ('20-Up), Scoopy ESP ('20-Up) - K0J",
+    "description": "Superstock Connecting Rod set, K0J Genio, New Beat ESP 20Up Scoopy ESP 20up",
     "het": 179931,
     "price": "179.931",
     "qty": "1",
@@ -6733,7 +6733,7 @@
   },
   {
     "pn": "6149",
-    "description": "Stang Seher Superstock Connecting Rod Set - Vario 125 Techno CBS ESP - KZR",
+    "description": "Superstock Connecting Rod set, KZR Vario 125 Techno CBS ESP",
     "het": 189921,
     "price": "189.921",
     "qty": "1",
@@ -6745,7 +6745,7 @@
   },
   {
     "pn": "6150",
-    "description": "Stang Seher Superstock Connecting Rod Set - Vario 150 ESP ('15-'20), PCX 150, ADV 150 - KYZ",
+    "description": "Superstock Connecting Rod set, KYZ Vario 150 ESP '15-'20, PCX 150, ADV150",
     "het": 199911,
     "price": "199.911",
     "qty": "1",
@@ -6757,7 +6757,7 @@
   },
   {
     "pn": "6151",
-    "description": "Stang Seher Superstock Connecting Rod Set - Karisma, Supra X 125 Karbu / FI ('07-'14) - KPH",
+    "description": "Superstock Connecting Rod set, KPH Karisma, Supra X 125 Carbu FI '07-14",
     "het": 159951,
     "price": "159.951",
     "qty": "1",
@@ -6769,7 +6769,7 @@
   },
   {
     "pn": "6152",
-    "description": "Stang Seher Superstock Connecting Rod Set - Supra Fit, Legenda, Revo 100 - KFM",
+    "description": "Superstock Connecting Rod set, KFM Supra Fit, Legenda, Revo 100",
     "het": 159951,
     "price": "159.951",
     "qty": "1",
@@ -6781,7 +6781,7 @@
   },
   {
     "pn": "6153",
-    "description": "Stang Seher Superstock Connecting Rod Set - Honda WIN, Astrea Grand - GF6",
+    "description": "Superstock Connecting Rod set, GF6 WIN, Astrea Grand",
     "het": 159951,
     "price": "159.951",
     "qty": "1",
@@ -6793,7 +6793,7 @@
   },
   {
     "pn": "6154",
-    "description": "Stang Seher Superstock Connecting Rod Set - X-Ride 115, Soul GT, Fino FI 115, Mio J - 54P",
+    "description": "Superstock Connecting Rod set, 54P X Ride 115, Soul GT, Fino FI 115, Mio J",
     "het": 189921,
     "price": "189.921",
     "qty": "1",
@@ -6805,7 +6805,7 @@
   },
   {
     "pn": "6155",
-    "description": "Stang Seher Superstock Connecting Rod Set - Mio M3, Soul GT 125, Gear 125, Fazzio - 2PH",
+    "description": "Superstock Connecting Rod set, 2PH Mio M3, Soul GT 125, Gear, Fazzio",
     "het": 199911,
     "price": "199.911",
     "qty": "1",
@@ -6817,7 +6817,7 @@
   },
   {
     "pn": "6156",
-    "description": "Stang Seher Superstock Connecting Rod Set - Yamaha NMAX ('15-'24), Aerox ('17-'24) - 2DP",
+    "description": "Superstock Connecting Rod set, 2DP Nmax '15-'24, Aerox '17-'24",
     "het": 199911,
     "price": "199.911",
     "qty": "1",
@@ -6829,7 +6829,7 @@
   },
   {
     "pn": "6157",
-    "description": "Stang Seher Superstock Connecting Rod Set - Jupiter Z 115, Vega ZR ('10-'12), Vega RR - 5D9",
+    "description": "Superstock Connecting Rod set, 5D9 Jupiter Z 115, Vega ZR '10-'12, Vega RR ZR",
     "het": 174936,
     "price": "174.936",
     "qty": "1",
@@ -6841,7 +6841,7 @@
   },
   {
     "pn": "6158",
-    "description": "Stang Seher Superstock Connecting Rod Set - MX King 150, Vixion NVL/NVA/VXN150, R15 ('14-'15) - 3C1",
+    "description": "Superstock Connecting Rod set, 3C1 MX King 150, Vixion NVL,NVA VXN150, R15 '14-'15",
     "het": 219891,
     "price": "219.891",
     "qty": "1",
@@ -6853,7 +6853,7 @@
   },
   {
     "pn": "6162",
-    "description": "Master Rem CNC Radial Brake Master Cylinder - CNC Radial Brake Master Cylinder Right Size 14\", Black/Red",
+    "description": "CNC Radial Brake Master Cylinder RH Size 14\", Cable switch etc Black/Red",
     "het": 699966,
     "d24": 531974,
     "d27": 510975,
@@ -6865,7 +6865,7 @@
   },
   {
     "pn": "6163",
-    "description": "Master Rem CNC Radial Brake Master Cylinder - CNC Radial Brake Master Cylinder Right Size 14\", Black/Silver",
+    "description": "CNC Radial Brake Master Cylinder RH Size 14\", Cable switch etc Black/Silver",
     "het": 699966,
     "d24": 531974,
     "d27": 510975,
@@ -6877,7 +6877,7 @@
   },
   {
     "pn": "6164",
-    "description": "Master Rem CNC Radial Brake Master Cylinder - CNC Radial Brake Master Cylinder Right Size 17\", Black/Red",
+    "description": "CNC Radial Brake Master Cylinder RH Size 17\", Cable switch etc Black/Red",
     "het": 699966,
     "d24": 531974,
     "d27": 510975,
@@ -6889,7 +6889,7 @@
   },
   {
     "pn": "6165",
-    "description": "Master Rem CNC Radial Brake Master Cylinder - CNC Radial Brake Master Cylinder Right Size 17\", Black/Silver",
+    "description": "CNC Radial Brake Master Cylinder RH Size 17\", Cable switch etc Black/Silver",
     "het": 699966,
     "d24": 531974,
     "d27": 510975,
@@ -6901,7 +6901,7 @@
   },
   {
     "pn": "6166",
-    "description": "Master Rem CNC Radial Brake Master Cylinder - CNC Radial Brake Master Cylinder Left Size 16\", Black/Red",
+    "description": "CNC Radial Brake Master Cylinder LH Size 16\", Cable switch etc Black/Red",
     "het": 699966,
     "d24": 531974,
     "d27": 510975,
@@ -6913,7 +6913,7 @@
   },
   {
     "pn": "6167",
-    "description": "Master Rem CNC Radial Brake Master Cylinder - CNC Radial Brake Master Cylinder Left Size 16\", Black/Silver",
+    "description": "CNC Radial Brake Master Cylinder LH Size 16\", Cable switch etc Black/Silver",
     "het": 699966,
     "d24": 531974,
     "d27": 510975,
@@ -6925,7 +6925,7 @@
   },
   {
     "pn": "6173",
-    "description": "Karburator Balap Daytona Hi-Flow PE 28 (Needle J6ZG, Slow Jet 45, Main Jet 118)",
+    "description": "Daytona Hi-Flow Carburetor PE 28, Needle J6ZG S-Jet:45 M-Jat : 118",
     "het": 474969,
     "price": "474.969",
     "qty": "1",
@@ -6937,7 +6937,7 @@
   },
   {
     "pn": "6207",
-    "description": "Piringan Cakram SUPERPRO T-Floating Racing - Mio 260mm, Black",
+    "description": "Superpro T-Floating Disc, Tornado Hole Yamaha Mio FR Black, Ø260 with BRKT",
     "het": 1199910,
     "d24": 911932,
     "d27": 875934,
@@ -6949,7 +6949,7 @@
   },
   {
     "pn": "6208",
-    "description": "Piringan Cakram SUPERPRO T-Floating Racing - Mio 260mm, Orange",
+    "description": "Superpro T-Floating Disc, Tornado Hole Yamaha Mio FR Orange, Ø260 with BRKT",
     "het": 1199910,
     "d24": 911932,
     "d27": 875934,
@@ -6961,7 +6961,7 @@
   },
   {
     "pn": "6210",
-    "description": "Komstir Hi-Carbon Cones (Stem Bearing) - Xmax, R25, MT25",
+    "description": "Steering Stem Bearing Set with Grease (Komstir) Yamaha XMAX, R25, MT25",
     "het": 179931,
     "d24": 136748,
     "d27": 131350,
@@ -6973,7 +6973,7 @@
   },
   {
     "pn": "6237",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 4 Piston Caliper, Black Color Size Piston 4x30mm, Left (Honda Matic)",
+    "description": "CNC 4 Piston Caliper, Black Color Size Piston 4 x 30mm, Left (Honda Matic)",
     "het": 649905,
     "d24": 493928,
     "d27": 474431,
@@ -6985,7 +6985,7 @@
   },
   {
     "pn": "6238",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 4 Piston Caliper, Titan Color Size Piston 4x30mm, Left (Honda Matic)",
+    "description": "CNC 4 Piston Caliper, Titan Color Size Piston 4 x 30mm, Left (Honda Matic)",
     "het": 649905,
     "d24": 493928,
     "d27": 474431,
@@ -6997,7 +6997,7 @@
   },
   {
     "pn": "6239",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 4 Piston Caliper, Red Color Size Piston 4x30mm, Left (Honda Matic)",
+    "description": "CNC 4 Piston Caliper, Red Color Size Piston 4 x 30mm, Left (Honda Matic)",
     "het": 649905,
     "d24": 493928,
     "d27": 474431,
@@ -7009,7 +7009,7 @@
   },
   {
     "pn": "6240",
-    "description": "Kaliper Rem CNC 2 Piston - CNC 4 Piston Caliper, Orange Color Size Piston 4x30mm, Left (Honda Matic)",
+    "description": "CNC 4 Piston Caliper, Orange Color Size Piston 4 x 30mm, Left (Honda Matic)",
     "het": 649905,
     "d24": 493928,
     "d27": 474431,
@@ -7021,7 +7021,7 @@
   },
   {
     "pn": "6241",
-    "description": "Koil Pengapian Balap Thunderbolt Racing Ignition Coil - Universal Karburator",
+    "description": "Thunderbolt Racing Ignition Coil, Universal Carburetor",
     "het": 149961,
     "price": "149.961",
     "qty": "1",
@@ -7033,7 +7033,7 @@
   },
   {
     "pn": "6242",
-    "description": "Koil Pengapian Balap Thunderbolt Racing Ignition Coil - Universal Injeksi / Injection",
+    "description": "Thunderbolt Racing Ignition Coil, Universal Injection",
     "het": 149961,
     "price": "149.961",
     "qty": "1",
@@ -7045,7 +7045,7 @@
   },
   {
     "pn": "6243",
-    "description": "Bearing Kruk As Racing (Crankshaft) - 6205Z, Forged C3 Hi-Speed Single Cover - Vario, Beat, Scoopy",
+    "description": "Crankshaft Bearing 6205Z, Forged C3 Hi-Speed Single Cover Vario, Beat, Scoopy",
     "het": 34965,
     "d24": 26573,
     "d27": 25524,
@@ -7057,7 +7057,7 @@
   },
   {
     "pn": "6255",
-    "description": "Per CVT 1.000 RPM (Putih / White) - NMAX Turbo, AEROX Turbo",
+    "description": "CVT Spring, White +10%/1,000 rpm.. NMAX Turbo, AEROX Turbo",
     "het": 139971,
     "d24": 106378,
     "d27": 102179,
@@ -7069,7 +7069,7 @@
   },
   {
     "pn": "6256",
-    "description": "Per CVT 1.500 RPM (Oranye / Orange) - NMAX Turbo, AEROX Turbo",
+    "description": "CVT Spring, Orange +20%/1,500 rpm.. NMAX Turbo, AEROX Turbo",
     "het": 139971,
     "d24": 106378,
     "d27": 102179,
@@ -7081,7 +7081,7 @@
   },
   {
     "pn": "6257",
-    "description": "Velg Daytona GP Wheel - Jupiter - Silver",
+    "description": "GP Wheel set, Silver Yamaha Jupiter, Fr Disc MT 1.6x17, Rr Drum MT 1.85x17",
     "het": 2099898,
     "d24": 1595922,
     "d27": 1532926,
@@ -7093,7 +7093,7 @@
   },
   {
     "pn": "6258",
-    "description": "Gas Spontan Racing Throttle Kit - Single Cable Matic - 1870mm",
+    "description": "Racing Throttle Kit \"EVOLUTION\" One Throttle Long Cable For Matic/Scooter",
     "het": 219891,
     "d24": 167117,
     "d27": 160520,
@@ -7105,7 +7105,7 @@
   },
   {
     "pn": "6259",
-    "description": "Jalu Stang Balap HI-Chrome Bar End Heavy Weight - PCX, ADV, NMAX, Aerox, Mio",
+    "description": "HI-Chrome Bar End Heavy Weight, PCX, ADV, NMAX, Aerox, Mio",
     "het": 149961,
     "price": "149.961",
     "qty": "1",
@@ -7117,7 +7117,7 @@
   },
   {
     "pn": "6261",
-    "description": "Per CVT 1.200 RPM (Biru / Blue) - Beat, Beat Fi, Beat Esp, Beat Pop, Genio, Scoopy - K44 KZL",
+    "description": "CVT Spring, Blue +15%/1,200 rpm..Beat, Beat Fi, Vario, Scoop",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -7129,7 +7129,7 @@
   },
   {
     "pn": "6263",
-    "description": "Per CVT 1.200 RPM (Biru / Blue) - PCX150, PCX160, Vario125, ADV160 - K35",
+    "description": "CVT Spring, Blue +15%/1,200 rpm..PCX150 2018~up, ADV155 2019~up",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -7141,7 +7141,7 @@
   },
   {
     "pn": "6265",
-    "description": "Per CVT 1.200 RPM (Biru / Blue) - Vario150, PCX CBU - K36",
+    "description": "CVT SPRING, Blue +15%/1200rpm, Vario150, PCX('14-'18)",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -7153,7 +7153,7 @@
   },
   {
     "pn": "6267",
-    "description": "Per CVT 1.200 RPM (Biru / Blue) - Mio 03~12 / Fino - 5TL",
+    "description": "CVT SPRING, Blue +15%/1200rpm, Mio,Fino",
     "het": 98901,
     "d24": 75165,
     "d27": 72198,
@@ -7165,7 +7165,7 @@
   },
   {
     "pn": "6269",
-    "description": "Per CVT 1.200 RPM (Biru / Blue) - Aerox155, Nmax155 - B65",
+    "description": "CVT Spring, Blue +15%/1,200 rpm..Aerox 155, N-Max 2020up",
     "het": 115995,
     "d24": 88156,
     "d27": 84676,
@@ -7177,7 +7177,7 @@
   },
   {
     "pn": "6316",
-    "description": "Master Rem CNC Clutch / Brake Lever Set (Handle Kopling/Rem) - CNC Clutch/Brake Lever, For Wire Type, Black/Red",
+    "description": "Daytona CNC Clutch/Brake Lever, For Wire Type, Black/Red",
     "het": 474969,
     "d24": 360976,
     "d27": 346727,
@@ -7189,7 +7189,7 @@
   },
   {
     "pn": "6317",
-    "description": "Master Rem CNC Clutch / Brake Lever Set (Handle Kopling/Rem) - CNC Clutch/Brake Lever, For Wire Type, Black/Silver",
+    "description": "Daytona CNC Clutch/Brake Lever, For Wire Type, Black/Silver",
     "het": 474969,
     "d24": 360976,
     "d27": 346727,
@@ -7201,7 +7201,7 @@
   },
   {
     "pn": "6463",
-    "description": "Bracket Kaliper 2 Piston (2P) Disc STD Ø230mm FR - Honda PCX 160",
+    "description": "Daytona Bracket Caliper 2P for Front PCX160 STD Ø230mm",
     "het": 174936,
     "price": "174.936",
     "qty": "1",
@@ -7213,7 +7213,7 @@
   },
   {
     "pn": "6464",
-    "description": "Bracket Kaliper 4 Piston (4P) Disc Ø260mm FR - Honda PCX 160",
+    "description": "Daytona Bracket Caliper 4P for PCX160 Ø260mm",
     "het": 224997,
     "price": "224.997",
     "qty": "1",
@@ -7225,7 +7225,7 @@
   },
   {
     "pn": "6465",
-    "description": "Bracket Kaliper 4 Piston (4P) Disc Ø260mm FR - Yamaha NMAX, Aerox",
+    "description": "Daytona Bracket Caliper 4P for NMAX, AEROX FR Ø260mm",
     "het": 249972,
     "price": "249.972",
     "qty": "1",
@@ -7237,7 +7237,7 @@
   },
   {
     "pn": "6505",
-    "description": "Seal Klep Daytona SS Double Spring Ø4.5mm (2 pcs) - Beat, PCX, NMAX, Aerox",
+    "description": "Daytona SS Seal Valve 2pcs Double Spring Ø4,5 Beat, PCX, Nmax, Aerox",
     "het": 19980,
     "price": "19.980",
     "qty": "1",
@@ -7249,7 +7249,7 @@
   },
   {
     "pn": "6506",
-    "description": "Seal Klep Daytona SS Double Spring Ø5.0mm (2 pcs) - Karisma, Supra, All Mio, Jupiter",
+    "description": "Daytona SS Seal Valve 2pcs Double Spring Ø5 Karisma Supra all Mio Jupiter",
     "het": 20979,
     "price": "20.979",
     "qty": "1",
@@ -7261,7 +7261,7 @@
   },
   {
     "pn": "6507",
-    "description": "Seal Klep Daytona SS Double Spring Ø5.5mm (2 pcs) - MegaPro ('99-'09), GL Pro, CB100",
+    "description": "Daytona SS Seal Valve 2pcs Double Spring Ø5,5 Megapro '99-'09, GL Pro, CB100",
     "het": 21978,
     "price": "21.978",
     "qty": "1",
@@ -7273,7 +7273,7 @@
   },
   {
     "pn": "6579",
-    "description": "Jalu Stang Balap HI-Chrome Bar End Heavy Weight - Beat, Genio, Vario 160, Stylo",
+    "description": "HI-Chrome Bar End Heavy Weight, Beat, Genio, Vario 160, Stylo",
     "het": 149961,
     "price": "149.961",
     "qty": "1",
@@ -7285,7 +7285,7 @@
   },
   {
     "pn": "6616",
-    "description": "Per Sentrik 1.200 RPM (Blue / Biru) - Mio, Fino, Beat - 5TL, KVY, GCC",
+    "description": "Spring Set(3pcs), Clutch Shoe, 1200 RPM 5TL, KVY,GCC, Mio, Fino, Beat",
     "het": 40404,
     "price": "40.404",
     "qty": "1",
@@ -7297,7 +7297,7 @@
   },
   {
     "pn": "6618",
-    "description": "Per Sentrik 1.200 RPM (Blue / Biru) - Aerox('17-21), New N-Max - B65",
+    "description": "Spring Set(3pcs), Clutch Shoe, 1200 RPM B65, Aerox('17-21), New N-Max",
     "het": 40404,
     "price": "40.404",
     "qty": "1",
@@ -7309,7 +7309,7 @@
   },
   {
     "pn": "6620",
-    "description": "Per Sentrik 1.200 RPM (Blue / Biru) - NMAX, PCX150, Vario 125/150 - 2DP, KVB, KGF, KWN",
+    "description": "Spring Set(3pcs), Clutch Shoe, 1200 RPM 2DP, KVB, KGF, KWN,Nmax,PCX150",
     "het": 40404,
     "price": "40.404",
     "qty": "1",
@@ -7321,7 +7321,7 @@
   },
   {
     "pn": "6624",
-    "description": "Roller CVT 10 Gram (10gr) - Mio, Fino, Soul, Mio J, Fino Fi, Mio GT, X-Ride",
+    "description": "Weight Roller 3 pcs, 10 Gr, Mio, Fino, Soul, Mio J, Fino Fi, Mio Gt, XRide",
     "het": 45399,
     "price": "45.399",
     "qty": "1",
@@ -7333,7 +7333,7 @@
   },
   {
     "pn": "6658",
-    "description": "Karburator Balap Daytona Hi-Flow PWK 28 (Needle JJH, Pilot Jet 35, Main Jet 108)",
+    "description": "Daytona Hi-Flow Carburetor PWK 28, Needle JJH P-Jet:35 M-Jat : 108",
     "het": 599955,
     "price": "599.955",
     "qty": "1",

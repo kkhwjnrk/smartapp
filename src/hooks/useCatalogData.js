@@ -5,7 +5,7 @@ import initialOsramPricelist from '../data/osramPricelist.json';
 import { ensureValidCategory } from '../constants/categories';
 import { comparePartNumbers } from '../utils/formatters';
 
-const PRICELIST_DATA_VERSION = 'v3_612_official_pdf';
+const PRICELIST_DATA_VERSION = 'v4_612_official_pdf_names';
 const DURA_DATA_VERSION = 'v1_319_official_pdf';
 const OSRAM_DATA_VERSION = 'v1_30_official_pdf';
 
