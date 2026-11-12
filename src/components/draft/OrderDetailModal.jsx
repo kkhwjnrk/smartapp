@@ -38,17 +38,27 @@ function OrderDetailModal({
     enabled: Boolean(order)
   });
 
+  const orderItemsList = useMemo(() => {
+    return Array.isArray(order?.items) ? order.items : [];
+  }, [order]);
+
   const grouped = useMemo(() => {
-    if (!order) return { daytona: [], dura: [], osram: [] };
-    const items = Array.isArray(order.items) ? order.items : [];
-    return groupOrderItemsByBrand(items, catalogItems);
-  }, [order, catalogItems]);
+    return groupOrderItemsByBrand(orderItemsList, catalogItems);
+  }, [orderItemsList, catalogItems]);
 
   const orderSummary = useMemo(() => {
-    if (!order) return { totalQty: 0, totalNet: 0, totalHet: 0, brandCounts: {} };
-    const items = Array.isArray(order.items) ? order.items : [];
-    return calculateOrderSummary(items, catalogItems);
-  }, [order, catalogItems]);
+    return calculateOrderSummary(orderItemsList, catalogItems);
+  }, [orderItemsList, catalogItems]);
+
+  const catalogMap = useMemo(() => {
+    const map = new Map();
+    if (Array.isArray(catalogItems)) {
+      catalogItems.forEach(it => {
+        if (it?.pn) map.set(String(it.pn).trim().toLowerCase(), it);
+      });
+    }
+    return map;
+  }, [catalogItems]);
 
   if (!order) return null;
 
@@ -77,81 +87,86 @@ function OrderDetailModal({
     setTimeout(() => setCopiedType(null), 1800);
   };
 
-  const renderItemRow = (item, displayIndex) => (
-    <div
-      key={`${item.pn}-${displayIndex}`}
-      className="p-3.5 flex items-center justify-between gap-3 hover:bg-zinc-50/80 transition-colors"
-    >
-      <div className="flex items-start gap-2.5 min-w-0 flex-1">
-        <span className="text-[12px] font-bold text-zinc-300 w-4 pt-0.5 text-right select-none shrink-0">
-          {displayIndex}
-        </span>
+  const renderItemRow = (item, displayIndex) => {
+    const catalogItem = catalogMap.get(String(item.pn || '').trim().toLowerCase());
+    const displayDesc = item.description || catalogItem?.description || '';
 
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className={`font-mono font-bold text-[15.5px] tracking-tight ${
-              item.brand === 'osram'
-                ? 'text-amber-800'
-                : item.brand === 'dura'
-                  ? 'text-sky-700'
-                  : 'text-[#EA580C]'
-            }`}>
-              {item.pn}
-            </span>
-
-            {item.brand && (
-              <span className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase ${
-                item.brand === 'dura'
-                  ? 'bg-sky-100 text-sky-700 border border-sky-200'
-                  : item.brand === 'osram'
-                    ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                    : 'bg-orange-100 text-[#EA580C] border border-orange-200'
-              }`}>
-                {item.brand}
-              </span>
-            )}
-
-            <span className="font-bold text-zinc-900 text-[13.5px] bg-zinc-100 px-2 py-0.5 rounded-md">
-              {item.qty} PCS
-            </span>
-          </div>
-
-          {item.description && (
-            <p className="text-[12.5px] text-zinc-600 font-medium mt-1 leading-snug break-words">
-              {item.description}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <button
-        type="button"
-        onClick={() => handleCopySinglePn(item.pn)}
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11.5px] font-semibold transition-all shrink-0 active:scale-95 ${
-          copiedPn === item.pn
-            ? 'bg-emerald-100 text-emerald-800 font-bold'
-            : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
-        }`}
-        title="Salin Part Number"
+    return (
+      <div
+        key={`${item.pn}-${displayIndex}`}
+        className="p-3.5 flex items-center justify-between gap-3 hover:bg-zinc-50/80 transition-colors"
       >
-        {copiedPn === item.pn ? (
-          <>
-            <svg className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-            <span>Tersalin</span>
-          </>
-        ) : (
-          <>
-            <svg className="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-            </svg>
-            <span>Salin PN</span>
-          </>
-        )}
-      </button>
-    </div>
-  );
+        <div className="flex items-start gap-2.5 min-w-0 flex-1">
+          <span className="text-[12px] font-bold text-zinc-300 w-4 pt-0.5 text-right select-none shrink-0">
+            {displayIndex}
+          </span>
+
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`font-mono font-bold text-[15.5px] tracking-tight ${
+                item.brand === 'osram'
+                  ? 'text-amber-800'
+                  : item.brand === 'dura'
+                    ? 'text-sky-700'
+                    : 'text-[#EA580C]'
+              }`}>
+                {item.pn}
+              </span>
+
+              {item.brand && (
+                <span className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded uppercase ${
+                  item.brand === 'dura'
+                    ? 'bg-sky-100 text-sky-700 border border-sky-200'
+                    : item.brand === 'osram'
+                      ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                      : 'bg-orange-100 text-[#EA580C] border border-orange-200'
+                }`}>
+                  {item.brand}
+                </span>
+              )}
+
+              <span className="font-bold text-zinc-900 text-[13.5px] bg-zinc-100 px-2 py-0.5 rounded-md">
+                {item.qty} PCS
+              </span>
+            </div>
+
+            {displayDesc ? (
+              <p className="text-[12.5px] text-zinc-600 font-medium mt-1 leading-snug break-words">
+                {displayDesc}
+              </p>
+            ) : null}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => handleCopySinglePn(item.pn)}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11.5px] font-semibold transition-all shrink-0 active:scale-95 ${
+            copiedPn === item.pn
+              ? 'bg-emerald-100 text-emerald-800 font-bold'
+              : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700'
+          }`}
+          title="Salin Part Number"
+        >
+          {copiedPn === item.pn ? (
+            <>
+              <svg className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Tersalin</span>
+            </>
+          ) : (
+            <>
+              <svg className="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+              </svg>
+              <span>Salin PN</span>
+            </>
+          )}
+        </button>
+      </div>
+    );
+  };
 
   const modalContent = (
     <div className="fixed inset-0 z-50 overflow-hidden flex justify-center">
@@ -290,7 +305,7 @@ function OrderDetailModal({
               <span>•</span>
               <span className="font-semibold text-zinc-800">{orderItemsList.length} item</span>
               <span>•</span>
-              <span className="font-semibold text-zinc-800">{grouped.totalDaytonaQty + grouped.totalOsramQty} pcs</span>
+              <span className="font-semibold text-zinc-800">{(orderSummary.totalQty ?? ((grouped.totalDaytonaQty || 0) + (grouped.totalOsramQty || 0))) || 0} pcs</span>
               <span>•</span>
               {isCompleted ? (
                 <span className="text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full text-[11px] font-bold inline-flex items-center gap-1">
