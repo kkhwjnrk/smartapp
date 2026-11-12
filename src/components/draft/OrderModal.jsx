@@ -98,7 +98,7 @@ function OrderModal({
     if (!searchQuery.trim()) return [];
     const tokens = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
     return currentBrandCatalog.filter(item => {
-      const combined = `${item.pn} ${item.description} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
+      const combined = `${item.pn || ''} ${item.name || ''} ${item.description || ''} ${item.spec || ''} ${item.compatibility || ''} ${item.motorCode || ''} ${item.brandMotor || ''} ${item.category || ''} ${item.subCategory || ''}`.toLowerCase();
       return tokens.every(t => combined.includes(t));
     }).sort(comparePartNumbers).slice(0, 30);
   }, [searchQuery, currentBrandCatalog]);
@@ -724,10 +724,16 @@ function OrderModal({
                             </span>
                           )}
                         </div>
-                        {/* Deskripsi Lengkap Tanpa HET */}
+                        {/* Deskripsi Barang & Peruntukan */}
                         <p className="text-[13px] font-semibold text-zinc-900 group-hover:text-orange-950 leading-snug break-words whitespace-normal">
-                          {item.description}
+                          {item.name || item.description}
+                          {item.spec && <span className="ml-1.5 font-normal text-zinc-500 font-mono text-[11.5px]">({item.spec})</span>}
                         </p>
+                        {item.compatibility && (
+                          <p className="text-[11.5px] text-zinc-500 line-clamp-1">
+                            {item.compatibility}
+                          </p>
+                        )}
                       </button>
                     ))
                   ) : (

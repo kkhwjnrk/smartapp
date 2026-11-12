@@ -99,7 +99,29 @@ function DiscountSheet({ item, onClose }) {
                 </span>
               )}
             </div>
-            <div className="text-[17px] font-bold text-zinc-900 leading-snug">{item.description}</div>
+            <div className="text-[17px] font-bold text-zinc-900 leading-snug">
+              {item.name || item.description}
+            </div>
+            {item.spec && (
+              <div className="mt-1 flex items-center gap-1.5 flex-wrap">
+                <span className="text-[11.5px] font-medium text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded-md border border-zinc-200/80 inline-flex items-center gap-1">
+                  <span className="text-zinc-400 font-normal">Tipe/Spek:</span>
+                  <span className="font-mono font-semibold text-zinc-800">{item.spec}</span>
+                </span>
+              </div>
+            )}
+            {item.compatibility && (
+              <div className="mt-1.5 text-[12px] text-zinc-600 leading-relaxed">
+                <span className="text-zinc-400 font-medium">Motor: </span>
+                <span>{item.compatibility}</span>
+              </div>
+            )}
+            {item.motorCode && (
+              <div className="mt-1 text-[11px] text-zinc-500 font-mono">
+                <span className="text-zinc-400 font-sans font-medium">Kode: </span>
+                {item.motorCode}
+              </div>
+            )}
           </div>
           <div className="shrink-0 pt-0.5">
             <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200">
@@ -118,7 +140,9 @@ function DiscountSheet({ item, onClose }) {
           </div>
           <div className="text-right">
             <span className="block text-[12px] font-medium text-zinc-500">Isi per Kemasan</span>
-            <span className="text-[15px] font-semibold text-zinc-800">{item.qty || 1} PCS</span>
+            <span className="text-[15px] font-semibold text-zinc-800">
+              {item.qty || 1} PCS{item.qtyCtn ? <span className="text-[12px] font-normal text-zinc-400 ml-1">({item.qtyCtn}/dus)</span> : ''}
+            </span>
           </div>
         </div>
 
